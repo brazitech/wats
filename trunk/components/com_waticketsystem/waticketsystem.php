@@ -1,11 +1,10 @@
 <?php
 /**
  * FileName: waticketsystem.php
- * Date: 03/09/2006
+ * Date: 21/01/2009
  * License: GNU General Public License
- * Script Version #: 2.0.7
+ * Script Version #: 2.0.8
  * JOS Version #: 1.0.x
- * Development James Kennard jg8949@aol.com (www.webamoeba.co.uk)
  */
 
 // Don't allow direct linking
