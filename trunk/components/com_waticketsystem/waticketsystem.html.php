@@ -1,12 +1,11 @@
 <?php
 /**
  * FileName: waticketsystem.html.php
- * Date: 09/09/2006
+ * Date: 21/01/2009
  * License: GNU General Public License
- * Script Version #: 2.0.4
+ * Script Version #: 2.0.8
  * JOS Version #: 1.0.x
- * Development James Kennard jg8949@aol.com (www.webamoeba.co.uk)
- */
+  */
 
 // Don't allow direct linking
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
@@ -475,7 +474,6 @@ class watsTicketHTML extends watsTicket
 				//$prevArray = prevArray( $_GET );
 				//$link = prevLink( $prevArray );
 				echo "<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">";
-				echo prevInput( $_GET );
 				echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 					    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 					    <input name=\"act\" type=\"hidden\" value=\"ticket\">
