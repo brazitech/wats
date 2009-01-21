@@ -1,11 +1,10 @@
 <?php
 /**
  * FileName: admin.waticketsystem.php
- * Date: 07/09/2006
+ * Date: 21/01/2009
  * License: GNU General Public License
- * Script Version #: 2.0.4
+ * Script Version #: 2.0.8
  * JOS Version #: 1.0.x
- * Development James Kennard jg8949@aol.com (www.webamoeba.co.uk)
  */
 
 // Don't allow direct linking
@@ -784,23 +783,23 @@ function watsOption( &$task, &$act )
           </tr> 
           <tr> 
             <td width="80"> Tickets</td>  
-            <td width="60"><?=$watsStatTicketsRaw?> / 100%</td> 
+            <td width="60"><?php echo $watsStatTicketsRaw; ?> / 100%</td> 
 			<td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: 100%;"></td>
           </tr> 
           <tr> 
             <td> Open </td> 
-            <td><?=$watsStatTicketsOpen?> / <?=intval((100/$watsStatTickets)*$watsStatTicketsOpen)?>%</td> 
-			<td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?=(100/$watsStatTickets)*$watsStatTicketsOpen?>%;"></td>
+            <td><?php echo $watsStatTicketsOpen; ?> / <?php echo intval((100/$watsStatTickets)*$watsStatTicketsOpen); ?>%</td> 
+			<td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?php echo (100/$watsStatTickets)*$watsStatTicketsOpen; ?>%;"></td>
           </tr>
           <tr>
             <td>Closed</td>
-            <td><?=$watsStatTicketsClosed?> / <?=intval((100/$watsStatTickets)*$watsStatTicketsClosed)?>%</td>
-            <td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?=(100/$watsStatTickets)*$watsStatTicketsClosed?>%;"></td>
+            <td><?php echo $watsStatTicketsClosed; ?> / <?php echo intval((100/$watsStatTickets)*$watsStatTicketsClosed); ?>%</td>
+            <td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?php echo (100/$watsStatTickets)*$watsStatTicketsClosed; ?>%;"></td>
           </tr>
           <tr>
             <td>Dead</td>
-            <td><?=$watsStatTicketsDead?> / <?=intval((100/$watsStatTickets)*$watsStatTicketsDead)?>%</td>
-            <td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?=(100/$watsStatTickets)*$watsStatTicketsDead?>%;"></td>
+            <td><?php echo $watsStatTicketsDead; ?> / <?php echo intval((100/$watsStatTickets)*$watsStatTicketsDead); ?>%</td>
+            <td><img src="components/com_waticketsystem/images/red.gif" style="height: 4px; width: <?php echo (100/$watsStatTickets)*$watsStatTicketsDead; ?>%;"></td>
           </tr>
           <tr>
             <td>&nbsp;</td>
@@ -809,7 +808,7 @@ function watsOption( &$task, &$act )
           </tr>
           <tr>
             <td>Users</td>
-            <td><?=$watsStatUsers?></td>
+            <td><?php echo $watsStatUsers; ?></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
@@ -819,7 +818,7 @@ function watsOption( &$task, &$act )
           </tr>
           <tr>
             <td>Categories</td>
-            <td><?=$watsStatCategories?></td>
+            <td><?php echo $watsStatCategories; ?></td>
 			<td>&nbsp;</td>
           </tr> 
         </table> 
