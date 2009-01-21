@@ -138,7 +138,7 @@ else
 			else if ( $act == 'category' )
 			{
 				// send viewing category ID
-				$watsCategorySet->select( $_GET['catid'] );
+				$watsCategorySet->select( intval($_GET['catid']) );
 			}
 			else
 			{
@@ -176,7 +176,7 @@ else
 
 }
 ?>
-<p class="watsCopyright"><?=$wats->get( 'copyright' )?></p>
+<p class="watsCopyright"><?php echo $wats->get( 'copyright' )?></p>
 </div>
 <?php
 function watsOption( $task, $act )
@@ -194,7 +194,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'view':
 					// create ticket object
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( addslashes( $_GET[ 'ticketid' ] ) ) );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
 					// check there is a ticket
 					if ( $ticket != null )
 					{
@@ -227,12 +227,12 @@ function watsOption( $task, $act )
 				 */	
 				case 'makeComplete':
 					// check rites
-					$rite =  $watsUser->checkPermission( trim( $_POST[ 'catid' ] ), "m" );
+					$rite =  $watsUser->checkPermission( intval( $_POST[ 'catid' ] ), "m" );
 					if ( $rite > 0 )
 					{
 						// allow user make ticket
 						$createDatetime = date('YmdHis');
-						$ticket = new watsTicketHTML( $watsDatabase, null, null, trim( $_POST[ 'ticketname' ] ), $watsUser->id, null, $createDatetime, 1, null, null, 1, trim( $_POST[ 'catid' ] ) );
+						$ticket = new watsTicketHTML( $watsDatabase, null, null, trim( $_POST[ 'ticketname' ] ), $watsUser->id, null, $createDatetime, 1, null, null, 1, intval( $_POST[ 'catid' ] ) );
 						$ticket->_msgList[0] = new watsMsg( null, parseMsg( trim( $_POST[ 'msg' ] ) ), $watsUser->id, $createDatetime );
 						$ticket->msgNumberOf ++;
 						$ticket->save();
@@ -257,7 +257,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'delete':
 					// find ticket to delete
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, trim( $_GET[ 'ticketid' ] ) );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, trim( intval($_GET[ 'ticketid' ]) ) );
 					// check delete rite
 					$rite =  $watsUser->checkPermission( $ticket->category, "d" );
 					if ( (  $ticket->watsId == $watsUser->id AND $rite > 0 ) OR $rite == 2 )
@@ -277,7 +277,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'reply':
 					// find ticket to reply to
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, trim( $_POST[ 'ticketid' ] ) );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( $_POST[ 'ticketid' ] ) );
 					// check rite to view
 					$rite =  $watsUser->checkPermission( $ticket->category, "v" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
@@ -354,7 +354,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'reopen':
 					// find ticket to reopen
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, $_GET[ 'ticketid' ] );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
 					// check for reopen rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "o" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
@@ -372,7 +372,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'completeReopen':
 					// find ticket to reopen
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, $_GET[ 'ticketid' ] );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
 					// check for reopen rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "o" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
@@ -423,13 +423,13 @@ function watsOption( $task, $act )
 				 */	
 				case 'purge':
 					// check for purge rite
-					$rite =  $watsUser->checkPermission( $_GET['catid'], "p" );
+					$rite =  $watsUser->checkPermission( intval($_GET['catid']), "p" );
 					if ( $rite == 2 )
 					{
 						// create category object
 						$catPurge = new watsCategoryHTML( $watsDatabase );
 						// load details
-						$catPurge->load( $_GET['catid'] );
+						$catPurge->load( intval($_GET['catid']) );
 						// load dead tickets
 						$catPurge->loadTicketSet( 3, $watsUser->id, true );
 						// purge dead tickets
@@ -445,18 +445,19 @@ function watsOption( $task, $act )
 				 */	
 				default:
 					//check rites
-					$rite =  $watsUser->checkPermission( $_GET['catid'], "v" );
+					$rite =  $watsUser->checkPermission( intval($_GET['catid']), "v" );
 					if ( $rite > 0 )
 					{
 						// create category object
 						$cat = new watsCategoryHTML( $watsDatabase );
 						// load details
-						$cat->load( $_GET['catid'] );
+						$cat->load( intval($_GET['catid']) );
 						// get lifecycle
 						$lifecycle = 0;
-						if ( $_GET['lifecycle'] > 0 )
-						{
-							$lifecycle = $_GET['lifecycle'];
+						if ( isset($_GET['lifecycle']) ) {
+							if (in_array($_GET['lifecycle'], array("p", "a", "0", "1", "2", "3"))) {
+								$lifecycle = $_GET['lifecycle'];
+							}
 						} // end get lifecycle
 						// check for level of rites
 						if ( $rite == 2 AND $_GET['lifecycle'] != 'p' )
@@ -472,13 +473,13 @@ function watsOption( $task, $act )
 						}
 						// end check for level of rites
 						// view tickets
-						$start = ( $_GET[ 'page' ] - 1 ) *  $wats->get( 'ticketssub' );
+						$start = ( intval($_GET[ 'page' ]) - 1 ) *  $wats->get( 'ticketssub' );
 						$finish = $start + $wats->get( 'ticketssub' );
-						$cat->pageNav( $wats->get( 'ticketssub' ), $_GET[ 'page' ], 0, $watsUser );
+						$cat->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), 0, $watsUser );
 						$cat->viewTicketSet( $finish, $start );
-						$cat->pageNav( $wats->get( 'ticketssub' ), $_GET[ 'page' ], 0, $watsUser );
+						$cat->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), 0, $watsUser );
 						// check purge rites
-						if ( @$_GET['lifecycle'] == 3 AND $watsUser->checkPermission( $_GET['catid'], "p" ) == 2 )
+						if ( @$_GET['lifecycle'] == 3 AND $watsUser->checkPermission( intval($_GET['catid']), "p" ) == 2 )
 						{
 							$cat->viewPurge();
 						} // end check purge rites
@@ -504,23 +505,23 @@ function watsOption( $task, $act )
 					// load tickets
 					$assignedTickets->loadAssignedTicketSet( $watsUser->id );
 					// view tickets
-					$start = ( $_GET[ 'page' ] - 1 ) *  $wats->get( 'ticketssub' );
+					$start = ( intval($_GET[ 'page' ]) - 1 ) *  $wats->get( 'ticketssub' );
 					$finish = $start + $wats->get( 'ticketssub' );	
 					$assignedTickets->viewTicketSet( $finish, $start );
 					// display page navigation
-					$assignedTickets->pageNav( $wats->get( 'ticketssub' ), $_GET[ 'page' ], $wats->get( 'ticketssub' ) );
+					$assignedTickets->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), $wats->get( 'ticketssub' ) );
 					break;
 				/**
 				 * assign ticket to
 				 */	
 				case 'assignto':
 					// create ticket object
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, $_POST[ 'ticketid' ] );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_POST[ 'ticketid' ]) );
 					// check for assign rites
 					$riteA =  $watsUser->checkPermission( $ticket->category, "a" );
 					if ( ( $ticket->assignId == $watsUser->id AND $riteA > 0 ) OR ( $riteA == 2 ) )
 					{
-						$ticket->setAssignId( $_POST[ 'assignee' ] );
+						$ticket->setAssignId( intval($_POST[ 'assignee' ]) );
 					} // end chck for assign rites
 					// check rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "v" );
@@ -551,7 +552,7 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
 						$editUser = new watsUserHTML( $watsDatabase );
-						$editUser->loadWatsUser( $_GET[ 'userid' ] );
+						$editUser->loadWatsUser( intval($_GET[ 'userid' ]) );
 						// check for edit rites
 						if ( $watsUser->checkUserPermission( 'e' ) == 2 )
 						{
@@ -583,13 +584,13 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
 						$editUser = new watsUserHTML( $watsDatabase );
-						$editUser->loadWatsUser( $_POST[ 'userid' ] );
+						$editUser->loadWatsUser( intval($_POST[ 'userid' ]) );
 						// check for edit rites
 						if ( $watsUser->checkUserPermission( 'e' ) == 2 )
 						{
 							// complete edit user
 							$editUser->organisation = trim( $_POST[ 'organisation'] );
-							$editUser->setGroup( trim( $_POST[ 'grpId' ] ) );
+							$editUser->setGroup( intval( $_POST[ 'grpId' ] ) );
 							$editUser->updateUser();
 							$editUser->view();
 							
@@ -652,17 +653,17 @@ function watsOption( $task, $act )
 							while ( $i < $noOfNewUsers )
 							{
 								// check for successful creation
-								if ( watsUser::makeUser( $_GET[ 'user' ][ $i ], $_GET[ 'grpId' ], $_GET[ 'organisation' ], $watsDatabase  ) )
+								if ( watsUser::makeUser( intval($_GET[ 'user' ][ $i ]), intval($_GET[ 'grpId' ]), $_GET[ 'organisation' ], $watsDatabase  ) )
 								{
 									// give visual confirmation
 									$newUser = new watsUserHTML( $watsDatabase );
-									$newUser->loadWatsUser( $_GET[ 'user' ][ $i ] );
+									$newUser->loadWatsUser( intval($_GET[ 'user' ][ $i ]) );
 
 									$newUser->view();
 								}
 								else
 								{
-									echo "<p>".$_GET[ 'user' ][ $i ]." -> "._WATS_ERROR."</p>";
+									echo "<p>".intval($_GET[ 'user' ][ $i ])." -> "._WATS_ERROR."</p>";
 								} // check for successful creation
 								$i ++;
 							}
@@ -693,8 +694,8 @@ function watsOption( $task, $act )
 						// determine number of users to show
 						if ( isset( $_GET[ 'page' ] ) )
 						{
-							$start = ( $_GET[ 'page' ] - 1 ) * $wats->get( 'ticketssub' );
-							$currentPage = $_GET[ 'page' ];
+							$start = ( intval($_GET[ 'page' ]) - 1 ) * $wats->get( 'ticketssub' );
+							$currentPage = intval($_GET[ 'page' ]);
 						}
 						else
 						{

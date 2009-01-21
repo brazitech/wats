@@ -132,7 +132,7 @@ function watsOption( &$task, &$act )
 				 * view
 				 */	
 				case 'view':
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( addslashes( $_GET[ 'ticketid' ] ) ) );
+					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( $_GET[ 'ticketid' ] ) );
 					$ticket->loadMsgList();
 					$ticket->view( );
 					break;
@@ -161,7 +161,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'view':
 					$category = new watsCategoryHTML( $watsDatabase );
-					$category->load( $_GET['catid'] );
+					$category->load( intval($_GET['catid']) );
 					echo "<table width=\"100%\">
 							<tr>
 							  <td width=\"60%\" valign=\"top\">";
@@ -185,7 +185,7 @@ function watsOption( &$task, &$act )
 						{
 							// create category
 							$editCategory = new watsCategory( $watsDatabase );
-							$editCategory->load( $_POST['catid'] );
+							$editCategory->load( intval($_POST['catid']) );
 							// check if deleting
 							if ( $_POST['remove'] == 'removetickets' )
 							{
@@ -429,8 +429,8 @@ function watsOption( &$task, &$act )
 				 * view
 				 */	
 				case 'view':
-					echo "<input type=\"hidden\" name=\"groupid\" value=\"".$_GET['groupid']."\" />";
-					$userGroup = new watsUserGroupHTML( $watsDatabase, $_GET['groupid'] );
+					echo "<input type=\"hidden\" name=\"groupid\" value=\"".intval($_GET['groupid'])."\" />";
+					$userGroup = new watsUserGroupHTML( $watsDatabase, intval($_GET['groupid']) );
 					// load overlib
 					mosCommonHTML::loadOverlib();
 					echo "<table width=\"100%\">
@@ -448,7 +448,7 @@ function watsOption( &$task, &$act )
 				 * apply
 				 */	
 				case 'apply':
-					$userGroup = new watsUserGroupHTML( $watsDatabase, $_POST['groupid'] );
+					$userGroup = new watsUserGroupHTML( $watsDatabase, intval($_POST['groupid']) );
 					
 					// check if deleting
 					if ( $_POST['remove'] == 'remove' || $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
@@ -489,7 +489,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'edit':
 					$editUser = new watsUserHTML( $watsDatabase );
-					$editUser->loadWatsUser( $_GET[ 'userid' ] );
+					$editUser->loadWatsUser( intval($_GET[ 'userid' ]) );
 					echo "<table width=\"100%\">
 							<tr>
 							  <td width=\"60%\" valign=\"top\">";
@@ -519,7 +519,7 @@ function watsOption( &$task, &$act )
 						{
 							// create user
 							$editUser = new watsUserHTML( $watsDatabase );
-							$editUser->loadWatsUser( $_POST[ 'userid' ] );
+							$editUser->loadWatsUser( intval($_POST[ 'userid' ]) );
 							// check if deleting
 							if ( $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
 							{
@@ -532,7 +532,7 @@ function watsOption( &$task, &$act )
 								// check is numeric
 								if ( is_numeric( $_POST['grpId'] ) )
 								{
-									$editUser->group = $_POST['grpId'];
+									$editUser->group = intval($_POST['grpId']);
 								}
 								// update organistation
 								$editUser->organisation = htmlspecialchars( addslashes( $_POST['organisation'] ) );
@@ -571,11 +571,11 @@ function watsOption( &$task, &$act )
 						while ( $i < $noOfNewUsers )
 						{
 							// check for successful creation
-							if ( watsUser::makeUser( $_POST[ 'user' ][ $i ], $_POST[ 'grpId' ], $_POST[ 'organisation' ], $watsDatabase  ) )
+							if ( watsUser::makeUser( $_POST[ 'user' ][ $i ], intval($_POST[ 'grpId' ]), $_POST[ 'organisation' ], $watsDatabase  ) )
 							{
 								// give visual confirmation
 								$newUser = new watsUserHTML( $watsDatabase );
-								$newUser->loadWatsUser( $_POST[ 'user' ][ $i ] );
+								$newUser->loadWatsUser( intval($_POST[ 'user' ][ $i ]) );
 								$newUser->view();
 							}
 							$i ++;
