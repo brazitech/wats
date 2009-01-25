@@ -1,9 +1,9 @@
 <?php
 /**
 * FileName: install.waticketsystem.php
-* Date: 18/11/2006
+* Date: 21/01/2009
 * License: GNU General Public License
-* Script Version #: 2.0.6
+* Script Version #: 2.0.8
 * JOS Version #: 1.0.x
 * Development James Kennard james@webamoeba.co.uk (www.webamoeba.co.uk)
 **/
@@ -212,6 +212,12 @@ function com_install()
 		case '2.0.6':
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='7' WHERE `name`='versionpatch';" );
 			$database->query();
+		/**
+		 * patch from 2.0.7 to 2.0.8
+		 */	
+		case '2.0.7':
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='8' WHERE `name`='versionpatch';" );
+			$database->query();
 			break;
 	}
 
@@ -229,7 +235,7 @@ function com_install()
 				<th>
 					<div style=\"text-align: center;\">
 						WebAmoeba Ticket System<br>
-						2.0.7 ( stable )
+						2.0.8 ( stable )
 					</div>
 				</th>
 			</tr>
