@@ -8,25 +8,18 @@
  */
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
+
 echo '<div class="wats">';
 
 //add custom classes and functions
-require('components/com_waticketsystem/waticketsystem.html.php');
-
-// add database wrapper
-// $watsDatabase = new watsDatabaseWrapperHTML( $database );
-$watsDatabase = $database;
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "factory.php");
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "dbhelper.php");
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "tablehelper.php");
+require_once(JPATH_COMPONENT_SITE . DS . "waticketsystem.html.php");
 
 // get settings
-$wats = new watsSettings( $watsDatabase );
-
-// check for database debug
-if ( $wats->get( 'debug' ) != 0 )
-{
-	$watsDatabase = new watsDatabaseWrapperHTML( $database );
-	$watsDatabase->viewHeader();
-}
+$wats =& WFactory::getConfig();
 
 //install lang file
 require('components/com_waticketsystem/lang/'.$wats->get( 'lang' ));
@@ -40,14 +33,18 @@ echo ($wats->get( 'css' ) == 'enable') ? "<link rel=\"stylesheet\" href=\"compon
 prevArray( $_GET );
 prevLink( $_GET );
 
-if ( $my->id == 0 OR ( $watsUser = new watsUserHTML( $watsDatabase ) AND $watsUser->loadWatsUser( $my->id  ) == false ))
+$my =& JFactory::getUser();
+
+if ( $my->id == 0 OR ( $watsUser = new watsUserHTML() AND $watsUser->loadWatsUser( $my->id  ) == false ))
 {
 	echo _WATS_ERROR_NOUSER;
 }
 else
 {
+	$GLOBALS["watsUser"] =& $watsUser;
+
 	// check for agreement
-	if ( $wats->get( 'agree' ) == 1 && $watsUser->agree == 0 && !isset($_POST['agree']) )
+	if ( $wats->get( 'agree' ) == 1 && $watsUser->agree == 0 && JRequest::getVar('agree', false) !== false )
 	{
 		// needs to sign agreement
 		echo '<p>'.$wats->get( 'agreelw' ).'</p>';
@@ -55,7 +52,7 @@ else
 		echo '<p>'.$wats->get( 'agreela' ).'</p>';
 		echo '<form name="agree" method="post" action="'.$PHP_SELF.'?option=com_waticketsystem&Itemid='.$Itemid.'"><input type="submit" name="agree" value="'.$wats->get( 'agreeb' ).'"></form>';		
 	}
-	elseif ( isset($_POST['agree']) )
+	elseif ( JRequest::getVar('agree', false) !== false )
 	{
 		// user has agreed
 		$watsUser->agree = 1;
@@ -70,43 +67,13 @@ else
 		//check user exists and has agreed to contract
 		
 		// parse GET action
-		if ( isset( $_GET['act'] ) )
-		{
-			$act = trim( $_GET['act'] );
-		}
-		else
-		{
-			$act = null;
-		} // end parse GET action
+		$act = JRequest::getCmd("act", null);
+		
 		// add javaScript
 		echo "<script language=\"javascript\" type=\"text/javascript\" src=\"components/com_waticketsystem/wats.js\"></script>";
 		// create category set
-		$watsCategorySet = new watsCategorySetHTML( $watsDatabase, $watsUser );
-		
-		/*// create new navigation
-		echo "<div id=\"watsNavigation\" class=\"watsNavigation\">
-				<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">
-				  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				  <input name=\"act\" type=\"hidden\" value=\"ticket\">
-				  <input name=\"task\" type=\"hidden\" value=\"make\">
-				  <input type=\"submit\" name=\"watsTicketMake\" value=\""._WATS_TICKETS_SUBMIT."\" class=\"watsFormSubmit\">
-				</form> ";
-		$watsCategorySet->select();
-		echo "</div>";
-		
-		// create find navigation
-		echo "<div id=\"watsNavigation\" class=\"watsNavigation\">
-				<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">
-				  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				  <input name=\"act\" type=\"hidden\" value=\"ticket\">
-				  <input name=\"task\" type=\"hidden\" value=\"view\">
-				  WATS-
-				  <input name=\"ticketid\" type=\"text\" id=\"ticketid\" maxlength=\"255\" size=\"6\" />
-				  <input type=\"submit\" name=\"watsTicketMake\" value=\""._WATS_MISC_GO."\" class=\"watsFormSubmit\">
-				</form> ";
-		echo "</div>";*/
+		$watsCategorySet = new watsCategorySetHTML($watsUser);
+		$GLOBALS["watsCategorySet"] =& $watsCategorySet;
 		
 		// create new navigation
 		if ( $act != 'ticket' || $task != 'make' )
@@ -137,7 +104,7 @@ else
 			else if ( $act == 'category' )
 			{
 				// send viewing category ID
-				$watsCategorySet->select( intval($_GET['catid']) );
+				$watsCategorySet->select(JRequest::getInt('catid'));
 			}
 			else
 			{
@@ -165,13 +132,6 @@ else
 		// perform selected operation
 		watsOption( $task, $act );
 	}
-	
-	
-	// check for database debug
-	if ( $wats->get( 'debug' ) == 1 )
-	{
-		$watsDatabase->viewFooter();
-	}
 
 }
 ?>
@@ -180,7 +140,10 @@ else
 <?php
 function watsOption( $task, $act )
 {
-	global $watsUser, $watsDatabase, $Itemid, $wats, $watsCategorySet;
+	global $watsUser, $Itemid, $watsCategorySet;
+	
+	$wats =& WFactory::getConfig();
+	$db =& JFactory::getDBO();
 
 	switch ($act) {
 		/**
@@ -193,7 +156,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'view':
 					// create ticket object
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt("ticketid"));
 					// check there is a ticket
 					if ( $ticket != null )
 					{
@@ -207,7 +170,8 @@ function watsOption( $task, $act )
 						}
 						else
 						{
-							echo _WATS_ERROR_ACCESS;
+							echo _WATS_ERROR_ACCESS . " :( ";
+							print_r($ticket);
 						}
 					}
 					else
@@ -226,20 +190,21 @@ function watsOption( $task, $act )
 				 */	
 				case 'makeComplete':
 					// check rites
-					$rite =  $watsUser->checkPermission( intval( $_POST[ 'catid' ] ), "m" );
+					$rite =  $watsUser->checkPermission( JRequest::getInt('catid'), "m" );
 					if ( $rite > 0 )
 					{
 						// allow user make ticket
 						$createDatetime = date('YmdHis');
-						$ticket = new watsTicketHTML( $watsDatabase, null, null, trim( $_POST[ 'ticketname' ] ), $watsUser->id, null, $createDatetime, 1, null, null, 1, intval( $_POST[ 'catid' ] ) );
-						$ticket->_msgList[0] = new watsMsg( null, parseMsg( trim( $_POST[ 'msg' ] ) ), $watsUser->id, $createDatetime );
+						$parsedMsg = parseMsg( JRequest::getString('msg', "", "REQUEST", JREQUEST_ALLOWRAW) );
+						$ticket = new watsTicketHTML(null, null, JRequest::getString('ticketname'), $watsUser->id, null, $createDatetime, 1, null, null, 1, JRequest::getInt('catid') );
+						$ticket->_msgList[0] = new watsMsg( null, $parsedMsg, $watsUser->id, $createDatetime );
 						$ticket->msgNumberOf ++;
 						$ticket->save();
 						// notify
 						if ( $wats->get( 'notifyusers' ) == 1 )
 						{
-							watsMail( parseMsg( trim( $_POST[ 'msg' ] ) ), $watsUser->email );
-							watsMail( parseMsg( trim( $_POST[ 'msg' ] ) ), $wats->get( 'notifyemail' ) );
+							watsMail( $parsedMsg, $watsUser->email );
+							watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
 						}
 						// end notify
 						// view new ticket
@@ -256,7 +221,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'delete':
 					// find ticket to delete
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, trim( intval($_GET[ 'ticketid' ]) ) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid'));
 					// check delete rite
 					$rite =  $watsUser->checkPermission( $ticket->category, "d" );
 					if ( (  $ticket->watsId == $watsUser->id AND $rite > 0 ) OR $rite == 2 )
@@ -276,7 +241,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'reply':
 					// find ticket to reply to
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( $_POST[ 'ticketid' ] ) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid') );
 					// check rite to view
 					$rite =  $watsUser->checkPermission( $ticket->category, "v" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
@@ -288,9 +253,11 @@ function watsOption( $task, $act )
 						if ( $rite == 2 OR ( $rite == 1 AND $ticket->watsId == $watsUser->id ) )
 						{
 							// allow user to reply
-							$ticket->addMsg( parseMsg( $_POST[ 'msg' ] ), $watsUser->id, date('YmdHis') );
+							$parsedMsg = parseMsg(JRequest::getString("msg", "", "REQUEST", JREQUEST_ALLOWRAW));
+							
+							$ticket->addMsg( $parsedMsg, $watsUser->id, date('YmdHis') );
 							// check for close
-							if ( $_POST[ 'submit' ] == _WATS_TICKETS_REPLY_CLOSE )
+							if ( JRequest::getString('submit') == _WATS_TICKETS_REPLY_CLOSE )
 							{
 								// check rites to close
 								$rite =  $watsUser->checkPermission( $ticket->category, "c" );
@@ -307,11 +274,11 @@ function watsOption( $task, $act )
 							// notify
 							if ( $wats->get( 'notifyusers' ) == 1 )
 							{
-								$emailmsg = _WATS_MAIL_REPLY.$watsUser->username."\n(".$ticket->name.")"."\n\n".parseMsg( $_POST[ 'msg' ] );
+								$emailmsg = _WATS_MAIL_REPLY.$watsUser->username."\n(".$ticket->name.")"."\n\n".$parsedMsg;
 								// find addresses
 								$sql = "SELECT  DISTINCT m.watsid, u.email FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid=".$ticket->ticketId;
-								$watsDatabase->setQuery($sql);
-								$notify = $watsDatabase->loadObjectList();
+								$db->setQuery($sql);
+								$notify = $db->loadObjectList();
 								// loop through email addresses
 								$emails = count( $notify );
 								$i = 0;
@@ -324,7 +291,7 @@ function watsOption( $task, $act )
 									}
 									$i ++;
 								}
-								watsMail( parseMsg( trim( $_POST[ 'msg' ] ) ), $wats->get( 'notifyemail' ) );
+								watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
 							}
 							// end notify
 							// return to ticket
@@ -353,7 +320,7 @@ function watsOption( $task, $act )
 				 */	
 				case 'reopen':
 					// find ticket to reopen
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid'));
 					// check for reopen rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "o" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
@@ -371,24 +338,30 @@ function watsOption( $task, $act )
 				 */	
 				case 'completeReopen':
 					// find ticket to reopen
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_GET[ 'ticketid' ]) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid') );
 					// check for reopen rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "o" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
 					{
 						// reactivate
+						$parsedMsg = parseMsg(JRequest::getString("msg", "", "REQUEST", JREQUEST_ALLOWRAW));
+						
 						$ticket->reactivate();
-						$ticket->addMsg( parseMsg( $_POST[ 'msg' ] ), $watsUser->id, date( 'YmdHis' ) );
+						$ticket->addMsg( $parsedMsg, $watsUser->id, date( 'YmdHis' ) );
 						$ticket->loadMsgList();
 						$ticket->view( $watsUser );
 						// notify
 						if ( $wats->get( 'notifyusers' ) == 1 )
 						{
-							$emailmsg = _WATS_MAIL_REPLY.$my->username."\n(".$ticket->ticketname.")"."\n\n".parseMsg( $_POST[ 'msg' ] );
+							$emailmsg = _WATS_MAIL_REPLY.$my->username."\n(".$ticket->ticketname.")"."\n\n".$parsedMsg;
 							// find addresses
-							$sql = "SELECT  DISTINCT m.watsid, u.email FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid=".$ticket->ticketId;
-							$watsDatabase->setQuery($sql);
-							$notify = $watsDatabase->loadObjectList();
+							$sql = "SELECT DISTINCT " . WDBHelper::nameQuote("m.watsid") . ", " .
+							                            WDBHelper::nameQuote("u.email") . " " .
+								   "FROM " . WDBHelper::nameQuote("#__wats_msg") . " AS " . WDBHelper::nameQuote("m") . " " .
+								   "LEFT  JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") ." ON " . WDBHelper::nameQuote("m.watsid") . " = " . WDBHelper::nameQuote("u.id") . " " .
+								   "WHERE " . WDBHelper::nameQuote("m.ticketid") . " = " . intval($ticket->ticketId);
+							$db->setQuery($sql);
+							$notify = $db->loadObjectList();
 							// loop through email addresses
 							$emails = count( $notify );
 							$i = 0;
@@ -401,7 +374,7 @@ function watsOption( $task, $act )
 								}
 								$i ++;
 							}
-							watsMail( parseMsg( trim( $_POST[ 'msg' ] ) ), $wats->get( 'notifyemail' ) );
+							watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
 						}
 						// end notify
 					}
@@ -422,13 +395,13 @@ function watsOption( $task, $act )
 				 */	
 				case 'purge':
 					// check for purge rite
-					$rite =  $watsUser->checkPermission( intval($_GET['catid']), "p" );
+					$rite =  $watsUser->checkPermission(JRequest::getInt('catid'), "p");
 					if ( $rite == 2 )
 					{
 						// create category object
-						$catPurge = new watsCategoryHTML( $watsDatabase );
+						$catPurge = new watsCategoryHTML();
 						// load details
-						$catPurge->load( intval($_GET['catid']) );
+						$catPurge->load(JRequest::getInt('catid'));
 						// load dead tickets
 						$catPurge->loadTicketSet( 3, $watsUser->id, true );
 						// purge dead tickets
@@ -444,27 +417,26 @@ function watsOption( $task, $act )
 				 */	
 				default:
 					//check rites
-					$rite =  $watsUser->checkPermission( intval($_GET['catid']), "v" );
+					$rite =  $watsUser->checkPermission( JRequest::getInt('catid'), "v" );
 					if ( $rite > 0 )
 					{
 						// create category object
-						$cat = new watsCategoryHTML( $watsDatabase );
+						$cat = new watsCategoryHTML();
 						// load details
-						$cat->load( intval($_GET['catid']) );
+						$cat->load( JRequest::getInt('catid') );
 						// get lifecycle
 						$lifecycle = 0;
-						if ( isset($_GET['lifecycle']) ) {
-							if (in_array($_GET['lifecycle'], array("p", "a", "0", "1", "2", "3"))) {
-								$lifecycle = $_GET['lifecycle'];
+						if (JRequest::getCmd('lifecycle', null) != null) {
+							if (in_array(JRequest::getCmd('lifecycle'), array("p", "a", "0", "1", "2", "3"))) {
+								$lifecycle = JRequest::getCmd('lifecycle');
 							}
 						} // end get lifecycle
 						// check for level of rites
-						if ( $rite == 2 AND $_GET['lifecycle'] != 'p' )
+						if ( $rite == 2 AND JRequest::getCmd('lifecycle') != 'p' )
 						{
 							// allow user to view category with ALL tickets
 							$cat->loadTicketSet( $lifecycle, $watsUser->id, true );
 						}
-						//else if ( $rite == 1 OR ( $rite == 2 AND $_GET['lifecycle'] == 'p' )  )
 						else if ( $rite > 0  )
 						{
 							// allow user to view category with OWN tickets
@@ -472,13 +444,16 @@ function watsOption( $task, $act )
 						}
 						// end check for level of rites
 						// view tickets
-						$start = ( intval($_GET[ 'page' ]) - 1 ) *  $wats->get( 'ticketssub' );
+						
+						$wats =& WFactory::getConfig();
+						
+						$start = (JRequest::getInt('page', 1) - 1 ) *  $wats->get( 'ticketssub' );
 						$finish = $start + $wats->get( 'ticketssub' );
-						$cat->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), 0, $watsUser );
+						$cat->pageNav( $wats->get( 'ticketssub' ), JRequest::getInt('page'), 0, $watsUser );
 						$cat->viewTicketSet( $finish, $start );
-						$cat->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), 0, $watsUser );
+						$cat->pageNav( $wats->get( 'ticketssub' ), JRequest::getInt('page'), 0, $watsUser );
 						// check purge rites
-						if ( @$_GET['lifecycle'] == 3 AND $watsUser->checkPermission( intval($_GET['catid']), "p" ) == 2 )
+						if ( JRequest::getInt('lifecycle', null) == 3 AND $watsUser->checkPermission(JRequest::getInt('catid', null), "p") == 2)
 						{
 							$cat->viewPurge();
 						} // end check purge rites
@@ -500,27 +475,27 @@ function watsOption( $task, $act )
 				 */	
 				case 'view';
 					// create assigned object
-					$assignedTickets = new watsAssignHTML( $watsDatabase );
+					$assignedTickets = new watsAssignHTML();
 					// load tickets
 					$assignedTickets->loadAssignedTicketSet( $watsUser->id );
 					// view tickets
-					$start = ( intval($_GET[ 'page' ]) - 1 ) *  $wats->get( 'ticketssub' );
+					$start = (JRequest::getInt('page', 1) - 1) *  $wats->get( 'ticketssub' );
 					$finish = $start + $wats->get( 'ticketssub' );	
 					$assignedTickets->viewTicketSet( $finish, $start );
 					// display page navigation
-					$assignedTickets->pageNav( $wats->get( 'ticketssub' ), intval($_GET[ 'page' ]), $wats->get( 'ticketssub' ) );
+					$assignedTickets->pageNav( $wats->get( 'ticketssub' ), JRequest::getInt('page', 1), $wats->get( 'ticketssub' ) );
 					break;
 				/**
 				 * assign ticket to
 				 */	
 				case 'assignto':
 					// create ticket object
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval($_POST[ 'ticketid' ]) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid'));
 					// check for assign rites
 					$riteA =  $watsUser->checkPermission( $ticket->category, "a" );
 					if ( ( $ticket->assignId == $watsUser->id AND $riteA > 0 ) OR ( $riteA == 2 ) )
 					{
-						$ticket->setAssignId( intval($_POST[ 'assignee' ]) );
+						$ticket->setAssignId( JRequest::getInt('assignee') );
 					} // end chck for assign rites
 					// check rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "v" );
@@ -550,8 +525,8 @@ function watsOption( $task, $act )
 					// check for view rites
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
-						$editUser = new watsUserHTML( $watsDatabase );
-						$editUser->loadWatsUser( intval($_GET[ 'userid' ]) );
+						$editUser = new watsUserHTML();
+						$editUser->loadWatsUser( JRequest::getInt('userid') );
 						// check for edit rites
 						if ( $watsUser->checkUserPermission( 'e' ) == 2 )
 						{
@@ -582,14 +557,14 @@ function watsOption( $task, $act )
 					// check for view rites
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
-						$editUser = new watsUserHTML( $watsDatabase );
-						$editUser->loadWatsUser( intval($_POST[ 'userid' ]) );
+						$editUser = new watsUserHTML();
+						$editUser->loadWatsUser( JRequest::getInt('userid') );
 						// check for edit rites
 						if ( $watsUser->checkUserPermission( 'e' ) == 2 )
 						{
 							// complete edit user
-							$editUser->organisation = trim( $_POST[ 'organisation'] );
-							$editUser->setGroup( intval( $_POST[ 'grpId' ] ) );
+							$editUser->organisation = JRequest::getString('organisation');
+							$editUser->setGroup( JRequest::getInt('grpId') );
 							$editUser->updateUser();
 							$editUser->view();
 							
@@ -609,16 +584,16 @@ function watsOption( $task, $act )
 				 * user delete
 				 */	
 				case 'delete':
-					if ( isset( $_POST[ 'userid' ] ) AND isset( $_POST[ 'remove' ] ) )
+					if (JRequest::getVar('userid', false) AND JRequest::getVar('remove', false) )
 					{
 						// create user object
-						$deleteUser = new watsUser( $watsDatabase );
-						$deleteUser->load( intval( trim( $_POST[ 'userid' ] ) ) );
+						$deleteUser = new watsUser();
+						$deleteUser->load(JRequest::getInt('userid'));
 						// delete user
-						$deleteUser->delete( $_POST[ 'remove' ] );
+						$deleteUser->delete(JRequest::getVar('remove'));
 					}
 					// return to home
-					defaultAction( $watsCategorySet, $watsDatabase, $watsUser );
+					defaultAction( $watsCategorySet, $watsUser );
 					break;
 				/**
 				 * user make
@@ -628,7 +603,7 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'm' ) == 2 )
 					{
 						echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>";
-						watsUserHTML::makeForm( $watsDatabase );
+						watsUserHTML::makeForm();
 					}
 					else
 					{
@@ -643,26 +618,27 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'm' ) == 2 )
 					{
 						// check for input
-						if ( isset( $_GET[ 'user' ], $_GET[ 'grpId' ], $_GET[ 'organisation' ] ) )
+						if (JRequest::getVar('user', false) && JRequest::getVar('grpId', false) && JRequest::getVar('organisation', false) )
 						{
 							// make users
 							echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>"._WATS_USER_ADD_LIST;
-							$noOfNewUsers = count( $_GET['user'] );
+							$newUsers = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
+							$noOfNewUsers = count($newUsers);
 							$i = 0;
 							while ( $i < $noOfNewUsers )
 							{
 								// check for successful creation
-								if ( watsUser::makeUser( intval($_GET[ 'user' ][ $i ]), intval($_GET[ 'grpId' ]), $_GET[ 'organisation' ], $watsDatabase  ) )
+								if ( watsUser::makeUser(intval($newUsers['user'][ $i ]), JRequest::getInt('grpId'), JRequest::getString('organisation')) )
 								{
 									// give visual confirmation
-									$newUser = new watsUserHTML( $watsDatabase );
-									$newUser->loadWatsUser( intval($_GET[ 'user' ][ $i ]) );
+									$newUser = new watsUserHTML();
+									$newUser->loadWatsUser(intval($newUsers[ 'user' ][ $i ]));
 
 									$newUser->view();
 								}
 								else
 								{
-									echo "<p>".intval($_GET[ 'user' ][ $i ])." -> "._WATS_ERROR."</p>";
+									echo "<p>".intval($newUsers['user'][ $i ])." -> "._WATS_ERROR."</p>";
 								} // check for successful creation
 								$i ++;
 							}
@@ -673,7 +649,7 @@ function watsOption( $task, $act )
 							// display error
 							echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>";
 							echo _WATS_ERROR_NODATA;
-							watsUserHTML::makeForm( $watsDatabase );
+							watsUserHTML::makeForm();
 							// end display error
 						}
 						// end check for input
@@ -691,19 +667,12 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'v' ) == 2 )
 					{
 						// determine number of users to show
-						if ( isset( $_GET[ 'page' ] ) )
-						{
-							$start = ( intval($_GET[ 'page' ]) - 1 ) * $wats->get( 'ticketssub' );
-							$currentPage = intval($_GET[ 'page' ]);
-						}
-						else
-						{
-							$start = 0;
-							$currentPage = 1;
-						}
+						$start = (JRequest::getInt("page", 1) - 1 ) * $wats->get( 'ticketssub' );
+						$currentPage = JRequest::getInt('page');
+
 						$finish = $start + $wats->get( 'ticketssub' );
 						// make user set and load
-						$watsUserSet = new watsUserSetHTML( $watsDatabase );
+						$watsUserSet = new watsUserSetHTML();
 						$watsUserSet->load();
 						// view user set
 						$watsUserSet->view( $finish, $start );
@@ -725,20 +694,24 @@ function watsOption( $task, $act )
 		 * default
 		 */	
 		default:
-			defaultAction( $watsCategorySet, $watsDatabase, $watsUser );
+			defaultAction( $watsCategorySet, $watsUser );
 			break;
 	}
 }
 
-function defaultAction( &$watsCategorySet, &$watsDatabase, &$watsUser )
+function defaultAction( &$watsCategorySet, &$watsUser )
 {
-	global $wats, $Itemid;
+	global $Itemid;
+	
+	$wats =& WFactory::getConfig();
+	$db =& JFactory::getDBO();
+	
 	// load tickets to categoryies
 	$watsCategorySet->loadTicketSet( 0, $watsUser );
 	// view tickets
 	$watsCategorySet->viewWithTicketSet( $wats->get( 'ticketsfront' ), 0, $watsUser );
 	// check for assigned tickets
-	$assignedTickets = new watsAssignHTML( $watsDatabase );
+	$assignedTickets = new watsAssignHTML();
 	$assignedTickets->loadAssignedTicketSet( $watsUser->id );
 	if ( count( $assignedTickets->ticketSet->_ticketList ) > 0 )
 	{
@@ -755,7 +728,7 @@ function defaultAction( &$watsCategorySet, &$watsDatabase, &$watsUser )
 		$start = 0;
 		$finish = $wats->get( 'ticketsfront' );
 		// create user set and load
-		$watsUserSet = new watsUserSetHTML( $watsDatabase );
+		$watsUserSet = new watsUserSetHTML();
 		$watsUserSet->load();
 		// view user set
 		$watsUserSet->view( $finish, $start );
@@ -806,7 +779,7 @@ function prevLink( $getArray )
 		if ( strncmp ( $key, 'prev', 4 ) === 0 )
 		{
 			//$newKey = substr( $key, 4 );
-			$link = $link.'&'.$key.'='.mosGetParam( $getArray, $key );
+			$link = $link.'&'.$key.'='.JRequest::getVar($key, "", "REQUEST", "STRING", JREQUEST_ALLOWRAW | JREQUEST_NOTRIM);
 			//$getArray[ $key ];
 		}
 	}
@@ -883,7 +856,8 @@ function newInput( $getArray )
 
 function parseMsg( $msg )
 {
-	global $wats;
+	$wats =& WFactory::getConfig();
+	
 	if ( $wats->get( 'msgbox' ) == 'editor' )
 	{
 		$msg = nl2br( $msg );
@@ -922,11 +896,13 @@ function parseMsg( $msg )
 
 function watsredirect( $dest )
 {
-	global $wats;
+	global $mainframe;
+	
+	$wats =& WFactory::getConfig();
 	
 	if ( $wats->get( 'debug' ) == 0 )
 	{
-		mosredirect( $dest );
+		$mainframe->redirect( $dest );
 	}
 	else
 	{
