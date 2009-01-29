@@ -8,10 +8,11 @@
   */
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
 
 // include classes
-require("components/com_waticketsystem/waticketsystem.class.php");
+require_once(JPATH_COMPONENT_SITE . DS . "waticketsystem.class.php");
+//require_once("components/com_waticketsystem/waticketsystem.class.php");
 
 /**
  * @version 1.0
@@ -23,8 +24,8 @@ class watsUserHTML extends watsUser
 	 *
 	 * @param watsId
 	 */
-	 function watsUserHTML( &$database ) {
-	 	$this->mosUser( $database );
+	 function watsUserHTML() {
+	 	$this->__construct();
 	 }
 
 	/**
@@ -84,8 +85,13 @@ class watsUserHTML extends watsUser
 				    <span class=\"watsHeading2\">"._WATS_USER_GROUP."</span>
 					<select name=\"grpId\" size=\"10\">";
 		// groups
-		$this->_db->setQuery( "SELECT g.grpid, g.name FROM #__wats_groups AS g ORDER BY g.name" );
-		$groups = $this->_db->loadObjectList();
+		$db =& JFactory::getDBO();
+		
+		$db->setQuery("SELECT " . WDBHelper::nameQuote("g.grpid") . ", " .
+		                          WDBHelper::nameQuote("g.name") . " " .
+					  "FROM " . WDBHelper::nameQuote("#__wats_groups") . " AS " . WDBHelper::nameQuote("g") . " " .
+					  "ORDER BY " . WDBHelper::nameQuote("g.name") . " /* watsUserHTML::viewEdit() */ " );
+		$groups = $db->loadObjectList();
 		$noOfGroups = count( $groups );
 		$i = 0;
 		while ( $i < $noOfGroups )
@@ -173,8 +179,12 @@ class watsUserHTML extends watsUser
 	 * static
 	 * @param database
 	 */
-	 function makeForm( &$database ) {
-	 	global $Itemid, $wats;
+	 function makeForm() {
+	 	global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		$database =& JFactory::getDBO();
+		
 	 	echo "<div id=\"watsReply\" class=\"watsReply\">
 		      <form name=\"watsUserMake\" method=\"get\" action=\"index.php\" onsubmit=\"return watsValidateNewUser( this, document.getElementById('user'), '"._WATS_ERROR_NODATA."' );\">
 				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
@@ -185,7 +195,12 @@ class watsUserHTML extends watsUser
 				  <span class=\"watsHeading2\">"._WATS_USER_SELECT."</span>
 				  <select name=\"user[]\" size=\"10\" multiple=\"multiple\" id=\"user\">";
 		// potential users
-		$database->setQuery( "SELECT u.username, u.id, u.name FROM #__users AS u LEFT OUTER JOIN #__wats_users AS wu ON u.id=wu.watsid where wu.watsid is null" );
+		$database->setQuery("SELECT " . WDBHelper::nameQuote("u.username") . ", " .
+		                                WDBHelper::nameQuote("u.id") . ", " .
+										WDBHelper::nameQuote("u.name") . " " .
+							"FROM " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " " .
+							"LEFT OUTER JOIN " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " ON " . WDBHelper::nameQuote("u.id") . " = " . WDBHelper::nameQuote("wu.watsid") . " " .
+							"WHERE " . WDBHelper::nameQuote("wu.watsid") . " IS NULL /* watsUserHTML::makeForm() */" );
 		$users = $database->loadObjectList();
 		$noOfNullUsers = count( $users );
 		$i = 0;
@@ -200,7 +215,10 @@ class watsUserHTML extends watsUser
 				  <span class=\"watsHeading2\">"._WATS_GROUP_SELECT."</span>
 		          <select name=\"grpId\" size=\"10\">";
 		// potential groups
-		$database->setQuery( "SELECT g.grpid, g.name FROM #__wats_groups AS g ORDER BY g.name" );
+		$database->setQuery("SELECT " . WDBHelper::nameQuote("g.grpid") . ", " .
+		                                WDBHelper::nameQuote("g.name") . " " .
+							"FROM " . WDBHelper::nameQuote("#__wats_groups") . " AS " . WDBHelper::nameQuote("g") . " " .
+							"ORDER BY " . WDBHelper::nameQuote("g.name") . " /* watsUserHTML::makeForm() */ " );
 		$groups = $database->loadObjectList();
 		$noOfGroups = count( $groups );
 		$i = 0;
@@ -236,7 +254,10 @@ class watsUserSetHTML extends watsUserSet
 	 */
 	function view( $finish = -1, $start = 0 )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		// header
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsUsersView\">
 			    <tr>
@@ -292,7 +313,6 @@ class watsUserSetHTML extends watsUserSet
 					<td>".$this->userSet[$i]->groupName."</td>
 					<td>".$this->userSet[$i]->email."</td>
 					<td>";
-				//echo "<a onClick=\"watsConfirmAction('delete me? XXX', 'index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."')\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
 			echo "</td>
 				  </tr>";
 			$i ++;
@@ -367,7 +387,10 @@ class watsTicketHTML extends watsTicket
 	 */	
 	function view( &$watsUser )
 	{
-		global $wats, $Itemid;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		// update highlight setting
 		$this->_highlightUpdate( $watsUser->id );
 		// echo out
@@ -471,8 +494,6 @@ class watsTicketHTML extends watsTicket
 			$rite =  $watsUser->checkPermission( $this->category, "o" );
 			if ( ( $this->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
 			{ // reopen
-				//$prevArray = prevArray( $_GET );
-				//$link = prevLink( $prevArray );
 				echo "<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">";
 				echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 					    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
@@ -492,35 +513,38 @@ class watsTicketHTML extends watsTicket
 	 */
 	function viewAssignTo( )
 	{
-		global $Itemid, $wats;
-			$assignees = watsCategory::getAssignee( $this->category, $this->_db );
-			// check for useres to assign to
-			if ( $assignees != null )
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+	
+		$assignees = watsCategory::getAssignee( $this->category, $this->_db );
+		// check for useres to assign to
+		if ( $assignees != null )
+		{
+			echo "<div id=\"watsViewAssignTo\" class=\"watsViewAssignTo\">
+					<form name=\"submitassign\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=assign&task=assignto\" onsubmit=\"return watsValidateTicketAssign( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
+					<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
+					<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
+					<input name=\"act\" type=\"hidden\" value=\"assign\">
+					<input name=\"task\" type=\"hidden\" value=\"assignto\">
+					<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
+					<select name=\"assignee\">";
+			$assigneeCount = count( $assignees );
+			$i = 0;
+			while ( $i < $assigneeCount )
 			{
-				echo "<div id=\"watsViewAssignTo\" class=\"watsViewAssignTo\">
-						<form name=\"submitassign\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=assign&task=assignto\" onsubmit=\"return watsValidateTicketAssign( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
-						<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-						<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-						<input name=\"act\" type=\"hidden\" value=\"assign\">
-						<input name=\"task\" type=\"hidden\" value=\"assignto\">
-						<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
-						<select name=\"assignee\">";
-				$assigneeCount = count( $assignees );
-				$i = 0;
-				while ( $i < $assigneeCount )
+				// check is not already assigned to
+				if ( $assignees[$i]->watsid != $this->assignId )
 				{
-					// check is not already assigned to
-					if ( $assignees[$i]->watsid != $this->assignId )
-					{
-						echo "<option value=\"".$assignees[$i]->watsid."\">".$assignees[$i]->username."</option>";
-					}
-					$i ++;
+					echo "<option value=\"".$assignees[$i]->watsid."\">".$assignees[$i]->username."</option>";
 				}
-				echo "  </select>
-						<input type=\"submit\" name=\"watsTicketAssignTo\" value=\""._WATS_TICKETS_ASSIGN."\" class=\"watsFormSubmit\">
-					    </form>
-					  </div>";
-			} // end check for useres to assign to
+				$i ++;
+			}
+			echo "  </select>
+					<input type=\"submit\" name=\"watsTicketAssignTo\" value=\""._WATS_TICKETS_ASSIGN."\" class=\"watsFormSubmit\">
+					</form>
+				  </div>";
+		} // end check for useres to assign to
 	}
 
 	/**
@@ -528,7 +552,10 @@ class watsTicketHTML extends watsTicket
 	 */
 	function make( &$categorySet, &$watsUser )
 	{
-		global $wats, $Itemid;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		// header and ticket name
 		echo "<span class=\"watsHeading1\">"._WATS_TICKETS_SUBMIT."</span>
 			  <div class=\"watsTicketMake\" id=\"watsTicketMake\">
@@ -570,7 +597,10 @@ class watsTicketHTML extends watsTicket
 
 	function reopen()
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		echo "<div id=\"watsReply\" class=\"watsReply\">
 		      <form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=completeReopen&ticketid=".$this->ticketId."\" onsubmit=\"return watsValidateTicketReopen( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
 			  "._WATS_TICKETS_REOPEN_REASON;
@@ -588,7 +618,6 @@ class watsTicketHTML extends watsTicket
 			    <input name=\"act\" type=\"hidden\" value=\"ticket\">
 			    <input name=\"task\" type=\"hidden\" value=\"completeReopen\">
 			    <input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">";
-		//echo newInput( $_GET );
 		echo "  <input type=\"submit\" name=\"watsTicketReopen\" value=\""._WATS_TICKETS_REOPEN."\" class=\"watsFormSubmit\">
 			  </form>
 		      </div>";
@@ -603,21 +632,15 @@ class watsTicketSetHTML extends watsTicketSet
 {
 	/**
 	 * 
-	 * @param database
-	 */
-	function watsTicketSetHTML( &$database )
-	{
-		$this->watsTicketSet( $database );
-	}
-
-	/**
-	 * 
 	 * @param finish
 	 * @param start
 	 */
 	function view( $finish, $start = 0 )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsTicketSetView\">
 				    <tr>
 					  <th scope=\"col\" width=\"20\">&nbsp;</th>
@@ -693,16 +716,7 @@ class watsTicketSetHTML extends watsTicketSet
  * @version 1.0
  * @created 06-Dec-2005 21:44:17
  */
-class watsCategoryHTML extends watsCategory
-{
-	/**
-	 * 
-	 * @param database
-	 */	
-	function watsCategoryHTML( &$database )
-	{
-		$this->watsCategory( $database );
-	}
+class watsCategoryHTML extends watsCategory {
 
 	/**
 	 * 
@@ -766,14 +780,8 @@ class watsCategoryHTML extends watsCategory
 				$numberOfPages ++;
 			}
 			// prepare lifecycle
-			if ( isset( $_GET['lifecycle'] ) == false )
-			{
-				$lifecycle = "a";
-			}
-			else
-			{
-				$lifecycle = $_GET['lifecycle'];
-			} // end prepare lifecycle
+			$lifecycle = JRequest::getVar('lifecycle', "a");
+			
 			// previous
 			if ( $currentPage > 1 )
 			{
@@ -802,7 +810,7 @@ class watsCategoryHTML extends watsCategory
 		// view type
 		// all
 		// check current selection
-		if ( @$_GET['lifecycle'] == 'a' ) {
+		if ( $lifecycle == 'a' ) {
 			echo " (<span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_ALL."</span>";
 		}
 		else
@@ -814,7 +822,7 @@ class watsCategoryHTML extends watsCategory
 		if ( $rite == 2 )
 		{
 			// check current selection
-			if ( @$_GET['lifecycle'] == 'p' ) {
+			if ( $lifecycle == 'p' ) {
 				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_PERSONAL."</span>";
 			}
 			else
@@ -824,7 +832,7 @@ class watsCategoryHTML extends watsCategory
 		}
 		//open
 		// check current selection
-		if ( @$_GET['lifecycle'] == 1 ) {
+		if ( $lifecycle == 1 ) {
 			echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_OPEN."</span>";
 		}
 		else
@@ -836,7 +844,7 @@ class watsCategoryHTML extends watsCategory
 		if ( $rite > 0 )
 		{
 			// check current selection
-			if ( @$_GET['lifecycle'] == 2 ) {
+			if ( $lifecycle == 2 ) {
 				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_CLOSED."</span>";
 			}
 			else
@@ -849,7 +857,7 @@ class watsCategoryHTML extends watsCategory
 		if ( $rite > 0 )
 		{
 			// check current selection
-			if ( @$_GET['lifecycle'] == 3 ) {
+			if ( $lifecycle == 3 ) {
 				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_DEAD."</span>";
 			}
 			else
@@ -891,7 +899,10 @@ class watsAssignHTML extends watsAssign
 	 */
 	function view( )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsCategoryView\">
 			    <tr>
 				  <th colspan=\"2\" scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=assign&task=view&page=1\">".$wats->get( 'assignname' )."</a></th>
@@ -978,104 +989,6 @@ class watsAssignHTML extends watsAssign
 
 /**
  * @version 1.0
- * @created 04-Sep-2006
- */
-class watsDatabaseWrapperItemHTML extends watsDatabaseWrapperItem
-{
-
-	function view( &$database, $number )
-	{
-		$this->_sql = trim( $this->_sql );
-		$this->_sql = str_replace( '<pre>', '', $this->_sql);
-		$this->_sql = str_replace( '</pre>', '', $this->_sql);
-		// display query
-		echo "\n<p class=\"";
-		if ( $this->_errorNum )
-		{
-			echo 'watsDebugFail';
-		}
-		elseif ( $this->_count === 0 )
-		{
-			echo 'watsDebugQuestion';
-		}
-		else
-		{
-			echo 'watsDebugSuccess';
-		}
-		echo "\"><u>Action $number</u>";
-		echo ( $this->_sql ) ? "<a href=\"javascript:watsToggleLayer('watsDebugQueryArrayItem$number');\"> [explain]</a>" : '';
-		echo "<br />$this->_name";
-		echo ( $this->_count !== null ) ? "<br />Number of results returned: $this->_count</p>" : '</p>';
-		
-		if ( $this->_sql )
-		{
-			// check for semicolon
-			if ( substr( $this->_sql, -1, 1) != ';' )
-			{
-				$this->_sql .= ';';
-			}
-			echo "<div class=\"watsDebugExplain\" id=\"watsDebugQueryArrayItem$number\"><br />";
-			if ( $this->_errorNum != 0 )
-			{
-				// display error and SQL.
-				echo $this->_sql.'<br />Error: '.$this->_errorMsg.'<br />&nbsp;';
-			}
-			elseif ( substr( $this->_sql, 0, 6) == 'SELECT' )
-			{
-				$database->setQuery( $this->_sql );
-				// display explanation
-				echo $database->explain();
-			}
-			else
-			{
-				// display non SELECT query.
-				echo '<pre>'.$this->_sql.'</pre>&nbsp;';
-			}
-			echo "</div>";
-		}	
-	}
-
-}
-
-/**
- * @version 1.0
- * @created 04-Sep-2006
- */
-class watsDatabaseWrapperHTML extends watsDatabaseWrapper
-{
-
-	function viewHeader()
-	{
-		echo '<style type="text/css">
-			  <!--
-			  .watsDebugSuccess {font-family: Courier New, Courier, monospace; background-color: #CDFECF; margin-bottom: 0px;}
-			  .watsDebugQuestion{font-family: Courier New, Courier, monospace; background-color: #FED3A5; margin-bottom: 0px;}
-			  .watsDebugFail    {font-family: Courier New, Courier, monospace; background-color: #FDB0A6; margin-bottom: 0px;}
-			  .watsDebug        {font-family: Courier New, Courier, monospace; color: green;}
-			  .watsDebugExplain {background-color:#FFFFCC; font-family: Courier New, Courier, monospace; display: none;}
-			  -->
-			  </style>';
-		echo '<p class="watsDebug">WARNING<br />-------<br />WATS debug mode is enabled, you may experience additional problems if you have site debuging enabled. WATS Debug mode is currently under development and may not report all queries correctly. WATS Debug will decrease the overall perfomance of WATS. WATS Debug mode displays important database information, it is recommended that you do not use debug mode on a live site.</p>';
-	}
-	
-	function viewFooter()
-	{
-		echo '<p class="watsDebug">Debug mode is enabled.<br />----------------------<br />To disable debug mode, change your WATS debug configuration. The \'Action List\' shows the database actions in chronological order executed during the generation of this page. Results are \'traffic light\' colour coded, if you recieve an amber (No Result) action, this is NOT a failure, it just means that no results were found for that query.</p>
-		<p><span class="watsDebugSuccess">&nbsp;&nbsp;</span> = Success <span class="watsDebugQuestion">&nbsp;&nbsp;</span> = No Result <span class="watsDebugFail">&nbsp;&nbsp;</span> = Fail</p>';
-		
-		$logItemNumber = 1;
-		foreach ( $this->_log as $logItem )
-		{
-			$logItem->view( $this->_db, $logItemNumber );
-			$logItemNumber++;
-		}		
-	}
-
-}
-
-
-/**
- * @version 1.0
  * @created 06-Dec-2005 21:43:13
  */
 class watsCategorySetHTML extends watsCategorySet
@@ -1086,9 +999,9 @@ class watsCategorySetHTML extends watsCategorySet
 	 */	
 	function viewWithTicketSet( $finish, $start = 0, &$watsUser )
 	{
-		global $wats;
-		foreach( $this->categorySet as $category )
-		{
+		$wats =& WFactory::getConfig();
+		
+		foreach($this->categorySet as $category) {
 			echo "<div class=\"watsCategoryViewWithTicketSet\" id=\"watsCategory".$category->catid."\">";
 			$category->viewTicketSet( $finish, $start );
 			$category->pageNav( $wats->get( 'ticketssub' ), 0, $wats->get( 'ticketsfront' ), $watsUser );
@@ -1103,7 +1016,10 @@ class watsCategorySetHTML extends watsCategorySet
 	 */		
 	function select( $current )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
 		echo "<select name=\"option\" id=\"watsCategorySetSelect\" class=\"watsCategorySetSelect\" onchange=\"MM_jumpMenu('parent',this,0)\">";
 		echo ( $current == null ) ? "<option selected=\"selected\"> " : "" ;
 		echo"<option value=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."\">".$wats->get( 'name' )."</option>\n";
