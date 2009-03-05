@@ -37,7 +37,7 @@ $my =& JFactory::getUser();
 
 if ( $my->id == 0 OR ( $watsUser = new watsUserHTML() AND $watsUser->loadWatsUser( $my->id  ) == false ))
 {
-	echo _WATS_ERROR_NOUSER;
+	echo JText::_("WATS_ERROR_NOUSER");
 }
 else
 {
@@ -81,9 +81,9 @@ else
 			echo "<div id=\"watsNavigation\">
 					<table width=\"100%\"  border=\"0\" cellspacing=\"0\" cellpadding=\"0\">
 					  <tr>
-						<th>"._WATS_NAV_NEW."</th>
-						<th>"._WATS_NAV_CATEGORY."</th>
-						<th>"._WATS_NAV_TICKET."</th>
+						<th>".JText::_("WATS_NAV_NEW")."</th>
+						<th>".JText::_("WATS_NAV_CATEGORY")."</th>
+						<th>".JText::_("WATS_NAV_TICKET")."</th>
 					  </tr>
 					  <tr>
 						<td width=\"33%\">
@@ -92,7 +92,7 @@ else
 						  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 						  <input name=\"act\" type=\"hidden\" value=\"ticket\">
 						  <input name=\"task\" type=\"hidden\" value=\"make\">
-						  <input type=\"submit\" name=\"watsTicketMake\" value=\""._WATS_TICKETS_SUBMIT."\" class=\"watsFormSubmit\">
+						  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_TICKETS_SUBMIT")."\" class=\"watsFormSubmit\">
 					</form>
 					</td>
 					<td>";
@@ -120,7 +120,7 @@ else
 							  <input name=\"task\" type=\"hidden\" value=\"view\">
 							  WATS-
 							  <input name=\"ticketid\" type=\"text\" id=\"ticketid\" maxlength=\"255\" size=\"6\" />
-							  <input type=\"submit\" name=\"watsTicketMake\" value=\""._WATS_MISC_GO."\" class=\"watsFormSubmit\">
+							  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_MISC_GO")."\" class=\"watsFormSubmit\">
 							</form> 
 						</td>
 					  </tr>
@@ -170,13 +170,13 @@ function watsOption( $task, $act )
 						}
 						else
 						{
-							echo _WATS_ERROR_ACCESS . " :( ";
+							echo JText::_("WATS_ERROR_ACCESS") . " :( ";
 							print_r($ticket);
 						}
 					}
 					else
 					{
-						echo _WATS_ERROR_NOT_FOUND;
+						echo JText::_("WATS_ERROR_NOT_FOUND");
 					} // end check rites
 					break;
 				/**
@@ -213,7 +213,7 @@ function watsOption( $task, $act )
 					else
 					{
 						// do not allow make ticket
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					} // end check rites
 					break;
 				/**
@@ -233,7 +233,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				/**
@@ -257,7 +257,7 @@ function watsOption( $task, $act )
 							
 							$ticket->addMsg( $parsedMsg, $watsUser->id, date('YmdHis') );
 							// check for close
-							if ( JRequest::getString('submit') == _WATS_TICKETS_REPLY_CLOSE )
+							if ( JRequest::getString('submit') == JText::_("WATS_TICKETS_REPLY_CLOSE") )
 							{
 								// check rites to close
 								$rite =  $watsUser->checkPermission( $ticket->category, "c" );
@@ -268,13 +268,13 @@ function watsOption( $task, $act )
 								}
 								else
 								{
-									echo _WATS_ERROR_ACCESS;
+									echo JText::_("WATS_ERROR_ACCESS");
 								}// end check rites to close
 							} // end check for close
 							// notify
 							if ( $wats->get( 'notifyusers' ) == 1 )
 							{
-								$emailmsg = _WATS_MAIL_REPLY.$watsUser->username."\n(".$ticket->name.")"."\n\n".$parsedMsg;
+								$emailmsg = JText::_("WATS_MAIL_REPLY").$watsUser->username."\n(".$ticket->name.")"."\n\n".$parsedMsg;
 								// find addresses
 								$sql = "SELECT  DISTINCT m.watsid, u.email FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid=".$ticket->ticketId;
 								$db->setQuery($sql);
@@ -306,12 +306,12 @@ function watsOption( $task, $act )
 						} 
 						else
 						{
-							echo _WATS_ERROR_ACCESS;
+							echo JText::_("WATS_ERROR_ACCESS");
 						} // end check rites to reply
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					} // end check rite to view
 					break;
 					
@@ -329,7 +329,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}// end check for reopen rites
 					break;
 					
@@ -353,7 +353,7 @@ function watsOption( $task, $act )
 						// notify
 						if ( $wats->get( 'notifyusers' ) == 1 )
 						{
-							$emailmsg = _WATS_MAIL_REPLY.$my->username."\n(".$ticket->ticketname.")"."\n\n".$parsedMsg;
+							$emailmsg = JText::_("WATS_MAIL_REPLY").$my->username."\n(".$ticket->ticketname.")"."\n\n".$parsedMsg;
 							// find addresses
 							$sql = "SELECT DISTINCT " . WDBHelper::nameQuote("m.watsid") . ", " .
 							                            WDBHelper::nameQuote("u.email") . " " .
@@ -380,7 +380,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}// end check for reopen rites
 					break;
 				}
@@ -409,7 +409,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					} // end check for purge rite
 					//break;
 				/**
@@ -460,7 +460,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					} // end check rites
 					break;
 				}
@@ -507,7 +507,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					} // end check rites
 					break;
 				}
@@ -521,7 +521,7 @@ function watsOption( $task, $act )
 				 * user edit
 				 */	
 				case 'edit';
-					echo "<span class=\"watsHeading1\">"._WATS_USER_EDIT."</span>";
+					echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_EDIT")."</span>";
 					// check for view rites
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
@@ -534,7 +534,7 @@ function watsOption( $task, $act )
 							// check for delete rites
 							if ( $watsUser->checkUserPermission( 'd' ) == 2 )
 							{
-								echo "<span class=\"watsHeading1\">"._WATS_USER_DELETE."</span>";
+								echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_DELETE")."</span>";
 								$editUser->viewDelete();
 							}
 						}
@@ -546,14 +546,14 @@ function watsOption( $task, $act )
 					// no rites
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				/**
 				 * user complete edit
 				 */	
 				case 'editComplete':
-					echo "<span class=\"watsHeading1\">"._WATS_USER_EDIT."</span>";
+					echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_EDIT")."</span>";
 					// check for view rites
 					if ( $watsUser->checkUserPermission( 'v' ) )
 					{
@@ -577,7 +577,7 @@ function watsOption( $task, $act )
 					// no rites
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				/**
@@ -602,12 +602,12 @@ function watsOption( $task, $act )
 					// check for make user rites
 					if ( $watsUser->checkUserPermission( 'm' ) == 2 )
 					{
-						echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>";
+						echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_ADD")."</span>";
 						watsUserHTML::makeForm();
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				/**
@@ -621,7 +621,7 @@ function watsOption( $task, $act )
 						if (JRequest::getVar('user', false) && JRequest::getVar('grpId', false) && JRequest::getVar('organisation', false) )
 						{
 							// make users
-							echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>"._WATS_USER_ADD_LIST;
+							echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_ADD")."</span>".JText::_("WATS_USER_ADD_LIST");
 							$newUsers = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
 							$noOfNewUsers = count($newUsers);
 							$i = 0;
@@ -638,7 +638,7 @@ function watsOption( $task, $act )
 								}
 								else
 								{
-									echo "<p>".intval($newUsers['user'][ $i ])." -> "._WATS_ERROR."</p>";
+									echo "<p>".intval($newUsers['user'][ $i ])." -> ".JText::_("WATS_ERROR")."</p>";
 								} // check for successful creation
 								$i ++;
 							}
@@ -647,8 +647,8 @@ function watsOption( $task, $act )
 						else
 						{
 							// display error
-							echo "<span class=\"watsHeading1\">"._WATS_USER_ADD."</span>";
-							echo _WATS_ERROR_NODATA;
+							echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_ADD")."</span>";
+							echo JText::_("WATS_ERROR_NODATA");
 							watsUserHTML::makeForm();
 							// end display error
 						}
@@ -656,7 +656,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-						echo _WATS_ERROR_ACCESS;
+						echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				/**
@@ -685,7 +685,7 @@ function watsOption( $task, $act )
 					}
 					else
 					{
-					echo _WATS_ERROR_ACCESS;
+					echo JText::_("WATS_ERROR_ACCESS");
 					}
 					break;
 				}
