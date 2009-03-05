@@ -44,9 +44,9 @@ class watsUserHTML extends watsUser
 			        <img border=\"0\" src=\"".$this->image."\" />
 					</td>";
 		} // end add image
-		echo "		<td>"._WATS_USER_USERNAME.": ".$this->username."<br />"
-						 ._WATS_USER_GROUP.": ".$this->groupName."<br />"
-						 ._WATS_USER_ORG.": ".$this->organisation."
+		echo "		<td>".JText::_("WATS_USER_USERNAME").": ".$this->username."<br />"
+						 .JText::_("WATS_USER_GROUP").": ".$this->groupName."<br />"
+						 .JText::_("WATS_USER_ORG").": ".$this->organisation."
 			        </td>
 				  </tr>
 				</table>
@@ -70,7 +70,7 @@ class watsUserHTML extends watsUser
 			        <img border=\"0\" src=\"".$this->image."\" />
 					</td>";
 		} // end add image
-		echo "		<td>"._WATS_USER_USERNAME.": ".$this->username."
+		echo "		<td>".JText::_("WATS_USER_USERNAME").": ".$this->username."
 			        </td>
 				  </tr>
 				</table>
@@ -82,7 +82,7 @@ class watsUserHTML extends watsUser
 				<input name=\"task\" type=\"hidden\" value=\"editComplete\">
 				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\">
 			      <p>
-				    <span class=\"watsHeading2\">"._WATS_USER_GROUP."</span>
+				    <span class=\"watsHeading2\">".JText::_("WATS_USER_GROUP")."</span>
 					<select name=\"grpId\" size=\"10\">";
 		// groups
 		$db =& JFactory::getDBO();
@@ -110,11 +110,11 @@ class watsUserHTML extends watsUser
 		}
 		echo "    </select>
 					<br />
-				    <span class=\"watsHeading2\">"._WATS_USER_ORG."</span>
+				    <span class=\"watsHeading2\">".JText::_("WATS_USER_ORG")."</span>
 					<input name=\"organisation\" type=\"text\" maxlength=\"255\" value=\"".$this->organisation."\" />
 				  </p>
 				  <p>
-					<input type=\"submit\" name=\"watsTicketReopen\" value=\""._WATS_USER_EDIT."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_EDIT")."\" class=\"watsFormSubmit\">
 				  </p>
 				 </form>
 				</div>
@@ -137,15 +137,15 @@ class watsUserHTML extends watsUser
 				<input name=\"task\" type=\"hidden\" value=\"delete\">
 				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\">
 			      <p>
-				    "._WATS_USER_DELETE_REC."<br />
+				    ".JText::_("WATS_USER_DELETE_REC")."<br />
 					<input name=\"remove\" type=\"radio\" value=\"removetickets\" checked=\"checked\" />
 				  </p>
 				  <p>
-					"._WATS_USER_DELETE_NOTREC."<br />
+					".JText::_("WATS_USER_DELETE_NOTREC")."<br />
 					<input name=\"remove\" type=\"radio\" value=\"removeposts\" />
 				  </p>
 				  <p>
-					<input type=\"submit\" name=\"watsTicketReopen\" value=\""._WATS_USER_DELETE."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_DELETE")."\" class=\"watsFormSubmit\">
 				  </p>
 				 </form>
 				</div>
@@ -171,7 +171,7 @@ class watsUserHTML extends watsUser
 				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 				<input name=\"act\" type=\"hidden\" value=\"user\">
 				<input name=\"task\" type=\"hidden\" value=\"make\">
-				<input type=\"submit\" name=\"watsAddUser\" value=\""._WATS_USER_ADD."\" class=\"watsFormSubmit\">
+				<input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\">
 			  </form>";
 	 }
 	 
@@ -186,13 +186,13 @@ class watsUserHTML extends watsUser
 		$database =& JFactory::getDBO();
 		
 	 	echo "<div id=\"watsReply\" class=\"watsReply\">
-		      <form name=\"watsUserMake\" method=\"get\" action=\"index.php\" onsubmit=\"return watsValidateNewUser( this, document.getElementById('user'), '"._WATS_ERROR_NODATA."' );\">
+		      <form name=\"watsUserMake\" method=\"get\" action=\"index.php\" onsubmit=\"return watsValidateNewUser( this, document.getElementById('user'), '".JText::_("WATS_ERROR_NODATA")."' );\">
 				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 				<input name=\"act\" type=\"hidden\" value=\"user\">
 				<input name=\"task\" type=\"hidden\" value=\"makeComplete\">
 				<p>
-				  <span class=\"watsHeading2\">"._WATS_USER_SELECT."</span>
+				  <span class=\"watsHeading2\">".JText::_("WATS_USER_SELECT")."</span>
 				  <select name=\"user[]\" size=\"10\" multiple=\"multiple\" id=\"user\">";
 		// potential users
 		$database->setQuery("SELECT " . WDBHelper::nameQuote("u.username") . ", " .
@@ -212,7 +212,7 @@ class watsUserHTML extends watsUser
 		echo "    </select>
 		        </p>
 				<p>
-				  <span class=\"watsHeading2\">"._WATS_GROUP_SELECT."</span>
+				  <span class=\"watsHeading2\">".JText::_("WATS_GROUP_SELECT")."</span>
 		          <select name=\"grpId\" size=\"10\">";
 		// potential groups
 		$database->setQuery("SELECT " . WDBHelper::nameQuote("g.grpid") . ", " .
@@ -230,11 +230,11 @@ class watsUserHTML extends watsUser
 		echo "    </select>
 		        </p>
 				<p>
-					<span class=\"watsHeading2\">"._WATS_USER_ORG_SELECT."</span>
+					<span class=\"watsHeading2\">".JText::_("WATS_USER_ORG_SELECT")."</span>
 					<input name=\"organisation\" type=\"text\" maxlength=\"255\" value=\"".$wats->get( 'dorganisation' )."\" />
 				</p>
 				<p>
-		          <input type=\"submit\" name=\"watsAddUser\" value=\""._WATS_USER_ADD."\" class=\"watsFormSubmit\">
+		          <input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\">
 				</p>
 			  </form>
 			  </div>";
@@ -261,20 +261,20 @@ class watsUserSetHTML extends watsUserSet
 		// header
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsUsersView\">
 			    <tr>
-				  <th scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=user&page=1\">"._WATS_USER_SET."</a></th>
+				  <th scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=user&page=1\">".JText::_("WATS_USER_SET")."</a></th>
 			    </tr>
 			    <tr>
-				  <td>"._WATS_USER_SET_DESCRIPTION."</td>
+				  <td>".JText::_("WATS_USER_SET_DESCRIPTION")."</td>
 			    </tr>
 			  </table>";
 		// end header
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsUserSetView\">
 				    <tr>
 					  <th scope=\"col\" width=\"20\">&nbsp;</th>
-					  <th scope=\"col\">"._WATS_USER_USERNAME."</th>
-					  <th scope=\"col\">"._WATS_USER_ORG."</th>
-					  <th scope=\"col\">"._WATS_USER_GROUP."</th>
-					  <th scope=\"col\">"._WATS_USER_EMAIL."</th>
+					  <th scope=\"col\">".JText::_("WATS_USER_USERNAME")."</th>
+					  <th scope=\"col\">".JText::_("WATS_USER_ORG")."</th>
+					  <th scope=\"col\">".JText::_("WATS_USER_GROUP")."</th>
+					  <th scope=\"col\">".JText::_("WATS_USER_EMAIL")."</th>
 					  <th scope=\"col\" width=\"20\">&nbsp;</th>
 				    </tr>";
 		// if view all set finish to maximum
@@ -335,7 +335,7 @@ class watsUserSetHTML extends watsUserSet
 		// check is valid to show
 		if ( $currentUsersPerPage < $this->noOfUsers )
 		{
-			echo _WATS_TICKETS_PAGES.": ";
+			echo JText::_("WATS_TICKETS_PAGES").": ";
 			// determine number of pages
 			$numberOfPages = 0;
 			$numberOfPages = intval( $this->noOfUsers / $usersPerPage );
@@ -396,7 +396,7 @@ class watsTicketHTML extends watsTicket
 		// echo out
 		echo "<div id=\"watsTicketView\" class=\"watsTicketView\">";
 		echo "<span class=\"watsHeading1\">".$this->name."</span>";
-		echo "<span class=\"watsTicketId\">"._WATS_TICKETS_ID.": WATS-".$this->ticketId."</span>";
+		echo "<span class=\"watsTicketId\">".JText::_("WATS_TICKETS_ID").": WATS-".$this->ticketId."</span>";
 		// itterate through messages
 		$i = 0;
 		while ( $i < $this->msgNumberOf )
@@ -437,10 +437,10 @@ class watsTicketHTML extends watsTicket
 			if ( ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) ) )
 			{ // reply rites
 				echo "<div id=\"watsReply\" class=\"watsReply\">
-					<form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=reply\" onsubmit=\"return watsValidateTicketReply( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
+					<form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=reply\" onsubmit=\"return watsValidateTicketReply( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">
 					  <table border=\"0\" class=\"wats_form\" width=\"100%\">
 						<tr> 
-						  <td>"._WATS_TICKETS_REPLY."</td>
+						  <td>".JText::_("WATS_TICKETS_REPLY")."</td>
 						  <td>";
 				// message box
 				if ( $wats->get( 'msgbox' ) == "editor" )
@@ -461,25 +461,25 @@ class watsTicketHTML extends watsTicket
 							<input name=\"act\" type=\"hidden\" value=\"ticket\">
 							<input name=\"task\" type=\"hidden\" value=\"reply\">
 							<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
-							<input type=\"submit\" name=\"submit\" value=\""._WATS_TICKETS_REPLY."\" class=\"watsFormSubmit\">";
+							<input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY")."\" class=\"watsFormSubmit\">";
 				// check for close  rites
 				// if ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) AND ( $this->watsId == $watsUser->id AND $riteC > 0 ) OR ( $riteC == 2 ) )
 				if ( ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) ) AND ( ( $this->watsId == $watsUser->id AND $riteC > 0 ) OR ( $riteC == 2 ) ) )
 				{ // reply and close
-					echo " <input type=\"submit\" name=\"submit\" value=\""._WATS_TICKETS_REPLY_CLOSE."\" class=\"watsFormSubmit\">";
+					echo " <input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY_CLOSE")."\" class=\"watsFormSubmit\">";
 				} // end reply and close
 				echo "        </td>
 							</tr>
 						  </table>
 						</form>
 					  </div>";
-				echo ( $wats->get( 'msgbox' ) == "bbcode" AND $wats->get( 'msgboxt' ) == "1" ) ? _WATS_BB_HELP : "";
+				echo ( $wats->get( 'msgbox' ) == "bbcode" AND $wats->get( 'msgboxt' ) == "1" ) ? JText::_("WATS_BB_HELP") : "";
 			} // end reply rites
 			
 			// show assignment
 			if ( $this->assignId != null )
 			{
-				echo "<span class=\"watsTicketAssign\">("._WATS_TICKETS_ASSIGNEDTO." ".$this->getAssignedUsername().")</span>";
+				echo "<span class=\"watsTicketAssign\">(".JText::_("WATS_TICKETS_ASSIGNEDTO")." ".$this->getAssignedUsername().")</span>";
 			} // end show assignment
 			// check for assign rites
 			$riteA =  $watsUser->checkPermission( $this->category, "a" );
@@ -500,7 +500,7 @@ class watsTicketHTML extends watsTicket
 					    <input name=\"act\" type=\"hidden\" value=\"ticket\">
 					    <input name=\"task\" type=\"hidden\" value=\"reopen\">
 						<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
-					    <input type=\"submit\" name=\"watsTicketReopen\" value=\""._WATS_TICKETS_REOPEN."\" class=\"watsFormSubmit\">
+					    <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\">
 					  </form>";
 			} // end reopen
 		} // end reopenrites
@@ -522,7 +522,7 @@ class watsTicketHTML extends watsTicket
 		if ( $assignees != null )
 		{
 			echo "<div id=\"watsViewAssignTo\" class=\"watsViewAssignTo\">
-					<form name=\"submitassign\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=assign&task=assignto\" onsubmit=\"return watsValidateTicketAssign( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
+					<form name=\"submitassign\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=assign&task=assignto\" onsubmit=\"return watsValidateTicketAssign( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">
 					<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 					<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 					<input name=\"act\" type=\"hidden\" value=\"assign\">
@@ -541,7 +541,7 @@ class watsTicketHTML extends watsTicket
 				$i ++;
 			}
 			echo "  </select>
-					<input type=\"submit\" name=\"watsTicketAssignTo\" value=\""._WATS_TICKETS_ASSIGN."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketAssignTo\" value=\"".JText::_("WATS_TICKETS_ASSIGN")."\" class=\"watsFormSubmit\">
 					</form>
 				  </div>";
 		} // end check for useres to assign to
@@ -557,13 +557,13 @@ class watsTicketHTML extends watsTicket
 		$wats =& WFactory::getConfig();
 		
 		// header and ticket name
-		echo "<span class=\"watsHeading1\">"._WATS_TICKETS_SUBMIT."</span>
+		echo "<span class=\"watsHeading1\">".JText::_("WATS_TICKETS_SUBMIT")."</span>
 			  <div class=\"watsTicketMake\" id=\"watsTicketMake\">
-			  <form name=\"submitticket\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=makeComplete\" onsubmit=\"return watsValidateTicketMake( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">"
-			  ._WATS_TICKETS_NAME.
+			  <form name=\"submitticket\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=makeComplete\" onsubmit=\"return watsValidateTicketMake( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">"
+			  .JText::_("WATS_TICKETS_NAME").
 			  "<input name=\"ticketname\" type=\"text\" id=\"ticketname\" maxlength=\"25\">";
 		// itterate through categories
-		echo _WATS_CATEGORY."<select name=\"catid\" class=\"watsCategorySetSelect\">";
+		echo JText::_("WATS_CATEGORY")."<select name=\"catid\" class=\"watsCategorySetSelect\">";
 	    foreach( $categorySet->categorySet as $category )
 		{
 			if ( $watsUser->checkPermission( $category->catid, "m" ) > 0 )
@@ -575,7 +575,7 @@ class watsTicketHTML extends watsTicket
 		// end itterate through categories
 		echo "</select>";
 		// message box
-		echo _WATS_TICKETS_DESC;
+		echo JText::_("WATS_TICKETS_DESC");
 		if ( $wats->get( 'msgbox' ) == "editor" )
 		{
 			editorArea( "msg", $wats->get( 'defaultmsg' ), "msg", $wats->get( 'msgboxw' )*8.5, $wats->get( 'msgboxh' )*18, 45, 5 );
@@ -589,10 +589,10 @@ class watsTicketHTML extends watsTicket
 			  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 			  <input name=\"act\" type=\"hidden\" value=\"ticket\">
 			  <input name=\"task\" type=\"hidden\" value=\"makeComplete\">
-			  <input type=\"submit\" name=\"Submit\" value=\""._WATS_TICKETS_SUBMIT."\" class=\"watsFormSubmit\">
+			  <input type=\"submit\" name=\"Submit\" value=\"".JText::_("WATS_TICKETS_SUBMIT")."\" class=\"watsFormSubmit\">
 			  </form>
 			  </div>";
-		echo ( $wats->get( 'msgbox' ) == "bbcode" AND $wats->get( 'msgboxt' ) == "1" ) ? _WATS_BB_HELP : "";
+		echo ( $wats->get( 'msgbox' ) == "bbcode" AND $wats->get( 'msgboxt' ) == "1" ) ? JText::_("WATS_BB_HELP") : "";
 	}
 
 	function reopen()
@@ -602,8 +602,8 @@ class watsTicketHTML extends watsTicket
 		$wats =& WFactory::getConfig();
 		
 		echo "<div id=\"watsReply\" class=\"watsReply\">
-		      <form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=completeReopen&ticketid=".$this->ticketId."\" onsubmit=\"return watsValidateTicketReopen( this, '"._WATS_ERROR_NODATA."', '".$wats->get( 'defaultmsg' )."' );\">
-			  "._WATS_TICKETS_REOPEN_REASON;
+		      <form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=completeReopen&ticketid=".$this->ticketId."\" onsubmit=\"return watsValidateTicketReopen( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">
+			  ".JText::_("WATS_TICKETS_REOPEN_REASON");
 		// message box
 		if ( $wats->get( 'msgbox' ) == "editor" )
 		{
@@ -618,7 +618,7 @@ class watsTicketHTML extends watsTicket
 			    <input name=\"act\" type=\"hidden\" value=\"ticket\">
 			    <input name=\"task\" type=\"hidden\" value=\"completeReopen\">
 			    <input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">";
-		echo "  <input type=\"submit\" name=\"watsTicketReopen\" value=\""._WATS_TICKETS_REOPEN."\" class=\"watsFormSubmit\">
+		echo "  <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\">
 			  </form>
 		      </div>";
 	}
@@ -644,9 +644,9 @@ class watsTicketSetHTML extends watsTicketSet
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsTicketSetView\">
 				    <tr>
 					  <th scope=\"col\" width=\"20\">&nbsp;</th>
-					  <th scope=\"col\">"._WATS_TICKETS_NAME."</th>
-					  <th scope=\"col\">"._WATS_TICKETS_POSTS."</th>
-					  <th scope=\"col\">"._WATS_TICKETS_DATETIME."</th>
+					  <th scope=\"col\">".JText::_("WATS_TICKETS_NAME")."</th>
+					  <th scope=\"col\">".JText::_("WATS_TICKETS_POSTS")."</th>
+					  <th scope=\"col\">".JText::_("WATS_TICKETS_DATETIME")."</th>
 					  <th scope=\"col\" width=\"20\">&nbsp;</th>
 				    </tr>";
 		// if view all set finish to maximum
@@ -702,7 +702,7 @@ class watsTicketSetHTML extends watsTicketSet
 					<td>";
 			if ( $this->_ticketList[$i]->lifeCycle != 1)
 			{
-				echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&".$link."\" onClick=\"return confirm( '"._WATS_MISC_DELETE_VERIFY."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
+				echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&".$link."\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
 			}
 			echo "</td>
 				  </tr>";
@@ -772,7 +772,7 @@ class watsCategoryHTML extends watsCategory {
 		// check is valid to show
 		if ( $currentTicketsPerPage < $this->ticketSet->ticketNumberOf )
 		{
-			echo _WATS_TICKETS_PAGES.": ";
+			echo JText::_("WATS_TICKETS_PAGES").": ";
 			$numberOfPages = 0;
 			$numberOfPages = intval( $this->ticketSet->ticketNumberOf / $ticketsPerPage );
 			if ( ( $this->ticketSet->ticketNumberOf % $ticketsPerPage ) > 0 )
@@ -811,11 +811,11 @@ class watsCategoryHTML extends watsCategory {
 		// all
 		// check current selection
 		if ( $lifecycle == 'a' ) {
-			echo " (<span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_ALL."</span>";
+			echo " (<span class=\"watsSelectedPage\">".JText::_("WATS_TICKETS_STATE_ALL")."</span>";
 		}
 		else
 		{
-			echo " (<a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=a\">"._WATS_TICKETS_STATE_ALL."</a>";
+			echo " (<a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=a\">".JText::_("WATS_TICKETS_STATE_ALL")."</a>";
 		} // end all
 		// check for full rites
 		$rite =  $watsUser->checkPermission( $this->catid, "v" );
@@ -823,21 +823,21 @@ class watsCategoryHTML extends watsCategory {
 		{
 			// check current selection
 			if ( $lifecycle == 'p' ) {
-				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_PERSONAL."</span>";
+				echo ", <span class=\"watsSelectedPage\">".JText::_("WATS_TICKETS_STATE_PERSONAL")."</span>";
 			}
 			else
 			{
-				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=p\">"._WATS_TICKETS_STATE_PERSONAL."</a>";
+				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=p\">".JText::_("WATS_TICKETS_STATE_PERSONAL")."</a>";
 			}
 		}
 		//open
 		// check current selection
 		if ( $lifecycle == 1 ) {
-			echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_OPEN."</span>";
+			echo ", <span class=\"watsSelectedPage\">".JText::_("WATS_TICKETS_STATE_OPEN")."</span>";
 		}
 		else
 		{
-			echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=1\">"._WATS_TICKETS_STATE_OPEN."</a>";
+			echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=1\">".JText::_("WATS_TICKETS_STATE_OPEN")."</a>";
 		} // end open
 		// check for delete rites
 		$rite =  $watsUser->checkPermission( $this->catid, "d" );
@@ -845,11 +845,11 @@ class watsCategoryHTML extends watsCategory {
 		{
 			// check current selection
 			if ( $lifecycle == 2 ) {
-				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_CLOSED."</span>";
+				echo ", <span class=\"watsSelectedPage\">".JText::_("WATS_TICKETS_STATE_CLOSED")."</span>";
 			}
 			else
 			{
-				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=2\">"._WATS_TICKETS_STATE_CLOSED."</a>";
+				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=2\">".JText::_("WATS_TICKETS_STATE_CLOSED")."</a>";
 			}
 		}
 		// check for purge rites
@@ -858,11 +858,11 @@ class watsCategoryHTML extends watsCategory {
 		{
 			// check current selection
 			if ( $lifecycle == 3 ) {
-				echo ", <span class=\"watsSelectedPage\">"._WATS_TICKETS_STATE_DEAD."</span>";
+				echo ", <span class=\"watsSelectedPage\">".JText::_("WATS_TICKETS_STATE_DEAD")."</span>";
 			}
 			else
 			{
-				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=3\">"._WATS_TICKETS_STATE_DEAD."</a>";
+				echo ", <a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=3\">".JText::_("WATS_TICKETS_STATE_DEAD")."</a>";
 			}
 		}
 		echo ")";
@@ -882,7 +882,7 @@ class watsCategoryHTML extends watsCategory {
 				  <input name=\"catid\" type=\"hidden\" value=\"".$this->catid."\">
 				  <input name=\"lifecycle\" type=\"hidden\" value=\"a\">
 				  <input name=\"page\" type=\"hidden\" value=\"1\">
-				  <input type=\"submit\" name=\"watsTicketMake\" value=\""._WATS_TICKETS_PURGE.$this->name."\" class=\"watsFormSubmit\">
+				  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_TICKETS_PURGE").$this->name."\" class=\"watsFormSubmit\">
 			    </form>
 			  </p>";
 	}
@@ -951,7 +951,7 @@ class watsAssignHTML extends watsAssign
 		// check is valid to show
 		if ( $currentTicketsPerPage < $this->ticketSet->ticketNumberOf )
 		{
-			echo _WATS_TICKETS_PAGES.": ";
+			echo JText::_("WATS_TICKETS_PAGES").": ";
 			$numberOfPages = 0;
 			$numberOfPages = intval( $this->ticketSet->ticketNumberOf / $ticketsPerPage );
 			if ( ( $this->ticketSet->ticketNumberOf % $ticketsPerPage ) > 0 )
