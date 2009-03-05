@@ -1,102 +1,101 @@
-<?php
-/**
- * FileName: english.php
- * Date: 06/06/2006
- * License: GNU General Public License
- * File Version #: 5
- * WATS Version #: 2.0.0.1
- * Author: James Kennard james@webamoeba.com (www.webamoeba.co.uk)
- **/
+#
+# FileName: english.php
+# Date: 06/06/2006
+# License: GNU General Public License
+# File Version #: 5
+# WATS Version #: 2.0.0.1
+# Author: ?
+#
 
-// NAVIGATION
-DEFINE("_WATS_NAV_NEW","Yeni Ticket");
-DEFINE("_WATS_NAV_CATEGORY","Destek Kategorileri");
-DEFINE("_WATS_NAV_TICKET","Ticket Numarasi");
+# NAVIGATION
+WATS_NAV_NEW=Yeni Ticket
+WATS_NAV_CATEGORY=Destek Kategorileri
+WATS_NAV_TICKET=Ticket Numarasi
 
-// USER
-DEFINE("_WATS_USER","Kullanici");
-DEFINE("_WATS_USER_SET","Kullanicilar");
-DEFINE("_WATS_USER_NAME","Ad");
-DEFINE("_WATS_USER_USERNAME","Kullanici Adi");
-DEFINE("_WATS_USER_GROUP","Grup");
-DEFINE("_WATS_USER_ORG","Organizasyon");
-DEFINE("_WATS_USER_ORG_SELECT","Organizasyonu giriniz");
-DEFINE("_WATS_USER_EMAIL","E-Posta");
-DEFINE("_WATS_USER_NEW","Yeni kullanici yarat");
-DEFINE("_WATS_USER_NEW_SELECT","Kullanici seç");
-DEFINE("_WATS_USER_NEW_CREATED","Yaratilan kullanici");
-DEFINE("_WATS_USER_NEW_FAILED","Bu kullanicinin zaten ticket destek hesabi var");
-DEFINE("_WATS_USER_DELETED","Kullanici silindi");
-DEFINE("_WATS_USER_EDIT","Kullanici düzenle");
-DEFINE("_WATS_USER_DELETE_REC","Kullanici ticketlarini kaldir (tavsiye edilen)");
-DEFINE("_WATS_USER_DELETE_NOTREC","Kullanici ticketlarini ve diger ticketlara cevaplarini kaldir (tavsiye edilmeyen)");
-DEFINE("_WATS_USER_DELETE","Kullaniciyi sil");
-DEFINE("_WATS_USER_ADD","Kullanici ekle");
-DEFINE("_WATS_USER_SELECT","Kullanici seç");
-DEFINE("_WATS_USER_SET_DESCRIPTION","Kullanicilari düzenle");
-DEFINE("_WATS_USER_ADD_LIST","Su kullanicilar eklendi");
+# USER
+WATS_USER=Kullanici
+WATS_USER_SET=Kullanicilar
+WATS_USER_NAME=Ad
+WATS_USER_USERNAME=Kullanici Adi
+WATS_USER_GROUP=Grup
+WATS_USER_ORG=Organizasyon
+WATS_USER_ORG_SELECT=Organizasyonu giriniz
+WATS_USER_EMAIL=E-Posta
+WATS_USER_NEW=Yeni kullanici yarat
+WATS_USER_NEW_SELECT=Kullanici seç
+WATS_USER_NEW_CREATED=Yaratilan kullanici
+WATS_USER_NEW_FAILED=Bu kullanicinin zaten ticket destek hesabi var
+WATS_USER_DELETED=Kullanici silindi
+WATS_USER_EDIT=Kullanici düzenle
+WATS_USER_DELETE_REC=Kullanici ticketlarini kaldir (tavsiye edilen)
+WATS_USER_DELETE_NOTREC=Kullanici ticketlarini ve diger ticketlara cevaplarini kaldir (tavsiye edilmeyen)
+WATS_USER_DELETE=Kullaniciyi sil
+WATS_USER_ADD=Kullanici ekle
+WATS_USER_SELECT=Kullanici seç
+WATS_USER_SET_DESCRIPTION=Kullanicilari düzenle
+WATS_USER_ADD_LIST=Su kullanicilar eklendi
 
-// GROUPS
-DEFINE("_WATS_GROUP_SELECT","Grup Seç");
+# GROUPS
+WATS_GROUP_SELECT=Grup Seç
 
-// CATEGORIES
-DEFINE("_WATS_CATEGORY","Kategori");
+# CATEGORIES
+WATS_CATEGORY=Kategori
 
-// TICKETS
-DEFINE("_WATS_TICKETS_USER_OPEN","Açik Ticketlarim");
-DEFINE("_WATS_TICKETS_USER_CLOSED","Kapali Ticketlarim");
-DEFINE("_WATS_TICKETS_OPEN","Açik Ticketlar");
-DEFINE("_WATS_TICKETS_CLOSED","Kapali Tickerlar");
-DEFINE("_WATS_TICKETS_DEAD","Bozuk Ticketlar");
-DEFINE("_WATS_TICKETS_OPEN_VIEW","Bütün açik ticketlari incele");
-DEFINE("_WATS_TICKETS_CLOSED_VIEW","Bütün kapali ticketlari incele");
-DEFINE("_WATS_TICKETS_DEAD_VIEW","Bütün bozuk ticketlari incele");
-DEFINE("_WATS_TICKETS_NAME","Ticket Ismi");
-DEFINE("_WATS_TICKETS_POSTS","Gönderiler");
-DEFINE("_WATS_TICKETS_DATETIME","Son Gönderi");
-DEFINE("_WATS_TICKETS_PAGES","Sayfalar");
-DEFINE("_WATS_TICKETS_SUBMIT","Yeni bir ticket aç");
-DEFINE("_WATS_TICKETS_SUBMITING","Ticket açiliyor");
-DEFINE("_WATS_TICKETS_SUBMITTED","Ticket basariyla açildi");
-DEFINE("_WATS_TICKETS_DESC","Açiklama");
-DEFINE("_WATS_TICKETS_CLOSE","Ticketi Kapat");
-DEFINE("_WATS_TICKETS_CLOSED_COMP","Ticket kapatildi");
-DEFINE("_WATS_TICKETS_DELETED_COMP","Ticket silindi");
-DEFINE("_WATS_TICKETS_PURGED_COMP","Ticket temizlendi");
-DEFINE("_WATS_TICKETS_NONE","Hiç ticket bulunamadi");
-DEFINE("_WATS_TICKETS_FIRSTPOST","Baslangiç: ");
-DEFINE("_WATS_TICKETS_LASTPOST","Gönderen: ");
-DEFINE("_WATS_TICKETS_REPLY","cevap Ver");
-DEFINE("_WATS_TICKETS_REPLY_CLOSE","Cevap Ver ve Kapat");
-DEFINE("_WATS_TICKETS_ASSIGN","Ticket Ata");
-DEFINE("_WATS_TICKETS_ASSIGNEDTO","Atanacak Kisi");
-DEFINE("_WATS_TICKETS_ID","Ticket ID");
-DEFINE("_WATS_TICKETS_REOPEN","Tekrar Aç");
-DEFINE("_WATS_TICKETS_REOPEN_REASON","Lütfen ticketi açmak için bir neden giriniz");
-DEFINE("_WATS_TICKETS_STATE_ALL","Hepsi");
-DEFINE("_WATS_TICKETS_STATE_PERSONAL","Kisisel");
-DEFINE("_WATS_TICKETS_STATE_OPEN","Açik");
-DEFINE("_WATS_TICKETS_STATE_CLOSED","Kapali");
-DEFINE("_WATS_TICKETS_STATE_DEAD","Bozuk");
-DEFINE("_WATS_TICKETS_PURGE","Ölü ticketlar içinde ");
+# TICKETS
+WATS_TICKETS_USER_OPEN=Açik Ticketlarim
+WATS_TICKETS_USER_CLOSED=Kapali Ticketlarim
+WATS_TICKETS_OPEN=Açik Ticketlar
+WATS_TICKETS_CLOSED=Kapali Tickerlar
+WATS_TICKETS_DEAD=Bozuk Ticketlar
+WATS_TICKETS_OPEN_VIEW=Bütün açik ticketlari incele
+WATS_TICKETS_CLOSED_VIEW=Bütün kapali ticketlari incele
+WATS_TICKETS_DEAD_VIEW=Bütün bozuk ticketlari incele
+WATS_TICKETS_NAME=Ticket Ismi
+WATS_TICKETS_POSTS=Gönderiler
+WATS_TICKETS_DATETIME=Son Gönderi
+WATS_TICKETS_PAGES=Sayfalar
+WATS_TICKETS_SUBMIT=Yeni bir ticket aç
+WATS_TICKETS_SUBMITING=Ticket açiliyor
+WATS_TICKETS_SUBMITTED=Ticket basariyla açildi
+WATS_TICKETS_DESC=Açiklama
+WATS_TICKETS_CLOSE=Ticketi Kapat
+WATS_TICKETS_CLOSED_COMP=Ticket kapatildi
+WATS_TICKETS_DELETED_COMP=Ticket silindi
+WATS_TICKETS_PURGED_COMP=Ticket temizlendi
+WATS_TICKETS_NONE=Hiç ticket bulunamadi
+WATS_TICKETS_FIRSTPOST=Baslangiç:
+WATS_TICKETS_LASTPOST=Gönderen:
+WATS_TICKETS_REPLY=cevap Ver
+WATS_TICKETS_REPLY_CLOSE=Cevap Ver ve Kapat
+WATS_TICKETS_ASSIGN=Ticket Ata
+WATS_TICKETS_ASSIGNEDTO=Atanacak Kisi
+WATS_TICKETS_ID=Ticket ID
+WATS_TICKETS_REOPEN=Tekrar Aç
+WATS_TICKETS_REOPEN_REASON=Lütfen ticketi açmak için bir neden giriniz
+WATS_TICKETS_STATE_ALL=Hepsi
+WATS_TICKETS_STATE_PERSONAL=Kisisel
+WATS_TICKETS_STATE_OPEN=Açik
+WATS_TICKETS_STATE_CLOSED=Kapali
+WATS_TICKETS_STATE_DEAD=Bozuk
+WATS_TICKETS_PURGE=Ölü ticketlar içinde
 
 //MAIL
-DEFINE("_WATS_MAIL_TICKET","Ticketi açan kisi: ");
-DEFINE("_WATS_MAIL_REPLY","Cevabi açan kisi: ");
+WATS_MAIL_TICKET=Ticketi açan kisi:
+WATS_MAIL_REPLY=Cevabi açan kisi:
 
 //MISC
-DEFINE("_WATS_MISC_DELETE_VERIFY","Sil?");
-DEFINE("_WATS_MISC_GO","Git");
+WATS_MISC_DELETE_VERIFY=Sil?
+WATS_MISC_GO=Git
 
 //ERRORS
-DEFINE("_WATS_ERROR","Bir hata olustu");
-DEFINE("_WATS_ERROR_ACCESS","Bu görevi tamamlamak için yeterli hakkiniz yok");
-DEFINE("_WATS_ERROR_NOUSER","Bu kaynagi görmek için yetkiniz yok.<br>Giris yapmaniz veya yöneticinizden yetki istemeniz gerekli.");
-DEFINE("_WATS_ERROR_NODATA","Formu düzgün doldurmadiniz, lütfen tekrar deneyiniz.");
-DEFINE("_WATS_ERROR_NOT_FOUND","Öge bulunamadi");
+WATS_ERROR=Bir hata olustu
+WATS_ERROR_ACCESS=Bu görevi tamamlamak için yeterli hakkiniz yok
+WATS_ERROR_NOUSER=Bu kaynagi görmek için yetkiniz yok.<br>Giris yapmaniz veya yöneticinizden yetki istemeniz gerekli.
+WATS_ERROR_NODATA=Formu düzgün doldurmadiniz, lütfen tekrar deneyiniz.
+WATS_ERROR_NOT_FOUND=Öge bulunamadi
 
 //BBCODE
-DEFINE("_WATS_BB_HELP","<p><i>Yazinizi biçimlendirmek için asagidaki 'tag'leri kullanin:</i></p> 
+WATS_BB_HELP=<p><i>Yazinizi biçimlendirmek için asagidaki 'tag'leri kullanin:</i></p>
 <table width='100%'border='0'cellspacing='5'cellpadding='0'> 
   <tr valign='top'> 
     <td><b>bold</b></td> 
@@ -130,5 +129,4 @@ DEFINE("_WATS_BB_HELP","<p><i>Yazinizi biçimlendirmek için asagidaki 'tag'leri k
     <td style='cursor: pointer; color: #0000FF;'><u>fred@bloggs.com</u></td> 
     <td><b>[email=bbcode@webamoeba.co.uk]mail[/email]</b></td> 
   </tr> 
-</table> ");
-?>
+</table>
