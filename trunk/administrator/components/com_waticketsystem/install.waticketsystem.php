@@ -218,6 +218,16 @@ function com_install()
 		case '2.0.7':
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='8' WHERE `name`='versionpatch';" );
 			$database->query();
+		/**
+		 * patch from 2.0.8 to 3.0.0
+		 */	
+		case '2.0.8':
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='0' WHERE `name`='versionpatch';" );
+			$database->query();
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='0' WHERE `name`='versionminor';" );
+			$database->query();
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionmajor';" );
+			$database->query();
 			break;
 	}
 
@@ -231,53 +241,57 @@ function com_install()
 	changeIcon("Category Manager", "js/ThemeOffice/add_section.png");
 	changeIcon("Database Maintenance", "js/ThemeOffice/sysinfo.png");
 	return "<table class=\"adminlist\">
-			<tr>
-				<th>
-					<div style=\"text-align: center;\">
-						WebAmoeba Ticket System<br>
-						2.0.8 ( stable )
-					</div>
-				</th>
-			</tr>
-			<tr>
-				<td nowrap=\"true\" align=\"center\">
-					<div style=\"text-align: center;\">
-						<p><strong>Developers</strong><br />
-						<a href=\"mailto:james@webamoeba.co.uk\">James Kennard</a></p>
-						<p><strong>Web</strong><br />
-						<a href=\"http://www.webamoeba.co.uk\" target=\"_blank\">www.webamoeba.co.uk</a></p>
-						<p><strong>Libraries</strong><br />
-						BBCode - Leif K-Brooks</p>
-						<p><strong>Translations</strong><br />
-						english - James Kennard <a href=\"mailto:james@webamoeba.com\">james@webamoeba.com</a> (<a href=\"http://www.webamoeba.co.uk\" target=\"_blank\">www.webamoeba.co.uk</a>)<br />
-						french - Johan Aubry <a href=\"mailto:jaubry@a-itservices.com\">jaubry@a-itservices.com</a> (<a href=\"http://www.a-itservices.com\" target=\"_blank\">www.a-itservices.com</a>)<br />
-						germanf - Chr.G&auml;rtner<br />
-						portuguese - Jorge Rosado <a href=\"mailto:info@jrpi.pt\">info@jrpi.pt</a> (<a href=\"http://www.jrpi.pt\" target=\"_blank\">www.jrpi.pt</a>)<br />
-						slovak - Daniel K·Ëer <a href=\"mailto:kacer@aceslovakia.sk\">kacer@aceslovakia.sk</a> (<a href=\"http://www.aceslovakia.sk\" target=\"_blank\">www.aceslovakia.sk</a>)<br />
-						italian - Leonardo Lombardi (<a href=\"http://www.dimsat.unicas.it\" target=\"_blank\">www.dimsat.unicas.it</a>)<br />
-						spanish - Urano Gonzalez <a href=\"mailto:urano@uranogonzalez.com\">urano@uranogonzalez.com</a> (<a href=\"http://www.uranogonzalez.com\" target=\"_blank\">www.uranogonzalez.com</a>)<br />
-						swedish  - Thomas Westman <a href=\"mailto:Westman%20info@backupnow.se\">info@backupnow.se</a> (<a href=\"http://www.backupnow.se\" target=\"_blank\">www.backupnow.se</a>)</p>
-						<p><strong>Beta Testers</strong><br />
-						72dpi<br />
-						ateul<br />
-						backupnow<br />
-						claudio<br />
-						DanielMD<br />
-						elmar<br />
-						gaertner65<br />
-						gdude66<br />
-						jrpi<br />
-						laurie_lewis<br />
-						lexel<br />
-						peternie<br />
-						ravenswood<br />
-						Skye<br />
-						tvinhas<br />
-						urano</p>
-					</div>
-				</td>
-			</tr>
-		</table>";
+				<thead>
+					<tr>
+						<th>
+							<div style=\"text-align: center;\">
+								WebAmoeba Ticket System<br />
+								3.0.0 ( stable )
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td nowrap=\"true\" align=\"center\">
+							<div style=\"text-align: center;\">
+								<p><strong>Developers</strong><br />
+								<a href=\"mailto:james@webamoeba.co.uk\">James Kennard</a></p>
+								<p><strong>Web</strong><br />
+								<a href=\"http://www.webamoeba.co.uk\" target=\"_blank\">www.webamoeba.co.uk</a></p>
+								<p><strong>Libraries</strong><br />
+								BBCode - Leif K-Brooks</p>
+								<p><strong>Translations</strong><br />
+								english - James Kennard <a href=\"mailto:james@webamoeba.com\">james@webamoeba.com</a> (<a href=\"http://www.webamoeba.co.uk\" target=\"_blank\">www.webamoeba.co.uk</a>)<br />
+								french - Johan Aubry <a href=\"mailto:jaubry@a-itservices.com\">jaubry@a-itservices.com</a> (<a href=\"http://www.a-itservices.com\" target=\"_blank\">www.a-itservices.com</a>)<br />
+								germanf - Chr.G&auml;rtner<br />
+								portuguese - Jorge Rosado <a href=\"mailto:info@jrpi.pt\">info@jrpi.pt</a> (<a href=\"http://www.jrpi.pt\" target=\"_blank\">www.jrpi.pt</a>)<br />
+								slovak - Daniel K·Ëer <a href=\"mailto:kacer@aceslovakia.sk\">kacer@aceslovakia.sk</a> (<a href=\"http://www.aceslovakia.sk\" target=\"_blank\">www.aceslovakia.sk</a>)<br />
+								italian - Leonardo Lombardi (<a href=\"http://www.dimsat.unicas.it\" target=\"_blank\">www.dimsat.unicas.it</a>)<br />
+								spanish - Urano Gonzalez <a href=\"mailto:urano@uranogonzalez.com\">urano@uranogonzalez.com</a> (<a href=\"http://www.uranogonzalez.com\" target=\"_blank\">www.uranogonzalez.com</a>)<br />
+								swedish  - Thomas Westman <a href=\"mailto:Westman%20info@backupnow.se\">info@backupnow.se</a> (<a href=\"http://www.backupnow.se\" target=\"_blank\">www.backupnow.se</a>)</p>
+								<p><strong>Beta Testers</strong><br />
+								72dpi<br />
+								ateul<br />
+								backupnow<br />
+								claudio<br />
+								DanielMD<br />
+								elmar<br />
+								gaertner65<br />
+								gdude66<br />
+								jrpi<br />
+								laurie_lewis<br />
+								lexel<br />
+								peternie<br />
+								ravenswood<br />
+								Skye<br />
+								tvinhas<br />
+								urano</p>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>";
 }
 
 ?>
