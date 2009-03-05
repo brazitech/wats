@@ -9,13 +9,13 @@
  */
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
 
 /**
  * watsUser
  * @version 1.0
  */
-class watsUser extends mosUser
+class watsUser extends JUser
 {
 	var $groupName;
 	var $agree;
@@ -28,9 +28,9 @@ class watsUser extends mosUser
 	 * @version 1.0
 	 * @param watsId
 	 */
-	function watsUser( &$database )
+	function watsUser()
 	{
-	    $this->mosUser( $database );
+	    $this->__construct();
 	}
 	
 	/**
@@ -39,12 +39,14 @@ class watsUser extends mosUser
 	 */
 	function loadWatsUser( $uid )
 	{
+		$db =& JFactory::getDBO();
+		
 		$returnValue = false;
 		// load mosUser
 		$this->load( $uid );
 		// loadmosWatsUser
-		$this->_db->setQuery( "SELECT  u.*, g.name, g.userrites, g.image, g.name AS groupname FROM #__wats_users AS u LEFT  JOIN #__wats_groups AS g ON g.grpid = u.grpid WHERE u.watsid=".$uid );
-		$vars = $this->_db->loadObjectList();
+		$db->setQuery( "SELECT  u.*, g.name, g.userrites, g.image, g.name AS groupname FROM #__wats_users AS u LEFT  JOIN #__wats_groups AS g ON g.grpid = u.grpid WHERE u.watsid=".(int)$uid );
+		$vars = $db->loadObjectList();
 		// set attributes
 		if ( isset( $vars[0] ) ) {
 		    $this->groupName = $vars[0]->groupname ;
@@ -66,11 +68,13 @@ class watsUser extends mosUser
 	 */
 	function checkPermission( $catid, $rite )
 	{
+		$db =& JFactory::getDBO();
+		
 		// prepare for no rite
 		$returnValue = 0;
 		// run SQL to find permission
-		$this->_db->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".$catid ." AND grpid=".$this->group);
-		$vars = $this->_db->loadObjectList();
+		$db->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".$catid ." AND grpid=".$this->group);
+		$vars = $db->loadObjectList();
 		// check for result
 		if ( isset( $vars[0] ) ) {
 			// find rite in string
@@ -116,8 +120,9 @@ class watsUser extends mosUser
 	 *
 	 * @param watsId
 	 */
-	function makeUser( $watsId, $grpId, $organisation, &$database )
+	function makeUser( $watsId, $grpId, $organisation )
 	{
+	    $database =& JFactory::getDBO();
 		// check doesn't already exist
 		$database->setQuery( "SELECT wu.watsid FROM #__wats_users AS wu WHERE watsid=".$watsId);
 		$database->query();
@@ -140,21 +145,26 @@ class watsUser extends mosUser
 	 */
 	function updateUser()
 	{
+		$db =& JFactory::getDBO();
+	
 		// check already exists
-		$this->_db->setQuery( "SELECT wu.watsid FROM #__wats_users AS wu WHERE watsid=".$this->id);
-		$this->_db->query();
-		if ( $this->_db->getNumRows() != 0 )
+		$db->setQuery("SELECT " . WDatabaseHelper::identifierQuote("wu.watsid") . " " .
+		              "FROM " . WDatabaseHelper::identifierQuote("#__wats_users") . " AS " . WDatabaseHelper::identifierQuote("wu") . " " .
+					  "WHERE watsid=".intval($this->id));
+		$db->query();
+		if ( $db->getNumRows() != 0 )
 		{
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$db->setQuery("UPDATE " . WDatabaseHelper::identifierQuote("#__wats_users") . " " .
+                          "SET " . WDatabaseHelper::identifierQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
+						  WDatabaseHelper::identifierQuote("agree") . " = " . intval($this->agree) . ", " .
+						  WDatabaseHelper::identifierQuote("grpid") . " = " . intval($this->group) . " " .
+						  "WHERE " . WDatabaseHelper::identifierQuote("watsid") . " = " . intval($this->id) . ";" );
 			// execute
-			$this->_db->query();
-			return true;
+			return $db->query();	
 		}
-		else
-		{
-			return false;
-		} // end check doesn't already exist
+		
+		return false;
 	}
 	
 	/**
@@ -163,9 +173,11 @@ class watsUser extends mosUser
 	 */
 	function setGroup( $groupId )
 	{
+	    $db =& JFactory::getDBO();
+	
 		// check group exists and get name
-		$this->_db->setQuery( "SELECT g.name, g.image FROM #__wats_groups AS g WHERE grpid=".$groupId);
-		$groupDetails = $this->_db->loadObjectList();
+		$db->setQuery( "SELECT g.name, g.image FROM #__wats_groups AS g WHERE grpid=".intval($groupId));
+		$groupDetails = $db->loadObjectList();
 		if ( count( $groupDetails ) != 0 )
 		{
 			// update object
@@ -173,10 +185,9 @@ class watsUser extends mosUser
 			$this->groupName = $groupDetails[0]->name;
 			$this->image = $groupDetails[0]->image;
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$db->setQuery( "UPDATE #__wats_users SET grpid=".intval($this->group)." WHERE watsid=".intval($this->id).";" );
 			// execute
-			$this->_db->query();
-			return true;
+			return $db->query();
 		}
 		else
 		{
@@ -190,39 +201,41 @@ class watsUser extends mosUser
 	 */
 	function delete( $remove )
 	{
+		$db =& JFactory::getDBO();
+	
 		switch ( $remove )
 		{
 			case 'removeposts':
 				// remove all posts
-				$this->_db->setQuery( "DELETE FROM #__wats_msg WHERE watsid=".$this->id);
-				$this->_db->query();
+				$db->setQuery( "DELETE FROM #__wats_msg WHERE watsid=".$this->id);
+				$db->query();
 			case 'removetickets':
 				// find tickets
-				$this->_db->setQuery( "SELECT ticketid FROM #__wats_ticket WHERE watsid=".$this->id);
-				$tickets = $this->_db->loadObjectList();
+				$db->setQuery( "SELECT ticketid FROM #__wats_ticket WHERE watsid=".$this->id);
+				$tickets = $db->loadObjectList();
 				$noOfTickets = count( $tickets );
 				$i = 0;
 				while ( $i < $noOfTickets )
 				{
 					// remove ticket messages
-					$this->_db->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$tickets[$i]->ticketid );
-					$this->_db->query();
+					$db->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$tickets[$i]->ticketid );
+					$db->query();
 					// remove highlights
-					$this->_db->setQuery( "DELETE FROM #__wats_highlight WHERE ticketid=".$tickets[$i]->ticketid );
-					$this->_db->query();
+					$db->setQuery( "DELETE FROM #__wats_highlight WHERE ticketid=".$tickets[$i]->ticketid );
+					$db->query();
 					$i ++;
 				}
 				// remove tickets
-				$this->_db->setQuery( "DELETE FROM #__wats_ticket WHERE watsid=".$this->id);
-				$this->_db->query();				
+				$db->setQuery( "DELETE FROM #__wats_ticket WHERE watsid=".$this->id);
+				$db->query();				
 				break;
 		}
 		// delete users highlights
-		// $this->_db->setQuery( "DELETE FROM #__wats_highlight WHERE watsid=".$this->id);
-		// $this->_db->query();
+		// $database->setQuery( "DELETE FROM #__wats_highlight WHERE watsid=".$this->id);
+		// $database->query();
 		// delete user
-		$this->_db->setQuery( "DELETE FROM #__wats_users WHERE watsid=".$this->id);
-		$this->_db->query();
+		$db->setQuery( "DELETE FROM #__wats_users WHERE watsid=".$this->id);
+		$db->query();
 	}
 }
 
@@ -239,9 +252,7 @@ class watsUserSet
 	/**
 	 * @param database
 	 */
-	function watsUserSet( &$database )
-	{
-	    $this->_db = &$database;
+	function watsUserSet() {
 	}
 	
 	/**
@@ -252,15 +263,16 @@ class watsUserSet
 		// load all users
 	    if ( $groupId === null )
 		{
-			//$this->_db->setQuery( "SELECT * FROM #__wats_users ORDER BY grpid" );
-			$this->_db->setQuery( "SELECT w.watsid, w.organisation, w.agree, w.grpid FROM #__wats_users AS w LEFT JOIN #__users AS u ON w.watsid = u.id ORDER BY grpid, username" );
-			$set = $this->_db->loadObjectList();
+			$db =& JFactory::getDBO();
+		
+			$db->setQuery( "SELECT w.watsid, w.organisation, w.agree, w.grpid FROM #__wats_users AS w LEFT JOIN #__users AS u ON w.watsid = u.id ORDER BY grpid, username" );
+			$set = $db->loadObjectList();
 			$this->noOfUsers = count( $set );
 			$i = 0;
 			// create users
 			while ( $i < $this->noOfUsers )
 			{
-				$this->userSet[$i] = new watsUserHTML( $this->_db );
+				$this->userSet[$i] = new watsUserHTML();
 				$this->userSet[$i]->loadWatsUser( $set[$i]->watsid  );
 				$i ++;
 			} // end create users
@@ -279,9 +291,10 @@ class watsObjectBuilder
 	 * @param database
 	 * @param ticketId
 	 */
-	 function ticket( &$database, $ticketId ) {
+	 function ticket( $ticketId ) {
+	    $database =& JFactory::getDBO();
 		// create query
-		$query = "SELECT * FROM #__wats_ticket WHERE ticketid=".$ticketId;
+		$query = "SELECT * FROM #__wats_ticket WHERE ticketid=".intval($ticketId);
 		// execute query
 		$database->setQuery( $query );
 		$set = &$database->loadObjectList();
@@ -289,7 +302,7 @@ class watsObjectBuilder
 		if ( $set != null )
 		{
 			// create ticket object
-			return new watsTicketHTML( $database, null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, null, $set[0]->category, $set[0]->assign );
+			return new watsTicketHTML( $database, null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, $set[0]->category, $set[0]->assign );
 		} // end check there are results
 		return null;
 	 }
@@ -330,9 +343,7 @@ class watsTicket
 	 * @param lastView
 	 * @param create
 	 */
-	//function watsTicket( &$database, $username, $lastWatsId, $name, $watsId, $lastMsg, $datetime, $lifeCycle, $ticketId, $lastView, $msgNumberOf, $catId )
-	function watsTicket( &$database, $username, $lastWatsId, $name, $watsId, $lastMsg, $datetime, $lifeCycle, $ticketId, $msgNumberOf, $catId, $assignId = null )
-	{
+	function watsTicket( $username, $lastWatsId, $name, $watsId, $lastMsg, $datetime, $lifeCycle, $ticketId, $msgNumberOf, $catId, $assignId = null ) {
 		$this->username = $username;
 		$this->lastWatsId = $lastWatsId;
 		$this->name = $name;
@@ -343,7 +354,6 @@ class watsTicket
 		$this->ticketId = $ticketId;
 		$this->msgNumberOf = $msgNumberOf;
 		$this->_msgList = array();
-		$this->_db = &$database;
 		$this->category = $catId;
 		$this->assignId = $assignId;
 	}
@@ -356,9 +366,10 @@ class watsTicket
 		// check for assignment
 	    if ( $this->assignId != null )
 		{
+		    $database =& JFactory::getDBO();
 			// find username
-			$this->_db->setQuery( "SELECT u.username FROM #__users AS u WHERE u.id=".$this->assignId );
-			$user = $this->_db->loadObjectList();
+			$database->setQuery( "SELECT u.username FROM #__users AS u WHERE u.id=".$this->assignId );
+			$user = $database->loadObjectList();
 			$returnValue = $user[0]->username;
 		}
 		else
@@ -375,15 +386,17 @@ class watsTicket
 	 */
 	function save()
 	{
+		$db =& JFactory::getDBO();
+		
 		// ticket
 		$queryTicket = "INSERT INTO #__wats_ticket SET watsid=".$this->watsId.", ticketname='".$this->name."', lifecycle=".$this->lifeCycle.", datetime=".$this->datetime.", category=".$this->category;
-		$this->_db->setQuery( $queryTicket );
-		$this->_db->query();
-		$this->ticketId = $this->_db->insertid();
+		$db->setQuery( $queryTicket );
+		$db->query();
+		$this->ticketId = $db->insertid();
 		// message
 		$queryMsg = "INSERT INTO #__wats_msg SET watsid=".$this->watsId.", ticketid='".$this->ticketId."',msg='".$this->_msgList[0]->msg."', datetime=".$this->datetime;
-		$this->_db->setQuery( $queryMsg );
-		$this->_db->query();
+		$db->setQuery( $queryMsg );
+		$db->query();
 	}
 
 	/**
@@ -391,6 +404,8 @@ class watsTicket
 	 */
 	function deactivate()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// check is not dead
 		if ( $this->lifeCycle < 3 )
 		{
@@ -406,12 +421,12 @@ class watsTicket
 			foreach ( $this->_msgList as $message )
 			{
 				$queryDeactivateMsg = "DELETE FROM #__wats_msg WHERE msgid=".$message->msgId.";";
-				$this->_db->setQuery( $queryDeactivateMsg );
-				$this->_db->query();
+				$database->setQuery( $queryDeactivateMsg );
+				$database->query();
 			} // end remove all messages in ticket
 		}
-		$this->_db->setQuery( $queryDeactivateTicket );
-		$this->_db->query();
+		$database->setQuery( $queryDeactivateTicket );
+		$database->query();
 	}
 
 	/**
@@ -419,11 +434,13 @@ class watsTicket
 	 */
 	function _highlightUpdate( $watsId )
 	{
+	    $database =& JFactory::getDBO();
+		
 		// check for existing record
 		$queryHighlight = "SELECT datetime FROM #__wats_highlight WHERE ticketid=".$this->ticketId." AND watsid =".$watsId.";";
-		$this->_db->setQuery( $queryHighlight );
-		$this->_db->query();
-		if ( $this->_db->getNumRows() > 0 )
+		$database->setQuery( $queryHighlight );
+		$database->query();
+		if ( $database->getNumRows() > 0 )
 		{
 			// update record
 			$queryHighlight = "UPDATE #__wats_highlight SET datetime=".date('YmdHis')." WHERE ticketid=".$this->ticketId." AND watsid =".$watsId.";";
@@ -434,8 +451,8 @@ class watsTicket
 			$queryHighlight = "INSERT INTO #__wats_highlight SET watsid=".$watsId.", ticketid=".$this->ticketId.", datetime=".date('YmdHis').";";
 		}
 		// perform query
-		$this->_db->setQuery( $queryHighlight );
-		$this->_db->query();
+		$database->setQuery( $queryHighlight );
+		$database->query();
 
 	}
 	
@@ -444,10 +461,12 @@ class watsTicket
 	 */
 	function reactivate()
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->lifeCycle = 1;
 		$queryDeactivateMsg = "UPDATE #__wats_ticket SET lifecycle=1 WHERE ticketid=".$this->ticketId.";";
-		$this->_db->setQuery( $queryDeactivateMsg );
-		$this->_db->query();
+		$database->setQuery( $queryDeactivateMsg );
+		$database->query();
 	}
 
 	/**
@@ -455,11 +474,12 @@ class watsTicket
 	 */
 	function loadMsgList()
 	{
+	    $database =& JFactory::getDBO();
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$this->_db->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
-		$messages = $this->_db->loadObjectList();
+		$this->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
+		$messages = $database->loadObjectList();
 		// create message objects
 		$i = 0;
 		foreach( $messages as $message )
@@ -477,9 +497,10 @@ class watsTicket
 	 */
 	function addMsg( $msg, $watsId, $datetime )
 	{
+	    $database =& JFactory::getDBO();
 		// create SQL and execute
-		$this->_db->setQuery( "INSERT INTO #__wats_msg ( ticketid, watsid, msg, datetime ) VALUES ( '".$this->ticketId."', '".$watsId."', '".$msg."', ".$datetime.");" );
-		$this->_db->query();
+		$database->setQuery( "INSERT INTO #__wats_msg ( ticketid, watsid, msg, datetime ) VALUES ( '".$this->ticketId."', '".$watsId."', '".$msg."', ".$datetime.");" );
+		$database->query();
 		$this->_msgList[ count( $this->_msgList ) ] = new watsMsg( $this->ticketId, $msg, $watsId, $datetime );
 		$this->msgNumberOf ++;
 	}
@@ -489,10 +510,12 @@ class watsTicket
 	 */
 	function setAssignId( $assignId )
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->assignId = $assignId;
 		// create SQL and execute
-		$this->_db->setQuery( "UPDATE #__wats_ticket SET assign=".$this->assignId." WHERE ticketid=".$this->ticketId );
-		$this->_db->query();
+		$database->setQuery( "UPDATE #__wats_ticket SET assign=".$this->assignId." WHERE ticketid=".$this->ticketId );
+		$database->query();
 	}
 }
 
@@ -514,15 +537,19 @@ class watsUserGroupCategoryPermissionSet
 	/**
 	 * 
 	 */
-	function watsUserGroupCategoryPermissionSet( &$database, $grpid, $catid )
+	function watsUserGroupCategoryPermissionSet( $grpid, $catid )
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->grpid = $grpid;
 		$this->catid = $catid;
-		$this->_db = &$database;
 		$this->categoryRites = array();
 		// load group details
-		$this->_db->setQuery( "SELECT p.type, g.name as groupname, c.name as categoryname FROM #__wats_permissions AS p LEFT JOIN #__wats_groups AS g ON p.grpid = g.grpid LEFT JOIN #__wats_category AS c ON p.catid = c.catid WHERE p.grpid=".$this->grpid." AND p.catid=".$this->catid );
-		$group = $this->_db->loadObjectList();
+		
+		$database->setQuery( "SELECT p.type, g.name as groupname, c.name as categoryname " . 
+		                     "FROM #__wats_permissions AS p LEFT JOIN #__wats_groups AS g ON p.grpid = g.grpid LEFT JOIN #__wats_category AS c ON p.catid = c.catid " . 
+							 "WHERE p.grpid = " . $this->grpid . " AND p.catid = " . $this->catid );
+		$group = $database->loadObjectList();
 		// check group exists
 		if ( count($group) == 1 )
 		{
@@ -610,15 +637,18 @@ class watsUserGroupCategoryPermissionSet
 	 */
 	function save()
 	{
-		$this->_db->setQuery( "UPDATE #__wats_permissions SET type=\"".$this->rites."\" WHERE catid=".$this->catid." AND grpid=".$this->grpid.";" );
-		$this->_db->query();
+	    $database =& JFactory::getDBO();
+		
+		$database->setQuery( "UPDATE #__wats_permissions SET type=\"".$this->rites."\" WHERE catid=".$this->catid." AND grpid=".$this->grpid.";" );
+		$database->query();
 	}
 	
 	/**
 	 * static
 	 */
-	function newPermissionSet( $grpId, $catId, &$database )
+	function newPermissionSet( $grpId, $catId )
 	{
+	    $database =& JFactory::getDBO();
 		// check doesn't already exist
 		$database->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".$catId." AND grpid=".$grpId);
 		$database->query();
@@ -652,9 +682,7 @@ class watsUserGroupCategoryPermissionSetSet
 	/**
 	 * @param database
 	 */
-	function watsUserGroupCategoryPermissionSetSet( &$database )
-	{
-	    $this->_db = &$database;
+	function watsUserGroupCategoryPermissionSetSet() {
 	}
 	
 	/**
@@ -662,16 +690,18 @@ class watsUserGroupCategoryPermissionSetSet
 	 */
 	function load( $groupId )
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->groupId = $groupId;
 		// load all sets
-		$this->_db->setQuery( "SELECT catid FROM #__wats_category ORDER BY catid" );
-		$set = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT catid FROM #__wats_category ORDER BY catid" );
+		$set = $database->loadObjectList();
 		$this->noOfSets = count( $set );
 		$i = 0;
 		// create sets
 		while ( $i < $this->noOfSets )
 		{
-			$this->watsUserGroupCategoryPermissionSet[$i] = new watsUserGroupCategoryPermissionSet( $this->_db, $groupId, $set[$i]->catid );
+			$this->watsUserGroupCategoryPermissionSet[$i] = new watsUserGroupCategoryPermissionSet( $groupId, $set[$i]->catid );
 			//$this->userSet[$i]->loadWatsUser( $set[$i]->watsid  );
 			$i ++;
 		} // end create sets
@@ -698,15 +728,16 @@ class watsUserGroup
 	/**
 	 * 
 	 */
-	function watsUserGroup( &$database, $grpid = -1 )
+	function watsUserGroup( $grpid = -1 )
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->grpid = $grpid;
-		$this->_db = &$database;
 		$this->categoryRites = array();
 		$this->_users = array();
 		// load group details
-		$this->_db->setQuery( "SELECT * FROM #__wats_groups WHERE grpid=".$this->grpid );
-		$group = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT * FROM #__wats_groups WHERE grpid = " . intval($this->grpid) );
+		$group = $database->loadObjectList();
 		// check group exists
 		if ( count($group) == 1 )
 		{
@@ -714,7 +745,7 @@ class watsUserGroup
 			$this->image = $group[0]->image;
 			$this->userRites = $group[0]->userrites;
 			$this->_new = false;
-			$this->categoryRites = new watsUserGroupCategoryPermissionSetSetHTML($database);
+			$this->categoryRites = new watsUserGroupCategoryPermissionSetSetHTML();
 			$this->categoryRites->load( $grpid );
 		}
 	}
@@ -724,7 +755,7 @@ class watsUserGroup
 	 */
 	function newPermissionSet( $catId )
 	{
-		return watsUserGroupCategoryPermissionSet::newPermissionSet( $this->grpid , $catId, $this->_db );
+		return watsUserGroupCategoryPermissionSet::newPermissionSet( $this->grpid , $catId );
 	}
 
 	/**
@@ -735,8 +766,8 @@ class watsUserGroup
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$this->_db->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
-		$messages = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
+		$messages = $database->loadObjectList();
 		// create message objects
 		$i = 0;
 		foreach( $messages as $message )
@@ -848,23 +879,26 @@ class watsUserGroup
 	 */
 	function save()
 	{
-		$this->_db->setQuery( "UPDATE #__wats_groups SET name=\"".$this->name."\", image=\"".$this->image."\", userrites=\"".$this->userRites."\" WHERE grpid=".$this->grpid.";" );
-		$this->_db->query();
+	    $database =& JFactory::getDBO();
+		
+		$database->setQuery( "UPDATE #__wats_groups SET name=\"".$this->name."\", image=\"".$this->image."\", userrites=\"".$this->userRites."\" WHERE grpid=".$this->grpid.";" );
+		$database->query();
 	}
 	
 	/**
 	 * 
 	 */
-	function loadUsers()
-	{
+	function loadUsers() {
+	    $database =& JFactory::getDBO();
+		
 		$this->_users = null;
 		$this->_users = array();
-		$this->_db->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".$this->grpid.";" );
-		$users = $this->_db->loadObjectList();
+		$datbase->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".$this->grpid.";" );
+		$users = $database->loadObjectList();
 		foreach ( $users as $user )
 		{
 			echo 'a';
-			$tempUser = new watsUser( $this->_db );
+			$tempUser = new watsUser();
 			echo 'b';
 			$tempUser->loadWatsUser( $user->watsid );
 			echo 'c';
@@ -878,29 +912,32 @@ class watsUserGroup
 	 */
 	function delete( $option )
 	{
+	    $database =& JFactory::getDBO();
+		
 		$this->loadUsers();
 		foreach ( $this->_users as $editUser )
 		{
 			$editUser->delete( $option );
 		}
 		// remove permission sets
-		$this->_db->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$this->grpid.";" );
-		$this->_db->query();
+		$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$this->grpid.";" );
+		$database->query();
 		// remove group
-		$this->_db->setQuery( "DELETE FROM #__wats_groups WHERE grpid=".$this->grpid.";" );
-		$this->_db->query();
+		$database->setQuery( "DELETE FROM #__wats_groups WHERE grpid=".$this->grpid.";" );
+		$database->query();
 	}
 	
 	/**
 	 * static
 	 */
-	function makeGroup( $name, $image, &$database )
+	function makeGroup( $name, $image )
 	{
+	    $database =& JFactory::getDBO();
 		// create new category
 		$database->setQuery( "INSERT INTO #__wats_groups ( name, image, userrites ) VALUES ( '".$name."', '".$image."', '----' );" );
 		$database->query();
 		// create object
-		$newGroup = new watsUserGroup( $database, $database->insertid() );
+		$newGroup = new watsUserGroup( $database->insertid() );
 		// create permission sets
 		$database->setQuery( "SELECT c.catid FROM #__wats_category AS c;" );		
 		$categories = &$database->loadObjectList();
@@ -919,31 +956,20 @@ class watsUserGroup
  */
 class watsUserGroupSet
 {
-	var $noOfGroups;
-	var $_userGroupList;
-	var $_db;
-
-	/**
-	 * 
-	 * @param database
-	 */
-	function watsUserGroupSet( &$database )
-	{
-		$this->_db = &$database;
-		$this->noOfGroups = 0;
-		$this->_userGroupList = array();
-	}
+	var $noOfGroups = 0;
+	var $_userGroupList = array();
 
 	/**
 	 * 
 	 */
-	function loadUserGroupSet()
-	{
+	function loadUserGroupSet() {
+		$db =& JFactory::getDBO();
+	
 		// create query
 		$query = $sql = "SELECT grpid FROM #__wats_groups ORDER BY name";
 		// end create query
-		$this->_db->setQuery( $query );
-		$set = $this->_db->loadObjectList();
+		$db->setQuery( $query );
+		$set = $db->loadObjectList();
 		// check there are results
 		if ( $set != null )
 		{
@@ -951,7 +977,7 @@ class watsUserGroupSet
 			foreach( $set as $group )
 			{
 				// create object
-				$this->_userGroupList[$this->noOfGroups] = new watsUserGroupHTML( $this->_db, $group->grpid );
+				$this->_userGroupList[$this->noOfGroups] = new watsUserGroupHTML( $group->grpid );
 				// increment counter
 				$this->noOfGroups ++;
 			}// end create user group objects
@@ -988,9 +1014,8 @@ class watsTicketSet
 	 * 
 	 * @param database
 	 */
-	function watsTicketSet( &$database )
+	function watsTicketSet()
 	{
-		$this->_db = &$database;
 		$this->ticketNumberOf = 0;
 		$this->_ticketListPointer = 0;
 	}
@@ -1006,6 +1031,8 @@ class watsTicketSet
 	 //$this->ticketSet->loadTicketSet( 0, $this->watsId, -1, true, true );
 	function loadTicketSet( $lifecycle, $category = null )
 	{
+		$db =& JFactory::getDBO();
+	
 		// create query
 		$query = $sql = "SELECT COUNT(*) AS posts, t.ticketid, t.assign, t.watsid AS ownerid, t.ticketname, t.category, t.lifecycle, UNIX_TIMESTAMP(t.datetime) AS firstpost, SUBSTRING(MIN(CONCAT(DATE_FORMAT(m1.datetime, '%Y-%m-%d %H:%i:%s'), m1.msgid)), 20) as firstmsg, SUBSTRING(MAX(CONCAT(DATE_FORMAT(m1.datetime, '%Y-%m-%d %H:%i:%s'), m1.msgid)), 20) as lastpostid, SUBSTRING(MAX(CONCAT(DATE_FORMAT(m1.datetime, '%Y-%m-%d %H:%i:%s'), m1.watsid)), 20) as lastid, UNIX_TIMESTAMP(MAX(m1.datetime)) as lastdate, o.username AS username, SUBSTRING(MAX(CONCAT(DATE_FORMAT(m1.datetime, '%Y-%m-%d %H:%i:%s'), p.username)), 20) AS poster FROM #__wats_ticket AS t LEFT JOIN #__wats_msg AS m1 ON t.ticketid = m1.ticketid LEFT JOIN #__users AS o ON t.watsid = o.id LEFT JOIN #__users AS p ON m1.watsid = p.id ";
 		// check lifeCycle
@@ -1028,8 +1055,9 @@ class watsTicketSet
 		}
 		// end create query
 		$query .= " GROUP BY t.ticketid, t.watsid, t.ticketname, t.datetime ORDER BY lastdate desc;";
-		$this->_db->setQuery( $query );
-		$set = $this->_db->loadObjectList();
+		
+		$db->setQuery( $query );
+		$set = $db->loadObjectList();
 		// check there are results
 		if ( $set != null )
 		{
@@ -1037,7 +1065,7 @@ class watsTicketSet
 			foreach( $set as $ticket )
 			{
 				// create object
-				$this->_ticketList[$this->ticketNumberOf] = new watsTicketHTML( $this->_db, $ticket->username, $ticket->lastid, $ticket->ticketname, $ticket->ownerid, $ticket->lastdate, $ticket->firstpost, $ticket->lifecycle, $ticket->ticketid, $ticket->posts, $ticket->category, $ticket->assign );
+				$this->_ticketList[$this->ticketNumberOf] = new watsTicketHTML( $ticket->username, $ticket->lastid, $ticket->ticketname, $ticket->ownerid, $ticket->lastdate, $ticket->firstpost, $ticket->lifecycle, $ticket->ticketid, $ticket->posts, $ticket->category, $ticket->assign );
 				// increment counter
 				$this->ticketNumberOf ++;
 			}// end create ticket objects
@@ -1075,7 +1103,7 @@ class watsMsg
  * @version 1.0
  * @created 06-Dec-2005 21:44:11
  */
-class watsCategory extends mosDBTable
+class watsCategory extends JTable
 {
     var $catid;
 	var $name;
@@ -1087,9 +1115,9 @@ class watsCategory extends mosDBTable
 	 * 
 	 * @param database
 	 */
-	function watsCategory( &$database )
+	function watsCategory()
 	{
-	    $this->mosDBTable( '#__wats_category', 'catid', $database );
+	    $this->__construct( '#__wats_category', 'catid' );
 	}
 
 	/**
@@ -1103,7 +1131,7 @@ class watsCategory extends mosDBTable
 	function loadTicketSet( $lifecycle, $watsid, $riteAll = false )
 	{
 		// create new ticketset
-		$this->ticketSet = new watsTicketSetHTML( $this->_db );
+		$this->ticketSet = new watsTicketSetHTML();
 		// load tickets
 		$this->ticketSet->loadTicketSet( $lifecycle, $watsid, $this->catid, $riteAll );
 	}
@@ -1126,13 +1154,14 @@ class watsCategory extends mosDBTable
 	/**
 	 * Returns an array of users who can have tickets assigned to.
 	 */
-	function getAssignee( $catid = null, $database = null )
+	function getAssignee( $catid = null )
 	{
-		if ( $catid == null )
-		{
-			$catid = $this->catid;
-			$database = $this->_db;
+		if ( $catid == null ) {
+			$catid = intval($this->catid);
 		}
+		
+		$database =& JFactory::getDBO();
+		
 		$database->setQuery( "SELECT wu.watsid, u.username
 								FROM #__wats_permissions AS p
 								LEFT  JOIN #__wats_users AS wu ON wu.grpid = p.grpid
@@ -1156,8 +1185,8 @@ class watsCategory extends mosDBTable
 	/**
 	 * static
 	 */
-	function newCategory( $name, $description, $image, &$database )
-	{
+	function newCategory( $name, $description, $image ) {
+	    $database =& JFactory::getDBO();
 		// check doesn't already exist
 		$database->setQuery( "SELECT name FROM #__wats_category WHERE name='".$name."';");
 		$database->query();
@@ -1191,15 +1220,17 @@ class watsCategory extends mosDBTable
 	 */
 	function updateCategory()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// check already exists
-		$this->_db->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".$this->catid);
-		$this->_db->query();
-		if ( $this->_db->getNumRows() != 0 )
+		$datbase->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".$this->catid);
+		$database->query();
+		if ( $database->getNumRows() != 0 )
 		{
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_category SET name='".$this->name."', description='".$this->description."', image='".$this->image."' WHERE catid='".$this->catid."';" );
+			$database->setQuery( "UPDATE #__wats_category SET name='".$this->name."', description='".$this->description."', image='".$this->image."' WHERE catid='".$this->catid."';" );
 			// execute
-			$this->_db->query();
+			$database->query();
 			return true;
 		}
 		else
@@ -1213,15 +1244,17 @@ class watsCategory extends mosDBTable
 	 */
 	function delete()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// remove tickets
-		$this->_db->setQuery( "DELETE FROM #__wats_ticket WHERE category=".$this->catid.";" );
-		$this->_db->query();
+		$database->setQuery( "DELETE FROM #__wats_ticket WHERE category=".$this->catid.";" );
+		$database->query();
 		// remove rites matrixes
-		$this->_db->setQuery( "DELETE FROM #__wats_permissions WHERE catid=".$this->catid.";" );
-		$this->_db->query();
+		$database->setQuery( "DELETE FROM #__wats_permissions WHERE catid=".$this->catid.";" );
+		$database->query();
 		// remove category
-		$this->_db->setQuery( "DELETE FROM #__wats_category WHERE catid=".$this->catid.";" );
-		$this->_db->query();
+		$database->setQuery( "DELETE FROM #__wats_category WHERE catid=".$this->catid.";" );
+		$database->query();
 	}
 }
 
@@ -1239,9 +1272,7 @@ class watsAssign
 	 * 
 	 * @param database
 	 */	
-	function watsAssign( &$database )
-	{
-		$this->_db = &$database;
+	function watsAssign() {
 	}
 
 	/**
@@ -1254,7 +1285,7 @@ class watsAssign
 		// set watsId
 		$this->watsId = $watsId;
 		// create new ticketset
-		$this->ticketSet = new watsTicketSetHTML( $this->_db );
+		$this->ticketSet = new watsTicketSetHTML();
 		// load tickets
 		$this->ticketSet->loadTicketSet( 0, $this->watsId, -1, true, true );
 	}
@@ -1273,18 +1304,18 @@ class watsCategorySet
 	 * 
 	 * @param database
 	 */	
-	function watsCategorySet( &$database )
+	function watsCategorySet()
 	{
-		$this->_db = &$database;
+	    $database =& JFactory::getDBO();
 		// load categories
-		$this->_db->setQuery( "SELECT * FROM #__wats_category" );
-		$vars = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT * FROM #__wats_category" );
+		$vars = $database->loadObjectList();
 		// create category objects
 		$i = 0;
 		foreach( $vars as $var )
 		{
 			// create object
-			$this->categorySet[$i] = new watsCategoryHTML( $this->_db );
+			$this->categorySet[$i] = new watsCategoryHTML();
 			// load object
 			$this->categorySet[$i]->load( $var->catid );
 			// increment counter
@@ -1334,8 +1365,9 @@ class watsCss
 	/**
 	 * 
 	 */
-	function watsCss( &$database )
+	function watsCss()
 	{
+	    $database =& JFactory::getDBO();
 		$this->cssStyles = array();
 		$database->setQuery( "SELECT value FROM #__wats_settings WHERE name=\"css\"" );
 		$this->css = &$database->loadObjectList();
@@ -1518,85 +1550,6 @@ class watsCss
 
 /**
  * @version 1.0
- * @created 06-Dec-2005 21:44:11
- */
-class watsSettings
-{
-    var $_settings;
-	var $_db;
-
-	/**
-	 * 
-	 * @param database
-	 */
-	function watsSettings( &$database )
-	{
-		// set db
-		$this->_db =& $database;
-		$this->reload();
-	}
-
-	/**
-	 * 
-	 */
-	function reload()
-	{
-		// reset settings array
-		$this->_settings = null;
-		// load settings
-		$this->_db->setQuery( "SELECT * FROM #__wats_settings" );
-		$vars = $this->_db->loadObjectList();
-		// create category objects
-		foreach( $vars as $var )
-		{
-			// create index in array and give value
-			$this->_settings[$var->name] = $var->value;
-		}
-	}
-	
-	/**
-	 * 
-	 *  @param name of setting
-	 */
-	function get( $name )
-	{
-		if ( isset( $this->_settings[$name] ) )
-		{
-			return $this->_settings[$name];
-		}
-	}
-	
-	/**
-	 * 
-	 *  @param name of setting
-	 *  @param value of setting
-	 */
-	function set( $name, $value )
-	{
-		if ( isset( $this->_settings[$name] ) )
-		{
-			$this->_settings[$name] = $value;
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	function save()
-	{
-		$keys = array_keys( $this->_settings );
-		foreach( $keys as $key )
-		{
-			// changed for MySQL prior to 4.2, does not allow AS in UPDATE statement.
-			// $this->_db->setQuery( "UPDATE #__wats_settings AS s SET s.value=\"".$this->_settings[$key]."\" WHERE s.name=\"".$key."\";" );
-			$this->_db->setQuery( "UPDATE #__wats_settings SET value=\"".$this->_settings[$key]."\" WHERE name=\"".$key."\";");
-			$this->_db->query();
-		}
-	}
-}
-
-/**
- * @version 1.0
  * @created 07-May-2006 15:44:11
  */
 class watsDatabaseMaintenance
@@ -1607,10 +1560,7 @@ class watsDatabaseMaintenance
 	 * 
 	 * @param database
 	 */
-	function watsDatabaseMaintenance( &$database )
-	{
-		// set db
-		$this->_db = &$database;
+	function watsDatabaseMaintenance() {
 	}
 	
 	/**
@@ -1618,15 +1568,16 @@ class watsDatabaseMaintenance
 	 */
 	function performOrphanUsers()
 	{
+	    $database =& JFactory::getDBO();
 		// find errors
-		$this->_db->setQuery( "SELECT w.watsid, u.id AS id FROM #__wats_users AS w LEFT JOIN #__users AS u ON u.id = w.watsid WHERE u.id is null;" );
-		$errors = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT w.watsid, u.id AS id FROM #__wats_users AS w LEFT JOIN #__users AS u ON u.id = w.watsid WHERE u.id is null;" );
+		$errors = $database->loadObjectList();
 		// find errors
 		// resolve errors
 		foreach( $errors as $error )
 		{
 			// remove orphan users
-			$orphanUser = new watsUserHTML( $this->_db );
+			$orphanUser = new watsUserHTML();
 			$orphanUser->loadWatsUser( $error->watsid );
 			$orphanUser->delete( 'removeposts' );
 		}
@@ -1639,8 +1590,9 @@ class watsDatabaseMaintenance
 	 */
 	function performUserPermissionsFormat()
 	{
-		$this->_db->setQuery( "SELECT grpid, userrites FROM #__wats_groups;" );
-		$rows = $this->_db->loadObjectList();
+	    $database =& JFactory::getDBO();
+		$database->setQuery( "SELECT grpid, userrites FROM #__wats_groups;" );
+		$rows = $database->loadObjectList();
 		$errors = array();
 		$rites = array( 'V', 'M', 'E', 'D' );
 		// find errors
@@ -1678,8 +1630,9 @@ class watsDatabaseMaintenance
 	 */
 	function performPermissionSetsFormat()
 	{
-		$this->_db->setQuery( "SELECT grpid, catid, type FROM #__wats_permissions;" );
-		$rows = $this->_db->loadObjectList();
+	    $database =& JFactory::getDBO();
+		$database->setQuery( "SELECT grpid, catid, type FROM #__wats_permissions;" );
+		$rows = $database->loadObjectList();
 		$errors = array();
 		$rites = array( 'V', 'M', 'R', 'C', 'D', 'P', 'A', 'O' );
 		// find errors
@@ -1732,8 +1685,8 @@ class watsDatabaseMaintenance
 				}
 			}
 			// apply new rites string
-			$this->_db->setQuery( "UPDATE #__wats_permissions SET p.type=\"".$newRites."\" WHERE p.grpid=".$error->grpid." AND p.catid=".$error->catid.";" );
-			$this->_db->query();
+			$database->setQuery( "UPDATE #__wats_permissions SET p.type=\"".$newRites."\" WHERE p.grpid=".$error->grpid." AND p.catid=".$error->catid.";" );
+			$database->query();
 		}
 		// end resolve errors
 		return count( $errors );
@@ -1758,15 +1711,16 @@ class watsDatabaseMaintenance
 	 */
 	function performOrphanPermissionSets()
 	{
+	    $database =& JFactory::getDBO();
 		// get group missing
-		$this->_db->setQuery( "SELECT p.grpid, p.catid FROM #__wats_permissions AS p LEFT JOIN #__wats_groups AS g ON p.grpid = g.grpid WHERE g.grpid IS NULL;" );
+		$database->setQuery( "SELECT p.grpid, p.catid FROM #__wats_permissions AS p LEFT JOIN #__wats_groups AS g ON p.grpid = g.grpid WHERE g.grpid IS NULL;" );
 		$groupErrors = array();
-		$groupErrors = $this->_db->loadObjectList();
+		$groupErrors = $database->loadObjectList();
 		// end group missing
 		// get category missing
-		$this->_db->setQuery( "SELECT p.grpid, p.catid FROM #__wats_permissions AS p LEFT JOIN #__wats_category AS c ON p.catid = c.catid WHERE c.catid IS NULL;" );
+		$database->setQuery( "SELECT p.grpid, p.catid FROM #__wats_permissions AS p LEFT JOIN #__wats_category AS c ON p.catid = c.catid WHERE c.catid IS NULL;" );
 		$categoryErrors = array();
-		$categoryErrors = $this->_db->loadObjectList();
+		$categoryErrors = $database->loadObjectList();
 		// end category missing
 		
 		// merge arrays
@@ -1792,8 +1746,8 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// apply new rites string
-			$this->_db->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$error->grpid." AND catid=".$error->catid.";" );
-			$this->_db->query();
+			$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$error->grpid." AND catid=".$error->catid.";" );
+			$database->query();
 		}
 		// end resolve errors*/
 		return count( $errors );
@@ -1804,15 +1758,17 @@ class watsDatabaseMaintenance
 	 */
 	function performOrphanTickets()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// get user missing
-		$this->_db->setQuery( "SELECT t.ticketid, u.id FROM #__wats_ticket AS t LEFT JOIN #__users AS u ON t.watsid = u.id WHERE u.id IS NULL;" );
+		$database->setQuery( "SELECT t.ticketid, u.id FROM #__wats_ticket AS t LEFT JOIN #__users AS u ON t.watsid = u.id WHERE u.id IS NULL;" );
 		$userErrors = array();
-		$userErrors = $this->_db->loadObjectList();
+		$userErrors = $database->loadObjectList();
 		// end user missing
 		// get category missing
-		$this->_db->setQuery( "SELECT t.ticketid, t.category, c.catid FROM #__wats_ticket AS t LEFT JOIN #__wats_category AS c ON t.category = c.catid WHERE c.catid IS NULL;" );
+		$database->setQuery( "SELECT t.ticketid, t.category, c.catid FROM #__wats_ticket AS t LEFT JOIN #__wats_category AS c ON t.category = c.catid WHERE c.catid IS NULL;" );
 		$categoryErrors = array();
-		$categoryErrors = $this->_db->loadObjectList();
+		$categoryErrors = $database->loadObjectList();
 		// end category missing
 		
 		// merge arrays
@@ -1838,11 +1794,11 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// remove messages
-			$this->_db->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$error->ticketid.";" );
-			$this->_db->query();
+			$database->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$error->ticketid.";" );
+			$database->query();
 			// remove ticket
-			$this->_db->setQuery( "DELETE FROM #__wats_ticket WHERE ticketid=".$error->ticketid.";" );
-			$this->_db->query();
+			$database->setQuery( "DELETE FROM #__wats_ticket WHERE ticketid=".$error->ticketid.";" );
+			$database->query();
 		}
 		// end resolve errors
 		return count( $errors );
@@ -1853,15 +1809,17 @@ class watsDatabaseMaintenance
 	 */
 	function performOrphanMessages()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// get user missing
-		$this->_db->setQuery( "SELECT m.msgid FROM #__wats_msg AS m LEFT JOIN #__users AS u ON m.watsid = u.id WHERE u.id IS NULL;" );
+		$database->setQuery( "SELECT m.msgid FROM #__wats_msg AS m LEFT JOIN #__users AS u ON m.watsid = u.id WHERE u.id IS NULL;" );
 		$userErrors = array();
-		$userErrors = $this->_db->loadObjectList();
+		$userErrors = $database->loadObjectList();
 		// end user missing
 		// get ticket missing
-		$this->_db->setQuery( "SELECT m.msgid FROM #__wats_msg AS m LEFT JOIN #__wats_ticket AS t ON m.ticketid = t.ticketid WHERE t.ticketid IS NULL;" );
+		$database->setQuery( "SELECT m.msgid FROM #__wats_msg AS m LEFT JOIN #__wats_ticket AS t ON m.ticketid = t.ticketid WHERE t.ticketid IS NULL;" );
 		$ticketErrors = array();
-		$ticketErrors = $this->_db->loadObjectList();
+		$ticketErrors = $database->loadObjectList();
 		// end ticket missing
 		
 		// merge arrays
@@ -1887,8 +1845,8 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// remove messages
-			$this->_db->setQuery( "DELETE FROM #__wats_msg WHERE msgid=".$error->msgid.";" );
-			$this->_db->query();
+			$database->setQuery( "DELETE FROM #__wats_msg WHERE msgid=".$error->msgid.";" );
+			$database->query();
 		}
 		// end resolve errors
 		return count( $errors );
@@ -1899,15 +1857,17 @@ class watsDatabaseMaintenance
 	 */
 	function performMissingPermissionSets()
 	{
+	    $database =& JFactory::getDBO();
+		
 		// get number of groups
-		$this->_db->setQuery( "SELECT COUNT(*) AS size FROM #__wats_groups" );
-		$groupCounter = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_groups" );
+		$groupCounter = $database->loadObjectList();
 		// get number of categories
-		$this->_db->setQuery( "SELECT COUNT(*) AS size FROM #__wats_category" );
-		$categoryCounter = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_category" );
+		$categoryCounter = $database->loadObjectList();
 		// get number of sets
-		$this->_db->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions" );
-		$setCounter = $this->_db->loadObjectList();
+		$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions" );
+		$setCounter = $database->loadObjectList();
 		// number of sets that should exist
 		$sets = $groupCounter[0]->size * $categoryCounter[0]->size;
 		// number of sets missing
@@ -1922,13 +1882,13 @@ class watsDatabaseMaintenance
 		{
 			// determine where inconsistencies are and resolve them
 			// get groups
-			$this->_db->setQuery( "SELECT grpid FROM #__wats_groups" );
+			$database->setQuery( "SELECT grpid FROM #__wats_groups" );
 			$groups = array();
-			$groups = $this->_db->loadObjectList();
+			$groups = $database->loadObjectList();
 			// get categories
-			$this->_db->setQuery( "SELECT catid FROM #__wats_category" );
+			$database->setQuery( "SELECT catid FROM #__wats_category" );
 			$categories = array();
-			$categories = $this->_db->loadObjectList();
+			$categories = $database->loadObjectList();
 			// itterate through groups
 			foreach ( $groups as $group )
 			{
@@ -1936,13 +1896,13 @@ class watsDatabaseMaintenance
 				foreach ( $categories as $category )
 				{
 					// check set exists
-					$this->_db->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions WHERE catid=".$category->catid." AND grpid=".$group->grpid.";" );
-					$result = $this->_db->loadObjectList();
+					$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions WHERE catid=".$category->catid." AND grpid=".$group->grpid.";" );
+					$result = $database->loadObjectList();
 					// check exists
 					if ( $result[0]->size != 1 )
 					{
 						// inconsistency found -> create missing set
-						$watsUserGroup = new watsUserGroup( $this->_db, $group->grpid );
+						$watsUserGroup = new watsUserGroup( $database, $group->grpid );
 						$watsUserGroup->newPermissionSet( $category->catid );
 					}
 				}
@@ -1951,141 +1911,6 @@ class watsDatabaseMaintenance
 		return $totalMissingSets;
 	}
 
-}
-
-/**
- * @version 1.0
- * @created 04-Sep-2006
- * In development
- */
-class watsDatabaseWrapperItem
-{
-	var $_name;
-	var $_sql;
-	var $_errorNum;
-	var $_errorMsg;
-	var $_count;
-
-	/** 
-	 * @param name of Action
-	 * @param sql executed
-	 * @param error Number
-	 * @param error Message
-	 * @param count of results, null if inappropriate.
-	 */
-	function watsDatabaseWrapperItem( $name, $sql='', $errorNum=0, $errorMsg='', $count=null )
-	{
-		// set vars
-		$this->_name     = $name;
-		$this->_sql      = $sql;
-		$this->_errorNum = $errorNum;
-		$this->_errorMsg = $errorMsg;
-		$this->_count    = $count;
-	}
-
-}
-
-/**
- * @version 1.0
- * @created 26-Aug-2006
- * In development
- */
-class watsDatabaseWrapper
-{
-    var $_log;
-	var $_db;
-
-	/** 
-	 * @param database
-	 */
-	function watsDatabaseWrapper( &$database )
-	{
-		// set db
-		$this->_db = $database;
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'WATS Database Wrapper Initiated for WATS Debug' );
-	}
-	
-	/**
-	* @param int
-	*/
-	function debug( $level )
-	{
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Database debug level set to '.$level );
-		$this->_db->debug( $level );
-	}
-	
-	function query()
-	{
-		$tmp = $this->_db->query();
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg() );
-		return $tmp;
-	}
-
-	function query_batch( $abort_on_error=true, $p_transaction_safe = false)
-	{
-		$tmp = $this->_db->query_batch( $abort_on_error, $p_transaction_safe );
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Batch Executed', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg() );
-		return $tmp;
-	}
-
-	function loadResult()
-	{
-		$tmp = $this->_db->loadResult();
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed: loadResult', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg(), count( $tmp ) );
-		return $tmp;
-	}
-	
-	function loadResultArray( $numinarray = 0 )
-	{
-		$tmp = $this->_db->loadResultArray( $numinarray );
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed: loadResultArray', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg(), count( $tmp ) );
-		return $tmp;
-	}
-	
-	function loadAssocList( $key='' )
-	{
-		$tmp = $this->_db->loadAssocList( $key );
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed: loadAssocList', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg(), count( $tmp ) );
-		return $tmp;
-	}
-	
-	function loadObject( &$object )
-	{
-		$tmp = $this->_db->loadObject( $object );
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed: loadObject', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg(), count( $tmp ) );
-		return $tmp;
-	}
-	
-	function loadObjectList( $key='' )
-	{
-		$tmp = $this->_db->loadObjectList( $key );
-		$this->_log[] = new watsDatabaseWrapperItemHTML( 'Query Executed: loadObjectList', $this->_db->getQuery(), $this->_db->getErrorNum(), $this->_db->getErrorMsg(), count( $tmp ) );
-		return $tmp;
-	}
-
-	function getErrorNum() { return $this->_db->getErrorNum(); }
-	function getErrorMsg() { return $this->_db->getErrorMsg(); }
-	function getEscaped( $text ) { return $this->_db->getEscaped( $text ); }
-	function Quote( $text ) { return $this->_db->Quote( $text ); }
-	function NameQuote( $s ) { return $this->_db->NameQuote( $s ); }
-	function getPrefix() { return $this->_db->getPrefix(); }
-	function getNullDate() { return $this->_db->getNullDate(); }
-	function setQuery( $sql, $offset = 0, $limit = 0, $prefix='#__' ) { $this->_db->setQuery( $sql, $offset, $limit, $prefix ); }
-	function replacePrefix( $sql, $prefix='#__' ) { return $this->_db->replacePrefix( $sql, $prefix ); }
-	function getQuery() { return $this->_db->getQuery(); }
-	function explain() { return $this->_db->explain(); }
-	function getNumRows( $cur=null ) { return $this->_db->getNumRows( $cur ); }
-	function loadRow() { return $this->_db->loadRow(); }
-	function loadRowList( $key='' ) { return $this->_db->loadRowList( $key ); }
-	function insertObject( $table, &$object, $keyName = NULL, $verbose=false ) { return $this->_db->insertObject( $table, $object, $keyName, $verbose ); }
-	function updateObject( $table, &$object, $keyName, $updateNulls=true ) { return $this->_db->updateObject( $table, $object, $keyName, $updateNulls ); }
-	function stderr( $showSQL = false ) { return $this->_db->stderr( $showSQL ); }
-	function insertid() { return $this->_db->insertid(); }
-	function getVersion() { return $this->_db->getVersion(); }
-	function getTableList() { return $this->_db->getTableList(); }
-	function getTableCreate( $tables ) { return $this->_db->getTableCreate( $tables ); }
-	function getTableFields( $tables ) { return $this->_db->getTableFields( $tables ); }
-	function GenID( $foo1=null, $foo2=null ) { return $this->_db->GenID( $foo1, $foo2 ); }
 }
 
 ?>

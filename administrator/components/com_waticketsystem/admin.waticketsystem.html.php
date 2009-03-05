@@ -9,7 +9,7 @@
  */
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
 
 // include classes
 require("components/com_waticketsystem/admin.waticketsystem.class.php");
@@ -24,8 +24,8 @@ class watsUserHTML extends watsUser
 	 *
 	 * @param database
 	 */
-	 function watsUserHTML( &$database ) {
-	 	$this->mosUser( $database );
+	 function watsUserHTML() {
+	 	$this->watsUser();
 	 }
 
 	/**
@@ -89,8 +89,9 @@ class watsUserHTML extends watsUser
 						<td width=\"85%\">
 							<select name=\"grpId\">";
 		// groups
-		$this->_db->setQuery( "SELECT g.grpid, g.name FROM #__wats_groups AS g ORDER BY g.name" );
-		$groups = $this->_db->loadObjectList();
+		$db =& JFactory::getDBO();
+		$db->setQuery( "SELECT g.grpid, g.name FROM #__wats_groups AS g ORDER BY g.name" );
+		$groups = $db->loadObjectList();
 		$noOfGroups = count( $groups );
 		$i = 0;
 		while ( $i < $noOfGroups )
@@ -183,8 +184,10 @@ class watsUserHTML extends watsUser
 	 * static
 	 * @param database
 	 */
-	 function newForm( &$database ) {
-	 	global $wats;
+	 function newForm() {
+	 	
+		$wats =& WFactory::getConfig();
+		
 	 	echo "<table class=\"adminform\">
 					<tr>
 						<th colspan=\"2\">
@@ -198,6 +201,7 @@ class watsUserHTML extends watsUser
 						<td>
 				  <select name=\"user[]\" size=\"10\" multiple=\"multiple\" id=\"user\">";
 		// potential users
+		$database =& JFactory::getDBO();
 		$database->setQuery( "SELECT u.username, u.id, u.name FROM #__users AS u LEFT OUTER JOIN #__wats_users AS wu ON u.id=wu.watsid where wu.watsid is null" );
 		$users = $database->loadObjectList();
 		$noOfNullUsers = count( $users );
@@ -255,47 +259,44 @@ class watsUserSetHTML extends watsUserSet
 	 */
 	function view( $limitstart, $limit )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& WFactory::getConfig();
+		
+		echo "<form name=\"adminForm\" method=\"post\" action=\"index.php?option=com_banners\">
+			  <input type=\"hidden\" value=\"com_waticketsystem\" name=\"option\"/>
+			  <input type=\"hidden\" value=\"\" name=\"task\"/>
+			  <input type=\"hidden\" value=\"user\" name=\"act\"/>";
+		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
-				    <tr>
-					  <th scope=\"col\" class=\"title\">&nbsp;</th>
-					  <th scope=\"col\" class=\"title\">Username (name)</th>
-					  <th scope=\"col\" class=\"title\">Organisation</th>
-					  <th scope=\"col\" class=\"title\">Group</th>
-					  <th scope=\"col\" class=\"title\">Email</th>
-					  <th scope=\"col\" class=\"title\">&nbsp;</th>
-				    </tr>";
-		// if start is too high, reset to 0
-		if ( $limitstart > $this->noOfUsers )
-		{
-			$limitstart = 0;
-		} 
-		// determine finish point
-		$limit = $limitstart + $limit;
-		if ( $limit > $this->noOfUsers )
-		{
-			$limit = $this->noOfUsers;
-		}
+					<thead>
+						<tr>
+						  <th scope=\"col\" class=\"title\" style=\"width: 16px;\">&nbsp;</th>
+						  <th scope=\"col\" class=\"title\">Username (name)</th>
+						  <th scope=\"col\" class=\"title\">Organisation</th>
+						  <th scope=\"col\" class=\"title\">Group</th>
+						  <th scope=\"col\" class=\"title\">Email</th>
+						</tr>
+					</thead>
+					<tbody>";
 		// itterate through users
-		while ( $limitstart < $limit )
+		while ( $limitstart < $this->noOfUsers )
 		{
 			echo "<tr class=\"row".($limitstart % 2)."\">
 					<td>
-				      <img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."user1616.gif\" height=\"16\" width=\"16\" border=\"0\">
+					    <img src=\"../components/com_waticketsystem/images/".$wats->get('iconset', "PATH")."user1616.gif\" height=\"16\" width=\"16\" border=\"0\">
 			        </td>
-					<td>";
-			echo "<a href=\"index2.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstart]->id."\">".$this->userSet[$limitstart]->username."</a> (".$this->userSet[$limitstart]->name.")
+					<td>
+			            <a href=\"index2.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstart]->id."\">".$this->userSet[$limitstart]->username."</a> (".$this->userSet[$limitstart]->name.")
 			        </td>
 					<td>".$this->userSet[$limitstart]->organisation."</td>
 					<td>".$this->userSet[$limitstart]->groupName."</td>
 					<td>".$this->userSet[$limitstart]->email."</td>
-					<td>";
-				//echo "<a onClick=\"watsConfirmAction('delete me? XXX', 'index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."')\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
-			echo "</td>
 				  </tr>";
 			$limitstart ++;
 		} // end itterate through users
-		echo "</table>";
+		echo "</tbody></table>";
+		echo "</form>";
 	}
 
 	/**
@@ -303,7 +304,7 @@ class watsUserSetHTML extends watsUserSet
 	 */
 	function pageNav( $option, $limitstart, $limit )
 	{
-		global $mainframe, $mosConfig_list_limit;
+		/*global $mainframe, $mosConfig_list_limit;
 
 		//allternatively
 		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
@@ -315,7 +316,7 @@ class watsUserSetHTML extends watsUserSet
 		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"user\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
 	}
 	
 }
@@ -332,7 +333,10 @@ class watsTicketHTML extends watsTicket
 	 */	
 	function view( )
 	{
-		global $wats, $Itemid;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		// echo out
 		echo "<table class=\"adminform\"><tr><th>".$this->name."<br/>";
 		echo "Ticket ID: WATS-".$this->ticketId."</th></tr></table>";
@@ -341,7 +345,7 @@ class watsTicketHTML extends watsTicket
 		while ( $i < $this->msgNumberOf )
 		{
 			// create new user
-			$msgUser = new watsUserHTML( $this->_db );
+			$msgUser = new watsUserHTML();
 			$msgUser->loadWatsUser( $this->_msgList[$i]->watsId  );
 			// print message
 			echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
@@ -364,7 +368,10 @@ class watsTicketHTML extends watsTicket
 	 */
 	function make( &$categorySet, &$watsUser )
 	{
-		global $wats, $Itemid;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		// header and ticket name
 		echo "<span class=\"watsHeading1\">"._WATS_TICKETS_SUBMIT."</span>
 			  <div class=\"watsTicketMake\" id=\"watsTicketMake\">
@@ -406,7 +413,10 @@ class watsTicketHTML extends watsTicket
 
 	function reopen()
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		echo "<div id=\"watsReply\" class=\"watsReply\">
 		      <form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=completeReopen&ticketid=".$this->ticketId."\" onsubmit=\"return watsValidateTicketReopen( this, 'refill form XXX', '".$wats->get( 'defaultmsg' )."' );\">
 			  Please give a reason why you want to reopen this ticket XXXX";
@@ -441,9 +451,9 @@ class watsTicketSetHTML extends watsTicketSet
 	 * 
 	 * @param database
 	 */
-	function watsTicketSetHTML( &$database )
+	function watsTicketSetHTML()
 	{
-		$this->watsTicketSet( $database );
+		$this->watsTicketSet();
 	}
 
 	/**
@@ -453,37 +463,28 @@ class watsTicketSetHTML extends watsTicketSet
 	 */
 	function view( $limit, $limitstart )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
+				<thead>
 				    <tr>
-					  <th scope=\"col\" class=\"title\" width=\"20\">&nbsp;</th>
 					  <th scope=\"col\" class=\"title\" >Name</th>
 					  <th scope=\"col\" class=\"title\" >User</th>
 					  <th scope=\"col\" class=\"title\" >Posts</th>
 					  <th scope=\"col\" class=\"title\" >First Post</th>
 					  <th scope=\"col\" class=\"title\" >Last Post</th>
 					  <th scope=\"col\" class=\"title\" width=\"40\">Status</th>
-				    </tr>";
-		// if start is too high, reset to 0
-		if ( $limitstart > $this->ticketNumberOf )
-		{
-			$limitstart = 0;
-		} 
-		// determine finish point
-		$limit = $limitstart + $limit;
-		if ( $limit > $this->ticketNumberOf )
-		{
-			$limit = $this->ticketNumberOf;
-		}
+				    </tr>
+				</thead>
+				<tbody>";
 		// itterate through tickets
-		while ( $limitstart < $limit )
+		while ( $limitstart < $this->ticketNumberOf )
 		{
 			echo "<tr class=\"row".($limitstart % 2)."\">
-					<td>";
-				echo "&nbsp;";
-			echo "  </td>
-					<td>";
-			echo "<a href=\"index2.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstart]->ticketId."\">".$this->_ticketList[$limitstart]->name."</a></td>
+					<td>
+			            <a href=\"index2.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstart]->ticketId."\">".$this->_ticketList[$limitstart]->name."</a></td>
 					<td>".$this->_ticketList[$limitstart]->username."</td>
 					<td>".$this->_ticketList[$limitstart]->msgNumberOf."</td>
 					<td>".date( $wats->get( 'date' ), $this->_ticketList[$limitstart]->datetime )."</td>
@@ -506,7 +507,7 @@ class watsTicketSetHTML extends watsTicketSet
 			echo "</td></tr>";
 			$limitstart ++;
 		} // end itterate through tickets
-		echo "</table>";
+		echo "</tbody></table>";
 	}
 	
 	/**
@@ -516,7 +517,7 @@ class watsTicketSetHTML extends watsTicketSet
 	{
 		global $mainframe, $mosConfig_list_limit;
 
-		//allternatively
+		/*//allternatively
 		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
 		$total = $this->ticketNumberOf;
 		$pageNav = new mosPageNav( $total, $limitstart, $limit );
@@ -524,7 +525,7 @@ class watsTicketSetHTML extends watsTicketSet
 		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"ticket\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
 	}
 	
 }
@@ -539,9 +540,9 @@ class watsCategoryHTML extends watsCategory
 	 * 
 	 * @param database
 	 */	
-	function watsCategoryHTML( &$database )
+	function watsCategoryHTML()
 	{
-		$this->watsCategory( $database );
+		$this->watsCategory();
 	}
 	
 	/**
@@ -671,7 +672,10 @@ class watsAssignHTML extends watsAssign
 	 */
 	function view( )
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsCategoryView\">
 			    <tr>
 				  <th colspan=\"2\" scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=assign&task=view&page=1\">".$wats->get( 'assignname' )."</a></th>
@@ -768,7 +772,8 @@ class watsCategorySetHTML extends watsCategorySet
 	 */	
 	function viewWithTicketSet( $finish, $start = 0, &$watsUser )
 	{
-		global $wats;
+		$wats =& JFactory::getConfig();
+		
 		foreach( $this->categorySet as $category )
 		{
 			echo "<div class=\"watsCategoryViewWithTicketSet\" id=\"watsCategory".$category->catid."\">";
@@ -784,7 +789,10 @@ class watsCategorySetHTML extends watsCategorySet
 	 */		
 	function select()
 	{
-		global $Itemid, $wats;
+		global $Itemid;
+		
+		$wats =& JFactory::getConfig();
+		
 		echo "<select name=\"option\" id=\"watsCategorySetSelect\" class=\"watsCategorySetSelect\">
 				<option onClick=\"watsCategorySetSelect( -1, $Itemid )\">".$wats->get( 'name' )."</option>\n";
 	    foreach( $this->categorySet as $category )
@@ -803,33 +811,23 @@ class watsCategorySetHTML extends watsCategorySet
 	{
 		global $Itemid, $wats;
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
+				<thead>
 				    <tr>
-					  <th scope=\"col\" class=\"title\">&nbsp;</th>
 					  <th scope=\"col\" class=\"title\">Name</th>
 					  <th scope=\"col\" class=\"title\">Description</th>
-					  <th scope=\"col\" class=\"title\">&nbsp;</th>
-				    </tr>";
-		// if start is too high, reset to 0
-		if ( $limitstart > count($this->categorySet) )
-		{
-			$limitstart = 0;
-		} 
-		// determine finish point
-		if ( $limit > count($this->categorySet) )
-		{
-			$limit = count($this->categorySet);
-		}
+				    </tr>
+				</thead>
+				<tbody>";
 		// itterate through users
-		while ( $limitstart < $limit )
+		while ( $limitstart < count($this->categorySet) )
 		{
-			echo "<tr><td class=\"row".$limitstart."\">&nbsp;</td>";
 			echo "<td><a href=\"index2.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstart]->catid."\">".$this->categorySet[$limitstart]->name."</a></td>";
 			echo "<td>".$this->categorySet[$limitstart]->description."</td>";
-			echo "<td>&nbsp;</td>";
+			echo "<td>".$this->categorySet[$limitstart]->description."</td>";
 			echo "</tr>";
 			$limitstart ++;
 		} // end itterate through users
-		echo "</table>";
+		echo "</tbody></table>";
 	}
 	
 	/**
@@ -840,7 +838,7 @@ class watsCategorySetHTML extends watsCategorySet
 		global $mainframe, $mosConfig_list_limit;
 
 		//allternatively
-		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
+		/*require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
 		//$limit = $mainframe->getUserStateFromRequest( 'viewlistlimit', 'limit', $mosConfig_list_limit );
 		//$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
 		$total = count($this->categorySet);
@@ -849,12 +847,12 @@ class watsCategorySetHTML extends watsCategorySet
 		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"category\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
 	}
 	
 }
 
-class watsSettingsHTML extends watsSettings
+class watsSettingsHTML extends WConfig
 {
 
 	/*
@@ -868,25 +866,6 @@ class watsSettingsHTML extends watsSettings
 				<tr>
 				  <td width=\"185\">Name:</td><td><input name=\"watsSettingname\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('name')."\" /></td></tr><tr>
 				  <td width=\"185\">Copyright:</td><td><input name=\"watsSettingcopyright\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('copyright')."\" /></td></tr><tr>
-				  <td width=\"185\">Language:</td><td>";
-		$path = $mosConfig_absolute_path.'/components/com_waticketsystem/lang';
-		if ($handle = opendir($path))
-		{
-			echo '<select name="watsSettinglang" id="watsSettinglang">';
-			while (false !== ($lang = readdir($handle)))
-			{ 
-				if ($lang != "." && $lang != ".." && is_file($path . "/" . $lang))
-				{
-					if ((substr(strrchr($lang,"."),1)) == 'php')
-					{
-						echo ($this->get('lang') == $lang) ? '<option value="'.$lang.'" selected="selected">'.substr($lang,0,strpos($lang,'.')).'</option>' : '<option value="'.$lang.'">'.substr($lang,0,strpos($lang,'.')).'</option>';
-					}
-				}	
-			}
-			echo '</select>';
-			closedir($handle);
-		}
-		echo "</td></tr><tr>
 				  <td width=\"185\">Date Format:</td><td><input name=\"watsSettingdate\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('date')."\" /></td></tr><tr>
 				  <td width=\"185\">Short Date Format:</td><td><input name=\"watsSettingdateshort\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('dateshort')."\" /></td></tr><tr>
 				  <td width=\"185\">Message Box Editor:</td><td>
@@ -895,7 +874,7 @@ class watsSettingsHTML extends watsSettings
 		echo ($this->get('msgbox') == 'bbcode') ? '<option value="bbcode" selected="selected">BBCode</option>' : '<option value="bbcode">BBCode</option>';
 		echo ($this->get('msgbox') == 'none') ? '<option value="none" selected="selected">None</option>' : '<option value="none">None</option>';
 		echo "		</select> ";
-		echo mosToolTip( "BBCode is the recomended option" );
+		echo JHTML::_("tooltip", "BBCode is the recomended option");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Message Box Tips:</td><td>
 					  <input type=\"radio\" name=\"watsSettingmsgboxt\" id=\"msgboxtNo\" value=\"0\"";
@@ -906,7 +885,7 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('msgboxt') == 1) ? " checked=\"checked\"" : " ";
 					   echo " class=\"inputbox\" />
 					  <label for=\"msgboxtYes\">Yes</label> ";
-		echo mosToolTip( "Include BBCode tips, if BBCode editor is enabled" );
+		echo JHTML::_("tooltip", "Include BBCode tips, if BBCode editor is enabled");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Message Box Hieght:</td><td><input name=\"watsSettingmsgboxh\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('msgboxh')."\" /></td></tr><tr>
 				  <td width=\"185\">Message Box Width:</td><td><input name=\"watsSettingmsgboxw\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('msgboxw')."\" /></td></tr><tr>
@@ -934,7 +913,7 @@ class watsSettingsHTML extends watsSettings
 		echo ($this->get('ticketsfront') == '25') ? '<option value="25" selected="selected">25</option>' : '<option value="25">25</option>';
 		echo ($this->get('ticketsfront') == '30') ? '<option value="30" selected="selected">30</option>' : '<option value="30">30</option>';
 		echo "		</select> ";
-		echo mosToolTip( "Number of tickets displayed per category on the frontpage" );
+		echo JHTML::_("tooltip", "Number of tickets displayed per category on the frontpage");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Sub Page Tickets:</td><td>
 					<select name=\"watsSettingticketssub\" size=\"1\" class=\"inputbox\" id=\"watsSettingticketssub\">";
@@ -945,7 +924,7 @@ class watsSettingsHTML extends watsSettings
 		echo ($this->get('ticketssub') == '25') ? '<option value="25" selected="selected">25</option>' : '<option value="25">25</option>';
 		echo ($this->get('ticketssub') == '30') ? '<option value="30" selected="selected">30</option>' : '<option value="30">30</option>';
 		echo "		</select> ";
-		echo mosToolTip( "Number of tickets displayed on each category page." );
+		echo JHTML::_("tooltip", "Number of tickets displayed on each category page.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Enable Highlighting:</td><td>
 				  	  <input type=\"radio\" name=\"watsSettingenhighlight\" id=\"msgboxtNo\" value=\"0\"";
@@ -956,7 +935,7 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('enhighlight') == 1) ? " checked=\"checked\"" : " ";
 					   echo " class=\"inputbox\" />
 					  <label for=\"enhighlightYes\">Yes</label> ";
-		echo mosToolTip( "Highligt unread tickets." );
+		echo JHTML::_("tooltip", "Highligt unread tickets.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Highlight Text:</td><td><input name=\"watsSettinghighlight\" type=\"text\" maxlength=\"255\" size=\"20\" value=\"".$this->get('highlight')."\" /></td></tr><tr>
 				  <td width=\"185\">Default Message:</td><td><input name=\"watsSettingdefaultmsg\" type=\"text\" maxlength=\"255\" size=\"20\" value=\"".$this->get('defaultmsg')."\" /></td></tr><tr>
@@ -970,6 +949,8 @@ class watsSettingsHTML extends watsSettings
 	 */
 	function editUser()
 	{
+	    JHTML::_("behavior.tooltip");
+		
 		echo "<table class=\"adminform\">
 				<tr>
 				  <td width=\"185\">Allow All User Access:</td><td>
@@ -981,7 +962,7 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('users') == 1) ? " checked=\"checked\"" : " ";
 					   echo " class=\"inputbox\" />
 					  <label for=\"usersYes\">Yes</label> ";
-		echo mosToolTip( "Allow all registered users access to the ticket system. Prevents having to manually add users." );
+		echo JHTML::_("tooltip", "Allow all registered users access to the ticket system. Prevents having to manually add users.");
 		echo "	  </td>
 				</tr><tr>
 				  <td width=\"185\">Import User:</td><td>
@@ -993,13 +974,13 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('usersimport') == 1) ? " checked=\"checked\"" : " ";
 					   echo " class=\"inputbox\" />
 					  <label for=\"usersimportYes\">Yes</label> ";
-		echo mosToolTip( "Adds users to the default group the first time they visit. Only applicable if Allow All User Access is enabled." );
+		echo JHTML::_("tooltip", "Adds users to the default group the first time they visit. Only applicable if Allow All User Access is enabled.");
 		echo "	  </td>
 				</tr><tr>
 				  <td width=\"185\">Default group:</td><td>
 				  	  <select name=\"watsSettinguserdefault\" size=\"1\" class=\"inputbox\" id=\"watsSettinguserdefault\">";
 		// get groups
-		$groups = new watsUserGroupSet( $this->_db );
+		$groups = new watsUserGroupSet();
 		$groups->loadUserGroupSet();
 		$groups = $groups->getNamesAndIds();
 		$groupIds = array_keys( $groups );
@@ -1008,7 +989,7 @@ class watsSettingsHTML extends watsSettings
 			echo ($this->get('userdefault') == $groupId) ? '<option value="'.$groupId.'" selected="selected">'.$groups[$groupId].'</option>' : '<option value="'.$groupId.'">'.$groups[$groupId].'</option>';
 		}
 		echo "		</select> ";
-		echo mosWarning( "Make sure the group you choose is correct, if it is not users may have rites to areas they should not! The default group is only used if Allow All User Access is enabled.", "WATS Warning" );
+		echo JHTML::_("tooltip", "Make sure the group you choose is correct, if it is not users may have rites to areas they should not! The default group is only used if Allow All User Access is enabled.", "WATS Warning", "warning.png");
 		echo "	  </td>
 				</tr>
 			  </table>";
@@ -1030,10 +1011,10 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('agree') == 1) ? " checked=\"checked\"" : " ";
 					   echo "class=\"inputbox\" />
 					  <label for=\"notifyUsersYes\">Yes</label> ";
-		echo mosToolTip( "Force user to accept an agreement before continuing." );
+		echo JHTML::_("tooltip", "Force user to accept an agreement before continuing.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Agreement ItemId:</td><td><input name=\"watsSettingagreei\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('agreei')."\" /> ";
-		echo mosToolTip( "ItemId of the agreement content." );
+		echo JHTML::_("tooltip", "ItemId of the agreement content.");
 		echo "</td></tr><tr>
 				  <td width=\"185\">Warning Line:</td><td><input name=\"watsSettingagreelw\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('agreelw')."\" /></td></tr><tr>
 				  <td width=\"185\">Agreement Name:</td><td><input name=\"watsSettingagreen\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('agreen')."\" /></td></tr><tr>
@@ -1058,16 +1039,16 @@ class watsSettingsHTML extends watsSettings
 					   echo ($this->get('notifyusers') == 1) ? " checked=\"checked\"" : " ";
 					   echo "class=\"inputbox\" />
 					  <label for=\"notifyUsersYes\">Yes</label> ";
-		echo mosToolTip( "Notifties associated users when new tickets and replies are made." );
+		echo JHTML::_("tooltip", "Notifties associated users when new tickets and replies are made.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Notify Email:</td><td><input name=\"watsSettingnotifyemail\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('notifyemail')."\" /> ";
-		echo mosToolTip( "Email address that recieves all notification emails." );
+		echo JHTML::_("tooltip", "Email address that recieves all notification emails.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Source Email:</td><td><input name=\"watsSettingsourceemail\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('sourceemail')."\" /> ";
-		echo mosToolTip( "Email address that the notifcations come from." );
+		echo JHTML::_("tooltip", "Email address that the notifcations come from.");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Email Subject:</td><td><input name=\"watsSettingnewpostmsg\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg')."\" /> ";
-		echo mosToolTip( "Subject line of notification emails" );
+		echo JHTML::_("tooltip", "Subject line of notification emails");
 		echo "	  </td></tr><tr>
 				  <td width=\"185\">Email Line 1:</td><td><input name=\"watsSettingnewpostmsg1\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg1')."\" /></td></tr><tr>
 				  <td width=\"185\">Email Line 2:</td><td><input name=\"watsSettingnewpostmsg2\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg2')."\" /></td></tr><tr>
@@ -1079,8 +1060,11 @@ class watsSettingsHTML extends watsSettings
 	/*
 	 *
 	 */
-	function editDebug()
-	{
+	function editDebug() {
+		$db =& JFactory::getDBO();
+		
+		JHTML::_("behavior.tooltip");
+	
 		echo "<table class=\"adminform\">
 			<tr>
 			  <td width=\"185\">Debug Mode:</td><td>
@@ -1092,11 +1076,11 @@ class watsSettingsHTML extends watsSettings
 				echo ($this->get('debug') == 1) ? " checked=\"checked\"" : " ";
 				echo "class=\"inputbox\" />
 				<label for=\"debugYes\">Yes</label> ";
-				echo mosWarning( "Debug mode affects the course of events in the frontend, it is recomended that you do not enable debug mode on a live system.", "WATS Warning" );
+				echo JHTML::_("tooltip", "Debug mode affects the course of events in the frontend, it is recomended that you do not enable debug mode on a live system.", "WATS Warning", "warning.png");
 		echo "</td></tr>
 			<tr><td width=\"185\">
 				Debug Message:</td><td><input name=\"watsSettingdebugmessage\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('debugmessage')."\" /> ";
-				echo mosToolTip( "Continuation message displayed when in debug mode; replaces auto redirections." );
+				echo JHTML::_("tooltip", "Continuation message displayed when in debug mode; replaces auto redirections.");
 		echo " </td></tr>
 			<tr>
 			 <td colspan=\"2\">";
@@ -1106,10 +1090,10 @@ class watsSettingsHTML extends watsSettings
 		// output settings
 		print_r( $this->_settings );
 		// get system settings
-		require_once( '../includes/version.php' );
+		//require_once( '../includes/version.php' );
 		$systemSettings = array();
 		$systemSettings[ 'phpVersion' ] = phpversion();
-		$systemSettings[ 'mySQLVersion' ] = $this->_db->getVersion();
+		$systemSettings[ 'mySQLVersion' ] = $db->getVersion();
 		if ( class_exists( 'joomlaVersion' ) )
 		{
 			$version = new joomlaVersion();
@@ -1133,6 +1117,8 @@ class watsSettingsHTML extends watsSettings
 	 */
 	function editUpgrade()
 	{
+		JHTML::_("behavior.tooltip");
+	
 		echo "<table class=\"adminform\">
 				<tr>
 				  <td colspan=\"2\">";
@@ -1147,12 +1133,8 @@ class watsSettingsHTML extends watsSettings
 					  <input type=\"radio\" name=\"watsSettingupgrade\" id=\"upgrade\" value=\"1\"";
 					   echo ($this->get('upgrade') == 1) ? " checked=\"checked\"" : " ";
 					   echo "class=\"inputbox\" />
-					  <label for=\"notifyUsersYes\">Yes</label> ".mosWarning( "Make sure you have made the correct selection before unistalling, incorrect use could result in the loss of data.", "WATS Warning" )."</td></tr>
-				<tr>
-				  <td colspan=\"2\">
-				  	  <p>Check for a newer version <a href=\"http://www.webamoeba.co.uk/joomla/?option=com_waversionchecker&Itemid=16&major=".$this->get('versionmajor')."&minor=".$this->get('versionminor')."&patch=".$this->get('versionpatch')."\" target=\"_blank\">here</a></p>
-				  </td>
-				</tr>
+					  <label for=\"notifyUsersYes\">Yes</label> ".JHTML::_("tooltip", "Make sure you have made the correct selection before unistalling, incorrect use could result in the loss of data.", "WATS Warning", "warning.png")."</td>
+				  </tr>
 			  </table>";
 	}
 
@@ -1162,12 +1144,15 @@ class watsSettingsHTML extends watsSettings
 	function about()
 	{
 	echo "<table class=\"adminlist\">
+			<thead>
 			<tr>
 				<th>
 					WebAmoeba Ticket System<br>
 					".$this->get('versionmajor').".".$this->get('versionminor').".".$this->get('versionpatch')." ( ".$this->get('versionname')." )
 				</th>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
 				<td nowrap=\"true\" align=\"center\">
 					<p><strong>Developers</strong><br />
@@ -1204,6 +1189,7 @@ class watsSettingsHTML extends watsSettings
 					urano</p>
 				</td>
 			</tr>
+			</tbody>
 		</table>";
 	}
 	
@@ -1241,7 +1227,9 @@ class watsCssHTML extends watsCss
 	 */
 	function processSettings()
 	{
-		global $_POST, $wats;
+		global $_POST;
+		
+		$wats =& WFactory::getConfig();
 		
 		// enable disable css
 		if ( isset( $_POST['watsCSS'] ) )
@@ -1300,6 +1288,8 @@ class watsCssHTML extends watsCss
 	 */
 	function editSettings()
 	{
+	    JHTML::_("behavior.tooltip");
+	
 		echo "  <table border=\"0\"> 
 				  <tr> 
 					<td colspan=\"2\">To make it easier to customise the visual appearance, you can, if you choose, use this integrated CSS editor. If you do choose to turn this option on, please make make sure that none of the styles defined here are in your template CSS file. </td> 
@@ -1317,7 +1307,7 @@ class watsCssHTML extends watsCss
 					  <input type=\"radio\" name=\"watsCSS\" id=\"watsCSSEnable\" value=\"enable\"";
 					   echo ($this->css == "enable") ? " checked=\"checked\"" : " ";
 					   echo "class=\"inputbox\" />
-					  <label for=\"watsCSSEnable\">Enable</label> ".mosWarning('Ensure no WATS styles are present in the site template before enabling', 'WATS Warning')."
+					  <label for=\"watsCSSEnable\">Enable</label> ".JHTML::_("tooltip", 'Ensure no WATS styles are present in the site template before enabling', 'WATS Warning', "warning.png")."
 					  </td> 
 				  </tr> 
 				  <tr> 
@@ -1603,6 +1593,8 @@ class watsUserGroupHTML extends watsUserGroup
 	{
 		global $Itemid;
 		
+		JHTML::_("behavior.tooltip");
+		
 		echo "  <table class=\"adminform\">
 					<tr>
 						<th colspan=\"2\">
@@ -1636,12 +1628,14 @@ class watsUserGroupHTML extends watsUserGroup
 					<tr>
 					    <td colspan=\"2\">";
 		// Tabs
-		$ritesTabs = new mosTabs(1);
-		$ritesTabs->startPane('ritesTabs');
+		jimport("joomla.html.pane");
+		
+		$ritesTabs = JPane::getInstance("tabs");
+		echo $ritesTabs->startPane('ritesTabs');
 		// fill tabs
 		{
 			// User Setup Rites
-			$ritesTabs->startTab( 'User Setup', 'ritesTabs' );
+			echo $ritesTabs->startPanel( 'User Setup', 'ritesTabs' );
 		echo "  <table class=\"adminform\">
 					<tr>
 						<td width=\"100\">
@@ -1651,7 +1645,7 @@ class watsUserGroupHTML extends watsUserGroup
 							<input name=\"userGroupV\" type=\"checkbox\"";
 							echo ($this->checkUserPermission('V') == 2) ? " checked=\"checked\"" : "" ;
 							echo " /> ";
-							echo mosWarning('This will allow all users of this group to view ALL other user accounts for this component.', 'WATS Warning');
+							echo JHTML::_("tooltip", 'This will allow all users of this group to view ALL other user accounts for this component.', 'WATS Warning', "warning.png");
 						echo "</td>
 					</tr>
 					<tr>
@@ -1662,7 +1656,7 @@ class watsUserGroupHTML extends watsUserGroup
 							<input name=\"userGroupM\" type=\"checkbox\"";
 							echo ($this->checkUserPermission('M') == 2) ? " checked=\"checked\"" : "" ;
 							echo " /> ";
-							echo mosWarning('This will allow all users of this group to ADD user accounts to this component.', 'WATS Warning');
+							echo JHTML::_("tooltip", 'This will allow all users of this group to ADD user accounts to this component.', 'WATS Warning', "warning.png");
 						echo "</td>
 					</tr>
 					<tr>
@@ -1673,7 +1667,7 @@ class watsUserGroupHTML extends watsUserGroup
 							<input name=\"userGroupE\" type=\"checkbox\"";
 							echo ($this->checkUserPermission('E') == 2) ? " checked=\"checked\"" : "" ;
 							echo " /> ";
-							echo mosWarning('This will allow all users of this group to EDIT user accounts in this component.', 'WATS Warning');
+							echo JHTML::_("tooltip", 'This will allow all users of this group to EDIT user accounts in this component.', 'WATS Warning', "warning.png");
 						echo "</td>
 					</tr>
 					<tr>
@@ -1684,18 +1678,18 @@ class watsUserGroupHTML extends watsUserGroup
 							<input name=\"userGroupD\" type=\"checkbox\"";
 							echo ($this->checkUserPermission('D') == 2) ? " checked=\"checked\"" : "" ;
 							echo " /> ";
-							echo mosWarning('This will allow all users of this group to DELETE user accounts from this component.', 'WATS Warning');
+							echo JHTML::_("tooltip", 'This will allow all users of this group to DELETE user accounts from this component.', 'WATS Warning', "warning.png");
 						echo "</td>
 					</tr>
 				</table>";
-			$ritesTabs->endTab();
+			echo $ritesTabs->endPanel();
 			// Rites Matrix
-			$ritesTabs->startTab( 'Rites Matrix', 'ritesTabs' );
+			echo $ritesTabs->startPanel( 'Rites Matrix', 'ritesTabs' );
 			$this->categoryRites->viewMatrix();
-			$ritesTabs->endTab();
+			echo $ritesTabs->endPanel();
 		}
 		// end fill tabs
-		$ritesTabs->endPane();
+		echo $ritesTabs->endPane();
 		echo "</tr></td></table>";
 	}
 
@@ -1780,7 +1774,7 @@ class watsUserGroupHTML extends watsUserGroup
 				// get rite
 				$rite = substr($key, strlen( $key ) - 1, strlen( $key ) );
 				// create watsUserGroupCategoryPermissionSet
-				$edit = new watsUserGroupCategoryPermissionSet( $this->_db, $_POST['groupid'], $catid );
+				$edit = new watsUserGroupCategoryPermissionSet( $_POST['groupid'], $catid );
 				$edit->setPermission( $rite, $_POST[$key] );
 				$edit->save();
 			}
@@ -1850,33 +1844,21 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 	{
 		global $Itemid, $wats;
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
-				    <tr>
-					  <th scope=\"col\" class=\"title\">&nbsp;</th>
-					  <th scope=\"col\" class=\"title\">Group</th>
-					  <th scope=\"col\" class=\"title\">Image</th>
-					  <th scope=\"col\" class=\"title\" width=\"35\">View</th>
-					  <th scope=\"col\" class=\"title\" width=\"35\">Make</th>
-					  <th scope=\"col\" class=\"title\" width=\"35\">Edit</th>
-					  <th scope=\"col\" class=\"title\" width=\"35\">Delete</th>
-				    </tr>";
-		// if start is too high, reset to 0
-		if ( $limitstart > $this->noOfGroups )
-		{
-			$limitstart = 0;
-		} 
-		// determine finish point
-		$limit = $limitstart + $limit;
-		if ( $limit > $this->noOfGroups )
-		{
-			$limit = $this->noOfGroups;
-		}
+				    <thead>
+						<tr>
+						  <th scope=\"col\" class=\"title\">Group</th>
+						  <th scope=\"col\" class=\"title\">Image</th>
+						  <th scope=\"col\" class=\"title\" width=\"35\">View</th>
+						  <th scope=\"col\" class=\"title\" width=\"35\">Make</th>
+						  <th scope=\"col\" class=\"title\" width=\"35\">Edit</th>
+						  <th scope=\"col\" class=\"title\" width=\"35\">Delete</th>
+						</tr>
+					</thead>
+					<tbody>";
 		// itterate through groups
-		while ( $limitstart < $limit )
+		while ( $limitstart < $this->noOfGroups )
 		{
 			echo "<tr class=\"row".($limitstart % 2)."\">
-					<td>
-				      &nbsp;
-			        </td>
 					<td><a href=\"index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$this->_userGroupList[$limitstart]->grpid."\">".$this->_userGroupList[$limitstart]->name."</a></td>
 					<td>".$this->_userGroupList[$limitstart]->image."</td>
 					<td><input name=\"userGroupV".$limitstart."\" type=\"checkbox\"";
@@ -1894,7 +1876,7 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 				  </tr>";
 			$limitstart ++;
 		} // end itterate through groups
-		echo "</table>";
+		echo "<tbody></table>";
 	}
 
 	/**
@@ -1904,14 +1886,14 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 	{
 		global $mainframe, $mosConfig_list_limit;
 
-		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
+		/*require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
 		$total = $this->noOfGroups;
 		$pageNav = new mosPageNav( $total, $limitstart, $limit );
 		echo $pageNav->getListFooter();
 		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"rites\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
 	}
 }
 
@@ -2175,100 +2157,4 @@ class watsDatabaseMaintenanceHTML extends watsDatabaseMaintenance
 	}
 }
 
-/**
- * @version 1.0
- * @created 04-Sep-2006
- */
-class watsDatabaseWrapperItemHTML extends watsDatabaseWrapperItem
-{
-
-	function view( &$database, $number )
-	{
-		$this->_sql = trim( $this->_sql );
-		$this->_sql = str_replace( '<pre>', '', $this->_sql);
-		$this->_sql = str_replace( '</pre>', '', $this->_sql);
-		// display query
-		echo "\n<p class=\"";
-		if ( $this->_errorNum )
-		{
-			echo 'watsDebugFail';
-		}
-		elseif ( $this->_count === 0 )
-		{
-			echo 'watsDebugQuestion';
-		}
-		else
-		{
-			echo 'watsDebugSuccess';
-		}
-		echo "\"><u>Action $number</u>";
-		echo ( $this->_sql ) ? "<a href=\"javascript:watsToggleLayer('watsDebugQueryArrayItem$number');\"> [explain]</a>" : '';
-		echo "<br />$this->_name";
-		echo ( $this->_count !== null ) ? "<br />Number of results returned: $this->_count</p>" : '</p>';
-		
-		if ( $this->_sql )
-		{
-			// check for semicolon
-			if ( substr( $this->_sql, -1, 1) != ';' )
-			{
-				$this->_sql .= ';';
-			}
-			echo "<div class=\"watsDebugExplain\" id=\"watsDebugQueryArrayItem$number\"><br />";
-			if ( $this->_errorNum != 0 )
-			{
-				// display error and SQL.
-				echo $this->_sql.'<br />Error: '.$this->_errorMsg.'<br />&nbsp;';
-			}
-			elseif ( substr( $this->_sql, 0, 6) == 'SELECT' )
-			{
-				$database->setQuery( $this->_sql );
-				// display explanation
-				echo $database->explain();
-			}
-			else
-			{
-				// display non SELECT query.
-				echo '<pre>'.$this->_sql.'</pre>&nbsp;';
-			}
-			echo "</div>";
-		}	
-	}
-
-}
-
-/**
- * @version 1.0
- * @created 04-Sep-2006
- */
-class watsDatabaseWrapperHTML extends watsDatabaseWrapper
-{
-
-	function viewHeader()
-	{
-		echo '<style type="text/css">
-			  <!--
-			  .watsDebugSuccess {font-family: Courier New, Courier, monospace; background-color: #CDFECF; margin-bottom: 0px;}
-			  .watsDebugQuestion{font-family: Courier New, Courier, monospace; background-color: #FED3A5; margin-bottom: 0px;}
-			  .watsDebugFail    {font-family: Courier New, Courier, monospace; background-color: #FDB0A6; margin-bottom: 0px;}
-			  .watsDebug        {font-family: Courier New, Courier, monospace; color: green;}
-			  .watsDebugExplain {background-color:#FFFFCC; font-family: Courier New, Courier, monospace; display: none;}
-			  -->
-			  </style>';
-		echo '<p class="watsDebug">WARNING<br />-------<br />WATS debug mode is enabled, you may experience additional problems if you have site debuging enabled. WATS Debug mode is currently under development and may not report all queries correctly. WATS Debug will decrease the overall perfomance of WATS. WATS Debug mode displays important database information, it is recommended that you do not use debug mode on a live site.</p>';
-	}
-	
-	function viewFooter()
-	{
-		echo '<p class="watsDebug">Debug mode is enabled.<br />----------------------<br />To disable debug mode, change your WATS debug configuration. The \'Action List\' shows the database actions in chronological order executed during the generation of this page. Results are \'traffic light\' colour coded, if you recieve an amber (No Result) action, this is NOT a failure, it just means that no results were found for that query.</p>
-		<p><span class="watsDebugSuccess">&nbsp;&nbsp;</span> = Success <span class="watsDebugQuestion">&nbsp;&nbsp;</span> = No Result <span class="watsDebugFail">&nbsp;&nbsp;</span> = Fail</p>';
-		
-		$logItemNumber = 1;
-		foreach ( $this->_log as $logItem )
-		{
-			$logItem->view( $this->_db, $logItemNumber );
-			$logItemNumber++;
-		}		
-	}
-
-}
 ?>

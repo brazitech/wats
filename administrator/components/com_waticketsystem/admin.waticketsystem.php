@@ -8,28 +8,29 @@
  */
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
+
 echo "<script language=\"javascript\" type=\"text/javascript\" src=\"components/com_waticketsystem/admin.wats.js\"></script>";
 echo '<div class="wats">';
 
 //add custom classes and functions
-require('components/com_waticketsystem/admin.waticketsystem.html.php');
-
-// add database wrapper
-$watsDatabase =& $database;
-
-// get settings
-$wats = new watsSettings( $watsDatabase );
-
-// check for database debug
-if ( $wats->get( 'debug' ) != 0 )
-{
-	$watsDatabase = new watsDatabaseWrapperHTML( $database );
-	$watsDatabase->viewHeader();
-}
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "config.php");
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "dbhelper.php");
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "factory.php");
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "admin.waticketsystem.html.php");
 
 // add javaScript
-echo "<script language=\"javascript\" type=\"text/javascript\" src=\"../components/com_waticketsystem/wats.js\"></script>";
+$document =& JFactory::getDocument();
+$document->addScript("../components/com_waticketsystem/wats.js");
+
+// add CSS
+$document->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_waticketsystem/images/icon-48-watshead.png );}");
+
+// set heading
+JToolBarHelper::title("Webamoeba Ticket System", "wats");
+
+// get settings
+$wats = WFactory::getConfig();
 
 // create watsUser
 // check id is set and watsUser exists
@@ -47,98 +48,37 @@ echo "<script language=\"javascript\" type=\"text/javascript\" src=\"../componen
 	{
 		$act = null;
     } // end parse GET action
-	
-	// display navigation
-?>
- <table border="0" cellspacing="0" cellpadding="0" class="adminform"> 
-  <tr> 
-     <td><a href="http://www.webamoeba.co.uk" target="_blank"><img src="components/com_waticketsystem/images/wats.gif" alt="webamoeba" border="0"/></a></td> 
-     <td align="right"><table cellpadding="0" cellspacing="0" border="0" align="right"> 
-         <tr valign="middle" align="center"> 
-          <td align="center"><a href="index2.php?option=com_waticketsystem"><img src="../includes/js/ThemeOffice/home.png" alt="Webamoeba Ticket System" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td align="center"><a href="index2.php?option=com_waticketsystem&act=configure&hidemainmenu=1"><img src="../includes/js/ThemeOffice/config.png" alt="Configure" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=css"><img src="../includes/js/ThemeOffice/menus.png" alt="CSS" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=user"><img src="../includes/js/ThemeOffice/users.png" alt="Users" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=rites"><img src="../includes/js/ThemeOffice/globe3.png" alt="Rites Manager" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=category"><img src="../includes/js/ThemeOffice/add_section.png " alt="Categories" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=ticket"><img src="../includes/../components/com_waticketsystem/images/mdn_ticket1616.gif" alt="Tickets" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=database"><img src="../includes/js/ThemeOffice/sysinfo.png" alt="Database Maintenance" border="0"/></a></td> 
-          <td>&nbsp;</td> 
-          <td><a href="index2.php?option=com_waticketsystem&act=about"><img src="../includes/js/ThemeOffice/controlpanel.png" alt="About" border="0"/></a></td> 
-        </tr> 
-       </table></td> 
-   </tr> 
-</table> 
-<br /> 
-<?php
+
 	// perform selected operation
 	watsOption( $task, $act );
 	
-	// check for database debug
-	if ( $wats->get( 'debug' ) == 1 )
-	{
-		$watsDatabase->viewFooter();
-	}
-	/*
-		echo "<p style=\"font-family: Courier New, Courier, monospace; color: green;\">Debug mode is enabled.<br />----------------------<br />To disable debug mode, change your WATS debug configuration. The 'Query Debug Array' shows the queries in chronological order executed during the generation of this page.</p>";
-
-		
-		// return debug to site mode
-		$watsDatabase->debug( $mosConfig_debug );
-		
-		$logItemNumber = 0;
-		foreach ( $watsDatabase->_log as $logItem )
-		{
-			// check for semicolon
-			if ( substr($logItem, -1, 1) != ';' )
-			{
-				$logItem .= ';';
-			}
-			// display query
-			echo "\n<p style=\"font-family: Courier New, Courier, monospace; background-color: #CDFECF; margin-bottom: 0px;\"><u>Query $logItemNumber</u> <a href=\"javascript:watsToggleLayer('watsDebugQueryArrayItem$logItemNumber');\">[explain]</a><br />$logItem</p>";
-			echo "<div style=\"display: none;\" id=\"watsDebugQueryArrayItem$logItemNumber\">";
-			$watsDatabase->setQuery($logItem);
-			// diaply explanation
-			echo str_replace ( 'EXPLAIN '.$logItem, ' ', $watsDatabase->explain() );
-			echo "</div>";
-			$logItemNumber++;
-		}
-	}*/
 ?> 
-<p class="smallgrey" style="clear: both ">WebAmoeba Ticket System for Mambo and Joomla</p> 
 </div> 
 <?php
 function watsOption( &$task, &$act )
 {
-	global $watsDatabase, $wats, $option, $mainframe, $mosConfig_list_limit, $mosCommonHTML;
+	global $wats, $option, $mainframe, $mosConfig_list_limit, $mosCommonHTML;
 
 	switch ($act) {
 		/**
 		 * ticket
 		 */	
 		case 'ticket':
-			echo "<table class=\"adminheading\"><tr><th class=\"ticket\">Ticket Viewer</th></tr></table>";
+			JToolbarHelper::title("Ticket Viewer", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * view
 				 */	
 				case 'view':
-					$ticket = watsObjectBuilder::ticket( $watsDatabase, intval( $_GET[ 'ticketid' ] ) );
+					$ticket = watsObjectBuilder::ticket(JRequest::getInt('ticketid'));
 					$ticket->loadMsgList();
 					$ticket->view( );
 					break;
 				default:
 					$limit = $mainframe->getUserStateFromRequest( 'viewlistlimit', 'limit', $mosConfig_list_limit );
 					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-					$ticketSet = new watsTicketSetHTML( $watsDatabase );
+					$ticketSet = new watsTicketSetHTML();
 					$ticketSet->loadTicketSet( -1 );
 					$ticketSet->view( $limit, $limitstart );
 					$ticketSet->pageNav( $option, $limitstart, $limit );
@@ -152,14 +92,14 @@ function watsOption( &$task, &$act )
 		 * category
 		 */	
 		case 'category':
-			echo "<table class=\"adminheading\"><tr><th class=\"categories\">Category Manager</th></tr></table>";
+			JToolbarHelper::title("Category Manager", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * view
 				 */	
 				case 'view':
-					$category = new watsCategoryHTML( $watsDatabase );
+					$category = new watsCategoryHTML();
 					$category->load( intval($_GET['catid']) );
 					echo "<table width=\"100%\">
 							<tr>
@@ -183,7 +123,7 @@ function watsOption( &$task, &$act )
 						if ( is_numeric( $_POST['catid'] ) )
 						{
 							// create category
-							$editCategory = new watsCategory( $watsDatabase );
+							$editCategory = new watsCategory();
 							$editCategory->load( intval($_POST['catid']) );
 							// check if deleting
 							if ( $_POST['remove'] == 'removetickets' )
@@ -228,7 +168,7 @@ function watsOption( &$task, &$act )
 							$name = htmlspecialchars( $_POST['name'] );
 							$description = htmlspecialchars( $_POST['description'] );
 							$image = htmlspecialchars( $_POST['image'] );
-							if ( watsCategory::newCategory( $name, $description, $image, $watsDatabase ) )
+							if ( watsCategory::newCategory($name, $description, $image) )
 							{
 								// success
 								watsredirect( "index2.php?option=com_waticketsystem&act=category&mosmsg=Category Added" );
@@ -248,13 +188,13 @@ function watsOption( &$task, &$act )
 				/**
 				 * new
 				 */	
-				case 'new':
+				case 'add':
 					watsCategoryHTML::newForm();
 					break;
 				default:
 					$limit 		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-					$categorySet = new watsCategorySetHTML( $watsDatabase );
+					$categorySet = new watsCategorySetHTML();
 					$categorySet->view( $limit, $limitstart );
 					$categorySet->pageNav( "com_waticketsysten", $limitstart, $limit );
 					break;
@@ -265,9 +205,9 @@ function watsOption( &$task, &$act )
 		 * CSS
 		 */	
 		case 'css':
-			echo "<table class=\"adminheading\"><tr><th class=\"menus\">CSS</th></tr></table>";
+			JToolbarHelper::title("CSS", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
-			$watsCss = new watsCssHTML( $watsDatabase );
+			$watsCss = new watsCssHTML();
 			$watsCss->open('../components/com_waticketsystem/wats.css');
 
 			switch ($task) {
@@ -317,8 +257,9 @@ function watsOption( &$task, &$act )
 				default:
 					// start Tab Pane
 					{
-						// load overlib
-						mosCommonHTML::loadOverlib();
+						echo JHTML::_("behavior.mootools");
+						
+						
 						// table
 						echo "<table width=\"100%\">
 								<tr>
@@ -335,34 +276,35 @@ function watsOption( &$task, &$act )
 						if ( $watsCss->css == "enable" )
 						{
 							// prepare tabs
-							$cssTabs = new mosTabs(1);
+							jimport("joomla.html.pane");
+							$cssTabs = JPane::getInstance("tabs");
 							$cssTabs->startPane('cssTabs');
 							// fill tabs
 							{
 								// general
-								$cssTabs->startTab( 'General', 'cssTabs' );
+								$cssTabs->startPanel( 'General', 'cssTabs' );
 								$watsCss->editGeneral();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 								// navigation
-								$cssTabs->startTab( 'Navigation', 'cssTabs' );
+								$cssTabs->startPanel( 'Navigation', 'cssTabs' );
 								$watsCss->editNavigation();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 								// categories
-								$cssTabs->startTab( 'Categories', 'cssTabs' );
+								$cssTabs->startPanel( 'Categories', 'cssTabs' );
 								$watsCss->editCategories();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 								// tickets
-								$cssTabs->startTab( 'Tickets', 'cssTabs' );
+								$cssTabs->startPanel( 'Tickets', 'cssTabs' );
 								$watsCss->editTickets();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 								// assigned tickets
-								$cssTabs->startTab( 'Assigned', 'cssTabs' );
+								$cssTabs->startPanel( 'Assigned', 'cssTabs' );
 								$watsCss->editAssignedTickets();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 								// users
-								$cssTabs->startTab( 'Users', 'cssTabs' );
+								$cssTabs->startPanel( 'Users', 'cssTabs' );
 								$watsCss->editUsers();
-								$cssTabs->endTab();
+								$cssTabs->endPanel();
 							}
 							// end fill tabs
 							$cssTabs->endPane();
@@ -386,7 +328,7 @@ function watsOption( &$task, &$act )
 		 * rites
 		 */	
 		case 'rites':
-			echo "<table class=\"adminheading\"><tr><th class=\"impressions\">Rites Manager</th></tr></table>";
+			JToolbarHelper::title("Rights Manager", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
@@ -407,7 +349,7 @@ function watsOption( &$task, &$act )
 						if ( strlen( $_POST[ 'name' ] ) !== 0 )
 						{
 							// create new group
-							$newCategory = watsUserGroup::makeGroup( htmlspecialchars( $_POST[ 'name' ] ), htmlspecialchars( $_POST[ 'image' ] ), $watsDatabase );
+							$newCategory = watsUserGroup::makeGroup( htmlspecialchars( $_POST[ 'name' ] ), htmlspecialchars( $_POST[ 'image' ] ) );
 							// redirect
 							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$newCategory->grpid );
 						}
@@ -429,9 +371,8 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'view':
 					echo "<input type=\"hidden\" name=\"groupid\" value=\"".intval($_GET['groupid'])."\" />";
-					$userGroup = new watsUserGroupHTML( $watsDatabase, intval($_GET['groupid']) );
-					// load overlib
-					mosCommonHTML::loadOverlib();
+					$userGroup = new watsUserGroupHTML( intval($_GET['groupid']) );
+					
 					echo "<table width=\"100%\">
 							<tr>
 							  <td width=\"60%\" valign=\"top\">";
@@ -447,7 +388,7 @@ function watsOption( &$task, &$act )
 				 * apply
 				 */	
 				case 'apply':
-					$userGroup = new watsUserGroupHTML( $watsDatabase, intval($_POST['groupid']) );
+					$userGroup = new watsUserGroupHTML( intval($_POST['groupid']) );
 					
 					// check if deleting
 					if ( $_POST['remove'] == 'remove' || $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
@@ -468,7 +409,7 @@ function watsOption( &$task, &$act )
 				default:
 					$limit 		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-					$userGroupSet = new watsUserGroupSetHTML( $watsDatabase );
+					$userGroupSet = new watsUserGroupSetHTML();
 					$userGroupSet->loadUserGroupSet();
 					$userGroupSet->view( $limitstart, $limit );
 					$userGroupSet->pageNav( "com_waticketsysten", $limitstart, $limit );
@@ -480,14 +421,14 @@ function watsOption( &$task, &$act )
 		 * user
 		 */	
 		case 'user':
-			echo "<table class=\"adminheading\"><tr><th class=\"user\">User Manager</th></tr></table>";
+			JToolbarHelper::title("User Manager", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * edit
 				 */	
 				case 'edit':
-					$editUser = new watsUserHTML( $watsDatabase );
+					$editUser = new watsUserHTML();
 					$editUser->loadWatsUser( intval($_GET[ 'userid' ]) );
 					echo "<table width=\"100%\">
 							<tr>
@@ -503,8 +444,8 @@ function watsOption( &$task, &$act )
 				/**
 				 * new
 				 */	
-				case 'new':
-					watsUserHTML::newForm( $watsDatabase );
+				case 'add':
+					watsUserHTML::newForm();
 					break;
 				/**
 				 * apply
@@ -517,7 +458,7 @@ function watsOption( &$task, &$act )
 						if ( is_numeric( $_POST['userid'] ) )
 						{
 							// create user
-							$editUser = new watsUserHTML( $watsDatabase );
+							$editUser = new watsUserHTML();
 							$editUser->loadWatsUser( intval($_POST[ 'userid' ]) );
 							// check if deleting
 							if ( $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
@@ -570,10 +511,10 @@ function watsOption( &$task, &$act )
 						while ( $i < $noOfNewUsers )
 						{
 							// check for successful creation
-							if ( watsUser::makeUser( $_POST[ 'user' ][ $i ], intval($_POST[ 'grpId' ]), $_POST[ 'organisation' ], $watsDatabase  ) )
+							if ( watsUser::makeUser( $_POST[ 'user' ][ $i ], intval($_POST[ 'grpId' ]), $_POST[ 'organisation' ] ) )
 							{
 								// give visual confirmation
-								$newUser = new watsUserHTML( $watsDatabase );
+								$newUser = new watsUserHTML();
 								$newUser->loadWatsUser( intval($_POST[ 'user' ][ $i ]) );
 								$newUser->view();
 							}
@@ -598,7 +539,7 @@ function watsOption( &$task, &$act )
 					// get limits
 					$limit 		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
 					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-					$watsUserSet = new watsUserSetHTML( $watsDatabase );
+					$watsUserSet = new watsUserSetHTML();
 					$watsUserSet->load();
 					$watsUserSet->view( $limitstart, $limit );
 					$watsUserSet->pageNav( $option, $limitstart, $limit );
@@ -610,23 +551,23 @@ function watsOption( &$task, &$act )
 		 * about
 		 */	
 		case 'about':
-			echo "<table class=\"adminheading\"><tr><th class=\"cpanel\">About</th></tr></table>";
-			$watsSettings = new watsSettingsHTML( $watsDatabase );
+			JToolbarHelper::title("About", "wats");
+			$watsSettings = new watsSettingsHTML();
 			$watsSettings->about();
 			break;
 		/**
 		 * database
 		 */	
 		case 'database':
-			echo "<table class=\"adminheading\"><tr><th class=\"info\">Database Maintenance</th></tr></table>";
-			$watsDatabaseMaintenance = new watsDatabaseMaintenanceHTML( $watsDatabase );
+			JToolbarHelper::title("Database Maintenance", "wats");
+			$watsDatabaseMaintenance = new watsDatabaseMaintenanceHTML();
 			$watsDatabaseMaintenance->performMaintenance();
 			break;
 		/**
-		 * default (configuration)
+		 * configuration
 		 */	
 		case 'configure':
-			echo "<table class=\"adminheading\"><tr><th class=\"config\">Configuration</th></tr></table>";
+			JToolbarHelper::title("Configuration", "wats");
 			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
@@ -634,7 +575,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'apply':
 					// create settings object
-					$watsSettings = new watsSettingsHTML( $watsDatabase );
+					$watsSettings = new watsSettingsHTML();
 					// process form
 					$watsSettings->processForm();
 					// save
@@ -653,41 +594,44 @@ function watsOption( &$task, &$act )
 				 */	
 				default:
 					// load overlib
-					mosCommonHTML::loadOverlib();
-					$watsSettings = new watsSettingsHTML( $watsDatabase );
+					JHTML::_("behavior.mootools");
+					jimport("joomla.html.pane");
+					
+					
+					$watsSettings = new watsSettingsHTML();
 					// start Tab Pane
 					{
-						$settingsTabs = new mosTabs(1);
-						$settingsTabs->startPane('settingsTabs');
+						$settingsTabs = JPane::getInstance("tabs");
+						echo $settingsTabs->startPane('settingsTabs');
 						// fill tabs
 						{
 							// general
-							$settingsTabs->startTab( 'General', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'General', 'settingsTabs' );
 							$watsSettings->editGeneral();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 							// Users
-							$settingsTabs->startTab( 'Users', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'Users', 'settingsTabs' );
 							$watsSettings->editUser();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 							// Agreement
-							$settingsTabs->startTab( 'Agreement', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'Agreement', 'settingsTabs' );
 							$watsSettings->editAgreement();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 							// Notification
-							$settingsTabs->startTab( 'Notification', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'Notification', 'settingsTabs' );
 							$watsSettings->editNotification();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 							// Upgrade
-							$settingsTabs->startTab( 'Upgrade', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'Upgrade', 'settingsTabs' );
 							$watsSettings->editUpgrade();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 							// Debug
-							$settingsTabs->startTab( 'Debug', 'settingsTabs' );
+							echo $settingsTabs->startPanel( 'Debug', 'settingsTabs' );
 							$watsSettings->editDebug();
-							$settingsTabs->endTab();
+							echo $settingsTabs->endPanel();
 						}
 						// end fill tabs
-						$settingsTabs->endPane();
+						echo $settingsTabs->endPane();
 					}
 					// end tab pane
 					break;
@@ -699,34 +643,31 @@ function watsOption( &$task, &$act )
 		 */	
 		default:
 			// stats
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket" );
-			$set = $watsDatabase->loadObjectList();
+			$db =& JFactory::getDBO();
+			
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket" );
+			$set = $db->loadObjectList();
 			$watsStatTickets = $set[0]->count;
 			$watsStatTicketsRaw = $watsStatTickets;
 			if ( $watsStatTickets == 0 )
 				$watsStatTickets = 1;
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=1" );
-			$set = $watsDatabase->loadObjectList();
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=1" );
+			$set = $db->loadObjectList();
 			$watsStatTicketsOpen = $set[0]->count;
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=2" );
-			$set = $watsDatabase->loadObjectList();
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=2" );
+			$set = $db->loadObjectList();
 			$watsStatTicketsClosed =  $set[0]->count;;
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=3" );
-			$set = $watsDatabase->loadObjectList();
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_ticket WHERE lifeCycle=3" );
+			$set = $db->loadObjectList();
 			$watsStatTicketsDead = $set[0]->count;
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_users" );
-			$set = $watsDatabase->loadObjectList();
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_users" );
+			$set = $db->loadObjectList();
 			$watsStatUsers = $set[0]->count;
-			$watsDatabase->setQuery( "SELECT COUNT(*) as count FROM #__wats_category" );
-			$set = $watsDatabase->loadObjectList();
+			$db->setQuery( "SELECT COUNT(*) as count FROM #__wats_category" );
+			$set = $db->loadObjectList();
 			$watsStatCategories = $set[0]->count;
 			// end stats
 			?> 
-<table class="adminheading" border="0"> 
-  <tr> 
-    <th class="frontpage"> Webamoeba Ticket System </th> 
-  </tr> 
-</table> 
 <table class="adminform"> 
   <tr> 
     <td width="55%" valign="top"> <div id="cpanel"> 
@@ -832,11 +773,13 @@ function watsOption( &$task, &$act )
 
 function watsredirect( $dest )
 {
-	global $wats;
+	global $mainframe;
+	
+	$wats =& JFactory::getConfig();
 	
 	if ( $wats->get( 'debug' ) == 0 )
 	{
-		mosredirect( $dest );
+		$mainframe->redirect($dest);
 	}
 	else
 	{
