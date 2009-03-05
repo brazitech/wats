@@ -1,102 +1,101 @@
-<?php
-/**
- * FileName: czech.php
- * Date: 09/03/2007
- * License: GNU General Public License
- * File Version #: 1
- * WATS Version #: 2.0.6
- * Author: Lukáš Nìmec info@vtiger-crm.cz (www.vtiger-crm.cz)
- **/
+#
+# FileName: czech.php
+# Date: 09/03/2007
+# License: GNU General Public License
+# File Version #: 1
+# WATS Version #: 2.0.6
+# Author: Lukáš Nìmec info@vtiger-crm.cz (www.vtiger-crm.cz)
+#
 
-// NAVIGATION
-DEFINE("_WATS_NAV_NEW","Nový Ticket");
-DEFINE("_WATS_NAV_CATEGORY","Kategorie podpory");
-DEFINE("_WATS_NAV_TICKET","Èíslo Ticketu");
+# NAVIGATION
+WATS_NAV_NEW=Nový Ticket
+WATS_NAV_CATEGORY=Kategorie podpory
+WATS_NAV_TICKET=Èíslo Ticketu
 
-// USER
-DEFINE("_WATS_USER","Uživatel");
-DEFINE("_WATS_USER_SET","Uživatelé");
-DEFINE("_WATS_USER_NAME","Jméno");
-DEFINE("_WATS_USER_USERNAME","Uživ. jméno");
-DEFINE("_WATS_USER_GROUP","Skupina");
-DEFINE("_WATS_USER_ORG","Firma");
-DEFINE("_WATS_USER_ORG_SELECT","Zadajte firmu");
-DEFINE("_WATS_USER_EMAIL","Email");
-DEFINE("_WATS_USER_NEW","Vytvoøit nového uživat.");
-DEFINE("_WATS_USER_NEW_SELECT","Vybrat uživatela");
-DEFINE("_WATS_USER_NEW_CREATED","Vytvoøení uživatelie");
-DEFINE("_WATS_USER_NEW_FAILED","Tento užívatel už má úèet:");
-DEFINE("_WATS_USER_DELETED","Užívatel smazán");
-DEFINE("_WATS_USER_EDIT","Upravit uživatele");
-DEFINE("_WATS_USER_DELETE_REC","Odstranit Tickety uživatela (doporuèeno)");
-DEFINE("_WATS_USER_DELETE_NOTREC","Odstranit Tickety užívatele i jeho odpovìdi na jiné tickety (nedoporuèeno)");
-DEFINE("_WATS_USER_DELETE","Smazat uživatele");
-DEFINE("_WATS_USER_ADD","Pøidat uživatele");
-DEFINE("_WATS_USER_SELECT","Vyber uživatele");
-DEFINE("_WATS_USER_SET_DESCRIPTION","Správa uživatelù");
-DEFINE("_WATS_USER_ADD_LIST","Následující uživatelé byly pøidáni");
+# USER
+WATS_USER=Uživatel
+WATS_USER_SET=Uživatelé
+WATS_USER_NAME=Jméno
+WATS_USER_USERNAME=Uživ. jméno
+WATS_USER_GROUP=Skupina
+WATS_USER_ORG=Firma
+WATS_USER_ORG_SELECT=Zadajte firmu
+WATS_USER_EMAIL=Email
+WATS_USER_NEW=Vytvoøit nového uživat.
+WATS_USER_NEW_SELECT=Vybrat uživatela
+WATS_USER_NEW_CREATED=Vytvoøení uživatelie
+WATS_USER_NEW_FAILED=Tento užívatel už má úèet:
+WATS_USER_DELETED=Užívatel smazán
+WATS_USER_EDIT=Upravit uživatele
+WATS_USER_DELETE_REC=Odstranit Tickety uživatela (doporuèeno)
+WATS_USER_DELETE_NOTREC=Odstranit Tickety užívatele i jeho odpovìdi na jiné tickety (nedoporuèeno)
+WATS_USER_DELETE=Smazat uživatele
+WATS_USER_ADD=Pøidat uživatele
+WATS_USER_SELECT=Vyber uživatele
+WATS_USER_SET_DESCRIPTION=Správa uživatelù
+WATS_USER_ADD_LIST=Následující uživatelé byly pøidáni
 
-// GROUPS
-DEFINE("_WATS_GROUP_SELECT","Vyber skupinu");
+# GROUPS
+WATS_GROUP_SELECT=Vyber skupinu
 
-// CATEGORIES
-DEFINE("_WATS_CATEGORY","Kategorie");
+# CATEGORIES
+WATS_CATEGORY=Kategorie
 
-// TICKETS
-DEFINE("_WATS_TICKETS_USER_OPEN","Moje Otevøené Tickety");
-DEFINE("_WATS_TICKETS_USER_CLOSED","Moje Uzavøené Tickety");
-DEFINE("_WATS_TICKETS_OPEN","Otevøené Tickety");
-DEFINE("_WATS_TICKETS_CLOSED","Uzavøené Tickety");
-DEFINE("_WATS_TICKETS_DEAD","Neaktivní Tickety");
-DEFINE("_WATS_TICKETS_OPEN_VIEW","Zobrazit všechny otevøené tickety");
-DEFINE("_WATS_TICKETS_CLOSED_VIEW","Zobrazit všechny uzavøené tickety");
-DEFINE("_WATS_TICKETS_DEAD_VIEW","Zobrazit všechny neaktivní tickety");
-DEFINE("_WATS_TICKETS_NAME","Název Ticketu");
-DEFINE("_WATS_TICKETS_POSTS","Vytvoøeno");
-DEFINE("_WATS_TICKETS_DATETIME","Poslední zápis");
-DEFINE("_WATS_TICKETS_PAGES","Stránek");
-DEFINE("_WATS_TICKETS_SUBMIT","Vytvoøit nový ticket");
-DEFINE("_WATS_TICKETS_SUBMITING","Vytváøení ticketu");
-DEFINE("_WATS_TICKETS_SUBMITTED","Ticket je vytvoøen");
-DEFINE("_WATS_TICKETS_DESC","Popis");
-DEFINE("_WATS_TICKETS_CLOSE","Uzavøít Ticket");
-DEFINE("_WATS_TICKETS_CLOSED_COMP","Ticket uzavøen");
-DEFINE("_WATS_TICKETS_DELETED_COMP","Ticket vymazán");
-DEFINE("_WATS_TICKETS_PURGED_COMP","Ticket uvolnìn");
-DEFINE("_WATS_TICKETS_NONE","nebyli nlezeny tickety");
-DEFINE("_WATS_TICKETS_FIRSTPOST","zaèátek: ");
-DEFINE("_WATS_TICKETS_LASTPOST","poslední reakce: ");
-DEFINE("_WATS_TICKETS_REPLY","Odpovìdìt");
-DEFINE("_WATS_TICKETS_REPLY_CLOSE","Odpovìdìt a uzavøít");
-DEFINE("_WATS_TICKETS_ASSIGN","Pøidìlit ticket");
-DEFINE("_WATS_TICKETS_ASSIGNEDTO","Pøidìlit");
-DEFINE("_WATS_TICKETS_ID","Ticket ID");
-DEFINE("_WATS_TICKETS_REOPEN","Znovu otevøít");
-DEFINE("_WATS_TICKETS_REOPEN_REASON","Prosím, udejte dùvod, proè jste znovu otevøeli tento Ticket");
-DEFINE("_WATS_TICKETS_STATE_ALL","Vše");
-DEFINE("_WATS_TICKETS_STATE_PERSONAL","Osobní");
-DEFINE("_WATS_TICKETS_STATE_OPEN","Otevøené");
-DEFINE("_WATS_TICKETS_STATE_CLOSED","Uzavøené");
-DEFINE("_WATS_TICKETS_STATE_DEAD","Neaktivní");
-DEFINE("_WATS_TICKETS_PURGE","Uvolnit neaktivní tickety v ");
+# TICKETS
+WATS_TICKETS_USER_OPEN=Moje Otevøené Tickety
+WATS_TICKETS_USER_CLOSED=Moje Uzavøené Tickety
+WATS_TICKETS_OPEN=Otevøené Tickety
+WATS_TICKETS_CLOSED=Uzavøené Tickety
+WATS_TICKETS_DEAD=Neaktivní Tickety
+WATS_TICKETS_OPEN_VIEW=Zobrazit všechny otevøené tickety
+WATS_TICKETS_CLOSED_VIEW=Zobrazit všechny uzavøené tickety
+WATS_TICKETS_DEAD_VIEW=Zobrazit všechny neaktivní tickety
+WATS_TICKETS_NAME=Název Ticketu
+WATS_TICKETS_POSTS=Vytvoøeno
+WATS_TICKETS_DATETIME=Poslední zápis
+WATS_TICKETS_PAGES=Stránek
+WATS_TICKETS_SUBMIT=Vytvoøit nový ticket
+WATS_TICKETS_SUBMITING=Vytváøení ticketu
+WATS_TICKETS_SUBMITTED=Ticket je vytvoøen
+WATS_TICKETS_DESC=Popis
+WATS_TICKETS_CLOSE=Uzavøít Ticket
+WATS_TICKETS_CLOSED_COMP=Ticket uzavøen
+WATS_TICKETS_DELETED_COMP=Ticket vymazán
+WATS_TICKETS_PURGED_COMP=Ticket uvolnìn
+WATS_TICKETS_NONE=nebyli nlezeny tickety
+WATS_TICKETS_FIRSTPOST=zaèátek:
+WATS_TICKETS_LASTPOST=poslední reakce:
+WATS_TICKETS_REPLY=Odpovìdìt
+WATS_TICKETS_REPLY_CLOSE=Odpovìdìt a uzavøít
+WATS_TICKETS_ASSIGN=Pøidìlit ticket
+WATS_TICKETS_ASSIGNEDTO=Pøidìlit
+WATS_TICKETS_ID=Ticket ID
+WATS_TICKETS_REOPEN=Znovu otevøít
+WATS_TICKETS_REOPEN_REASON=Prosím, udejte dùvod, proè jste znovu otevøeli tento Ticket
+WATS_TICKETS_STATE_ALL=Vše
+WATS_TICKETS_STATE_PERSONAL=Osobní
+WATS_TICKETS_STATE_OPEN=Otevøené
+WATS_TICKETS_STATE_CLOSED=Uzavøené
+WATS_TICKETS_STATE_DEAD=Neaktivní
+WATS_TICKETS_PURGE=Uvolnit neaktivní tickety v
 
 //MAIL
-DEFINE("_WATS_MAIL_TICKET","Byl vytvoøen Ticket: ");
-DEFINE("_WATS_MAIL_REPLY","Byla vytvoøena Odpovìï: ");
+WATS_MAIL_TICKET=Byl vytvoøen Ticket:
+WATS_MAIL_REPLY=Byla vytvoøena Odpovìï:
 
 //MISC
-DEFINE("_WATS_MISC_DELETE_VERIFY","Vymazat ?");
-DEFINE("_WATS_MISC_GO","Provést");
+WATS_MISC_DELETE_VERIFY=Vymazat ?
+WATS_MISC_GO=Provést
 
 //ERRORS
-DEFINE("_WATS_ERROR","Vyskytla sa chyba");
-DEFINE("_WATS_ERROR_ACCESS","Nemáte dostateèné oprávnìní pro uzavøení tohoto požadavku");
-DEFINE("_WATS_ERROR_NOUSER","Némate oprávnìní prohlížet tyto zdroje.<br>Pøihlaste se nebo požádejte administrátora o údaje pro pøístup.");
-DEFINE("_WATS_ERROR_NODATA","Nevyplnili jste správnì formuláø, prosím zkuste to znovu.");
-DEFINE("_WATS_ERROR_NOT_FOUND","Položka nenalezena");
+WATS_ERROR=Vyskytla sa chyba
+WATS_ERROR_ACCESS=Nemáte dostateèné oprávnìní pro uzavøení tohoto požadavku
+WATS_ERROR_NOUSER=Némate oprávnìní prohlížet tyto zdroje.<br>Pøihlaste se nebo požádejte administrátora o údaje pro pøístup.
+WATS_ERROR_NODATA=Nevyplnili jste správnì formuláø, prosím zkuste to znovu.
+WATS_ERROR_NOT_FOUND=Položka nenalezena
 
 //BBCODE
-DEFINE("_WATS_BB_HELP","<p><i>Pro úèely formátování vašeho textu mùžete použít tyto 'znaèky':</i></p> 
+WATS_BB_HELP=<p><i>Pro úèely formátování vašeho textu mùžete použít tyto 'znaèky':</i></p>
 <table width='100%'border='0'cellspacing='5'cellpadding='0'> 
   <tr valign='top'> 
     <td><b>bold</b></td> 
@@ -130,5 +129,4 @@ DEFINE("_WATS_BB_HELP","<p><i>Pro úèely formátování vašeho textu mùžete použít t
     <td style='cursor: pointer; color: #0000FF;'><u>support@vtiger-crm.cz</u></td> 
     <td><b>[email=support@vtiger-crm.cz]email[/email]</b></td> 
   </tr> 
-</table> ");
-?>
+</table>

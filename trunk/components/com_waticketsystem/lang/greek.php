@@ -1,103 +1,102 @@
-<?php
-/**
- * FileName: greek.php
- * Date: 30/06/2006
- * License: GNU General Public License
- * File Version #: 1
- * WATS Version #: 2.0.0.1
- * Original language file (English) : James Kennard james@webamoeba.com (www.webamoeba.co.uk)
- * Translation & testing (Greek) : George Yiftoyiannis aka Hadderakk - hadderakk at gmail dot com
- **/
+#
+# FileName: greek.php
+# Date: 30/06/2006
+# License: GNU General Public License
+# File Version #: 1
+# WATS Version #: 2.0.0.1
+# Original language file (English) : James Kennard james@webamoeba.com (www.webamoeba.co.uk)
+# Translation & testing (Greek) : George Yiftoyiannis aka Hadderakk - hadderakk at gmail dot com
+#
 
-// NAVIGATION
-DEFINE("_WATS_NAV_NEW","Νέο Αίτημα");
-DEFINE("_WATS_NAV_CATEGORY","Κατηγορίες Υποστήριξης");
-DEFINE("_WATS_NAV_TICKET","Αρ. Αιτήματος");
+# NAVIGATION
+WATS_NAV_NEW=�?έο Αίτημα
+WATS_NAV_CATEGORY=Κατηγο�?ίες Υποστή�?ιξης
+WATS_NAV_TICKET=Α�?. Αιτήματος
 
-// USER
-DEFINE("_WATS_USER","Χρήστης");
-DEFINE("_WATS_USER_SET","Χρήστες");
-DEFINE("_WATS_USER_NAME","Όνομα");
-DEFINE("_WATS_USER_USERNAME","Username");
-DEFINE("_WATS_USER_GROUP","Ομάδα");
-DEFINE("_WATS_USER_ORG","Εταιρεία");
-DEFINE("_WATS_USER_ORG_SELECT","Εισάγετε εταιρεία");
-DEFINE("_WATS_USER_EMAIL","Email");
-DEFINE("_WATS_USER_NEW","Δημιουργία Νέου χρήστη");
-DEFINE("_WATS_USER_NEW_SELECT","Επιλέξτε χρήστη");
-DEFINE("_WATS_USER_NEW_CREATED","Δημιουργημένοι χρήστες");
-DEFINE("_WATS_USER_NEW_FAILED","Αυτός ο χρήστης έχει ήδη λογαριασμό αιτημάτων υποστήριξης");
-DEFINE("_WATS_USER_DELETED","Ο χρήστης διεγράφη");
-DEFINE("_WATS_USER_EDIT","Επεξεργασία χρήστη");
-DEFINE("_WATS_USER_DELETE_REC","Διαγραφή αιτημάτων χρηστών (προτείνεται)");
-DEFINE("_WATS_USER_DELETE_NOTREC","Διαγραφή αιτημάτων χρηστών και απαντήσεων σε άλλα αιτήματα (δεν προτείνεται)");
-DEFINE("_WATS_USER_DELETE","Διαγραφή χρήστη");
-DEFINE("_WATS_USER_ADD","Προσθήκη χρήστη");
-DEFINE("_WATS_USER_SELECT","Επιλογή χρήστη");
-DEFINE("_WATS_USER_SET_DESCRIPTION","Διαχείριση χρηστών");
-DEFINE("_WATS_USER_ADD_LIST","Προστέθηκαν οι παρακάτω χρήστες");
+# USER
+WATS_USER=Χ�?ήστης
+WATS_USER_SET=Χ�?ήστες
+WATS_USER_NAME=Όνομα
+WATS_USER_USERNAME=Username
+WATS_USER_GROUP=Ομάδα
+WATS_USER_ORG=Εται�?εία
+WATS_USER_ORG_SELECT=Εισάγετε εται�?εία
+WATS_USER_EMAIL=Email
+WATS_USER_NEW=Δημιου�?γία �?έου χ�?ήστη
+WATS_USER_NEW_SELECT=Επιλέξτε χ�?ήστη
+WATS_USER_NEW_CREATED=Δημιου�?γημένοι χ�?ήστες
+WATS_USER_NEW_FAILED=Αυτός ο χ�?ήστης έχει ήδη λογα�?ιασμό αιτημάτων υποστή�?ιξης
+WATS_USER_DELETED=Ο χ�?ήστης διεγ�?άφη
+WATS_USER_EDIT=Επεξε�?γασία χ�?ήστη
+WATS_USER_DELETE_REC=Διαγ�?αφή αιτημάτων χ�?ηστών (π�?οτείνεται)
+WATS_USER_DELETE_NOTREC=Διαγ�?αφή αιτημάτων χ�?ηστών και απαντήσεων σε άλλα αιτήματα (δεν π�?οτείνεται)
+WATS_USER_DELETE=Διαγ�?αφή χ�?ήστη
+WATS_USER_ADD=Π�?οσθήκη χ�?ήστη
+WATS_USER_SELECT=Επιλογή χ�?ήστη
+WATS_USER_SET_DESCRIPTION=Διαχεί�?ιση χ�?ηστών
+WATS_USER_ADD_LIST=Π�?οστέθηκαν οι πα�?ακάτω χ�?ήστες
 
-// GROUPS
-DEFINE("_WATS_GROUP_SELECT","Επιλογή Ομάδας");
+# GROUPS
+WATS_GROUP_SELECT=Επιλογή Ομάδας
 
-// CATEGORIES
-DEFINE("_WATS_CATEGORY","Κατηγορία");
+# CATEGORIES
+WATS_CATEGORY=Κατηγο�?ία
 
-// TICKETS
-DEFINE("_WATS_TICKETS_USER_OPEN","Τα εκκρεμή αιτήματά μου");
-DEFINE("_WATS_TICKETS_USER_CLOSED","Τα ολοκληρωμένα αιτήματά μου");
-DEFINE("_WATS_TICKETS_OPEN","Εκκρεμή Αιτήματα");
-DEFINE("_WATS_TICKETS_CLOSED","Ολοκληρωμένα Αιτήματα");
-DEFINE("_WATS_TICKETS_DEAD","Ανενεργά Αιτήματα");
-DEFINE("_WATS_TICKETS_OPEN_VIEW","Προβολή όλων των εκκρεμών αιτημάτων");
-DEFINE("_WATS_TICKETS_CLOSED_VIEW","Προβολή όλων των ολοκληρωμένων αιτημάτων");
-DEFINE("_WATS_TICKETS_DEAD_VIEW","Προβολή όλων των ανενεργών αιτημάτων");
-DEFINE("_WATS_TICKETS_NAME","Όνομα αιτήματος");
-DEFINE("_WATS_TICKETS_POSTS","Δημοσιεύσεις");
-DEFINE("_WATS_TICKETS_DATETIME","Τελευταία δημοσίευση");
-DEFINE("_WATS_TICKETS_PAGES","Σελίδες");
-DEFINE("_WATS_TICKETS_SUBMIT","Υποβολή νέου αιτήματος");
-DEFINE("_WATS_TICKETS_SUBMITING","Το αίτημα υποβάλλεται...");
-DEFINE("_WATS_TICKETS_SUBMITTED","Το αίτημα υπεβλήθη επιτυχώς");
-DEFINE("_WATS_TICKETS_DESC","Περιγραφή");
-DEFINE("_WATS_TICKETS_CLOSE","Ολοκλήρωση αιτήματος");
-DEFINE("_WATS_TICKETS_CLOSED_COMP","Αίτημα ολοκληρώθηκε");
-DEFINE("_WATS_TICKETS_DELETED_COMP","Αίτημα διεγράφη");
-DEFINE("_WATS_TICKETS_PURGED_COMP","Αίτημα εκκαθαρίστηκε");
-DEFINE("_WATS_TICKETS_NONE","Δεν βρέθηκαν αιτήματα");
-DEFINE("_WATS_TICKETS_FIRSTPOST","ξεκίνησε: ");
-DEFINE("_WATS_TICKETS_LASTPOST","δημοσιεύθηκε από: ");
-DEFINE("_WATS_TICKETS_REPLY","Απάντηση");
-DEFINE("_WATS_TICKETS_REPLY_CLOSE","Απάντηση & Ολοκλήρωση");
-DEFINE("_WATS_TICKETS_ASSIGN","Ανάθεση αιτήματος");
-DEFINE("_WATS_TICKETS_ASSIGNEDTO","Ανατέθηκε σε");
-DEFINE("_WATS_TICKETS_ID","ID Αιτήματος");
-DEFINE("_WATS_TICKETS_REOPEN","Αναδημιουργία");
-DEFINE("_WATS_TICKETS_REOPEN_REASON","Αιτία αναδημιουργίας αιτήματος");
-DEFINE("_WATS_TICKETS_STATE_ALL","Όλα");
-DEFINE("_WATS_TICKETS_STATE_PERSONAL","Προσωπικά");
-DEFINE("_WATS_TICKETS_STATE_OPEN","Εκκρεμή");
-DEFINE("_WATS_TICKETS_STATE_CLOSED","Ολοκληρωμένα");
-DEFINE("_WATS_TICKETS_STATE_DEAD","Ανενεργά");
-DEFINE("_WATS_TICKETS_PURGE","Εκκαθάριση ανενεργών αιτημάτων σε ");
+# TICKETS
+WATS_TICKETS_USER_OPEN=Τα εκκ�?εμή αιτήματά μου
+WATS_TICKETS_USER_CLOSED=Τα ολοκλη�?ωμένα αιτήματά μου
+WATS_TICKETS_OPEN=Εκκ�?εμή Αιτήματα
+WATS_TICKETS_CLOSED=Ολοκλη�?ωμένα Αιτήματα
+WATS_TICKETS_DEAD=Ανενε�?γά Αιτήματα
+WATS_TICKETS_OPEN_VIEW=Π�?οβολή όλων των εκκ�?εμών αιτημάτων
+WATS_TICKETS_CLOSED_VIEW=Π�?οβολή όλων των ολοκλη�?ωμένων αιτημάτων
+WATS_TICKETS_DEAD_VIEW=Π�?οβολή όλων των ανενε�?γών αιτημάτων
+WATS_TICKETS_NAME=Όνομα αιτήματος
+WATS_TICKETS_POSTS=Δημοσιε�?σεις
+WATS_TICKETS_DATETIME=Τελευταία δημοσίευση
+WATS_TICKETS_PAGES=Σελίδες
+WATS_TICKETS_SUBMIT=Υποβολή νέου αιτήματος
+WATS_TICKETS_SUBMITING=Το αίτημα υποβάλλεται...
+WATS_TICKETS_SUBMITTED=Το αίτημα υπεβλήθη επιτυχώς
+WATS_TICKETS_DESC=Πε�?ιγ�?αφή
+WATS_TICKETS_CLOSE=Ολοκλή�?ωση αιτήματος
+WATS_TICKETS_CLOSED_COMP=Αίτημα ολοκλη�?ώθηκε
+WATS_TICKETS_DELETED_COMP=Αίτημα διεγ�?άφη
+WATS_TICKETS_PURGED_COMP=Αίτημα εκκαθα�?ίστηκε
+WATS_TICKETS_NONE=Δεν β�?έθηκαν αιτήματα
+WATS_TICKETS_FIRSTPOST=ξεκίνησε:
+WATS_TICKETS_LASTPOST=δημοσιε�?θηκε από:
+WATS_TICKETS_REPLY=Απάντηση
+WATS_TICKETS_REPLY_CLOSE=Απάντηση & Ολοκλή�?ωση
+WATS_TICKETS_ASSIGN=Ανάθεση αιτήματος
+WATS_TICKETS_ASSIGNEDTO=Ανατέθηκε σε
+WATS_TICKETS_ID=ID Αιτήματος
+WATS_TICKETS_REOPEN=Αναδημιου�?γία
+WATS_TICKETS_REOPEN_REASON=Αιτία αναδημιου�?γίας αιτήματος
+WATS_TICKETS_STATE_ALL=Όλα
+WATS_TICKETS_STATE_PERSONAL=Π�?οσωπικά
+WATS_TICKETS_STATE_OPEN=Εκκ�?εμή
+WATS_TICKETS_STATE_CLOSED=Ολοκλη�?ωμένα
+WATS_TICKETS_STATE_DEAD=Ανενε�?γά
+WATS_TICKETS_PURGE=Εκκαθά�?ιση ανενε�?γών αιτημάτων σε
 
 //MAIL
-DEFINE("_WATS_MAIL_TICKET","Αίτημα υπεβλήθη από: ");
-DEFINE("_WATS_MAIL_REPLY","Απάντηση από: ");
+WATS_MAIL_TICKET=Αίτημα υπεβλήθη από:
+WATS_MAIL_REPLY=Απάντηση από:
 
 //MISC
-DEFINE("_WATS_MISC_DELETE_VERIFY","Διαγραφή ;");
-DEFINE("_WATS_MISC_GO","Εκτέλεση");
+WATS_MISC_DELETE_VERIFY=Διαγ�?αφή ;
+WATS_MISC_GO=Εκτέλεση
 
 //ERRORS
-DEFINE("_WATS_ERROR","Συνέβη ένα σφάλμα");
-DEFINE("_WATS_ERROR_ACCESS","Δεν διαθέτετε δικαιώματα πρόσβασης για την πραγματοποίηση της εργασίας");
-DEFINE("_WATS_ERROR_NOUSER","Δεν έχετε δικαίωμα προβολής αυτών των πληροφοριών.<br>Απαιτείται εισαγωγή (login) στο σύστημα ή αίτηση πρόσβασης από Διαχειριστή.");
-DEFINE("_WATS_ERROR_NODATA","Η φόρμα δεν συμπληρώθηκε σωστά. Παρακαλώ ξαναπροσπαθήστε.");
-DEFINE("_WATS_ERROR_NOT_FOUND","Δεν βρέθηκε το αντικείμενο");
+WATS_ERROR=Συνέβη ένα σφάλμα
+WATS_ERROR_ACCESS=Δεν διαθέτετε δικαιώματα π�?όσβασης για την π�?αγματοποίηση της ε�?γασίας
+WATS_ERROR_NOUSER=Δεν έχετε δικαίωμα π�?οβολής αυτών των πλη�?οφο�?ιών.<br>Απαιτείται εισαγωγή (login) στο σ�?στημα ή αίτηση π�?όσβασης από Διαχει�?ιστή.
+WATS_ERROR_NODATA=Η φό�?μα δεν συμπλη�?ώθηκε σωστά. Πα�?ακαλώ ξαναπ�?οσπαθήστε.
+WATS_ERROR_NOT_FOUND=Δεν β�?έθηκε το αντικείμενο
 
 //BBCODE
-DEFINE("_WATS_BB_HELP","<p><i>Χρησιμοποιήστε τα παρακάτω 'tags' για να μορφοποιήσετε το κείμενό σας:</i></p> 
+WATS_BB_HELP=<p><i>Χ�?ησιμοποιήστε τα πα�?ακάτω 'tags' για να μο�?φοποιήσετε το κείμενό σας:</i></p>
 <table width='100%'border='0'cellspacing='5'cellpadding='0'> 
   <tr valign='top'> 
     <td><b>bold</b></td> 
@@ -131,5 +130,4 @@ DEFINE("_WATS_BB_HELP","<p><i>Χρησιμοποιήστε τα παρακάτω
     <td style='cursor: pointer; color: #0000FF;'><u>fred@bloggs.com</u></td> 
     <td><b>[email=mail@mysite.tld]mail[/email]</b></td> 
   </tr> 
-</table> ");
-?>
+</table>
