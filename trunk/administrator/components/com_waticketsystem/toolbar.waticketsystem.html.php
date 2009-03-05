@@ -9,43 +9,35 @@
 **/
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
 
 class menuWATS
 {
 
 	function WATS_LIST()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::addNew();
-		mosMenuBar::endTable();
+		JToolbarHelper::addNew();
 	}
 	
 	function WATS_EDIT()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::apply();
-		mosMenuBar::cancel();
-		mosMenuBar::endTable();
+		JToolbarHelper::apply();
+		JToolbarHelper::cancel();
 	}
 	
 	function WATS_EDIT_BACKUP()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::apply();
-		mosMenuBar::cancel();
-		mosMenuBar::spacer();
+		JToolbarHelper::apply();
+		JToolbarHelper::cancel();
+		JToolbarHelper::spacer();
 		// $task='', $icon='', $iconOver='', $alt='', $listSelect=true
-		mosMenuBar::custom('backup', 'download_f2.png', 'download_f2.png', $alt='Backup', false);
-		mosMenuBar::endTable();
+		JToolbarHelper::custom('backup', 'download_f2.png', 'download_f2.png', $alt='Backup', false);
 	}
 	
 	function WATS_NEW()
 	{
-		mosMenuBar::startTable();
-		mosMenuBar::save();
-		mosMenuBar::cancel();
-		mosMenuBar::endTable();
+		JToolbarHelper::save();
+		JToolbarHelper::cancel();
 	}
 	
 }

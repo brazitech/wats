@@ -9,7 +9,7 @@
 **/
 
 // Don't allow direct linking
-defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die('Restricted Access');
 
 require_once( $mainframe->getPath( 'toolbar_html' ) );
 
@@ -37,7 +37,7 @@ if ($act)
 				case 'view';
 					menuWATS::WATS_EDIT();
 					break;
-				case 'new';
+				case 'add';
 					menuWATS::WATS_NEW();
 					break;
 				default:
