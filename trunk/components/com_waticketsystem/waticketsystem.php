@@ -21,9 +21,6 @@ require_once(JPATH_COMPONENT_SITE . DS . "waticketsystem.html.php");
 // get settings
 $wats =& WFactory::getConfig();
 
-//install lang file
-require('components/com_waticketsystem/lang/'.$wats->get( 'lang' ));
-
 // add css link if turned on
 echo ($wats->get( 'css' ) == 'enable') ? "<link rel=\"stylesheet\" href=\"components/com_waticketsystem/wats.css\" type=\"text/css\" />" : "";
 
