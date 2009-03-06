@@ -32,25 +32,10 @@ JToolBarHelper::title("Webamoeba Ticket System", "wats");
 // get settings
 $wats = WFactory::getConfig();
 
-// create watsUser
-// check id is set and watsUser exists
+JRequest::getCmd("act");
 
-	// parse GET action
-	if ( isset( $_GET['act'] ) )
-	{
-		$act = trim( $_GET['act'] );
-	}
-	elseif ( isset( $_POST['act'] ) )
-	{
-		$act = trim( $_POST['act'] );
-	}
-	else
-	{
-		$act = null;
-    } // end parse GET action
-
-	// perform selected operation
-	watsOption( $task, $act );
+// perform selected operation
+watsOption($task, JRequest::getCmd("act"));
 	
 ?> 
 </div> 
@@ -100,7 +85,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'view':
 					$category = new watsCategoryHTML();
-					$category->load( intval($_GET['catid']) );
+					$category->load(JRequest::getInt('catid'));
 					echo "<table width=\"100%\">
 							<tr>
 							  <td width=\"60%\" valign=\"top\">";
@@ -117,16 +102,20 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'apply':
 					// check input
-					if ( isset( $_POST['catid'], $_POST['name'], $_POST['description'], $_POST['image'], $_POST['remove'] ) )
+					if ( JRequest::getInt('catid', false) &&
+                         JRequest::getString('name') &&
+                         JRequest::getString('description') &&
+                         JRequest::getString('image') &&
+                         JRequest::getString('remove') )
 					{
 						// check is numeric
-						if ( is_numeric( $_POST['catid'] ) )
+						if ( JRequest::getInt('catid') )
 						{
 							// create category
 							$editCategory = new watsCategory();
-							$editCategory->load( intval($_POST['catid']) );
+							$editCategory->load( JRequest::getInt("catid") );
 							// check if deleting
-							if ( $_POST['remove'] == 'removetickets' )
+							if ( JRequest::getString('remove') == 'removetickets' )
 							{
 								// delete category
 								$editCategory->delete( );
@@ -135,11 +124,11 @@ function watsOption( &$task, &$act )
 							else
 							{
 								// update name
-								$editCategory->name = htmlspecialchars( addslashes( $_POST['name'] ) );
+								$editCategory->name = htmlspecialchars( addslashes( JRequest::getString('name') ) );
 								// update description
-								$editCategory->description = htmlspecialchars( addslashes( $_POST['description'] ) );
+								$editCategory->description = htmlspecialchars( addslashes( JRequest::getString('description') ) );
 								// update image
-								$editCategory->image = htmlspecialchars( addslashes( $_POST['image'] ) );
+								$editCategory->image = htmlspecialchars( addslashes( JRequest::getString('image') ) );
 								// save changes
 								$editCategory->updateCategory();
 								// success
@@ -159,15 +148,17 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new category
 					// check for input;
-					if ( isset( $_POST['name'], $_POST['description'], $_POST['image'] ) )
+					if ( JRequest::getString('name') &&
+                         JRequest::getString('description') &&
+                         JRequest::getString('image') )
 					{
 						// check input length
-						if ( strlen( $_POST['name'] ) > 0 && strlen( $_POST['description'] ) > 0 )
+						if ( strlen( JRequest::getString('name') ) > 0 && strlen( JRequest::getString('description') ) > 0 )
 						{
 							// parse input
-							$name = htmlspecialchars( $_POST['name'] );
-							$description = htmlspecialchars( $_POST['description'] );
-							$image = htmlspecialchars( $_POST['image'] );
+							$name = htmlspecialchars( JRequest::getString('name') );
+							$description = htmlspecialchars( JRequest::getString('description') );
+							$image = htmlspecialchars( JRequest::getString('image') );
 							if ( watsCategory::newCategory($name, $description, $image) )
 							{
 								// success
@@ -216,7 +207,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'apply':
 					// check if is restoring
-					if ( $_POST['restore'] == 'restore' )
+					if ( JRequest::getString('restore') == 'restore' )
 					{
 						// restore css
 						if ( $watsCss->restore( '../components/com_waticketsystem/wats.restore.css' ) )
@@ -343,13 +334,13 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new group
 					// check for input;
-					if ( isset( $_POST[ 'name' ], $_POST[ 'image' ] ) )
+					if ( JRequest::getString('name') && JRequest::getString('image') )
 					{
 						// check input is valid
-						if ( strlen( $_POST[ 'name' ] ) !== 0 )
+						if ( strlen( JRequest::getString('name') ) !== 0 )
 						{
 							// create new group
-							$newCategory = watsUserGroup::makeGroup( htmlspecialchars( $_POST[ 'name' ] ), htmlspecialchars( $_POST[ 'image' ] ) );
+							$newCategory = watsUserGroup::makeGroup( htmlspecialchars( JRequest::getString('name') ), htmlspecialchars( JRequest::getString('image') ) );
 							// redirect
 							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$newCategory->grpid );
 						}
@@ -370,8 +361,8 @@ function watsOption( &$task, &$act )
 				 * view
 				 */	
 				case 'view':
-					echo "<input type=\"hidden\" name=\"groupid\" value=\"".intval($_GET['groupid'])."\" />";
-					$userGroup = new watsUserGroupHTML( intval($_GET['groupid']) );
+					echo "<input type=\"hidden\" name=\"groupid\" value=\"".JRequest::getInt('groupid')."\" />";
+					$userGroup = new watsUserGroupHTML( JRequest::getInt("groupid") );
 					
 					echo "<table width=\"100%\">
 							<tr>
@@ -388,13 +379,13 @@ function watsOption( &$task, &$act )
 				 * apply
 				 */	
 				case 'apply':
-					$userGroup = new watsUserGroupHTML( intval($_POST['groupid']) );
+					$userGroup = new watsUserGroupHTML( JRequest::getInt("groupid") );
 					
 					// check if deleting
-					if ( $_POST['remove'] == 'remove' || $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
+					if ( JRequest::getString('remove') == 'remove' || JRequest::getString('remove') == 'removetickets' || JRequest::getString('remove') == 'removeposts' )
 					{
 						// delete category
-						$userGroup->delete( $_POST['remove'] );
+						$userGroup->delete( JRequest::getString('remove') );
 						// watsredirect( "index2.php?option=com_waticketsystem&act=rites&mosmsg=Group Removed" );
 					}
 					else
@@ -429,7 +420,7 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'edit':
 					$editUser = new watsUserHTML();
-					$editUser->loadWatsUser( intval($_GET[ 'userid' ]) );
+					$editUser->loadWatsUser( JRequest::getInt("userid") );
 					echo "<table width=\"100%\">
 							<tr>
 							  <td width=\"60%\" valign=\"top\">";
@@ -452,30 +443,33 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'apply':
 					// check input
-					if ( isset( $_POST['userid'], $_POST['grpId'], $_POST['organisation'], $_POST['remove'] ) )
+					if ( JRequest::getInt('userid') &&
+                         JRequest::getString('grpId') &&
+                         JRequest::getString('organisation') &&
+                         JRequest::getString('remove') )
 					{
 						// check is numeric
-						if ( is_numeric( $_POST['userid'] ) )
+						if ( is_numeric( JRequest::getInt('userid') ) )
 						{
 							// create user
 							$editUser = new watsUserHTML();
-							$editUser->loadWatsUser( intval($_POST[ 'userid' ]) );
+							$editUser->loadWatsUser( JRequest::getInt("userid") );
 							// check if deleting
-							if ( $_POST['remove'] == 'removetickets' || $_POST['remove'] == 'removeposts' )
+							if ( JRequest::getCmd('remove') == 'removetickets' || JRequest::getCmd('remove') == 'removeposts' )
 							{
 								// delete user
-								$editUser->delete( $_POST[ 'remove' ] );
+								$editUser->delete( JRequest::getCmd('remove') );
 								watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=User Removed" );
 							}
 							else
 							{
 								// check is numeric
-								if ( is_numeric( $_POST['grpId'] ) )
+								if ( is_numeric( JRequest::getInt('grpId') ) )
 								{
-									$editUser->group = intval($_POST['grpId']);
+									$editUser->group = JRequest::getInt("grpId");
 								}
 								// update organistation
-								$editUser->organisation = htmlspecialchars( addslashes( $_POST['organisation'] ) );
+								$editUser->organisation = htmlspecialchars( addslashes( JRequest::getString('organisation') ) );
 								// save changes
 								if ( $editUser->updateUser() )
 								{
@@ -503,19 +497,22 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new users
 					// check for input;
-					if ( isset( $_POST[ 'user' ], $_POST[ 'grpId' ], $_POST[ 'organisation' ] ) )
+					if ( JRequest::getString('user') &&
+                         JRequest::getString('grpId') &&
+                         JRequest::getString('organisation') )
 					{
 						// make users
-						$noOfNewUsers = count( $_POST['user'] );
+                        $users = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
+						$noOfNewUsers = count( JRequest::getString('user') );
 						$i = 0;
 						while ( $i < $noOfNewUsers )
 						{
 							// check for successful creation
-							if ( watsUser::makeUser( $_POST[ 'user' ][ $i ], intval($_POST[ 'grpId' ]), $_POST[ 'organisation' ] ) )
+							if ( watsUser::makeUser( intval($users[ $i ]), JRequest::getInt("grpId"), JRequest::getString('organisation') ) )
 							{
 								// give visual confirmation
 								$newUser = new watsUserHTML();
-								$newUser->loadWatsUser( intval($_POST[ 'user' ][ $i ]) );
+								$newUser->loadWatsUser(intval($user[ $i ]));
 								$newUser->view();
 							}
 							$i ++;
