@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<install version="1.5" type="plugin" group="waticketsystem">
+	<name>Webamoeba Ticket System - Email Notification</name>
+	<version>1.0</version>
+	<creationDate>March 2009</creationDate>
+	<author>James Kennard</author>
+	<authorEmail>james@webamoeba.co.uk</authorEmail>
+	<authorUrl>http://www.webamoeba.co.uk</authorUrl>
+	<copyright>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</copyright>
+	<license>GPL</license>
+	<description>Notifies user's by email about updates to tickets</description>
+	<files>
+		<filename plugin="mailnotification">mailnotification.php</filename>
+	</files>
+	<params/>
+</install>
