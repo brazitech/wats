@@ -823,7 +823,6 @@ class watsCategorySetHTML extends watsCategorySet
 		{
 			echo "<td><a href=\"index2.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstart]->catid."\">".$this->categorySet[$limitstart]->name."</a></td>";
 			echo "<td>".$this->categorySet[$limitstart]->description."</td>";
-			echo "<td>".$this->categorySet[$limitstart]->description."</td>";
 			echo "</tr>";
 			$limitstart ++;
 		} // end itterate through users
@@ -1227,22 +1226,17 @@ class watsCssHTML extends watsCss
 	 */
 	function processSettings()
 	{
-		global $_POST;
-		
 		$wats =& WFactory::getConfig();
-		
+		$status = JRequest::getCmd('watsCSS', null);
+
 		// enable disable css
-		if ( isset( $_POST['watsCSS'] ) )
-		{
-			// check is of correct type and is different
-			if ( ( $_POST['watsCSS'] == 'enable' || $_POST['watsCSS'] == 'disable' ) && $_POST['watsCSS'] != $wats->get('css') )
-			{
-				$wats->set( 'css', $_POST['watsCSS'] );;
-				$wats->save();
-				$this->css = $_POST['watsCSS'];
-			}
-		}
-		// end check enable disable css
+        // check is of correct type and is different
+        if ( ( $status == 'enable' || $status == 'disable' ) && $status != $wats->get('css') )
+        {
+            $wats->set( 'css', $status );;
+            $wats->save();
+            $this->css = $status;
+        }
 		
 		$keys = array_keys( $_POST );
 		foreach( $keys as $key )

@@ -31,7 +31,11 @@ class menuWATS
 		JToolbarHelper::cancel();
 		JToolbarHelper::spacer();
 		// $task='', $icon='', $iconOver='', $alt='', $listSelect=true
-		JToolbarHelper::custom('backup', 'download_f2.png', 'download_f2.png', $alt='Backup', false);
+		JToolbarHelper::custom('backup', 'export', 'download_f2.png', $alt='Backup', false);
+		
+		$document =& JFactory::getDocument();
+		$document->addStyleDeclaration(".icon-32-export { background-image: url(templates/khepri//images/toolbar/icon-32-export.png); }");
+
 	}
 	
 	function WATS_NEW()

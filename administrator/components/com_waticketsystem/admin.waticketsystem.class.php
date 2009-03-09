@@ -148,18 +148,18 @@ class watsUser extends JUser
 		$db =& JFactory::getDBO();
 	
 		// check already exists
-		$db->setQuery("SELECT " . WDatabaseHelper::identifierQuote("wu.watsid") . " " .
-		              "FROM " . WDatabaseHelper::identifierQuote("#__wats_users") . " AS " . WDatabaseHelper::identifierQuote("wu") . " " .
+		$db->setQuery("SELECT " . WDBHelper::nameQuote("wu.watsid") . " " .
+		              "FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
 					  "WHERE watsid=".intval($this->id));
 		$db->query();
 		if ( $db->getNumRows() != 0 )
 		{
 			// update SQL
-			$db->setQuery("UPDATE " . WDatabaseHelper::identifierQuote("#__wats_users") . " " .
-                          "SET " . WDatabaseHelper::identifierQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
-						  WDatabaseHelper::identifierQuote("agree") . " = " . intval($this->agree) . ", " .
-						  WDatabaseHelper::identifierQuote("grpid") . " = " . intval($this->group) . " " .
-						  "WHERE " . WDatabaseHelper::identifierQuote("watsid") . " = " . intval($this->id) . ";" );
+			$db->setQuery("UPDATE " . WDBHelper::nameQuote("#__wats_users") . " " .
+                          "SET " . WDBHelper::nameQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
+						  WDBHelper::nameQuote("agree") . " = " . intval($this->agree) . ", " .
+						  WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
+						  "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . ";" );
 			// execute
 			return $db->query();	
 		}
@@ -1115,9 +1115,10 @@ class watsCategory extends JTable
 	 * 
 	 * @param database
 	 */
-	function watsCategory()
-	{
-	    $this->__construct( '#__wats_category', 'catid' );
+	function watsCategory() {
+        $db =& JFactory::getDBO();
+
+	    $this->__construct( '#__wats_category', 'catid', $db);
 	}
 
 	/**
@@ -1223,7 +1224,7 @@ class watsCategory extends JTable
 	    $database =& JFactory::getDBO();
 		
 		// check already exists
-		$datbase->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".$this->catid);
+		$database->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".$this->catid);
 		$database->query();
 		if ( $database->getNumRows() != 0 )
 		{

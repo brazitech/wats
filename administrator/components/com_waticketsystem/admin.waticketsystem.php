@@ -32,10 +32,11 @@ JToolBarHelper::title("Webamoeba Ticket System", "wats");
 // get settings
 $wats = WFactory::getConfig();
 
-JRequest::getCmd("act");
+$act = JRequest::getCmd("act");
+require_once("toolbar.waticketsystem.php");
 
 // perform selected operation
-watsOption($task, JRequest::getCmd("act"));
+watsOption($task, $act);
 	
 ?> 
 </div> 
@@ -103,44 +104,50 @@ function watsOption( &$task, &$act )
 				case 'apply':
 					// check input
 					if ( JRequest::getInt('catid', false) &&
-                         JRequest::getString('name') &&
-                         JRequest::getString('description') &&
-                         JRequest::getString('image') &&
-                         JRequest::getString('remove') )
+                         (JRequest::getString('name') !== null) &&
+                         (JRequest::getString('description') !== null) &&
+                         (JRequest::getString('image') !== null) &&
+                         (JRequest::getString('remove') !== null) )
 					{
-						// check is numeric
-						if ( JRequest::getInt('catid') )
+						if ( strlen(JRequest::getString('name')) &&
+							 strlen(JRequest::getString('description')))
 						{
-							// create category
-							$editCategory = new watsCategory();
-							$editCategory->load( JRequest::getInt("catid") );
-							// check if deleting
-							if ( JRequest::getString('remove') == 'removetickets' )
+							// check is numeric
+							if ( JRequest::getInt('catid') )
 							{
-								// delete category
-								$editCategory->delete( );
-								watsredirect( "index2.php?option=com_waticketsystem&act=category&mosmsg=Category Removed" );
+								// create category
+								$editCategory = new watsCategory();
+								$editCategory->load( JRequest::getInt("catid") );
+								// check if deleting
+								if ( JRequest::getString('remove') == 'removetickets' )
+								{
+									// delete category
+									$editCategory->delete( );
+									watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Removed" );
+								}
+								else
+								{
+									// update name
+									$editCategory->name = htmlspecialchars( addslashes( JRequest::getString('name') ) );
+									// update description
+									$editCategory->description = htmlspecialchars( addslashes( JRequest::getString('description') ) );
+									// update image
+									$editCategory->image = htmlspecialchars( addslashes( JRequest::getString('image') ) );
+									// save changes
+									$editCategory->updateCategory();
+									// success
+									watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Updated" );
+								}
+								break;
 							}
-							else
-							{
-								// update name
-								$editCategory->name = htmlspecialchars( addslashes( JRequest::getString('name') ) );
-								// update description
-								$editCategory->description = htmlspecialchars( addslashes( JRequest::getString('description') ) );
-								// update image
-								$editCategory->image = htmlspecialchars( addslashes( JRequest::getString('image') ) );
-								// save changes
-								$editCategory->updateCategory();
-								// success
-								watsredirect( "index2.php?option=com_waticketsystem&act=category&mosmsg=Category Updated" );
-							}
-							break;
+							// end check is numeric
+						} else {
+							watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
 						}
-						// end check is numeric
 					}
 					// end check input
 					// redirect input error
-					watsredirect( "index2.php?option=com_waticketsystem&act=category&mosmsg=Error updating category" );
+					watsredirect( "index2.php?option=com_waticketsystem&act=category", "Error updating category" );
 					break;
 				/**
 				 * new
@@ -148,9 +155,9 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new category
 					// check for input;
-					if ( JRequest::getString('name') &&
-                         JRequest::getString('description') &&
-                         JRequest::getString('image') )
+					if ( !strlen(JRequest::getString('name')) &&
+                         !strlen(JRequest::getString('description')) &&
+                         (JRequest::getString('image') !== null) )
 					{
 						// check input length
 						if ( strlen( JRequest::getString('name') ) > 0 && strlen( JRequest::getString('description') ) > 0 )
@@ -162,18 +169,18 @@ function watsOption( &$task, &$act )
 							if ( watsCategory::newCategory($name, $description, $image) )
 							{
 								// success
-								watsredirect( "index2.php?option=com_waticketsystem&act=category&mosmsg=Category Added" );
+								watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Added" );
 							}
 							else
 							{
 								// already exists
-								watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new&mosmsg=The specified name already exists" );
+								watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new&", "The specified name already exists" );
 							}
 						}
 					}
 					else
 					{
-						watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new&mosmsg=Please fill in the form correctly" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
 					}
 					break;
 				/**
@@ -213,12 +220,12 @@ function watsOption( &$task, &$act )
 						if ( $watsCss->restore( '../components/com_waticketsystem/wats.restore.css' ) )
 						{
 							// redirect success
-							watsredirect( "index2.php?option=com_waticketsystem&act=css&mosmsg=CSS Restored" );
+							watsredirect( "index2.php?option=com_waticketsystem&act=css", "CSS Restored" );
 						}
 						else
 						{
 							// redirect failure
-							watsredirect( "index2.php?option=com_waticketsystem&act=css&mosmsg=CSS Restore Failed" );
+							watsredirect( "index2.php?option=com_waticketsystem&act=css", "CSS Restore Failed" );
 						}
 					}
 					else
@@ -227,7 +234,7 @@ function watsOption( &$task, &$act )
 						$watsCss->processSettings();
 						$watsCss->save();
 						// redirect
-						watsredirect( "index2.php?option=com_waticketsystem&act=css&mosmsg=Changes Saved" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=css", "Changes Saved" );
 					}
 					break;
 				/**
@@ -334,7 +341,7 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new group
 					// check for input;
-					if ( JRequest::getString('name') && JRequest::getString('image') )
+					if ( (JRequest::getString('name') !== null) && (JRequest::getString('image') !== null) )
 					{
 						// check input is valid
 						if ( strlen( JRequest::getString('name') ) !== 0 )
@@ -346,13 +353,13 @@ function watsOption( &$task, &$act )
 						}
 						else
 						{
-							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new&mosmsg=Please fill in the form correctly" );
+							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new", "Please fill in the form correctly" );
 						}
 					}
 					else
 					{
 						// redirect to add
-						watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new&mosmsg=Form Contents not recognised" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new", "Form Contents not recognised" );
 						// end display error
 					}
 					// end check for input
@@ -394,7 +401,7 @@ function watsOption( &$task, &$act )
 						$userGroup->processForm();
 						$userGroup->save();
 						// redirect on completion
-						watsredirect( "index2.php?option=com_waticketsystem&act=rites&mosmsg=Group Updated" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=rites", "Group Updated" );
 					}
 					break;
 				default:
@@ -443,10 +450,10 @@ function watsOption( &$task, &$act )
 				 */	
 				case 'apply':
 					// check input
-					if ( JRequest::getInt('userid') &&
-                         JRequest::getString('grpId') &&
-                         JRequest::getString('organisation') &&
-                         JRequest::getString('remove') )
+					if ( JRequest::getInt('userid') !== null &&
+                         JRequest::getString('grpId') !== null &&
+                         JRequest::getString('organisation') !== null &&
+                         JRequest::getString('remove') !== null )
 					{
 						// check is numeric
 						if ( is_numeric( JRequest::getInt('userid') ) )
@@ -459,7 +466,7 @@ function watsOption( &$task, &$act )
 							{
 								// delete user
 								$editUser->delete( JRequest::getCmd('remove') );
-								watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=User Removed" );
+								watsredirect( "index2.php?option=com_waticketsystem&act=user", "User Removed" );
 							}
 							else
 							{
@@ -474,12 +481,12 @@ function watsOption( &$task, &$act )
 								if ( $editUser->updateUser() )
 								{
 									// success
-									watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=User Updated" );
+									watsredirect( "index2.php?option=com_waticketsystem&act=user", "User Updated" );
 								}
 								else
 								{
 									// failure
-									watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=Update failed, user not found" );
+									watsredirect( "index2.php?option=com_waticketsystem&act=user", "Update failed, user not found" );
 								}
 							}
 						}
@@ -488,7 +495,7 @@ function watsOption( &$task, &$act )
 					else
 					{
 						// redirect input error
-						watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=Error updating user" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=user", "Error updating user" );
 					}// end check input
 					break;
 				/**
@@ -497,9 +504,9 @@ function watsOption( &$task, &$act )
 				case 'save':
 					// save new users
 					// check for input;
-					if ( JRequest::getString('user') &&
-                         JRequest::getString('grpId') &&
-                         JRequest::getString('organisation') )
+					if ( JRequest::getString('user') !== null &&
+                         JRequest::getString('grpId') !== null &&
+                         JRequest::getString('organisation') !== null )
 					{
 						// make users
                         $users = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
@@ -512,19 +519,19 @@ function watsOption( &$task, &$act )
 							{
 								// give visual confirmation
 								$newUser = new watsUserHTML();
-								$newUser->loadWatsUser(intval($user[ $i ]));
+								$newUser->loadWatsUser(intval($users[ $i ]));
 								$newUser->view();
 							}
 							$i ++;
 						}
 						// end make users
 						// redirect to list on completion
-						watsredirect( "index2.php?option=com_waticketsystem&act=user&mosmsg=Users Added" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=user", "Users Added" );
 					}
 					else
 					{
 						// redirect to add
-						watsredirect( "index2.php?option=com_waticketsystem&act=user&task=new&mosmsg=Please fill in the form correctly" );
+						watsredirect( "index2.php?option=com_waticketsystem&act=user&task=new", "Please fill in the form correctly" );
 						// end display error
 					}
 					// end check for input
@@ -768,19 +775,15 @@ function watsOption( &$task, &$act )
 	}
 }
 
-function watsredirect( $dest )
-{
+function watsredirect($uri, $message = null, $level = "message") {
 	global $mainframe;
 	
-	$wats =& JFactory::getConfig();
+	$wats =& WFactory::getConfig();
 	
-	if ( $wats->get( 'debug' ) == 0 )
-	{
-		$mainframe->redirect($dest);
-	}
-	else
-	{
-		echo "<a href=\"".$dest."\">".$wats->get( 'debugmessage' )."</a>";
+	if ( $wats->get( 'debug' ) == 0 ) {
+		$mainframe->redirect($uri, $message, $level);
+	} else {
+		echo "<a href=\"".$uri."\">".$wats->get( 'debugmessage' )."</a><br />".$message;
 	}
 }
 ?> 
