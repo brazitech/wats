@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Webamoeba</title>
+</head>
+<body style="background-color: #2D4B70; 
+             margin: 20px; 
+             background-image: url(http://localhost/WATS/svn_3.0/plugins/waticketsystem/mailnotification/html/background.jpg); 
+             background-repeat: repeat-x;
+             font-family: Arial;
+             font-size: small;">
+    <div style="background-color: #FFFFFF; 
+                border: 1px solid #777777; 
+                font-family: Arial;
+                font-size: small;">
+        <p>{?TO?}</p>
+        <p>{?NEW TICKET HAS ARRIVED?}</p>
+        <table border="0"
+               width="100%" 
+               style="font-family: Arial;
+                      font-size: small;">
+            <tbody>
+                <tr>
+                    <td><strong>{?Ticket Name?}</strong></td>
+                    <td><a href="{ticket.uri}">{ticket.name}</a></td>
+                </tr>
+                <tr>
+                    <td><strong>{?Submitted?}</strong></td>
+                    <td>{ticket.datetime}</td>
+                </tr>
+                <tr>
+                    <td><strong>{?Submitted By?}</strong></td>
+                    <td>{message.username}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" 
+                        style="color: #777777;">{message.msg}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br /><br />
+    <hr />
+    <p>Powered by Webamoeba Ticket System for Joomla!</p>
+</body>
+</html>

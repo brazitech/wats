@@ -445,7 +445,14 @@ class watsTicketHTML extends watsTicket
 				// message box
 				if ( $wats->get( 'msgbox' ) == "editor" )
 				{
-					editorArea( "msg", $wats->get( 'defaultmsg' ), "msg", $wats->get( 'msgboxw' )*8.5, $wats->get( 'msgboxh' )*18, 45, 5 );
+					$editor =& JFactory::getEditor();
+                    echo $editor->display("msg", 
+                                     $wats->get('defaultmsg'),
+                                     $wats->get('msgboxw')*8.5,
+                                     $wats->get( 'msgboxh' )*18,
+                                     45,
+                                     5,
+                                     false);
 				}
 				else
 				{
@@ -578,7 +585,14 @@ class watsTicketHTML extends watsTicket
 		echo JText::_("WATS_TICKETS_DESC");
 		if ( $wats->get( 'msgbox' ) == "editor" )
 		{
-			editorArea( "msg", $wats->get( 'defaultmsg' ), "msg", $wats->get( 'msgboxw' )*8.5, $wats->get( 'msgboxh' )*18, 45, 5 );
+            $editor =& JFactory::getEditor();
+			echo $editor->display("msg", 
+                             $wats->get('defaultmsg'),
+                             $wats->get('msgboxw')*8.5,
+                             $wats->get( 'msgboxh' )*18,
+                             45,
+                             5,
+                             false);
 		}
 		else
 		{

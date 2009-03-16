@@ -197,13 +197,13 @@ function watsOption( $task, $act )
 						$ticket->_msgList[0] = new watsMsg( null, $parsedMsg, $watsUser->id, $createDatetime );
 						$ticket->msgNumberOf ++;
 						$ticket->save();
-						// notify
-						if ( $wats->get( 'notifyusers' ) == 1 )
-						{
-							watsMail( $parsedMsg, $watsUser->email );
-							watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
-						}
-						// end notify
+						
+                        // trigger onTicketNew event
+                        JPluginHelper::importPlugin("waticketsystem");
+                        $app =& JFactory::getApplication();
+                        $args = array(&$ticket);
+                        $app->triggerEvent("onTicketNew", $args);
+						
 						// view new ticket
 						watsredirect( "index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=view&ticketid=".$ticket->ticketId );
 					}
@@ -268,29 +268,14 @@ function watsOption( $task, $act )
 									echo JText::_("WATS_ERROR_ACCESS");
 								}// end check rites to close
 							} // end check for close
-							// notify
-							if ( $wats->get( 'notifyusers' ) == 1 )
-							{
-								$emailmsg = JText::_("WATS_MAIL_REPLY").$watsUser->username."\n(".$ticket->name.")"."\n\n".$parsedMsg;
-								// find addresses
-								$sql = "SELECT  DISTINCT m.watsid, u.email FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid=".$ticket->ticketId;
-								$db->setQuery($sql);
-								$notify = $db->loadObjectList();
-								// loop through email addresses
-								$emails = count( $notify );
-								$i = 0;
-								while( $i < $emails )
-								{
-									if ( $wats->get( 'notifyemail' ) != $notify[$i]->email )
-									{
-										// email users with messages in the ticket
-										watsMail($emailmsg, $notify[$i]->email);
-									}
-									$i ++;
-								}
-								watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
-							}
-							// end notify
+							
+                            // trigger onTicketReply event
+                            JPluginHelper::importPlugin("waticketsystem");
+                            $app =& JFactory::getApplication();
+                            $args = array(&$ticket);
+                            $app->triggerEvent("onTicketReply", $args);
+                            
+                            
 							// return to ticket
 							if ( function_exists( 'watsredirect' ) )
 							{
@@ -347,33 +332,12 @@ function watsOption( $task, $act )
 						$ticket->addMsg( $parsedMsg, $watsUser->id, date( 'YmdHis' ) );
 						$ticket->loadMsgList();
 						$ticket->view( $watsUser );
-						// notify
-						if ( $wats->get( 'notifyusers' ) == 1 )
-						{
-							$emailmsg = JText::_("WATS_MAIL_REPLY").$my->username."\n(".$ticket->ticketname.")"."\n\n".$parsedMsg;
-							// find addresses
-							$sql = "SELECT DISTINCT " . WDBHelper::nameQuote("m.watsid") . ", " .
-							                            WDBHelper::nameQuote("u.email") . " " .
-								   "FROM " . WDBHelper::nameQuote("#__wats_msg") . " AS " . WDBHelper::nameQuote("m") . " " .
-								   "LEFT  JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") ." ON " . WDBHelper::nameQuote("m.watsid") . " = " . WDBHelper::nameQuote("u.id") . " " .
-								   "WHERE " . WDBHelper::nameQuote("m.ticketid") . " = " . intval($ticket->ticketId);
-							$db->setQuery($sql);
-							$notify = $db->loadObjectList();
-							// loop through email addresses
-							$emails = count( $notify );
-							$i = 0;
-							while( $i < $emails )
-							{
-								if ( $wats->get( 'notifyemail' ) != $notify[$i]->email )
-								{
-									// email users with messages in the ticket
-									watsMail($emailmsg, $notify[$i]->email);
-								}
-								$i ++;
-							}
-							watsMail( $parsedMsg, $wats->get( 'notifyemail' ) );
-						}
-						// end notify
+						
+                        // trigger onTicketReply event
+                        JPluginHelper::importPlugin("waticketsystem");
+                        $app =& JFactory::getApplication();
+                        $args = array(&$ticket);
+                        $app->triggerEvent("onTicketReopen", $args);
 					}
 					else
 					{
@@ -855,12 +819,11 @@ function parseMsg( $msg )
 {
 	$wats =& WFactory::getConfig();
 	
-	if ( $wats->get( 'msgbox' ) == 'editor' )
-	{
-		$msg = nl2br( $msg );
-	}
-	else if ( $wats->get( 'msgbox' ) == 'bbcode' )
-	{
+	if ( $wats->get( 'msgbox' ) == 'editor' ) {
+        // make safe
+        $filter =& JFilterInput::getInstance(array(), array(), 1, 1, 1);
+		$msg = $filter->clean($msg);
+	} else if ( $wats->get( 'msgbox' ) == 'bbcode' ) {
 		// include bbcode class
 		include_once( 'components/com_waticketsystem/bbcode.inc.php' );
 		// create bbcode instance
@@ -880,12 +843,9 @@ function parseMsg( $msg )
 		$msg = htmlspecialchars( $msg );
 		$msg = $bbcode->parse_bbcode( $msg );
 		$msg = nl2br( $msg );
-	}
-	else
-	{
-		$msg = strip_tags( $msg );
-		$msg = htmlspecialchars( $msg );
-		$msg = nl2br( $msg );
+	} else {
+		$msg = htmlspecialchars($msg, ENT_QUOTES, "UTF-8");
+		$msg = nl2br($msg);
 	}
 	// return parsed message
 	return $msg;
