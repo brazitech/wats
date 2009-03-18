@@ -459,8 +459,17 @@ class watsTicketHTML extends watsTicket
 					echo "<textarea name=\"msg\" cols=\"".$wats->get( 'msgboxw' )."\" rows=\"".$wats->get( 'msgboxh' )."\" id=\"msg\">".$wats->get( 'defaultmsg' )."</textarea>";
 				} // end message box
 				echo "   </td>
-						</tr>
-						<tr> 
+						</tr>";
+                // check for close  rites
+				if ( ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) ) AND ( ( $this->watsId == $watsUser->id AND $riteC > 0 ) OR ( $riteC == 2 ) ) )
+				{ // reply and close
+					echo "<tr> 
+						  <td>" . JText::_("WATS_TICKETS_CLOSE") . "</td>
+						  <td><input type=\"radio\" name=\"close\" value=\"0\" checked> " . JText::_("NO") . "<input type=\"radio\" name=\"close\" value=\"1\">" . JText::_("YES") . "
+                          </td>
+                        </tr>";
+				} // end reply and close
+                echo "  <tr> 
 						  <td>&nbsp;</td>
 						  <td>
 							<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
@@ -469,12 +478,6 @@ class watsTicketHTML extends watsTicket
 							<input name=\"task\" type=\"hidden\" value=\"reply\">
 							<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
 							<input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY")."\" class=\"watsFormSubmit\">";
-				// check for close  rites
-				// if ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) AND ( $this->watsId == $watsUser->id AND $riteC > 0 ) OR ( $riteC == 2 ) )
-				if ( ( ( $this->watsId == $watsUser->id AND $riteR > 0 ) OR ( $riteR == 2 ) ) AND ( ( $this->watsId == $watsUser->id AND $riteC > 0 ) OR ( $riteC == 2 ) ) )
-				{ // reply and close
-					echo " <input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY_CLOSE")."\" class=\"watsFormSubmit\">";
-				} // end reply and close
 				echo "        </td>
 							</tr>
 						  </table>
@@ -621,7 +624,14 @@ class watsTicketHTML extends watsTicket
 		// message box
 		if ( $wats->get( 'msgbox' ) == "editor" )
 		{
-			editorArea( "msg", $wats->get( 'defaultmsg' ), "msg", $wats->get( 'msgboxw' )*8.5, $wats->get( 'msgboxh' )*18, 45, 5 );
+            $editor =& JFactory::getEditor();
+                    echo $editor->display("msg", 
+                                     $wats->get('defaultmsg'),
+                                     $wats->get('msgboxw')*8.5,
+                                     $wats->get( 'msgboxh' )*18,
+                                     45,
+                                     5,
+                                     false);
 		}
 		else
 		{
@@ -685,9 +695,9 @@ class watsTicketSetHTML extends watsTicketSet
 			// set start
 			$i = $start;
 		}
-		// prepare previous array
-		$prevArray = prevArray( $_GET );
-		$link = prevLink( $prevArray );
+		// prepare previous link
+		$returnUrl = base64_encode(JRoute::_("index.php".substr($_SERVER["REQUEST_URI"], strrpos($_SERVER["REQUEST_URI"], "?"))));
+        
 		// itterate through tickets
 		while ( $i < $finish )
 		{
@@ -716,8 +726,16 @@ class watsTicketSetHTML extends watsTicketSet
 					<td>";
 			if ( $this->_ticketList[$i]->lifeCycle != 1)
 			{
-				echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&".$link."\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
-			}
+				echo "<a href=\"" .
+
+JRoute::_("
+index.php?option=com_waticketsystem&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&returnUrl=".$returnUrl) . "\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
+
+
+
+
+
+}
 			echo "</td>
 				  </tr>";
 			$i ++;
@@ -783,6 +801,10 @@ class watsCategoryHTML extends watsCategory {
 			$currentTicketsPerPage = $ticketsPerPage;
 		}
 		echo "<div class=\"watsPageNav\">";
+        
+        // prepare lifecycle
+        $lifecycle = JRequest::getVar('lifecycle', "a");
+        
 		// check is valid to show
 		if ( $currentTicketsPerPage < $this->ticketSet->ticketNumberOf )
 		{
@@ -793,8 +815,6 @@ class watsCategoryHTML extends watsCategory {
 			{
 				$numberOfPages ++;
 			}
-			// prepare lifecycle
-			$lifecycle = JRequest::getVar('lifecycle', "a");
 			
 			// previous
 			if ( $currentPage > 1 )
