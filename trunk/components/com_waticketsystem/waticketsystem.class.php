@@ -325,7 +325,8 @@ class watsUserSet
 		// load all users
 	    if ( $groupId === null )
 		{
-			$db->setQuery("SELECT * FROM " . WDBHelper::nameQuote("#__wats_users") . " " .
+			$db->setQuery("SELECT u.* FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
+                          "JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " ON " . WDBHelper::nameQuote("u.id") . " = " . WDBHelper::nameQuote("wu.watsid") .
 			              "ORDER BY " . WDBHelper::nameQuote("grpid") . " /* watsUserSet::load() */" );
 			$set = $db->loadObjectList();
 			$this->noOfUsers = count( $set );
@@ -334,7 +335,20 @@ class watsUserSet
 			while ( $i < $this->noOfUsers )
 			{
 				$this->userSet[$i] = new watsUserHTML();
-				$this->userSet[$i]->loadWatsUser( $set[$i]->watsid  );
+				$this->userSet[$i]->id = $set[$i]->id;
+                $this->userSet[$i]->name = $set[$i]->name;
+                $this->userSet[$i]->username = $set[$i]->username;
+                $this->userSet[$i]->email = $set[$i]->email;
+                $this->userSet[$i]->usertype = $set[$i]->usertype;
+                $this->userSet[$i]->block = $set[$i]->block;
+                $this->userSet[$i]->sendEmail = $set[$i]->sendEmail;
+                $this->userSet[$i]->gid = $set[$i]->gid;
+                $this->userSet[$i]->registerDate = $set[$i]->registerDate;
+                $this->userSet[$i]->lastvisitDate = $set[$i]->lastvisitDate;
+                $this->userSet[$i]->activation = $set[$i]->activation;
+                $this->userSet[$i]->params = $set[$i]->params;
+                $this->userSet[$i]->aid = $set[$i]->aid;
+                $this->userSet[$i]->guest = $set[$i]->guest;
 				$i ++;
 			} // end create users
 		} // end load all users
