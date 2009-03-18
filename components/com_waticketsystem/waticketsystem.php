@@ -225,8 +225,7 @@ function watsOption( $task, $act )
 					{
 						$ticket->deactivate();
 						// return to previous view
-						$link = newLink( $_GET );
-					        watsredirect( "index.php?".$link );
+                        watsredirect( base64_decode(JRequest::getVar("returnUrl")) );
 					}
 					else
 					{
@@ -254,7 +253,7 @@ function watsOption( $task, $act )
 							
 							$ticket->addMsg( $parsedMsg, $watsUser->id, date('YmdHis') );
 							// check for close
-							if ( JRequest::getString('submit') == JText::_("WATS_TICKETS_REPLY_CLOSE") )
+							if ( JRequest::getInt('close', 0) == 1 )
 							{
 								// check rites to close
 								$rite =  $watsUser->checkPermission( $ticket->category, "c" );
@@ -745,74 +744,6 @@ function prevLink( $getArray )
 		}
 	}
 	return $link;
-}
-
-/*
- * new Link
- * decomposes a previous action to create it as a new link
- * @param array
- */
-function newLink( $getArray )
-{
-	// create get link
-	$link = "prevLink=true";
-	// find keys
-	$keys = array_keys( $getArray );
-	// loop through keys
-	while ( $key = array_pop( $keys ) )
-	{
-		// check is previous
-		if ( strncmp ( $key, 'prev', 4 ) === 0 )
-		{
-			$newKey = substr( $key, 4 );
-			$link = $link.'&'.$newKey.'='.mosGetParam( $getArray, $key );
-			//$getArray[ $key ];
-		}
-	}
-	return $link;
-}
-
-/*
- * prevInput
- * creates prev form elements ffrom array
- * @param array
- */
-function prevInput( $getArray )
-{
-	// initialise input
-	$input = '';
-	// find keys
-	$keys = array_keys( $getArray );
-	// loop through keys
-	while ( $key = array_pop( $keys ) )
-	{
-		$input .= "<input name=\"prev".$key."\" type=\"hidden\" value=\"".mosGetParam( $getArray, $key )."\">";
-	}
-	return $input;
-}
-
-/*
- * new Link
- * decomposes a previous action to create it as a new form input
- * @param array
- */
-function newInput( $getArray )
-{
-	// initialise input
-	$input = '';
-	// find keys
-	$keys = array_keys( $getArray );
-	// loop through keys
-	while ( $key = array_pop( $keys ) )
-	{
-		// check is previous
-		if ( strncmp ( $key, 'prev', 4 ) === 0 )
-		{
-			$newKey = substr( $key, 4 );
-			$input .= "<input name=\"prev".$newKey."\" type=\"hidden\" value=\"".mosGetParam( $getArray, $key )."\">";
-		}
-	}
-	return $input;
 }
 
 function parseMsg( $msg )
