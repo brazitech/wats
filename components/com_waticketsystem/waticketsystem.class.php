@@ -327,7 +327,7 @@ class watsUserSet
 		{
 			$db->setQuery("SELECT u.* FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
                           "JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " ON " . WDBHelper::nameQuote("u.id") . " = " . WDBHelper::nameQuote("wu.watsid") .
-			              "ORDER BY " . WDBHelper::nameQuote("grpid") . " /* watsUserSet::load() */" );
+			              "ORDER BY " . WDBHelper::nameQuote("username") . " /* watsUserSet::load() */" );
 			$set = $db->loadObjectList();
 			$this->noOfUsers = count( $set );
 			$i = 0;
