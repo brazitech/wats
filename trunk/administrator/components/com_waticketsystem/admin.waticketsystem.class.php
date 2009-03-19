@@ -1324,7 +1324,7 @@ class watsCategorySet
 	{
 	    $database =& JFactory::getDBO();
 		// load categories
-		$database->setQuery( "SELECT * FROM #__wats_category" );
+		$database->setQuery( "SELECT * FROM #__wats_category ORDER BY name" );
 		$vars = $database->loadObjectList();
 		// create category objects
 		$i = 0;
