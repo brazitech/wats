@@ -515,7 +515,7 @@ function watsOption( &$task, &$act )
 					{
 						// make users
                         $users = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
-						$noOfNewUsers = count( JRequest::getString('user') );
+						$noOfNewUsers = count( $users );
 						$i = 0;
 						while ( $i < $noOfNewUsers )
 						{
@@ -546,12 +546,15 @@ function watsOption( &$task, &$act )
 				 */	
 				default:
 					// get limits
-					$limit 		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
-					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
+                    $limit		= $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+                    $limitstart	= $mainframe->getUserStateFromRequest('limitstart', 'limitstart', 0, 'int');
+
+                    // In case limit has been changed, adjust limitstart accordingly
+                    $limitstart = ( $limit != 0 ? (floor($limitstart / $limit) * $limit) : 0 );          
+                    
 					$watsUserSet = new watsUserSetHTML();
 					$watsUserSet->load();
 					$watsUserSet->view( $limitstart, $limit );
-					$watsUserSet->pageNav( $option, $limitstart, $limit );
 					break;
 			}
 			echo "<input type=\"hidden\" name=\"act\" value=\"user\" /><input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" /><input type=\"hidden\" name=\"task\" value=\"\" /></form>";
