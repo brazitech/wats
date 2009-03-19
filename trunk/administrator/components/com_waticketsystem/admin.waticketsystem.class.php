@@ -40,9 +40,9 @@ class watsUser extends JUser
 		$db =& JFactory::getDBO();
 		
 		$returnValue = false;
-		// load mosUser
+		// load user
 		$this->load( $uid );
-		// loadmosWatsUser
+		// load WatsUser
 		$db->setQuery( "SELECT  u.*, g.name, g.userrites, g.image, g.name AS groupname FROM #__wats_users AS u LEFT  JOIN #__wats_groups AS g ON g.grpid = u.grpid WHERE u.watsid=".(int)$uid );
 		$vars = $db->loadObjectList();
 		// set attributes

@@ -839,8 +839,6 @@ class watsSettingsHTML extends WConfig
 	 */
 	function editGeneral()
 	{
-		global $mosConfig_absolute_path;
-	
 		echo "<table class=\"adminform\">
 				<tr>
 				  <td width=\"185\">Name:</td><td><input name=\"watsSettingname\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('name')."\" /></td></tr><tr>
@@ -1867,23 +1865,6 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
         
         echo "</td></tr></tfoot></table></form>";
-	}
-
-	/**
-	 * @param database
-	 */
-	function pageNav( $option, $limitstart, $limit )
-	{
-		global $mainframe, $mosConfig_list_limit;
-
-		/*require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
-		$total = $this->noOfGroups;
-		$pageNav = new mosPageNav( $total, $limitstart, $limit );
-		echo $pageNav->getListFooter();
-		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
-		echo "<input type=\"hidden\" name=\"act\" value=\"rites\" />";
-		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
 	}
 }
 
