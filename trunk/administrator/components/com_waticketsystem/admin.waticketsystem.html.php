@@ -1,11 +1,9 @@
 <?php
 /**
- * FileName: admin.waticketsystem.html.php
- * Date: 07/09/2006
- * License: GNU General Public License
- * Script Version #: 2.0.4
- * JOS Version #: 1.0.x
- * Development James Kennard james@webamoeba.co.uk (www.webamoeba.co.uk)
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL, see LICENSE.php
+ * @package wats
  */
 
 // Don't allow direct linking
@@ -472,7 +470,7 @@ class watsTicketSetHTML extends watsTicketSet
 				<tbody>";
 		// itterate through tickets
         $limitstartThrow = $limitstart;
-        $limitMax = $limitstart + $limit;
+        $limitMax = ($limit > 0) ? $limitstart + $limit : $this->ticketNumberOf;
 		while (($limitstartThrow < $this->ticketNumberOf ) && ($limitstartThrow < $limitMax))
 		{
 			echo "<tr class=\"row".($limitstartThrow % 2)."\">
@@ -807,7 +805,7 @@ class watsCategorySetHTML extends watsCategorySet
 				<tbody>";
 		// itterate through categories
         $limitstartThrow = $limitstart;
-        $limitMax = $limitstart + $limit;
+        $limitMax = ($limit > 0) ? $limitstart + $limit : count($this->categorySet);
         while (($limitstartThrow < count($this->categorySet) ) && ($limitstartThrow < $limitMax))
 		{
             echo "<tr class=\"row".($limitstartThrow % 2)."\">";
