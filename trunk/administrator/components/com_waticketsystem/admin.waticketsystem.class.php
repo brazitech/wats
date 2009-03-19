@@ -1,11 +1,9 @@
 <?php
 /**
- * FileName: waticketsystem.class.php
- * Date: 08/10/2006
- * License: GNU General Public License
- * Script Version #: 2.0.5
- * JOS Version #: 1.0.x
- * Development James Kennard jg8949@aol.com (www.webamoeba.co.uk)
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL, see LICENSE.php
+ * @package wats
  */
 
 // Don't allow direct linking
