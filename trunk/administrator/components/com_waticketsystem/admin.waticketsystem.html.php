@@ -1830,27 +1830,43 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 					</thead>
 					<tbody>";
 		// itterate through groups
-		while ( $limitstart < $this->noOfGroups )
+        // itterate through users
+        $limitstartThrow = $limitstart;
+        $limitMax = ($limit > 0) ? $limitstart + $limit : $this->noOfUsers;
+        while (($limitstartThrow < $this->noOfGroups ) && ($limitstartThrow < $limitMax))
 		{
-			echo "<tr class=\"row".($limitstart % 2)."\">
-					<td><a href=\"index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$this->_userGroupList[$limitstart]->grpid."\">".$this->_userGroupList[$limitstart]->name."</a></td>
-					<td>".$this->_userGroupList[$limitstart]->image."</td>
-					<td><input name=\"userGroupV".$limitstart."\" type=\"checkbox\"";
-					echo ($this->_userGroupList[$limitstart]->checkUserPermission('V') == 2) ? " checked=\"checked\"" : "" ;
+			echo "<tr class=\"row".($limitstartThrow % 2)."\">
+					<td><a href=\"index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$this->_userGroupList[$limitstartThrow]->grpid."\">".$this->_userGroupList[$limitstartThrow]->name."</a></td>
+					<td>".$this->_userGroupList[$limitstartThrow]->image."</td>
+					<td><input name=\"userGroupV".$limitstartThrow."\" type=\"checkbox\"";
+					echo ($this->_userGroupList[$limitstartThrow]->checkUserPermission('V') == 2) ? " checked=\"checked\"" : "" ;
 					echo " DISABLED /></td>
-					<td><input name=\"userGroupM".$limitstart."\" type=\"checkbox\"";
-					echo ($this->_userGroupList[$limitstart]->checkUserPermission('M') == 2) ? " checked=\"checked\"" : "" ;
+					<td><input name=\"userGroupM".$limitstartThrow."\" type=\"checkbox\"";
+					echo ($this->_userGroupList[$limitstartThrow]->checkUserPermission('M') == 2) ? " checked=\"checked\"" : "" ;
 					echo " DISABLED /></td>
-					<td><input name=\"userGroupE".$limitstart."\" type=\"checkbox\"";
-					echo ($this->_userGroupList[$limitstart]->checkUserPermission('E') == 2) ? " checked=\"checked\"" : "" ;
+					<td><input name=\"userGroupE".$limitstartThrow."\" type=\"checkbox\"";
+					echo ($this->_userGroupList[$limitstartThrow]->checkUserPermission('E') == 2) ? " checked=\"checked\"" : "" ;
 					echo " DISABLED /></td>
-					<td><input name=\"userGroupD".$limitstart."\" type=\"checkbox\"";
-					echo ($this->_userGroupList[$limitstart]->checkUserPermission('D') == 2) ? " checked=\"checked\"" : "" ;
+					<td><input name=\"userGroupD".$limitstartThrow."\" type=\"checkbox\"";
+					echo ($this->_userGroupList[$limitstartThrow]->checkUserPermission('D') == 2) ? " checked=\"checked\"" : "" ;
 					echo " DISABLED /></td>
 				  </tr>";
-			$limitstart ++;
+			$limitstartThrow ++;
 		} // end itterate through groups
-		echo "<tbody></table>";
+        
+		echo "</tbody><tfoot><tr><td colspan=\"6\">";
+        
+        jimport("joomla.html.pagination");
+        
+        $pagination = new JPagination($this->noOfGroups, $limitstart, $limit);
+        echo $pagination->getListFooter();
+        
+        echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
+		echo "<input type=\"hidden\" name=\"act\" value=\"rites\" />";
+		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+        
+        echo "</td></tr></tfoot></table></form>";
 	}
 
 	/**

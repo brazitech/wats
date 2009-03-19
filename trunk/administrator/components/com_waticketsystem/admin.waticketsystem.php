@@ -66,7 +66,7 @@ function watsOption( &$task, &$act )
                     $limitstart	= $mainframe->getUserStateFromRequest('limitstart', 'limitstart', 0, 'int');
 
                     // In case limit has been changed, adjust limitstart accordingly
-                    $limitstart = ( $limit != 0 ? (floor($limitstart / $limit) * $limit) : 0 );          
+                    $limitstart = ( $limit != 0 ? (floor($limitstart / $limit) * $limit) : 0 );
                     
 					$ticketSet = new watsTicketSetHTML();
 					$ticketSet->loadTicketSet( -1 );
@@ -338,7 +338,7 @@ function watsOption( &$task, &$act )
 				/**
 				 * new
 				 */	
-				case 'new':
+				case 'add':
 					watsUserGroupHTML::newForm();
 					break;
 				/**
@@ -410,12 +410,15 @@ function watsOption( &$task, &$act )
 					}
 					break;
 				default:
-					$limit 		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mosConfig_list_limit );
-					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
+					$limit		= $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+                    $limitstart	= $mainframe->getUserStateFromRequest('limitstart', 'limitstart', 0, 'int');
+
+                    // In case limit has been changed, adjust limitstart accordingly
+                    $limitstart = ( $limit != 0 ? (floor($limitstart / $limit) * $limit) : 0 );
+                    
 					$userGroupSet = new watsUserGroupSetHTML();
 					$userGroupSet->loadUserGroupSet();
 					$userGroupSet->view( $limitstart, $limit );
-					$userGroupSet->pageNav( "com_waticketsysten", $limitstart, $limit );
 					break;
 			}
 			echo "<input type=\"hidden\" name=\"task\" value=\"\" /><input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" /><input type=\"hidden\" name=\"act\" value=\"rites\" /></form>";
