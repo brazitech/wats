@@ -317,7 +317,7 @@ class watsObjectBuilder
 		if ( $set != null )
 		{
 			// create ticket object
-			return new watsTicketHTML( $database, null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, $set[0]->category, $set[0]->assign );
+			return new watsTicketHTML( null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, $set[0]->category, $set[0]->assign );
 		} // end check there are results
 		return null;
 	 }
@@ -493,7 +493,7 @@ class watsTicket
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$this->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
+		$database->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
 		$messages = $database->loadObjectList();
 		// create message objects
 		$i = 0;

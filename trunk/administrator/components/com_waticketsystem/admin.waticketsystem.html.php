@@ -461,10 +461,7 @@ class watsTicketSetHTML extends watsTicketSet
 	 * @param finish
 	 * @param start
 	 */
-	function view( $limit, $limitstart )
-	{
-		global $Itemid;
-		
+	function view($limit, $limitstart) {
 		$wats =& JFactory::getConfig();
 		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
@@ -480,22 +477,24 @@ class watsTicketSetHTML extends watsTicketSet
 				</thead>
 				<tbody>";
 		// itterate through tickets
-		while ( $limitstart < $this->ticketNumberOf )
+        $limitstartThrow = $limitstart;
+        $limitMax = $limitstart + $limit;
+		while (($limitstartThrow < $this->ticketNumberOf ) && ($limitstartThrow < $limitMax))
 		{
-			echo "<tr class=\"row".($limitstart % 2)."\">
+			echo "<tr class=\"row".($limitstartThrow % 2)."\">
 					<td>
-			            <a href=\"index2.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstart]->ticketId."\">".$this->_ticketList[$limitstart]->name."</a></td>
-					<td>".$this->_ticketList[$limitstart]->username."</td>
-					<td>".$this->_ticketList[$limitstart]->msgNumberOf."</td>
-					<td>".date( $wats->get( 'date' ), $this->_ticketList[$limitstart]->datetime )."</td>
-					<td><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_ticketList[$limitstart]->lastMsg )."</span></td>
+			            <a href=\"index2.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstartThrow]->ticketId."\">".$this->_ticketList[$limitstartThrow]->name."</a></td>
+					<td>".$this->_ticketList[$limitstartThrow]->username."</td>
+					<td>".$this->_ticketList[$limitstartThrow]->msgNumberOf."</td>
+					<td>".date( $wats->get( 'date' ), $this->_ticketList[$limitstartThrow]->datetime )."</td>
+					<td><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_ticketList[$limitstartThrow]->lastMsg )."</span></td>
 					<td>";
 			// status
-			if ( $this->_ticketList[$limitstart]->lifeCycle == 1 )
+			if ( $this->_ticketList[$limitstartThrow]->lifeCycle == 1 )
 			{
 				echo "<img src=\"images/tick.png\" width=\"12\" height=\"12\" border=\"0\" alt=\"Open\" />";
 			}
-			else if ( $this->_ticketList[$limitstart]->lifeCycle == 2 )
+			else if ( $this->_ticketList[$limitstartThrow]->lifeCycle == 2 )
 			{
 				echo "<img src=\"images/publish_x.png\" width=\"12\" height=\"12\" border=\"0\" alt=\"Closed\" />";
 			}
@@ -505,27 +504,21 @@ class watsTicketSetHTML extends watsTicketSet
 			}
 			// end status
 			echo "</td></tr>";
-			$limitstart ++;
+			$limitstartThrow ++;
 		} // end itterate through tickets
-		echo "</tbody></table>";
-	}
-	
-	/**
-	 * @param database
-	 */
-	function pageNav( $option, $limitstart, $limit )
-	{
-		global $mainframe, $mosConfig_list_limit;
-
-		/*//allternatively
-		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
-		$total = $this->ticketNumberOf;
-		$pageNav = new mosPageNav( $total, $limitstart, $limit );
-		echo $pageNav->getListFooter();
-		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
+		echo "</tbody><tfoot><tr><td colspan=\"6\">";
+        
+        jimport("joomla.html.pagination");
+        
+        $pagination = new JPagination($this->ticketNumberOf, $limitstart, $limit);
+        echo $pagination->getListFooter();
+        
+        echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"ticket\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+        
+        echo "</td></tr></tfoot></table>";
 	}
 	
 }
