@@ -1,10 +1,9 @@
 <?php
 /**
- * FileName: admin.waticketsystem.php
- * Date: 21/01/2009
- * License: GNU General Public License
- * Script Version #: 2.0.8
- * JOS Version #: 1.0.x
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL, see LICENSE.php
+ * @package wats
  */
 
 // Don't allow direct linking
