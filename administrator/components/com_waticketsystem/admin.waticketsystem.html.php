@@ -811,35 +811,30 @@ class watsCategorySetHTML extends watsCategorySet
 				    </tr>
 				</thead>
 				<tbody>";
-		// itterate through users
-		while ( $limitstart < count($this->categorySet) )
+		// itterate through categories
+        $limitstartThrow = $limitstart;
+        $limitMax = $limitstart + $limit;
+        while (($limitstartThrow < count($this->categorySet) ) && ($limitstartThrow < $limitMax))
 		{
-			echo "<td><a href=\"index2.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstart]->catid."\">".$this->categorySet[$limitstart]->name."</a></td>";
-			echo "<td>".$this->categorySet[$limitstart]->description."</td>";
+            echo "<tr class=\"row".($limitstartThrow % 2)."\">";
+			echo "<td><a href=\"index2.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".$this->categorySet[$limitstartThrow]->name."</a></td>";
+			echo "<td>".$this->categorySet[$limitstartThrow]->description."</td>";
 			echo "</tr>";
-			$limitstart ++;
+			$limitstartThrow ++;
 		} // end itterate through users
-		echo "</tbody></table>";
-	}
-	
-	/**
-	 * @param database
-	 */
-	function pageNav( $option, $limitstart, $limit )
-	{
-		global $mainframe, $mosConfig_list_limit;
-
-		//allternatively
-		/*require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
-		//$limit = $mainframe->getUserStateFromRequest( 'viewlistlimit', 'limit', $mosConfig_list_limit );
-		//$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-		$total = count($this->categorySet);
-		$pageNav = new mosPageNav( $total, $limitstart, $limit );
-		echo $pageNav->getListFooter();
-		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
+		echo "</tbody><tfoot><tr><td colspan=\"6\">";
+        
+        jimport("joomla.html.pagination");
+        
+        $pagination = new JPagination(count($this->categorySet), $limitstart, $limit);
+        echo $pagination->getListFooter();
+        
+        echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"category\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+        
+        echo "</td></tr></tfoot></table>";
 	}
 	
 }
