@@ -43,7 +43,7 @@ watsOption($task, $act);
 <?php
 function watsOption( &$task, &$act )
 {
-	global $wats, $option, $mainframe, $mosConfig_list_limit, $mosCommonHTML;
+	global $wats, $option, $mainframe;
 
 	switch ($act) {
 		/**
@@ -64,10 +64,17 @@ function watsOption( &$task, &$act )
 				default:
 					$limit = $mainframe->getUserStateFromRequest( 'viewlistlimit', 'limit', $mosConfig_list_limit );
 					$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
+                    
+                    $limit		= $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+                    $limitstart	= $mainframe->getUserStateFromRequest('limitstart', 'limitstart', 0, 'int');
+
+                    // In case limit has been changed, adjust limitstart accordingly
+                    $limitstart = ( $limit != 0 ? (floor($limitstart / $limit) * $limit) : 0 );          
+                    
+                    
 					$ticketSet = new watsTicketSetHTML();
 					$ticketSet->loadTicketSet( -1 );
 					$ticketSet->view( $limit, $limitstart );
-					$ticketSet->pageNav( $option, $limitstart, $limit );
 					// key
 					echo "<p><img src=\"images/tick.png\" width=\"12\" height=\"12\" border=\"0\" alt=\"Open\" /> = Open <img src=\"images/publish_x.png\" width=\"12\" height=\"12\" border=\"0\" alt=\"Closed\" /> = Closed <img src=\"images/checked_out.png\" width=\"12\" height=\"12\" border=\"0\" alt=\"Closed\" /> = Dead</p>";
 					break;
@@ -393,7 +400,6 @@ function watsOption( &$task, &$act )
 					{
 						// delete category
 						$userGroup->delete( JRequest::getString('remove') );
-						// watsredirect( "index2.php?option=com_waticketsystem&act=rites&mosmsg=Group Removed" );
 					}
 					else
 					{
