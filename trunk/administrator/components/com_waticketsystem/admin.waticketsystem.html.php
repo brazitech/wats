@@ -280,43 +280,37 @@ class watsUserSetHTML extends watsUserSet
 					</thead>
 					<tbody>";
 		// itterate through users
-		while ( $limitstart < $this->noOfUsers )
+        $limitstartThrow = $limitstart;
+        $limitMax = ($limit > 0) ? $limitstart + $limit : $this->noOfUsers;
+        while (($limitstartThrow < $this->noOfUsers ) && ($limitstartThrow < $limitMax))
 		{
-			echo "<tr class=\"row".($limitstart % 2)."\">
+			echo "<tr class=\"row".($limitstartThrow % 2)."\">
 					<td>
 					    <img src=\"../components/com_waticketsystem/images/".$wats->get('iconset', "PATH")."user1616.gif\" height=\"16\" width=\"16\" border=\"0\">
 			        </td>
 					<td>
-			            <a href=\"index2.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstart]->id."\">".$this->userSet[$limitstart]->username."</a> (".$this->userSet[$limitstart]->name.")
+			            <a href=\"index2.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstartThrow]->id."\">".$this->userSet[$limitstartThrow]->username."</a> (".$this->userSet[$limitstartThrow]->name.")
 			        </td>
-					<td>".$this->userSet[$limitstart]->organisation."</td>
-					<td>".$this->userSet[$limitstart]->groupName."</td>
-					<td>".$this->userSet[$limitstart]->email."</td>
+					<td>".$this->userSet[$limitstartThrow]->organisation."</td>
+					<td>".$this->userSet[$limitstartThrow]->groupName."</td>
+					<td>".$this->userSet[$limitstartThrow]->email."</td>
 				  </tr>";
-			$limitstart ++;
+			$limitstartThrow ++;
 		} // end itterate through users
-		echo "</tbody></table>";
-		echo "</form>";
-	}
-
-	/**
-	 * @param database
-	 */
-	function pageNav( $option, $limitstart, $limit )
-	{
-		/*global $mainframe, $mosConfig_list_limit;
-
-		//allternatively
-		require_once( $GLOBALS['mosConfig_absolute_path'] . '/administrator/includes/pageNavigation.php' );
-		//$limit = $mainframe->getUserStateFromRequest( 'viewlistlimit', 'limit', $mosConfig_list_limit );
-		//$limitstart = $mainframe->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 );
-		$total = $this->noOfUsers;
-		$pageNav = new mosPageNav( $total, $limitstart, $limit );
-		echo $pageNav->getListFooter();
-		echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
+        
+		echo "</tbody><tfoot><tr><td colspan=\"6\">";
+        
+        jimport("joomla.html.pagination");
+        
+        $pagination = new JPagination($this->noOfUsers, $limitstart, $limit);
+        echo $pagination->getListFooter();
+        
+        echo "<input type=\"hidden\" name=\"option\" value=\"com_waticketsystem\" />";
 		echo "<input type=\"hidden\" name=\"act\" value=\"user\" />";
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
-		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";*/
+		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
+        
+        echo "</td></tr></tfoot></table></form>";
 	}
 	
 }
