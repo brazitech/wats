@@ -11,15 +11,16 @@
 	<description>Notifies user's by email about updates to tickets</description>
 	<files>
 		<filename plugin="mailnotification">mailnotification.php</filename>
+        <folder>mailnotification</folder>
 	</files>
 	<params>
-        <param name="email-format" 
+        <param name="email-allow-html"
                type="radio" 
-               default="html" 
-               label="FORMAT LABEL" 
-               description="FORMAT DESCRIPTION">
- 			<option value="html">HTML</option>
- 			<option value="text">PLAIN TEXT</option>
+               default="1"
+               label="ALLOW HTML LABEL"
+               description="ALLOW HTML DESCRIPTION">
+ 			<option value="1">YES</option>
+ 			<option value="0">NO</option>
  		</param>
         <param name="new-enabled" 
                type="radio" 
@@ -37,11 +38,19 @@
             <option value="0">NO</option>
             <option value="1">YES</option>
         </param>
-        <param name="reopen-enabled" 
-               type="radio" 
-               default="1" 
-               label="REOPEN ENABLED LABEL" 
+        <param name="reopen-enabled"
+               type="radio"
+               default="1"
+               label="REOPEN ENABLED LABEL"
                description="REOPEN ENABLED DESCRIPTION">
+            <option value="0">NO</option>
+            <option value="1">YES</option>
+        </param>
+        <param name="assign-enabled"
+               type="radio"
+               default="1"
+               label="ASSIGN ENABLED LABEL"
+               description="ASSIGN ENABLED DESCRIPTION">
             <option value="0">NO</option>
             <option value="1">YES</option>
         </param>
@@ -132,5 +141,32 @@
                default="SUBJECT REOPEN %s" 
                label="REOPEN SUBJECT LABEL"
                description="REOPEN SUBJECT DESCRIPTION" />
+        <param type="spacer" />
+        <!-- Assign ticket -->
+        <param name="assign-tmpl-html"
+               type="filelist"
+               default="assign"
+               label="ASSIGN HTML TEMPLATE LABEL"
+               description="ASSIGN HTML TEMPLATE DESCRIPTION"
+               directory="plugins/waticketsystem/mailnotification/html"
+               filter="\.tmpl$"
+               hide_default="1"
+               hide_none="1"
+               stripExt="1"/>
+        <param name="assign-tmpl-text"
+               type="filelist"
+               default="assign"
+               label="ASSIGN TEXT TEMPLATE LABEL"
+               description="ASSIGN TEXT TEMPLATE DESCRIPTION"
+               directory="plugins/waticketsystem/mailnotification/text"
+               filter="\.tmpl$"
+               hide_default="1"
+               hide_none="1"
+               stripExt="1"/>
+        <param name="assign-subject"
+               type="text"
+               default="SUBJECT ASSIGN %s"
+               label="ASSIGN SUBJECT LABEL"
+               description="ASSIGN SUBJECT DESCRIPTION" />
     </params>
 </install>

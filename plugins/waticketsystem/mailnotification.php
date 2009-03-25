@@ -1,32 +1,67 @@
 <?php
+/**
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL, see LICENSE.php
+ * @package wats-plugins
+ * @subpackage mailnotification
+ */
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 jimport( 'joomla.plugin.plugin' );
 
+/**
+ * Path to the waticketsystem plugins
+ */
 define("WPATH_PLUGINS", JPATH_PLUGINS . DS . "waticketsystem");
-define("WPATH_PLUGIN_MAILNOTIFICATION_TEMPLATES", WPATH_PLUGINS . DS . "mailnotification");
 
+/**
+ * Plugin class that enables email notification of changes to tickets
+ */
 class plgWaticketsystemMailnotification extends JPlugin {
-
-    var $_mergeDataObject = null;
     
 	function plgWaticketsystemMailnotification(&$subject, $config) {
 		parent::__construct($subject, $config);
         $this->loadLanguage();
 	}
 
-	function onTicketNew(&$ticket) {
+    /**
+     * Fire this when the ticket has just been created
+     *
+     * @param watsTicket $ticket
+     */
+    function onTicketNew(&$ticket) {
         $this->_sendNotification($ticket, "new");
 	}
     
+    /**
+     * Fire this when a new reply to the ticket has just arrived. Note that this
+     * is also used when a ticket is reopened.
+     *
+     * @param watsTicket $ticket
+     */
     function onTicketReply(&$ticket) {
 		$this->_sendNotification($ticket, "reply");
 	}
-    
+
+    /**
+     * Fire this when a ticket is reopened
+     *
+     * @param watsTicket $ticket
+     */
     function onTicketReopen(&$ticket) {
 		$this->_sendNotification($ticket, "reopen");
+	}
+
+    /**
+     * Fire this when a ticket is assigned to a user
+     *
+     * @param watsTicket $ticket
+     */
+    function onTicketAssign(&$ticket) {
+		$this->_sendNotification($ticket, "assign");
 	}
     
     function _sendNotification(&$ticket, $type) {
@@ -35,44 +70,69 @@ class plgWaticketsystemMailnotification extends JPlugin {
             return;
         }
         
-        // get the mailer object
+        // build the View object
+        require_once(WPATH_PLUGINS . DS . "mailnotification" . DS . "view.php");
+        $view = new WEmailView();
+        $view->assignRef("ticket", $ticket);
+        $view->assignRef("lastMessage", $ticket->_msgList[count($ticket->_msgList) - 1]);
+        $ticketOwner =& JFactory::getUser($ticket->watsId);
+        $view->assignRef("ticketOwner", $ticketOwner);
+        $lastMessageOwner =& JFactory::getUser();
+        $view->assignRef("lastMessageOwner", $lastMessageOwner);
+        if ($ticket->assign) {
+            $ticketAsignee =& JFactory::getUser($ticket->assign);
+            $view->assignRef("ticketAsignee", $ticketAsignee);
+        }
+        
+        // determine the templates to use
+        $tmplHTML = $this->params->get($type . "-tmpl-html", $type);
+        $tmplTEXT = $this->params->get($type . "-tmpl-text", $type);
+        
+        // get the mailer object and email addresses of those users who we want to notify
         $mailer = JFactory::getMailer();
-        
-        // prepare the message
-        $message =& $ticket->_msgList[count($ticket->_msgList) - 1];
-        
-        // get the template 
-        jimport("joomla.filesystem.file");
-        $templateFormat = ($this->params->get("email-format") == "text") ? "text" : "html";
-        $templateName = $this->params->get($type . "-tmpl-" . $this->params->get("email-format", "html"), $type);
-        $templatePath = WPATH_PLUGIN_MAILNOTIFICATION_TEMPLATES . DS . $templateFormat . DS . $templateName . ".tmpl";
-        $template = $this->_prepareTemplate($templatePath, $ticket, $message);
-        
-        // get the email addresses of those users who we want to notify
         $users =& $this->_getRelatedUsers($ticket);
+        $users = array_merge($users, $this->_getNotificationUsers());
         
-        // loop through users
+        // we onyl want unique users, ignore duplicates!
+        $uniqueUsers = array();
         for ($i = 0; $i < count($users); $i++) {
-            // add recipient
-            $user =& $users[$i];
-            $mailer->addRecipient($user->email);
-            
-            // add other recipients if this is the user that initiaited the event
-            if ($user->watsid == $message->watsId) {
-                $others = $this->params->get("email-others", "");
-                if (strlen($others)) {
-                    $others = preg_split("~\s*(\,\;)\s*~", $others);
-                    for ($n = 0; $n < count($others); $n++) {
-                        $mailer->addBCC($others[$n]);
-                    }
+            $isUnique = true;
+            for ($n = 0; $n < count($uniqueUsers); $n++) {
+                if ($users[$i]->email == $uniqueUsers[$n]->email) {
+                    $isUnique = false;
                 }
             }
-            
-            // set content
+            if ($isUnique) {
+                $uniqueUsers[] =& $users[$i];
+            }
+        }
+        
+        // loop through users
+        for ($i = 0; $i < count($uniqueUsers); $i++) {
+            $recipient =& $uniqueUsers[$i];
+        
+            // build the email
             $mailer->setSubject(JText::sprintf($this->params->get($type."-subject"), $ticket->name));
-            $mailer->IsHTML(($templateFormat == "html"));
-            $emailBody = $this->_mergeData($template, "~\{user\.([a-z]+)\}~i", $user);
-            $mailer->setBody($emailBody);
+            $view->assignRef("recipient", $recipient);
+            if ($this->params->get("email-allow-html", 1) == 1) {
+                // HTML body with alternative
+                $mailer->Body    = $view->render($tmplHTML, "html");
+                $mailer->AltBody = $view->render($tmplTEXT, "text");
+                $mailer->IsHTML(true);
+            } else {
+                // plain text body only
+                $mailer->Body = $view->render($tmplTEXT, "text");
+                $mailer->IsHTML(false);
+            }
+
+            if (!is_string($mailer->Body)) {
+                // uh oh it's gone a bit wrong... let's quit now!
+                return;
+            }
+            
+            // set recipient
+            $mailer->ClearAllRecipients();
+            $mailer->addRecipient($recipient->email);
             
             // send email
             $result = $mailer->Send();
@@ -83,80 +143,6 @@ class plgWaticketsystemMailnotification extends JPlugin {
         }
     }
     
-    function _prepareTemplate($templatePath, &$ticket, &$message) {
-        // read the template file
-        $template = JFile::read($templatePath);
-        
-        // translate template
-        $template = preg_replace_callback(
-            "~\{\?(.+)\?\}~", 
-            array($this, "_prepareTemplateTranslateCallback"),
-            $template
-        );
-        
-        // prepare ticket safe data
-        $safeTicket = new stdclass();
-        $safeTicket->watsId = $ticket->watsId;
-        $safeTicket->username = $ticket->username;
-        $safeTicket->ticketId = $ticket->ticketId;
-        $safeTicket->name = $ticket->name;
-        $safeTicket->category;
-        $safeTicket->lifeCycle;
-        $safeTicketDatetime = JFactory::getDate(strtotime($ticket->datetime));
-        $safeTicket->datetime = $safeTicketDatetime->toFormat();
-        $safeTicket->msgNumberOf = $ticket->msgNumberOf;
-        $safeTicket->uri = JRoute::_("index.php?option=com_waticketsystem&act=ticket&task=view&ticketid=" . $ticket->ticketId);
-        
-        // prepare message safe data
-        $safeMessage = new stdclass();
-        $safeMessage->msgId = $message->msgId;
-        $safeMessage->msg = $message->msg;
-        $safeMessage->watsId = $message->watsId;
-        $safeMessageUser = JFactory::getUser($safeMessage->watsId);
-        $safeMessage->username = $safeMessageUser->get("username");
-        $safeMessageDatetime = JFactory::getDate(strtotime($message->datetime));    
-        $safeMessage->datetime = $safeMessageDatetime->toFormat();
-        
-        // site
-        $site = new stdclass();
-        $site->uri = JRoute::_("index.php");
-        
-        // merge the ticket and message safe data with the template
-        $template = $this->_mergeData($template, "~\{ticket\.([a-z]+)\}~i", $safeTicket);
-        $template = $this->_mergeData($template, "~\{message\.([a-z]+)\}~i", $safeMessage);
-        $template = $this->_mergeData($template, "~\{site\.([a-z]+)\}~i", $site);
-        
-        // return the template
-        return $template;
-    }
-    
-    function _prepareTemplateTranslateCallback($matches) {
-        return JText::_($matches[1]);
-    }
-    
-    function _mergeData($string, $pattern, &$object) {
-        
-        // temporarily assign the object for callback purposes
-        $this->_mergeDataObject =& $object;
-        
-        // merge the data
-        $string = preg_replace_callback(
-            $pattern, 
-            array($this, "_mergeDataCallback"),
-            $string
-        );
-        
-        // unset object we're all done!
-        unset($this->_mergeDataObject);
-        
-        return $string;
-    }
-    
-    function _mergeDataCallback($matches) {
-        $property = $matches[1];
-        return (is_string($this->_mergeDataObject->$property)) ? $this->_mergeDataObject->$property : $property;
-    }
-    
     function &_getRelatedUsers(&$ticket) {
         // get the DBO
         $database =& JFactory::getDBO();
@@ -165,6 +151,58 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $query = "SELECT DISTINCT m.watsid, u.email, u.username, u.name FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid = " . intval($ticket->ticketId) . " AND u.block = 0";
         $database->setQuery($query);
         $users = $database->loadObjectList();
+        
+        // return the users
+        return $users;
+    }
+    
+    function &_getNotificationUsers() {
+        // get the notification email addresses
+        $notifyEmails = array();
+        if (!preg_match_all("~([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})~i", $this->params->get("email-others", ""), $notifyEmails)) {
+            return array();
+        }
+        $notifyEmails = $notifyEmails[0];
+        
+        // get the DBO
+        $database =& JFactory::getDBO();
+        
+        // make email addresses SQL safe
+        // doesn't really need this because of the pattern, but it's an implementation unaware mechanism for quoting values
+        $safeNotifyEmails = array();
+        for ($i = 0; $i < count($notifyEmails); $i ++) {
+            $safeNotifyEmails[] = $database->Quote($notifyEmails[$i]);
+        }
+        
+        // build and execute query to get users who are related to the ticket
+        $query = "SELECT DISTINCT u.id, u.email, u.username, u.name FROM #__users AS u WHERE u.email = ";
+        $query .= implode(" OR u.email = ", $safeNotifyEmails);
+        $database->setQuery($query);
+        $users = $database->loadObjectList();
+        
+        // check we got everyone!
+        for ($i = 0; $i < count($notifyEmails); $i ++) {
+            // flag if we known the email address
+            $isKnown = false;
+            
+            // look for the email
+            for ($n = 0; $n < count($users); $n ++) {
+                if ($users[$n]->email == $notifyEmails[$i]) {
+                    $isKnown = true;
+                    break;
+                }
+            }
+            
+            // uh oh, not known! better create a special generic unknown user...
+            if (!$isKnown) {
+                $unknownUser = new stdClass();
+                $unknownUser->id       = 0;
+                $unknownUser->email    = $notifyEmails[$i];
+                $unknownUser->name     = JText::_("UNKNOWN USER");
+                $unknownUser->username = JText::_("UNKNOWN USER");
+                $users[] = $unknownUser;
+            }
+        }
         
         // return the users
         return $users;
