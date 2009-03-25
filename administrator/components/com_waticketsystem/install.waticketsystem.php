@@ -126,17 +126,6 @@ function com_install()
 					);");
 			$database->query();
 			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_ticket`;");
-			// Altered due to version probs with MySQL.
-			/*$database->setQuery( "CREATE TABLE  `#__wats_ticket` (
-					  `watsid` int(11) NOT NULL default '0',
-					  `ticketid` int(11) NOT NULL auto_increment,
-					  `ticketname` varchar(25) NOT NULL default '',
-					  `lifecycle` tinyint(1) NOT NULL default '0',
-					  `datetime` timestamp NOT NULL default '0000-00-00 00:00:00',
-					  `category` int(11) NOT NULL default '0',
-					  `assign` int(11) default NULL,
-					  PRIMARY KEY  (`ticketid`)
-					);");*/
 			$database->setQuery( "CREATE TABLE  `#__wats_ticket` (
 					  `watsid` int(11) NOT NULL default '0',
 					  `ticketid` int(11) NOT NULL auto_increment,
@@ -227,6 +216,8 @@ function com_install()
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='0' WHERE `name`='versionminor';" );
 			$database->query();
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionmajor';" );
+			$database->query();
+            $database->setQuery( "UPDATE `#__wats_settings` SET `value`='WebAmoeba Ticket System for Joomla!' WHERE `name`='copyright';" );
 			$database->query();
 			break;
 	}
