@@ -633,6 +633,12 @@ class watsTicket
 		              "SET " . WDBHelper::nameQuote("assign") . " = " . intval($this->assignId) . " " .
 					  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " /* watsTicket::setAssignId() */ " );
 		$db->query();
+
+        // trigger onTicketAssign event
+        JPluginHelper::importPlugin("waticketsystem");
+        $app =& JFactory::getApplication();
+        $args = array(&$this);
+        $app->triggerEvent("onTicketAssign", $args);
 	}
 }
 
