@@ -12,28 +12,13 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 $wats =& WFactory::getConfig();
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><?php echo $this->ticket->name; ?></title>
-</head>
-<body style="background-color: #8FACC9; 
-             margin: 20px; 
-             font-family: Arial;
-             font-size: small;">
-    <div style="background-color: #EBF0F5; 
-                border: 1px solid #FFFFFF; 
-                font-family: Arial;
-                font-size: small;">
-        <p><?php echo JText::sprintf("TO %s", $this->recipient->name); ?></p>
-        <p><?php echo JText::_("TICKET HAS BEEN REOPENED"); ?></p>
-------------------------------------------------------------
+<?php echo JText::sprintf("TO %s", $this->recipient->name); ?> 
+<?php echo JText::_("TICKET HAS BEEN REOPENED"); ?> 
+------------------------------------------------------------ 
 <?php echo JText::_("Ticket Name"); ?>: <?php echo $this->ticket->name; ?> 
 <?php echo JText::_("WATS_TICKETS_ID"); ?>: WATS-<?php echo $this->ticket->ticketId; ?> 
-<?php echo JText::_("REOPENED BY"); ?>: <?php echo $this->lastMessageOwner->username; ?>
+<?php echo JText::_("REOPENED BY"); ?>: <?php echo $this->lastMessageOwner->username; ?> 
 <?php echo JText::_("REOPEN REASON"); ?>: 
 <?php echo $this->lastMessage->msg; ?> 
-------------------------------------------------------------
-<?php echo $wats->get("copyright"); ?>
+------------------------------------------------------------ 
+<?php echo $wats->get("copyright"); ?> 
