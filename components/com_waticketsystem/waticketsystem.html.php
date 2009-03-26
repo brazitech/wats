@@ -441,22 +441,37 @@ class watsTicketHTML extends watsTicket
 						<tr> 
 						  <td>".JText::_("WATS_TICKETS_REPLY")."</td>
 						  <td>";
-				// message box
-				if ( $wats->get( 'msgbox' ) == "editor" )
-				{
+
+                // message box
+				if ( $wats->get( 'msgbox' ) == "editor" ) {
 					$editor =& JFactory::getEditor();
-                    echo $editor->display("msg", 
-                                     $wats->get('defaultmsg'),
-                                     $wats->get('msgboxw')*8.5,
-                                     $wats->get( 'msgboxh' )*18,
-                                     45,
-                                     5,
-                                     false);
-				}
-				else
-				{
-					echo "<textarea name=\"msg\" cols=\"".$wats->get( 'msgboxw' )."\" rows=\"".$wats->get( 'msgboxh' )."\" id=\"msg\">".$wats->get( 'defaultmsg' )."</textarea>";
-				} // end message box
+                } else {
+                    $editor =& JFactory::getEditor("none");
+                }
+                echo $editor->display("msg",
+                                      $wats->get('defaultmsg'),
+                                      $wats->get('msgboxw')*8.5,
+                                      $wats->get( 'msgboxh' )*18,
+                                      45,
+                                      5,
+                                      false);
+                // add JS
+                $script = 'function watsValidateTicketReply(form, errorMessage, defaultMsg) {
+                               var returnValue = true;
+                               var message = '.$editor->getContent("msg").'
+
+                               // check fields
+                               if (trim(message) == "" || message == defaultMsg) {
+                                   alert( errorMessage );
+                                   form.msg.focus();
+                                   returnValue = false;
+                               } // end check fields
+                               return returnValue;
+                           }';
+                $document =& JFactory::getDocument();
+                $document->addScriptDeclaration($script);
+                // end message box
+
 				echo "   </td>
 						</tr>";
                 // check for close  rites
@@ -585,21 +600,40 @@ class watsTicketHTML extends watsTicket
 		echo "</select>";
 		// message box
 		echo JText::_("WATS_TICKETS_DESC");
-		if ( $wats->get( 'msgbox' ) == "editor" )
-		{
+		// message box
+        if ( $wats->get( 'msgbox' ) == "editor" ) {
             $editor =& JFactory::getEditor();
-			echo $editor->display("msg", 
-                             $wats->get('defaultmsg'),
-                             $wats->get('msgboxw')*8.5,
-                             $wats->get( 'msgboxh' )*18,
-                             45,
-                             5,
-                             false);
-		}
-		else
-		{
-			echo "<textarea name=\"msg\" cols=\"".$wats->get( 'msgboxw' )."\" rows=\"".$wats->get( 'msgboxh' )."\" id=\"msg\">".$wats->get( 'defaultmsg' )."</textarea>";
-		}
+        } else {
+            $editor =& JFactory::getEditor("none");
+        }
+        echo $editor->display("msg",
+                              $wats->get('defaultmsg'),
+                              $wats->get('msgboxw')*8.5,
+                              $wats->get( 'msgboxh' )*18,
+                              45,
+                              5,
+                              false);
+        // add JS
+        $script = 'function watsValidateTicketMake(form, errorMessage, defaultMsg) {
+                       var returnValue = true;
+                       var message = '.$editor->getContent("msg").';
+
+                       // check fields
+                       if ( trim( form.ticketname.value ) == "" ) {
+                           returnValue = false;
+                           form.ticketname.focus();
+                           alert( errorMessage );  
+                       } else if (trim(message) == "" || message == defaultMsg) {
+                           alert( errorMessage );
+                           returnValue = false;
+                           form.msg.focus();
+                       } // end check fields
+                       return returnValue;
+                   }';
+        $document =& JFactory::getDocument();
+        $document->addScriptDeclaration($script);
+        // end message box
+
 		// submit button
 		echo "<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 			  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
@@ -621,21 +655,33 @@ class watsTicketHTML extends watsTicket
 		      <form name=\"submitmsg\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=completeReopen&ticketid=".$this->ticketId."\" onsubmit=\"return watsValidateTicketReopen( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">
 			  ".JText::_("WATS_TICKETS_REOPEN_REASON");
 		// message box
-		if ( $wats->get( 'msgbox' ) == "editor" )
-		{
+        if ( $wats->get( 'msgbox' ) == "editor" ) {
             $editor =& JFactory::getEditor();
-                    echo $editor->display("msg", 
-                                     $wats->get('defaultmsg'),
-                                     $wats->get('msgboxw')*8.5,
-                                     $wats->get( 'msgboxh' )*18,
-                                     45,
-                                     5,
-                                     false);
-		}
-		else
-		{
-			echo "<textarea name=\"msg\" cols=\"".$wats->get( 'msgboxw' )."\" rows=\"".$wats->get( 'msgboxh' )."\" id=\"msg\">".$wats->get( 'defaultmsg' )."</textarea>";
-		} // end message box
+        } else {
+            $editor =& JFactory::getEditor("none");
+        }
+        echo $editor->display("msg",
+                              $wats->get('defaultmsg'),
+                              $wats->get('msgboxw')*8.5,
+                              $wats->get( 'msgboxh' )*18,
+                              45,
+                              5,
+                              false);
+        // add JS
+        $script = 'function watsValidateTicketReopen( form, errorMessage, defaultMsg ) {
+	returnValue = true;
+    var message = '.$editor->getContent("msg").';
+	// check fields
+	if (trim(message) == "" || message == defaultMsg) {
+		alert( errorMessage );
+		form.msg.focus();
+		returnValue = false;
+	} // end check fields
+	return returnValue;
+}';
+        $document =& JFactory::getDocument();
+        $document->addScriptDeclaration($script);
+        // end message box
 		echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 			    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 			    <input name=\"act\" type=\"hidden\" value=\"ticket\">
