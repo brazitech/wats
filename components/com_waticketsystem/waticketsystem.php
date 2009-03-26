@@ -1,10 +1,9 @@
 <?php
 /**
- * FileName: waticketsystem.php
- * Date: 21/01/2009
- * License: GNU General Public License
- * Script Version #: 2.0.8
- * JOS Version #: 1.0.x
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL
+ * @package wats
  */
 
 // Don't allow direct linking
@@ -168,7 +167,6 @@ function watsOption( $task, $act )
 						else
 						{
 							echo JText::_("WATS_ERROR_ACCESS") . " :( ";
-							print_r($ticket);
 						}
 					}
 					else
@@ -456,7 +454,7 @@ function watsOption( $task, $act )
 					if ( ( $ticket->assignId == $watsUser->id AND $riteA > 0 ) OR ( $riteA == 2 ) )
 					{
 						$ticket->setAssignId( JRequest::getInt('assignee') );
-					} // end chck for assign rites
+					} // end check for assign rites
 					// check rites
 					$rite =  $watsUser->checkPermission( $ticket->category, "v" );
 					if ( ( $ticket->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )

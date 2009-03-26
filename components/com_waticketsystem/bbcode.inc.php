@@ -1,8 +1,10 @@
 <?php
 /**
- * FileName: bbcode.inc.php
- * Date: 14/01/2003
  * Development Leif K-Brooks (www.phpclasses.org)
+ * 
+ * @version $Id$
+ * @license GNU/GPL
+ * @package wats
  */
  
 function begtoend($htmltag){
