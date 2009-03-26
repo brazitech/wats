@@ -1214,10 +1214,8 @@ class watsCategory extends JTable
 			// iterate through user groups and create rites entries
 			$watsUserGroupSet =  new watsUserGroupSet( $database );
 			$watsUserGroupSet->loadUserGroupSet();
-			//print_r( $watsUserGroupSet );
 			foreach ( $watsUserGroupSet->_userGroupList as $watsUserGroup )
 			{
-				//print_r($watsUserGroup);
 				$watsUserGroup->newPermissionSet( $newCategoryId );
 			}
 			return true;
