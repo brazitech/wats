@@ -64,60 +64,6 @@ function watsCategorySetSelect( catid, itemid )
 }*/
 
 /**
- * Validates make ticket form
- */
-function watsValidateTicketMake( form, errorMessage, defaultMsg )
-{
-	returnValue = true;
-	// check fields
-	if ( trim( form.ticketname.value ) == "" )
-	{
-		returnValue = false;
-		form.ticketname.focus();
-		alert( errorMessage );  
-	}
-	else if ( trim( form.msg.value ) == "" || form.msg.value == defaultMsg )
-	{
-		alert( errorMessage );
-		returnValue = false;
-		form.msg.focus();
-	} // end check fields
-	return returnValue;
-}
-
-/**
- * Validates reply ticket form
- */
-function watsValidateTicketReply( form, errorMessage, defaultMsg )
-{
-	returnValue = true;
-	// check fields
-	if ( trim( form.msg.value ) == "" || form.msg.value == defaultMsg )
-	{
-		alert( errorMessage );
-		form.msg.focus();
-		returnValue = false;
-	} // end check fields
-	return returnValue;
-}
-
-/**
- * Validates reopen ticket form
- */
-function watsValidateTicketReopen( form, errorMessage, defaultMsg )
-{
-	returnValue = true;
-	// check fields
-	if ( trim( form.msg.value ) == "" || form.msg.value == defaultMsg )
-	{
-		alert( errorMessage );
-		form.msg.focus();
-		returnValue = false;
-	} // end check fields
-	return returnValue;
-}
-
-/**
  * Validates new user form
  */
 function watsValidateNewUser( form, user, errorMessage )
