@@ -1003,40 +1003,6 @@ class watsSettingsHTML extends WConfig
 	/*
 	 *
 	 */
-	function editNotification()
-	{
-		echo "<table class=\"adminform\">
-				<tr>
-				  <td width=\"185\">Notify Relevant Users:</td><td>
-					<input type=\"radio\" name=\"watsSettingnotifyusers\" id=\"notifyUsersNo\" value=\"0\"";
-					   echo ($this->get('notifyusers') == 0) ? " checked=\"checked\"" : " ";
-					   echo "class=\"inputbox\" />
-					  <label for=\"notifyUsersNo\">No</label>
-					  <input type=\"radio\" name=\"watsSettingnotifyusers\" id=\"notifyUsersYes\" value=\"1\"";
-					   echo ($this->get('notifyusers') == 1) ? " checked=\"checked\"" : " ";
-					   echo "class=\"inputbox\" />
-					  <label for=\"notifyUsersYes\">Yes</label> ";
-		echo JHTML::_("tooltip", "Notifties associated users when new tickets and replies are made.");
-		echo "	  </td></tr><tr>
-				  <td width=\"185\">Notify Email:</td><td><input name=\"watsSettingnotifyemail\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('notifyemail')."\" /> ";
-		echo JHTML::_("tooltip", "Email address that recieves all notification emails.");
-		echo "	  </td></tr><tr>
-				  <td width=\"185\">Source Email:</td><td><input name=\"watsSettingsourceemail\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('sourceemail')."\" /> ";
-		echo JHTML::_("tooltip", "Email address that the notifcations come from.");
-		echo "	  </td></tr><tr>
-				  <td width=\"185\">Email Subject:</td><td><input name=\"watsSettingnewpostmsg\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg')."\" /> ";
-		echo JHTML::_("tooltip", "Subject line of notification emails");
-		echo "	  </td></tr><tr>
-				  <td width=\"185\">Email Line 1:</td><td><input name=\"watsSettingnewpostmsg1\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg1')."\" /></td></tr><tr>
-				  <td width=\"185\">Email Line 2:</td><td><input name=\"watsSettingnewpostmsg2\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg2')."\" /></td></tr><tr>
-				  <td width=\"185\">Email Line 3:</td><td><input name=\"watsSettingnewpostmsg3\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('newpostmsg3')."\" /></td>
-				</tr>
-			  </table>";
-	}
-	
-	/*
-	 *
-	 */
 	function editDebug() {
 		$db =& JFactory::getDBO();
 		

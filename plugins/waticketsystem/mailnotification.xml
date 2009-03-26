@@ -27,32 +27,32 @@
                default="1" 
                label="NEW ENABLED LABEL" 
                description="NEW ENABLED DESCRIPTION">
-            <option value="0">NO</option>
             <option value="1">YES</option>
+ 			<option value="0">NO</option>
         </param>
         <param name="reply-enabled" 
                type="radio" 
                default="1" 
                label="REPLY ENABLED LABEL" 
                description="REPLY ENABLED DESCRIPTION">
-            <option value="0">NO</option>
             <option value="1">YES</option>
+ 			<option value="0">NO</option>
         </param>
         <param name="reopen-enabled"
                type="radio"
                default="1"
                label="REOPEN ENABLED LABEL"
                description="REOPEN ENABLED DESCRIPTION">
-            <option value="0">NO</option>
             <option value="1">YES</option>
+ 			<option value="0">NO</option>
         </param>
         <param name="assign-enabled"
                type="radio"
                default="1"
                label="ASSIGN ENABLED LABEL"
                description="ASSIGN ENABLED DESCRIPTION">
-            <option value="0">NO</option>
             <option value="1">YES</option>
+ 			<option value="0">NO</option>
         </param>
         <param name="email-others"
                type="text" 

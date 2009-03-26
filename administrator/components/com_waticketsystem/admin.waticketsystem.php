@@ -633,7 +633,7 @@ function watsOption( &$task, &$act )
 							echo $settingsTabs->endPanel();
 							// Notification
 							echo $settingsTabs->startPanel( 'Notification', 'settingsTabs' );
-							$watsSettings->editNotification();
+							echo "<p>".JText::_("NOTIFICATION MOVED TO PLUGIN")."</p>";
 							echo $settingsTabs->endPanel();
 							// Upgrade
 							echo $settingsTabs->startPanel( 'Upgrade', 'settingsTabs' );

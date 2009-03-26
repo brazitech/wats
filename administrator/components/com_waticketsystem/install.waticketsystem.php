@@ -149,7 +149,43 @@ function com_install()
 			$database->query();
 			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_agree`;");
 			$database->query();			
-			$database->setQuery( "INSERT INTO `#__wats_settings` (`name`,`value`) VALUES ('iconset','mdn_'),('notifyemail',''),('highlight','!'),('notifyusers','0'),('enhighlight','1'),('ticketsfront','5'),('ticketssub','15'),('sourceemail',''),('msgbox','bbcode'),('lang','english.php'),('name','WebAmoeba Ticket System'),('newpostmsg','a new message has arrived:'),('newpostmsg1','a new message has arrived:'),('newpostmsg2',''),('newpostmsg3',''),('users','0'),('agree','0'),('agreei',''),('agreelw','You must agree to the following terms to use this system'),('agreen','agreement'),('agreela','If you have read the terms please continue'),('agreeb','continue'),('view','a'),('msgboxh','10'),('msgboxw','58'),('msgboxt','1'),('dorganisation','individual'),('copyright','WebAmoeba Ticket System for Mambo and Joomla'),('date','j-M-Y (h:i)'),('defaultmsg','type here...'),('dateshort','j-M-Y'),('assignname','Assigned Tickets'),('assigndescription','Tickets assigned to you to answer'),('assignimage',''),('versionmajor','2'), ('versionminor','0'),('versionpatch','0'),('css','disable'),('versionname','stable'),('upgrade','0'),('userdefault','1'),('usersimport','0'),('debug','0'),('debugmessage','Continue >>');");
+			$database->setQuery( "INSERT INTO `#__wats_settings` (`name`,`value`) VALUES ('iconset','mdn_'),
+                                                                                         ('highlight','!'),
+                                                                                         ('enhighlight','1'),
+                                                                                         ('ticketsfront','5'),
+                                                                                         ('ticketssub','15'),
+                                                                                         ('sourceemail',''),
+                                                                                         ('msgbox','bbcode'),
+                                                                                         ('name','Webamoeba Ticket System'),
+                                                                                         ('users','0'),
+                                                                                         ('agree','0'),
+                                                                                         ('agreei',''),
+                                                                                         ('agreelw','You must agree to the following terms to use this system'),
+                                                                                         ('agreen','agreement'),
+                                                                                         ('agreela','If you have read the terms please continue'),
+                                                                                         ('agreeb','continue'),
+                                                                                         ('view','a'),
+                                                                                         ('msgboxh','10'),
+                                                                                         ('msgboxw','58'),
+                                                                                         ('msgboxt','1'),
+                                                                                         ('dorganisation','individual'),
+                                                                                         ('copyright','WebAmoeba Ticket System for Mambo and Joomla'),
+                                                                                         ('date','j-M-Y (h:i)'),
+                                                                                         ('defaultmsg','type here...'),
+                                                                                         ('dateshort','j-M-Y'),
+                                                                                         ('assignname','Assigned Tickets'),
+                                                                                         ('assigndescription','Tickets assigned to you to answer'),
+                                                                                         ('assignimage',''),
+                                                                                         ('versionmajor','2'),
+                                                                                         ('versionminor','0'),
+                                                                                         ('versionpatch','0'),
+                                                                                         ('css','disable'),
+                                                                                         ('versionname','stable'),
+                                                                                         ('upgrade','0'),
+                                                                                         ('userdefault','1'),
+                                                                                         ('usersimport','0'),
+                                                                                         ('debug','0'),
+                                                                                         ('debugmessage','Continue >>');");
 			$database->query();
 			$database->setQuery( "INSERT INTO `#__wats_groups` (`grpid`,`name`,`image`,`userrites`) VALUES (1,'user','components/com_waticketsystem/images/mdn_userSmall.jpg','----'),(2,'advisor','components/com_waticketsystem/images/mdn_userSmallGreen.jpg','V---'),(3,'administrator','components/com_waticketsystem/images/mdn_userSmallRed.jpg','VMED');");
 			$database->query();
@@ -221,7 +257,15 @@ function com_install()
 			$database->query();
             $database->setQuery( "UPDATE `#__wats_settings` SET `value`='WebAmoeba Ticket System for Joomla!' WHERE `name`='copyright';" );
 			$database->query();
-			break;
+            
+            $database->setQuery("DELETE FROM `#__wats_settings` WHERE `name` = 'newpostmsg' OR
+                                                                      `name` = 'newpostmsg1' OR 
+                                                                      `name` = 'newpostmsg2' OR 
+                                                                      `name` = 'newpostmsg3' OR 
+                                                                      `name` = 'notifyusers' OR
+                                                                      `name` = 'notifyemail'");
+            $database->query();	
+            break;
 	}
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
