@@ -217,6 +217,8 @@ function com_install()
 			$database->query();
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionmajor';" );
 			$database->query();
+            $database->setQuery( "UPDATE `#__wats_settings` SET `value`='release candidate' WHERE `name`='versionnane';" );
+			$database->query();
             $database->setQuery( "UPDATE `#__wats_settings` SET `value`='WebAmoeba Ticket System for Joomla!' WHERE `name`='copyright';" );
 			$database->query();
 			break;
@@ -237,7 +239,7 @@ function com_install()
 						<th>
 							<div style=\"text-align: center;\">
 								WebAmoeba Ticket System<br />
-								3.0.0 ( stable )
+								3.0.0 ( release candidate )
 							</div>
 						</th>
 					</tr>
