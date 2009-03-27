@@ -269,14 +269,14 @@ function com_install()
 	}
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
-	changeIcon("About", "js/ThemeOffice/controlpanel.png");
+	changeIcon("About", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
 	changeIcon("Ticket Viewer", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
-	changeIcon("User Manager", "js/ThemeOffice/users.png");
-	changeIcon("Configure", "js/ThemeOffice/config.png");
-	changeIcon("CSS", "js/ThemeOffice/menus.png");
-	changeIcon("Rites Manager", "js/ThemeOffice/globe3.png");
-	changeIcon("Category Manager", "js/ThemeOffice/add_section.png");
-	changeIcon("Database Maintenance", "js/ThemeOffice/sysinfo.png");
+	changeIcon("User Manager", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
+	changeIcon("Configure", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
+	changeIcon("CSS", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
+	changeIcon("Rights Manager", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
+	changeIcon("Category Manager", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
+	changeIcon("Database Maintenance", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
 	return "<table class=\"adminlist\">
 				<thead>
 					<tr>
