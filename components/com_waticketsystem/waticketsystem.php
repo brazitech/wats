@@ -12,6 +12,7 @@ defined('_JEXEC') or die('Restricted Access');
 echo '<div class="wats">';
 
 //add custom classes and functions
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "config.php");
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "factory.php");
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "dbhelper.php");
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "tablehelper.php");
