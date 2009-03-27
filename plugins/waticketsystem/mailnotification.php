@@ -8,9 +8,9 @@
  */
 
 // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined("_JEXEC") or die("Restricted access");
 
-jimport( 'joomla.plugin.plugin' );
+jimport("joomla.plugin.plugin");
 
 /**
  * Path to the waticketsystem plugins
@@ -112,7 +112,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
             $recipient =& $uniqueUsers[$i];
         
             // build the email
-            $mailer->setSubject(JText::sprintf($this->params->get($type."-subject"), $ticket->name));
+            $mailer->setSubject(JText::sprintf($this->params->get($type."-subject", "SUBJECT $type %s"), $ticket->name));
             $view->assignRef("recipient", $recipient);
             if ($this->params->get("email-allow-html", 1) == 1) {
                 // HTML body with alternative

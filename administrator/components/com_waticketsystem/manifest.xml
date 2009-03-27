@@ -4,12 +4,12 @@
     <creationDate>March 2009</creationDate>
     <author>James Kennard</author>
     <copyright>This component is released under the GNU/GPL License</copyright>
-	<license>GNU/GPL</license>
+    <license>GNU/GPL</license>
     <authorEmail>james@webamoeba.co.uk</authorEmail>
     <authorUrl>www.webamoeba.co.uk</authorUrl>
     <version>3.0.0 (release candidate)</version>
     <description>Help ticket system</description>
-	<administration>
+    <administration>
         <menu>WATicketSystem</menu>
             <submenu>
                 <menu act="configure">Configure</menu>
@@ -29,17 +29,17 @@
             <filename>toolbar.waticketsystem.php</filename>
             <filename>toolbar.waticketsystem.html.php</filename>
             <filename>index.html</filename>
-			<folder>images</folder>
-			<folder>classes</folder>
+            <folder>images</folder>
+            <folder>classes</folder>
         </files>
         <languages folder="administrationLanguages">
             <language tag="en-GB">en-GB.com_waticketsystem.ini</language>
         </languages>
     </administration>
-	<install>
+    <install>
         <sql></sql>
     </install>
-	<uninstall>
+    <uninstall>
         <sql></sql>
     </uninstall>
     <installfile>install.waticketsystem.php</installfile>
@@ -53,22 +53,23 @@
         <filename>wats.js</filename>
         <filename>bbcode.inc.php</filename>
         <filename>index.html</filename>
-		<folder>images</folder>
+        <folder>images</folder>
     </files>
-	<languages folder="siteLanguages">
-	    <language tag="cs-CZ">cs-CZ.com_waticketsystem.ini</language>
-		<language tag="de-DE">de-DE.com_waticketsystem.ini</language>
-		<language tag="el-GR">de-DE.com_waticketsystem.ini</language>
-	    <language tag="en-GB">en-GB.com_waticketsystem.ini</language>
-	    <language tag="es-ES">es-ES.com_waticketsystem.ini</language>
-	    <language tag="fr-FR">fr-FR.com_waticketsystem.ini</language>
-	    <language tag="it-IT">it-IT.com_waticketsystem.ini</language>
-	    <language tag="nl-NL">nl-NL.com_waticketsystem.ini</language>
-	    <language tag="pt-BR">pt-BR.com_waticketsystem.ini</language>
-	    <language tag="pt-PT">pt-PT.com_waticketsystem.ini</language>
-	    <language tag="ru-RU">ru-RU.com_waticketsystem.ini</language>
-	    <language tag="sk-SK">sk-SK.com_waticketsystem.ini</language>
-	    <language tag="sv-SE">sv-SE.com_waticketsystem.ini</language>
-	    <language tag="tr-TR">tr-TR.com_waticketsystem.ini</language>
-	</languages>
+    <languages folder="siteLanguages">
+        <language tag="cs-CZ">cs-CZ.com_waticketsystem.ini</language>
+        <language tag="de-DE">de-DE.com_waticketsystem.ini</language>
+        <language tag="el-GR">de-DE.com_waticketsystem.ini</language>
+        <language tag="en-GB">en-GB.com_waticketsystem.ini</language>
+        <language tag="en-GB">en-GB.plg_waticketsystem_mailnotification.ini</language>
+        <language tag="es-ES">es-ES.com_waticketsystem.ini</language>
+        <language tag="fr-FR">fr-FR.com_waticketsystem.ini</language>
+        <language tag="it-IT">it-IT.com_waticketsystem.ini</language>
+        <language tag="nl-NL">nl-NL.com_waticketsystem.ini</language>
+        <language tag="pt-BR">pt-BR.com_waticketsystem.ini</language>
+        <language tag="pt-PT">pt-PT.com_waticketsystem.ini</language>
+        <language tag="ru-RU">ru-RU.com_waticketsystem.ini</language>
+        <language tag="sk-SK">sk-SK.com_waticketsystem.ini</language>
+        <language tag="sv-SE">sv-SE.com_waticketsystem.ini</language>
+        <language tag="tr-TR">tr-TR.com_waticketsystem.ini</language>
+    </languages>
 </install>
