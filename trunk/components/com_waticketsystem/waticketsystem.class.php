@@ -28,7 +28,7 @@ class watsUser extends JUser
 	 */
 	function loadWatsUser( $uid )
 	{
-		global $wats;
+		$wats = WFactory::getConfig();
 		
 		$db =& JFactory::getDBO();
 		

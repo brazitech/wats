@@ -7,7 +7,7 @@
 	<license>GNU/GPL</license>
     <authorEmail>james@webamoeba.co.uk</authorEmail>
     <authorUrl>www.webamoeba.co.uk</authorUrl>
-    <version>3.0.0 (stable)</version>
+    <version>3.0.0 (release candidate)</version>
     <description>Help ticket system</description>
 	<administration>
         <menu>WATicketSystem</menu>
@@ -32,6 +32,9 @@
 			<folder>images</folder>
 			<folder>classes</folder>
         </files>
+        <languages folder="administrationLanguages">
+            <language tag="en-GB">en-GB.com_waticketsystem.ini</language>
+        </languages>
     </administration>
 	<install>
         <sql></sql>
@@ -41,7 +44,6 @@
     </uninstall>
     <installfile>install.waticketsystem.php</installfile>
     <uninstallfile>uninstall.waticketsystem.php</uninstallfile>
-	</install>
     <files folder="site">
         <filename>waticketsystem.php</filename>
         <filename>waticketsystem.html.php</filename>
@@ -53,7 +55,7 @@
         <filename>index.html</filename>
 		<folder>images</folder>
     </files>
-	<languages folder="languages">
+	<languages folder="siteLanguages">
 	    <language tag="cs-CZ">cs-CZ.com_waticketsystem.ini</language>
 		<language tag="de-DE">de-DE.com_waticketsystem.ini</language>
 		<language tag="el-GR">de-DE.com_waticketsystem.ini</language>

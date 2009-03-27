@@ -7,11 +7,6 @@
  */
 
 /**
- * Automaticlaly load WConfig class
- */
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "config.php");
-
-/**
  *
  * @static
  */

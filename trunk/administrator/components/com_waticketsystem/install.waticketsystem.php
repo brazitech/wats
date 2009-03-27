@@ -12,14 +12,14 @@
 defined('_JEXEC') or die('Restricted Access');
 
 function changeIcon( $name, $icon ) {
-	global $database;
+	$database = JFactory::getDBO();
 	$database->setQuery( "UPDATE #__components SET admin_menu_img=\"".$icon."\" WHERE `name`=\"".$name."\" AND `option`=\"com_waticketsystem\";");
 	$database->query();
 	}
 
 function com_install()
 {
-	global $database;
+	$database = JFactory::getDBO();
 
 	// new install
 	$version = "0.0.0";
