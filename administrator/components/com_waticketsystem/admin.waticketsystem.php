@@ -595,7 +595,7 @@ function watsOption( &$task, &$act )
 					// save
 					$watsSettings->save();
 					// redirect
-					watsredirect( "index2.php?option=com_waticketsystem&act=configure&hidemainmenu=1" );
+					watsredirect( "index2.php?option=com_waticketsystem&act=configure" );
 					break;
 				/**
 				 * cancel
@@ -691,7 +691,7 @@ function watsOption( &$task, &$act )
           Webamoeba Ticket System</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=configure&hidemainmenu=1"> 
+          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=configure"> 
             <div class="iconimage"> <img src="images/config.png" alt="Configuration" align="middle" name="image" border="0" /> </div> 
           Configuration</a> </div> 
         </div> 

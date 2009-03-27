@@ -41,7 +41,7 @@ else
 	$GLOBALS["watsUser"] =& $watsUser;
 
 	// check for agreement
-	if ( $wats->get( 'agree' ) == 1 && $watsUser->agree == 0 && JRequest::getVar('agree', false) !== false )
+	if ( $wats->get( 'agree' ) == 1 && $watsUser->agree == 0 && !JRequest::getVar('agree', false) )
 	{
 		// needs to sign agreement
 		echo '<p>'.$wats->get( 'agreelw' ).'</p>';

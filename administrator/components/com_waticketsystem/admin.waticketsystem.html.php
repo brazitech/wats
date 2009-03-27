@@ -977,6 +977,15 @@ class watsSettingsHTML extends WConfig
 	 */
 	function editAgreement()
 	{
+        $paramArray = array("name" => "watsSettingagreei",
+                            "type" => "article",
+                            "default" => "0",
+                            "label" => "Select Article",
+                            "description" => "An article");
+        require_once(JPATH_ADMINISTRATOR . DS . "components".DS."com_content".DS."elements".DS."article.php");
+        $node = new JSimpleXMLElement("param", $paramArray);
+        $agreei = JElementArticle::fetchElement("value", $this->get('agreei'), $node, "watsSettingagreei");
+    
 		echo "<table class=\"adminform\">
 				<tr>
 				  <td width=\"185\">Require Agreement:</td><td>
@@ -990,7 +999,7 @@ class watsSettingsHTML extends WConfig
 					  <label for=\"notifyUsersYes\">Yes</label> ";
 		echo JHTML::_("tooltip", "Force user to accept an agreement before continuing.");
 		echo "	  </td></tr><tr>
-				  <td width=\"185\">Agreement ItemId:</td><td><input name=\"watsSettingagreei\" type=\"text\" maxlength=\"255\" size=\"15\" value=\"".$this->get('agreei')."\" /> ";
+				  <td width=\"185\">Agreement ItemId:</td><td>".$agreei;
 		echo JHTML::_("tooltip", "ItemId of the agreement content.");
 		echo "</td></tr><tr>
 				  <td width=\"185\">Warning Line:</td><td><input name=\"watsSettingagreelw\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->get('agreelw')."\" /></td></tr><tr>
@@ -1147,7 +1156,7 @@ class watsSettingsHTML extends WConfig
 		$keys = array_keys( $_POST );
 		foreach( $keys as $key )
 		{
-			if ( substr($key, 0, 11 )  == 'watsSetting' )
+			if ( substr($key, 0, 11 )  == 'watsSetting' && !is_array($_POST[$key]))
 			{
 				// decode name
 				$setting = substr( $key, 11, strlen( $key ) - 11 );
@@ -1155,7 +1164,9 @@ class watsSettingsHTML extends WConfig
 				$value = htmlspecialchars( $_POST[$key] );
 				// set setting
 				$this->set( $setting, $value );
-			}
+			} elseif ($key == "watsSettingagreei") {
+                $this->set("agreei", intval($_POST[$key]["value"]));
+            }
 		}
 	}
 
