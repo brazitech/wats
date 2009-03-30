@@ -50,7 +50,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'ticket':
 			JToolbarHelper::title("Ticket Viewer", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * view
@@ -81,7 +81,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'category':
 			JToolbarHelper::title("Category Manager", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * view
@@ -125,7 +125,7 @@ function watsOption( &$task, &$act )
 								{
 									// delete category
 									$editCategory->delete( );
-									watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Removed" );
+									watsredirect( "index.php?option=com_waticketsystem&act=category", "Category Removed" );
 								}
 								else
 								{
@@ -138,18 +138,18 @@ function watsOption( &$task, &$act )
 									// save changes
 									$editCategory->updateCategory();
 									// success
-									watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Updated" );
+									watsredirect( "index.php?option=com_waticketsystem&act=category", "Category Updated" );
 								}
 								break;
 							}
 							// end check is numeric
 						} else {
-							watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
+							watsredirect( "index.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
 						}
 					}
 					// end check input
 					// redirect input error
-					watsredirect( "index2.php?option=com_waticketsystem&act=category", "Error updating category" );
+					watsredirect( "index.php?option=com_waticketsystem&act=category", "Error updating category" );
 					break;
 				/**
 				 * new
@@ -170,18 +170,18 @@ function watsOption( &$task, &$act )
 							if ( watsCategory::newCategory($name, $description, $image) )
 							{
 								// success
-								watsredirect( "index2.php?option=com_waticketsystem&act=category", "Category Added" );
+								watsredirect( "index.php?option=com_waticketsystem&act=category", "Category Added" );
 							}
 							else
 							{
 								// already exists
-								watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new&", "The specified name already exists" );
+								watsredirect( "index.php?option=com_waticketsystem&act=category&task=new&", "The specified name already exists" );
 							}
 						}
 					}
 					else
 					{
-						watsredirect( "index2.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
+						watsredirect( "index.php?option=com_waticketsystem&act=category&task=new", "Please fill in the form correctly" );
 					}
 					break;
 				/**
@@ -209,7 +209,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'css':
 			JToolbarHelper::title("CSS", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			$watsCss = new watsCssHTML();
 			$watsCss->open('../components/com_waticketsystem/wats.css');
 
@@ -225,12 +225,12 @@ function watsOption( &$task, &$act )
 						if ( $watsCss->restore( '../components/com_waticketsystem/wats.restore.css' ) )
 						{
 							// redirect success
-							watsredirect( "index2.php?option=com_waticketsystem&act=css", "CSS Restored" );
+							watsredirect( "index.php?option=com_waticketsystem&act=css", "CSS Restored" );
 						}
 						else
 						{
 							// redirect failure
-							watsredirect( "index2.php?option=com_waticketsystem&act=css", "CSS Restore Failed" );
+							watsredirect( "index.php?option=com_waticketsystem&act=css", "CSS Restore Failed" );
 						}
 					}
 					else
@@ -239,14 +239,14 @@ function watsOption( &$task, &$act )
 						$watsCss->processSettings();
 						$watsCss->save();
 						// redirect
-						watsredirect( "index2.php?option=com_waticketsystem&act=css", "Changes Saved" );
+						watsredirect( "index.php?option=com_waticketsystem&act=css", "Changes Saved" );
 					}
 					break;
 				/**
 				 * cancel
 				 */	
 				case 'cancel':
-					watsredirect( "index2.php?option=com_waticketsystem" );
+					watsredirect( "index.php?option=com_waticketsystem" );
 					break;
 				/**
 				 * backup
@@ -332,7 +332,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'rites':
 			JToolbarHelper::title("Rights Manager", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * new
@@ -354,17 +354,17 @@ function watsOption( &$task, &$act )
 							// create new group
 							$newCategory = watsUserGroup::makeGroup( htmlspecialchars( JRequest::getString('name') ), htmlspecialchars( JRequest::getString('image') ) );
 							// redirect
-							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$newCategory->grpid );
+							watsredirect( "index.php?option=com_waticketsystem&act=rites&task=view&groupid=".$newCategory->grpid );
 						}
 						else
 						{
-							watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new", "Please fill in the form correctly" );
+							watsredirect( "index.php?option=com_waticketsystem&act=rites&task=new", "Please fill in the form correctly" );
 						}
 					}
 					else
 					{
 						// redirect to add
-						watsredirect( "index2.php?option=com_waticketsystem&act=rites&task=new", "Form Contents not recognised" );
+						watsredirect( "index.php?option=com_waticketsystem&act=rites&task=new", "Form Contents not recognised" );
 						// end display error
 					}
 					// end check for input
@@ -396,8 +396,9 @@ function watsOption( &$task, &$act )
 					// check if deleting
 					if ( JRequest::getString('remove') == 'remove' || JRequest::getString('remove') == 'removetickets' || JRequest::getString('remove') == 'removeposts' )
 					{
-						// delete category
+						// delete group
 						$userGroup->delete( JRequest::getString('remove') );
+                        watsredirect("index.php?option=com_waticketsystem&act=rites", "Group Updated" );
 					}
 					else
 					{
@@ -405,7 +406,7 @@ function watsOption( &$task, &$act )
 						$userGroup->processForm();
 						$userGroup->save();
 						// redirect on completion
-						watsredirect( "index2.php?option=com_waticketsystem&act=rites", "Group Updated" );
+						watsredirect( "index.php?option=com_waticketsystem&act=rites", "Group Updated" );
 					}
 					break;
 				default:
@@ -427,7 +428,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'user':
 			JToolbarHelper::title("User Manager", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * edit
@@ -473,7 +474,7 @@ function watsOption( &$task, &$act )
 							{
 								// delete user
 								$editUser->delete( JRequest::getCmd('remove') );
-								watsredirect( "index2.php?option=com_waticketsystem&act=user", "User Removed" );
+								watsredirect( "index.php?option=com_waticketsystem&act=user", "User Removed" );
 							}
 							else
 							{
@@ -488,12 +489,12 @@ function watsOption( &$task, &$act )
 								if ( $editUser->updateUser() )
 								{
 									// success
-									watsredirect( "index2.php?option=com_waticketsystem&act=user", "User Updated" );
+									watsredirect( "index.php?option=com_waticketsystem&act=user", "User Updated" );
 								}
 								else
 								{
 									// failure
-									watsredirect( "index2.php?option=com_waticketsystem&act=user", "Update failed, user not found" );
+									watsredirect( "index.php?option=com_waticketsystem&act=user", "Update failed, user not found" );
 								}
 							}
 						}
@@ -502,7 +503,7 @@ function watsOption( &$task, &$act )
 					else
 					{
 						// redirect input error
-						watsredirect( "index2.php?option=com_waticketsystem&act=user", "Error updating user" );
+						watsredirect( "index.php?option=com_waticketsystem&act=user", "Error updating user" );
 					}// end check input
 					break;
 				/**
@@ -533,12 +534,12 @@ function watsOption( &$task, &$act )
 						}
 						// end make users
 						// redirect to list on completion
-						watsredirect( "index2.php?option=com_waticketsystem&act=user", "Users Added" );
+						watsredirect( "index.php?option=com_waticketsystem&act=user", "Users Added" );
 					}
 					else
 					{
 						// redirect to add
-						watsredirect( "index2.php?option=com_waticketsystem&act=user&task=new", "Please fill in the form correctly" );
+						watsredirect( "index.php?option=com_waticketsystem&act=user&task=new", "Please fill in the form correctly" );
 						// end display error
 					}
 					// end check for input
@@ -582,7 +583,7 @@ function watsOption( &$task, &$act )
 		 */	
 		case 'configure':
 			JToolbarHelper::title("Configuration", "wats");
-			echo "<form action=\"index2.php\" method=\"post\" name=\"adminForm\">";
+			echo "<form action=\"index.php\" method=\"post\" name=\"adminForm\">";
 			switch ($task) {
 				/**
 				 * save
@@ -595,13 +596,13 @@ function watsOption( &$task, &$act )
 					// save
 					$watsSettings->save();
 					// redirect
-					watsredirect( "index2.php?option=com_waticketsystem&act=configure" );
+					watsredirect( "index.php?option=com_waticketsystem&act=configure" );
 					break;
 				/**
 				 * cancel
 				 */	
 				case 'cancel':
-					watsredirect( "index2.php?option=com_waticketsystem" );
+					watsredirect( "index.php?option=com_waticketsystem" );
 					break;
 				/**
 				 * default
@@ -686,47 +687,47 @@ function watsOption( &$task, &$act )
   <tr> 
     <td width="55%" valign="top"> <div id="cpanel"> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem"> 
             <div class="iconimage"> <img src="images/frontpage.png" alt="Frontpage Manager" align="middle" name="image" border="0" /> </div> 
           Webamoeba Ticket System</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=configure"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=configure"> 
             <div class="iconimage"> <img src="images/config.png" alt="Configuration" align="middle" name="image" border="0" /> </div> 
           Configuration</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=css"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=css"> 
             <div class="iconimage"> <img src="images/menu.png" alt="CSS" align="middle" name="image" border="0" /> </div> 
           CSS</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=user"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=user"> 
             <div class="iconimage"> <img src="images/user.png" alt="User Manager" align="middle" name="image" border="0" /> </div> 
           User Manager</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=rites"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=rites"> 
             <div class="iconimage"> <img src="images/impressions.png" alt="Rites Manager" align="middle" name="image" border="0" /> </div> 
           Rites Manager</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=category"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=category"> 
             <div class="iconimage"> <img src="images/categories.png" alt="Category Manager" align="middle" name="image" border="0" /> </div> 
           Category Manager</a> </div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=ticket"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=ticket"> 
             <div class="iconimage"> <img src="images/addedit.png" alt="Ticket Viewer" align="middle" name="image" border="0" /> </div> 
             Ticket Viewer </a></div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=database"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=database"> 
             <div class="iconimage"> <img src="images/systeminfo.png" alt="Database Maintenance" align="middle" name="image" border="0" /> </div> 
           Database Maintenance </a></div> 
         </div> 
         <div style="float:left;"> 
-          <div class="icon"> <a href="index2.php?option=com_waticketsystem&act=about"> 
+          <div class="icon"> <a href="index.php?option=com_waticketsystem&act=about"> 
             <div class="iconimage"> <img src="images/cpanel.png" alt="About" align="middle" name="image" border="0" /> </div> 
           About </a></div> 
         </div> 
