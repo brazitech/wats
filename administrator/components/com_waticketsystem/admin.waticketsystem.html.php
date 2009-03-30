@@ -2040,12 +2040,14 @@ class watsDatabaseMaintenanceHTML extends watsDatabaseMaintenance
 		$performUserPermissionsFormat = $this->performUserPermissionsFormat();
 		$performPermissionSetsFormat = $this->performPermissionSetsFormat();
 		$total = $performOrphanUsers + $performMissingPermissionSets + $performUserPermissionsFormat + $performPermissionSetsFormat + $performOrphanPermissionSets + $performOrphanTickets + $performOrphanMessages;
-		echo "<table class=\"adminform\"> 
-			  <tr> 
-				<th class=\"title\"> Action</th> 
-				<th class=\"title\"> # of Inconsistencies</th> 
-				<th class=\"title\"> Action Resolved</th> 
-			  </tr> 
+		echo "<table class=\"adminlist\"> 
+              <thead>
+                  <tr> 
+                    <th class=\"title\"> Action</th> 
+                    <th class=\"title\"> # of Inconsistencies</th> 
+                    <th class=\"title\"> Action Resolved</th> 
+                  </tr> 
+              </thead>
 			  <tr class=\"row0\"> 
 				<td width=\"350\">Orphan users </td> 
 				<td width=\"150\"><b>".$performOrphanUsers."</b> Inconsistencies</td> 
@@ -2088,20 +2090,19 @@ class watsDatabaseMaintenanceHTML extends watsDatabaseMaintenance
 		echo ( $performPermissionSetsFormat > 0 ) ? "<img src=\"images/tick.png\" border=\"0\" alt=\"tick\" />" : "&nbsp;" ;
 		echo"</td> 
 			  </tr> 
-			  <tr class=\"row0\"> 
-				<td width=\"350\">User permissions format </td> 
-				<td width=\"150\"><b>".$performUserPermissionsFormat."</b> Inconsistencies</td> 
-				<td width=\"100\">&nbsp;</td> 
-			  </tr> 
-			  <tr> 
-				<th class=\"title\" colspan=3> Totals</th> 
-			  </tr> 
-			  <tr class=\"row1\"> 
-				<td><strong>7</strong> Actions Performed</td> 
-				<td><b>".$total."</b> Inconsistencies found</td> 
-				<td><b>".$total."</b> Inconsistencies resolved</td> 
-			  </tr> 
-				</table>";
+              <tr class=\"row0\"> 
+                <td width=\"350\">User permissions format </td> 
+                <td width=\"150\"><b>".$performUserPermissionsFormat."</b> Inconsistencies</td> 
+                <td width=\"100\">&nbsp;</td> 
+              </tr> 
+              <tfoot>
+                  <tr> 
+                    <td><strong>7</strong> Actions Performed</td> 
+                    <td><b>".$total."</b> Inconsistencies found</td> 
+                    <td><b>".$total."</b> Inconsistencies resolved</td> 
+                  </tr>
+              </tfoot>
+            </table>";
 	}
 }
 
