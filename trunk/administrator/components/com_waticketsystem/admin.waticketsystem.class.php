@@ -905,7 +905,7 @@ class watsUserGroup
 		
 		$this->_users = null;
 		$this->_users = array();
-		$datbase->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".$this->grpid.";" );
+		$database->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".$this->grpid.";" );
 		$users = $database->loadObjectList();
 		foreach ( $users as $user )
 		{

@@ -1841,7 +1841,7 @@ class watsUserGroupSetHTML extends watsUserGroupSet
 		echo "<input type=\"hidden\" name=\"boxchecked\" value=\"0\" />";
 		echo "<input type=\"hidden\" name=\"hidemainmenu\" value=\"0\" />";
         
-        echo "</td></tr></tfoot></table></form>";
+        echo "</td></tr></tfoot></table>";
 	}
 }
 
