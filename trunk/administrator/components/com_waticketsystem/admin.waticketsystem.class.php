@@ -285,8 +285,7 @@ class watsUserSet
                 $this->userSet[$i]->lastvisitDate = $set[$i]->lastvisitDate;
                 $this->userSet[$i]->activation = $set[$i]->activation;
                 $this->userSet[$i]->params = $set[$i]->params;
-                $this->userSet[$i]->aid = $set[$i]->aid;
-                $this->userSet[$i]->guest = $set[$i]->guest;
+                $this->userSet[$i]->guest = 0;
 				$i ++;
 			} // end create users
 		} // end load all users
