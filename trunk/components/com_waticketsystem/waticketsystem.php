@@ -47,7 +47,7 @@ else
 		echo '<p>'.$wats->get( 'agreelw' ).'</p>';
 		echo '<p><a href="index.php?option=com_content&task=view&id='.$wats->get( 'agreei' ).'">'.$wats->get( 'agreen' ).'</a></p>';
 		echo '<p>'.$wats->get( 'agreela' ).'</p>';
-		echo '<form name="agree" method="post" action="'.$PHP_SELF.'?option=com_waticketsystem&Itemid='.$Itemid.'"><input type="submit" name="agree" value="'.$wats->get( 'agreeb' ).'"></form>';		
+		echo '<form name="agree" method="post" action="index.php?option=com_waticketsystem"><input type="submit" name="agree" value="'.$wats->get( 'agreeb' ).'"></form>';		
 	}
 	elseif ( JRequest::getVar('agree', false) !== false )
 	{
@@ -55,7 +55,7 @@ else
 		$watsUser->agree = 1;
 		$watsUser->updateUser();
 		// redirect
-		watsredirect( "index.php?option=com_waticketsystem&Itemid=".$Itemid );
+		watsredirect( "index.php?option=com_waticketsystem" );
 	}// end check for agreement
 	else
 	{
@@ -86,7 +86,6 @@ else
 						<td width=\"33%\">
 						  <form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">
 						  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-						  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 						  <input name=\"act\" type=\"hidden\" value=\"ticket\">
 						  <input name=\"task\" type=\"hidden\" value=\"make\">
 						  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_TICKETS_SUBMIT")."\" class=\"watsFormSubmit\">
@@ -112,7 +111,6 @@ else
 						<td width=\"33%\">
 							<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">
 							  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-							  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
 							  <input name=\"act\" type=\"hidden\" value=\"ticket\">
 							  <input name=\"task\" type=\"hidden\" value=\"view\">
 							  WATS-
@@ -577,24 +575,25 @@ function watsOption( $task, $act )
 					if ( $watsUser->checkUserPermission( 'm' ) == 2 )
 					{
 						// check for input
-						if (JRequest::getVar('user', false) && JRequest::getVar('grpId', false) && JRequest::getVar('organisation', false) )
+						if ( JRequest::getString('user') !== null &&
+                             JRequest::getString('grpId') !== null &&
+                             JRequest::getString('organisation') !== null )
 						{
 							// make users
 							echo "<span class=\"watsHeading1\">".JText::_("WATS_USER_ADD")."</span>".JText::_("WATS_USER_ADD_LIST");
-							$newUsers = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
-							$noOfNewUsers = count($newUsers);
-							$i = 0;
-							while ( $i < $noOfNewUsers )
+							$users = JRequest::getVar('user', array(), "REQUEST", "ARRAY");
+                            $noOfNewUsers = count( $users );
+                            $i = 0;
+                            while ( $i < $noOfNewUsers )
 							{
 								// check for successful creation
-								if ( watsUser::makeUser(intval($newUsers['user'][ $i ]), JRequest::getInt('grpId'), JRequest::getString('organisation')) )
-								{
-									// give visual confirmation
-									$newUser = new watsUserHTML();
-									$newUser->loadWatsUser(intval($newUsers[ 'user' ][ $i ]));
-
-									$newUser->view();
-								}
+								if ( watsUser::makeUser( intval($users[ $i ]), JRequest::getInt("grpId"), JRequest::getString('organisation') ) )
+                                {
+                                    // give visual confirmation
+                                    $newUser = new watsUserHTML();
+                                    $newUser->loadWatsUser(intval($users[ $i ]));
+                                    $newUser->view();
+                                }
 								else
 								{
 									echo "<p>".intval($newUsers['user'][ $i ])." -> ".JText::_("WATS_ERROR")."</p>";

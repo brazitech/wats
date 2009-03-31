@@ -207,7 +207,7 @@ class watsUser extends JUser
 		if ($db->getNumRows() == 1) {
 			// update SQL
 			$db->setQuery("UPDATE " . WDBHelper::nameQuote("#__wats_users") . " " .
-			                     "SET " . WDBHelper::nameQuote("organisation") . " = " . intval($this->organisation) . ", " .
+			                     "SET " . WDBHelper::nameQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
 								          WDBHelper::nameQuote("agree") . " = " . intval($this->agree) . ", " .
 										  WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
 								 "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::updateUser() */" );
@@ -323,8 +323,10 @@ class watsUserSet
 		// load all users
 	    if ( $groupId === null )
 		{
-			$db->setQuery("SELECT u.* FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
+			$db->setQuery("SELECT u.*, wu.organisation, g.name as " . WDBHelper::nameQuote("groupname") . " " .#
+                          "FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
                           "JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " ON " . WDBHelper::nameQuote("u.id") . " = " . WDBHelper::nameQuote("wu.watsid") .
+                          "JOIN " . WDBHelper::nameQuote("#__wats_groups") . " AS " . WDBHelper::nameQuote("g") . " ON " . WDBHelper::nameQuote("wu.grpid") . " = " . WDBHelper::nameQuote("g.grpid") .
 			              "ORDER BY " . WDBHelper::nameQuote("username") . " /* watsUserSet::load() */" );
 			$set = $db->loadObjectList();
 			$this->noOfUsers = count( $set );
@@ -345,8 +347,9 @@ class watsUserSet
                 $this->userSet[$i]->lastvisitDate = $set[$i]->lastvisitDate;
                 $this->userSet[$i]->activation = $set[$i]->activation;
                 $this->userSet[$i]->params = $set[$i]->params;
-                $this->userSet[$i]->aid = $set[$i]->aid;
-                $this->userSet[$i]->guest = $set[$i]->guest;
+                $this->userSet[$i]->organisation = $set[$i]->organisation;
+                $this->userSet[$i]->groupName = $set[$i]->groupname;
+                $this->userSet[$i]->guest = 0;
 				$i ++;
 			} // end create users
 		} // end load all users
