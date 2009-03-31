@@ -541,7 +541,7 @@ class watsTicketHTML extends watsTicket
 		
 		$wats =& WFactory::getConfig();
 	
-		$assignees = watsCategory::getAssignee( $this->category, $this->_db );
+		$assignees = watsCategory::getAssignee($this->category);
 		// check for useres to assign to
 		if ( $assignees != null )
 		{

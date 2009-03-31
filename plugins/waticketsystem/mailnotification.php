@@ -79,7 +79,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $view->assignRef("ticketOwner", $ticketOwner);
         $lastMessageOwner =& JFactory::getUser();
         $view->assignRef("lastMessageOwner", $lastMessageOwner);
-        if ($ticket->assign) {
+        if (@$ticket->assign) {
             $ticketAsignee =& JFactory::getUser($ticket->assign);
             $view->assignRef("ticketAsignee", $ticketAsignee);
         }
