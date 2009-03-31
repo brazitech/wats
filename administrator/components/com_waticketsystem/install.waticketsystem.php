@@ -1,12 +1,10 @@
 <?php
 /**
-* FileName: install.waticketsystem.php
-* Date: 21/01/2009
-* License: GNU General Public License
-* Script Version #: 2.0.8
-* JOS Version #: 1.0.x
-* Development James Kennard james@webamoeba.co.uk (www.webamoeba.co.uk)
-**/
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL
+ * @package wats
+ */
 
 // Don't allow direct linking
 defined('_JEXEC') or die('Restricted Access');
