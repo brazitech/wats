@@ -9,24 +9,53 @@
 // Don't allow direct linking
 defined('_JEXEC') or die('Restricted Access');
 
+// wrap everything to catch any unexepcted errors
+try {
+
+    // get the loader
+    require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'loader.php');
+
+    // import the classes we need
+    wimport('factory');
+    wimport('dbhelper');
+
+    // set the default toolbar title
+    JToolBarHelper::title("Webamoeba Help Desk", "wats");
+    JFactory::getDocument()->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/images/icon-48-watshead.png );}");
+    
+    // execute the request
+    WFactory::getCommand()->execute();
+    
+
+} catch (WException $e) {
+    // deal with applicaion specific exceptions
+    jexit($e);
+} catch (Exception $e) {
+    // deal with general exceptions
+    jexit($e);
+}
+
+
+if (1 == 2) {
+
 echo "<script language=\"javascript\" type=\"text/javascript\" src=\"components/com_whelpdesk/admin.wats.js\"></script>";
 echo '<div class="wats">';
 
 //add custom classes and functions
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "config.php");
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "dbhelper.php");
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "factory.php");
+
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "admin.waticketsystem.html.php");
 
 // add javaScript
-$document =& JFactory::getDocument();
+
 $document->addScript("../components/com_whelpdesk/wats.js");
 
 // add CSS
-$document->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/images/icon-48-watshead.png );}");
+
 
 // set heading
-JToolBarHelper::title("Webamoeba Ticket System", "wats");
+JToolBarHelper::title("Webamoeba Help Desk", "wats");
 
 // get settings
 $wats = WFactory::getConfig();
@@ -688,8 +717,8 @@ function watsOption( &$task, &$act )
     <td width="55%" valign="top"> <div id="cpanel"> 
         <div style="float:left;"> 
           <div class="icon"> <a href="index.php?option=com_whelpdesk"> 
-            <div class="iconimage"> <img src="images/frontpage.png" alt="Frontpage Manager" align="middle" name="image" border="0" /> </div> 
-          Webamoeba Ticket System</a> </div> 
+            <div class="iconimage"> <img src="images/frontpage.png" alt="Webamoeba Help Desk" align="middle" name="image" border="0" /> </div> 
+          Webamoeba Help Desk</a> </div> 
         </div> 
         <div style="float:left;"> 
           <div class="icon"> <a href="index.php?option=com_whelpdesk&act=configure"> 
@@ -796,5 +825,7 @@ function watsredirect($uri, $message = null, $level = "message") {
 	} else {
 		echo "<a href=\"".$uri."\">".$wats->get( 'debugmessage' )."</a><br />".$message;
 	}
+}
+
 }
 ?> 
