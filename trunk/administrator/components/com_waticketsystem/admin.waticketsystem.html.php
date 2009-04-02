@@ -287,7 +287,7 @@ class watsUserSetHTML extends watsUserSet
 					    <img src=\"../components/com_waticketsystem/images/".$wats->get('iconset', "PATH")."user1616.gif\" height=\"16\" width=\"16\" border=\"0\">
 			        </td>
 					<td>
-			            <a href=\"index2.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstartThrow]->id."\">".$this->userSet[$limitstartThrow]->username."</a> (".$this->userSet[$limitstartThrow]->name.")
+			            <a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$limitstartThrow]->id."\">".$this->userSet[$limitstartThrow]->username."</a> (".$this->userSet[$limitstartThrow]->name.")
 			        </td>
 					<td>".$this->userSet[$limitstartThrow]->organisation."</td>
 					<td>".$this->userSet[$limitstartThrow]->groupName."</td>
@@ -475,7 +475,7 @@ class watsTicketSetHTML extends watsTicketSet
 		{
 			echo "<tr class=\"row".($limitstartThrow % 2)."\">
 					<td>
-			            <a href=\"index2.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstartThrow]->ticketId."\">".$this->_ticketList[$limitstartThrow]->name."</a></td>
+			            <a href=\"index.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstartThrow]->ticketId."\">".$this->_ticketList[$limitstartThrow]->name."</a></td>
 					<td>".$this->_ticketList[$limitstartThrow]->username."</td>
 					<td>".$this->_ticketList[$limitstartThrow]->msgNumberOf."</td>
 					<td>".date( $wats->get( 'date' ), $this->_ticketList[$limitstartThrow]->datetime )."</td>
@@ -809,7 +809,7 @@ class watsCategorySetHTML extends watsCategorySet
         while (($limitstartThrow < count($this->categorySet) ) && ($limitstartThrow < $limitMax))
 		{
             echo "<tr class=\"row".($limitstartThrow % 2)."\">";
-			echo "<td><a href=\"index2.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".$this->categorySet[$limitstartThrow]->name."</a></td>";
+			echo "<td><a href=\"index.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".$this->categorySet[$limitstartThrow]->name."</a></td>";
 			echo "<td>".$this->categorySet[$limitstartThrow]->description."</td>";
 			echo "</tr>";
 			$limitstartThrow ++;
@@ -1811,7 +1811,7 @@ class watsUserGroupSetHTML extends watsUserGroupSet
         while (($limitstartThrow < $this->noOfGroups ) && ($limitstartThrow < $limitMax))
 		{
 			echo "<tr class=\"row".($limitstartThrow % 2)."\">
-					<td><a href=\"index2.php?option=com_waticketsystem&act=rites&task=view&groupid=".$this->_userGroupList[$limitstartThrow]->grpid."\">".$this->_userGroupList[$limitstartThrow]->name."</a></td>
+					<td><a href=\"index.php?option=com_waticketsystem&act=rites&task=view&groupid=".$this->_userGroupList[$limitstartThrow]->grpid."\">".$this->_userGroupList[$limitstartThrow]->name."</a></td>
 					<td>".$this->_userGroupList[$limitstartThrow]->image."</td>
 					<td><input name=\"userGroupV".$limitstartThrow."\" type=\"checkbox\"";
 					echo ($this->_userGroupList[$limitstartThrow]->checkUserPermission('V') == 2) ? " checked=\"checked\"" : "" ;
