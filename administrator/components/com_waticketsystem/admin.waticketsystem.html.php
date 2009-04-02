@@ -261,7 +261,7 @@ class watsUserSetHTML extends watsUserSet
 		
 		$wats =& WFactory::getConfig();
 		
-		echo "<form name=\"adminForm\" method=\"post\" action=\"index.php?option=com_banners\">
+		echo "<form name=\"adminForm\" method=\"post\" action=\"index.php\">
 			  <input type=\"hidden\" value=\"com_waticketsystem\" name=\"option\"/>
 			  <input type=\"hidden\" value=\"\" name=\"task\"/>
 			  <input type=\"hidden\" value=\"user\" name=\"act\"/>";
