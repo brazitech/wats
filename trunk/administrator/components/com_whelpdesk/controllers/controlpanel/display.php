@@ -8,11 +8,15 @@
 
 class ControlpanelDisplayWController extends WController {
 
+    public function __construct() {
+        $this->setEntity('controlpanel');
+    }
+
     /**
      * Displays the control panel
      */
     public function execute() {
-        echo 'Do dah day';
+        $this->display();
     }
 }
 
