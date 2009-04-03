@@ -6,9 +6,9 @@
  * @package helpdesk
  */
 
-jimport('joomla.application.component.controller');
+wimport('application.view');
 
-abstract class WController extends JController {
+abstract class WController {
 
     /**
      * 
@@ -17,11 +17,56 @@ abstract class WController extends JController {
     private static $instances = array();
 
     /**
+     * Name of the entity that this controller handles. This must be set by
+     * inheriting classes.
+     *
+     * @var String
+     * @see WController::setEntity()
+     */
+    private $entity;
+
+    /**
      * Does the business when executed. Sub class must override this method!
      */
     public function execute() {
         throw new WException('METHOD NOT IMPLEMENTED');
     }
+
+    /**
+     * Sets the name of the entity that this controller handles.
+     *
+     * @param String $name
+     */
+    protected function setEntity($name) {
+        $this->entity = (string)$name;
+    }
+
+    /**
+     * Gets the name of the entity that this controller handles.
+     * 
+     * @return String
+     */
+    public function getEntity() {
+        return $this->entity;
+    }
+
+	/**
+     * Outputs the view. This method assumes that we are using the MVC paradigm
+     * to the letter and that we display by outputting the view layout contents.
+     * This may not always be appropriate.
+     */
+    public function display() {
+		// get the info we need to display the view
+        $document =& JFactory::getDocument();
+		$format =  strtolower($document->getType());
+		$viewName =  JRequest::getCmd('view', 'display');
+
+        // get the view
+        $view = WView::getInstance($this->getEntity(), $viewName, $format = null);
+
+        // output the view!
+        echo $view->loadLayout();
+	}
 
     /**
      *
