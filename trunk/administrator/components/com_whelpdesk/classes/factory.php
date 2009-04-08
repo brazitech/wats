@@ -7,6 +7,8 @@
  */
 
 wimport('command');
+wimport('config');
+wimport('utilities.out');
 
 /**
  *
@@ -31,6 +33,15 @@ class WFactory {
     public static function getCommand() {
 	    return WCommand::getInstance();
 	}
+
+    /**
+     * Gets the globally available WOut object
+     *
+     * @return WOut
+     */
+    public function getOut() {
+        return WOut::getInstance();
+    }
 
 }
 
