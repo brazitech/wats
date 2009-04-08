@@ -57,15 +57,16 @@ abstract class WController {
      */
     public function display() {
 		// get the info we need to display the view
+        $command  = WCommand::getInstance();
         $document =& JFactory::getDocument();
-		$format =  strtolower($document->getType());
-		$viewName =  JRequest::getCmd('view', 'display');
+		$format   =  strtolower($document->getType());
+		$viewName =  JRequest::getCmd('view', $command->getUsecase());
 
         // get the view
-        $view = WView::getInstance($this->getEntity(), $viewName, $format = null);
+        $view = WView::getInstance($this->getEntity(), $viewName, $format);
 
         // output the view!
-        echo $view->loadLayout();
+        $view->render();
 	}
 
     /**

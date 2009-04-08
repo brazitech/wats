@@ -5,29 +5,6 @@
  */
 
 /**
- * Parses a field identifier and makes it safe for use in a query
- *
- * @param String $field
- * @return String
- */
-function dbField($field) {
-    // setup static cache
-    static $fields;
-    if (!$fields) {
-        $fields = array();
-    }
-
-    // check cache for identifier
-    if (!array_key_exists($field, $fields)) {
-        $db = JFactory::getDBO();
-        $fields[$field] = $db->nameQuote($field);
-    }
-
-    // return the goods
-    return $fields[$field];
-}
-
-/**
  * Parses a table name, automatically prefixes with the stndard helpdesk
  * table prefix.
  *
@@ -35,20 +12,37 @@ function dbField($field) {
  * @return String
  */
 function dbTable($table) {
+    return dbName($table, true);
+}
+
+function dbName($name, $table=false) {
+    // dealing with a table; add prefix if necessary
+    if ($table && substr($name, 0, 3) != '#__') {
+        $name = "#__whelpdesk_" . $name;
+    }
+    
+    // dealing with multipart-name?
+    if (strpos($name, '.')) {
+        $multipart = array();
+        foreach (explode('.', $name) as $part) {
+            $multipart[] = dbName($part);
+        }
+        return implode('.', $multipart);
+    }
+    
     // setup static cache
-    static $tables;
-    if (!$tables) {
-        $tables = array();
+    static $names;
+    if (!$names) {
+        $names = array('*' => '*');
     }
 
-    // check cache for identifier
-    if (!array_key_exists($table, $tables)) {
-        $db = JFactory::getDBO();
-        $tables[$table] = $db->nameQuote("#__helpdesk_" . $table);
+    // check cache
+    if (!array_key_exists($name, $names)) {
+        $names[$name] = JFactory::getDBO()->nameQuote($name);
     }
 
     // return the goods
-    return $tables[$table];
+    return $names[$name];
 }
 
 ?>

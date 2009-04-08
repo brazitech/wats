@@ -25,20 +25,34 @@ final class WCommand {
     private static $instance = null;
 
     /**
+     * Last entity to be invoked
+     *
+     * @var String
+     */
+    private $entity;
+
+    /**
+     * Last usecase to be invoked
+     *
+     * @var String
+     */
+    private $usecase;
+
+    /**
      * Executes the current command. The command is identified by the request
      * value task.
      */
     public function execute() {
         // prepare the command
         $command = explode('.', JRequest::getCmd('task', self::defaultCommand), 2);
-        $entity  = $command[0];
-        $usecase = $command[1];
+        $this->entity  = $command[0];
+        $this->usecase = $command[1];
 
         // clear the request command (task)
         JRequest::setVar('task', null);
 
         // get and execute the controller
-        $controller = WController::getInstance($entity, $usecase);
+        $controller = WController::getInstance($this->entity, $this->usecase);
         $controller->execute();
 
         // check for new command and keep going!
@@ -59,6 +73,24 @@ final class WCommand {
 
         // all done, send it home!
         return self::$instance;
+    }
+
+    /**
+     * Gets the name of the last entity on which a usecase was executed
+     *
+     * @return String
+     */
+    public function getEntity() {
+        return $this->entity;
+    }
+
+    /**
+     * Gets the name of the last usecase that was executed
+     *
+     * @return String
+     */
+    public function getUsecase() {
+        return $this->usecase;
     }
 }
 ?>
