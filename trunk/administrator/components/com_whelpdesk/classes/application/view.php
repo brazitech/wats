@@ -118,13 +118,22 @@ abstract class WView {
         $this->layoutPaths[] = (string)$path;
 	}
 
+    /**
+     * Renders and outputs the view.
+     */
+    public function render() {
+        // load the layout!
+        $layout = (JRequest::getCmd('layout')) ? JRequest::getCmd('layout') : $this->getLayout();
+        echo $this->loadLayout($layout);
+    }
+
 	/**
 	 * Load the layout and capture the output.
 	 *
 	 * @param String $layout Name of the layout to load
 	 * @return String Output of the template
 	 */
-	public function loadLayout($layout = null) {
+	protected function loadLayout($layout = null) {
 		// determine layout and file
         $layout = (empty($layout)) ? $this->getLayout() : (string)$layout;
 		$file   = $layout . '.php';
