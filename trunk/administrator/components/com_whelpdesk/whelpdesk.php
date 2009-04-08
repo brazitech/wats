@@ -18,9 +18,10 @@ try {
     // import the classes we need
     wimport('factory');
     wimport('dbhelper');
+    wimport('database.identifiers');
 
     // set the default toolbar title
-    JToolBarHelper::title("Webamoeba Help Desk", "wats");
+    JToolBarHelper::title("Webamoeba Help Desk");
     JFactory::getDocument()->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/images/icon-48-watshead.png );}");
     
     // execute the request
