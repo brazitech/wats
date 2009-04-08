@@ -72,9 +72,9 @@ abstract class WModel {
             $application =& JFactory::getApplication();
 
             // state based
-            $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.limit',
-                                                  'limitstart',
-                                                  $default);
+            $this->limit = $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.limit',
+                                                                 'limitstart',
+                                                                 $default);
         }
 
         return $this->limit;
@@ -96,9 +96,9 @@ abstract class WModel {
                 $this->limitstart = JRequest::getInt('limitstart', 0);
             } else {
                 // state based
-                $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->name . '.limitstart',
-                                                      'limitstart',
-                                                      0);
+                $this->limitstart = $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->name . '.limitstart',
+                                                                          'limitstart',
+                                                                          0);
             }
         }
 
