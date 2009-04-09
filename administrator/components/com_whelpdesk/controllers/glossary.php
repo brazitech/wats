@@ -54,17 +54,6 @@ abstract class GlossaryWController extends WController {
         WFactory::getOut()->log('Commited glossary term to the database');
         return true;
     }
-
-    public function getId() {
-        $id = JRequest::getInt('id');
-
-        if (!$id) {
-            $cid = JRequest::getVar('cid');
-            $id = (int)$cid[0];
-        }
-
-        return $id;
-    }
 }
 
 ?>

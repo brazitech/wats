@@ -138,6 +138,23 @@ abstract class WModel {
         return self::$instances[$name];
     }
 
+    /**
+     * Get the ID passed in the request. Returns 0 if the ID is not known.
+     *
+     * @return int
+     */
+    public static function getId() {
+        // attempt to get the ID normally
+        $id = JRequest::getInt('id');
+
+        // no luck?  try the cid array
+        if (!$id) {
+            $cid = JRequest::getVar('cid');
+            $id = (int)$cid[0];
+        }
+
+        return $id;
+    }
 }
 
 ?>
