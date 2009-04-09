@@ -41,9 +41,9 @@ class GlossaryHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        JToolbarHelper::addNew('glossary.create');
-        JToolbarHelper::editList();
-        JToolbarHelper::deleteList();
+        JToolbarHelper::addNew('glossary.create.start');
+        JToolbarHelper::editList('glossary.edit.start');
+        JToolbarHelper::deleteList('glossary.delete.start');
         JToolbarHelper::divider();
         JToolBarHelper::publishList();
         JToolBarHelper::unpublishList();
