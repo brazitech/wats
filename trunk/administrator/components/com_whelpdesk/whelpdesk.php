@@ -20,13 +20,15 @@ try {
     wimport('dbhelper');
     wimport('database.identifiers');
 
+    // add include paths
+    JTable::addIncludePath(JPATH_COMPONENT . DS . 'tables');
+
     // set the default toolbar title
     JToolBarHelper::title("Webamoeba Help Desk");
     JFactory::getDocument()->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/images/icon-48-watshead.png );}");
     
     // execute the request
     WFactory::getCommand()->execute();
-    
 
 } catch (WException $e) {
     // deal with applicaion specific exceptions
@@ -36,6 +38,14 @@ try {
     jexit($e);
 }
 
+    // output the output buffer
+    echo '<div style="clear: both;"></div><div><ul>';
+    foreach(WFactory::getOut()->getLogs() AS $line) {
+        echo '<li style="color: #'.($line[1] ? 'FF1111' : '000000').';">' . $line[0] . '</li>';
+    }
+    echo '</ul></div>';
+
+    
 
 if (1 == 2) {
 
@@ -43,7 +53,6 @@ echo "<script language=\"javascript\" type=\"text/javascript\" src=\"components/
 echo '<div class="wats">';
 
 //add custom classes and functions
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "config.php");
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "classes" . DS . "dbhelper.php");
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . "admin.waticketsystem.html.php");
