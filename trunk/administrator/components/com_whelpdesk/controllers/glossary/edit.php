@@ -23,7 +23,7 @@ class GlossaryEditWController extends GlossaryWController {
         $table = WFactory::getTable('glossary');
 
         // load the table data
-        $id = $this->getId();
+        $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'glossary.list.start');
             JError::raiseNotice('INPUT', JText::_('WHD GLOSSARY UNKNOWN TERM'));
