@@ -39,8 +39,29 @@ class WFactory {
      *
      * @return WOut
      */
-    public function getOut() {
+    public static function getOut() {
         return WOut::getInstance();
+    }
+
+    /**
+     * Array of JTable objects
+     *
+     * @var JTable[]
+     */
+    private static $tables = array();
+
+    /**
+     * Gets a cached JTable
+     *
+     * @param string $table
+     * @return JTable
+     */
+    public static function getTable($table) {
+        if (empty(self::$tables[$table])) {
+            self::$tables[$table] = JTable::getInstance($table);
+        }
+        
+        return self::$tables[$table];
     }
 
 }

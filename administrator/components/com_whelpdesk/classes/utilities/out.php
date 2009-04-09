@@ -35,9 +35,9 @@ final class WOut {
     /**
      * Adds a line to the log
      */
-    public function log($message) {
+    public function log($message, $highlight=false) {
         if ($this->enabled) {
-            $this->logs[] = $message;
+            $this->logs[] = array($message, $highlight);
         }
     }
 

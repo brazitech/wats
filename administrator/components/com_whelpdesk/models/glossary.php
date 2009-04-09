@@ -38,6 +38,8 @@ class GlossaryWModel extends WModel {
         $database = JFactory::getDBO();
         $database->setQuery($sql, $limitstart, $limit);
 
+        print_r(array($limitstart, $limit));
+
         return $database->loadObjectList();
     }
 

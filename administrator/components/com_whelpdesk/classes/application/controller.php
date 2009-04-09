@@ -6,6 +6,7 @@
  * @package helpdesk
  */
 
+jimport('joomla.filesystem.file');
 wimport('application.view');
 
 abstract class WController {
@@ -28,7 +29,7 @@ abstract class WController {
     /**
      * Does the business when executed. Sub class must override this method!
      */
-    public function execute() {
+    public function execute($stage) {
         throw new WException('METHOD NOT IMPLEMENTED');
     }
 
@@ -70,10 +71,12 @@ abstract class WController {
 	}
 
     /**
+     * Gets an instance of a concrete controller
      *
-     * @param <type> $entity
-     * @param <type> $usecase
+     * @param string $entity
+     * @param string $usecase
      * @return WController
+     * @throws WException
      */
     public static function getInstance($entity, $usecase) {
         if (empty(self::$instances[$entity][$usecase])) {
@@ -81,6 +84,9 @@ abstract class WController {
             $path = JPATH_COMPONENT . DS . 'controllers' 
                                     . DS . $entity
                                     . DS . $usecase . '.php';
+            if (!JFile::exists($path)) {
+                throw new WException('UNKNOWN CONTROLLER (%s, %s)', $entity, $usecase);
+            }
             require_once($path);
 
             // create the controller
