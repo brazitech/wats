@@ -18,7 +18,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
 
 ?>
 
-
+<?php $term = $this->getModel(); ?>
 <form action="<?php echo JRoute::_('index.php'); ?>"
       method="post"
       name="adminForm"
@@ -28,10 +28,10 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
     <input type="hidden" name="option" value="com_whelpdesk" />
     <input type="hidden" name="task"   value="glossary.create" />
     <input type="hidden" name="stage"  value="commit" />
+    <input type="hidden" name="id"     value="<?php echo $term->id; ?>" />
     <!--<input type="hidden" name="redirect" value="<?php echo $this->redirect;?>" />-->
     <?php echo JHTML::_('form.token'); ?>
 
-    <?php $term = $this->getModel(); ?>
     <div class="col width-70">
         <fieldset class="adminform">
             <table  class="admintable">

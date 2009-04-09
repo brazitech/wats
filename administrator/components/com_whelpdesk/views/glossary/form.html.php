@@ -41,8 +41,8 @@ class GlossaryHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        JToolBarHelper::save('glossary.create.save');
-        JToolBarHelper::apply('glossary.create.apply');
+        JToolBarHelper::save('glossary.'.WFactory::getCommand()->getUsecase().'.save');
+        JToolBarHelper::apply('glossary.'.WFactory::getCommand()->getUsecase().'.apply');
         JToolBarHelper::cancel('glossary.list');
         JToolbarHelper::divider();
         JToolbarHelper::help('glossary.form', true);

@@ -13,7 +13,7 @@ wimport('application.model');
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary.php');
 
-class GlossaryCreateWController extends GlossaryWController {
+class GlossaryEditWController extends GlossaryWController {
 
     /**
      * @todo
@@ -21,6 +21,15 @@ class GlossaryCreateWController extends GlossaryWController {
     public function execute($stage) {
         // get the table
         $table = WFactory::getTable('glossary');
+
+        // load the table data
+        $id = $this->getId();
+        if (!$id) {
+            JRequest::setVar('task', 'glossary.list.start');
+            JError::raiseNotice('INPUT', JText::_('WHD GLOSSARY UNKNOWN TERM'));
+            return;
+        }
+        $table->load($id);
 
         // check where in the usecase we are
         if ($stage == 'save' || $stage == 'apply') {
@@ -32,7 +41,6 @@ class GlossaryCreateWController extends GlossaryWController {
                    JRequest::setVar('task', 'glossary.list.start');
                } else {
                    JRequest::setVar('task', 'glossary.edit.start');
-                   // @todo set request id
                }
                
                return;
@@ -60,9 +68,6 @@ class GlossaryCreateWController extends GlossaryWController {
     public function commit() {
         // values to use to create new record
         $post = JRequest::get('POST');
-
-        // do not provide an ID
-        $post['id'] = false;
 
         return parent::commit($post);
     }
