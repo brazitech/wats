@@ -66,15 +66,14 @@ abstract class WModel {
      * @param int $default Default number of items to display on a page
      * @return int
      */
-    public function getLimit($default = 25) {
+    public function getLimit() {
          // determine limitstart if we don't already know what it is
         if ($this->limit === null) {
             $application =& JFactory::getApplication();
 
             // state based
             $this->limit = $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.limit',
-                                                                 'limitstart',
-                                                                 $default);
+                                                                 'limit');
         }
 
         return $this->limit;
