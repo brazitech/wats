@@ -9,12 +9,12 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-jimport('joomla.database.table');
+wimport('database.table');
 
 /**
  * Representation of the #__whelpdesk_glossary table
  */
-class JTableGlossary extends JTable {
+class JTableGlossary extends WTable {
 
     /**
      * PK
@@ -87,11 +87,32 @@ class JTableGlossary extends JTable {
     public $hits = 0;
 
     /**
+     * date and time when the hits counter was last reset
+     *
+     * @var String
+     */
+    public $reset_hits = 0;
+
+    /**
      * Extra parameters
      *
      * @var JParameter
      */
     public $params = null;
+
+    /**
+     * Version of the record, incremented on every save
+     *
+     * @var int
+     */
+    public $version = 1;
+
+    /**
+     * Date and time when the term was last modified
+     *
+     * @var String
+     */
+    public $modified = null;
 
     /**
      *

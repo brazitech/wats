@@ -1,4 +1,4 @@
-<?php
+erm<?php
 /**
  * @version $Id$
  * @copyright Copyright (C) James Kennard
@@ -86,8 +86,8 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
 
     <div class="col width-30">
         <?php if ($term->id) : ?>
-        <fieldset class="adminform" style="border: 1px dashed silver;">
-            <table class="admintable" style="padding: 5px; margin-bottom: 10px;">
+        <fieldset class="adminform" style="border: 1px dashed silver; margin: 0px 0px 10px 0px;">
+            <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
                 <tr>
                     <td>
                         <strong><?php echo JText::_('Term ID'); ?>:</strong>
@@ -105,23 +105,35 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                     </td>
                 </tr>
                 <tr>
-                <td>
-                <strong><?php echo JText::_('Hits'); ?></strong>
-                </td>
-                <td>
-                <?php echo $term->hits;?>
-                <span <?php echo $visibility; ?>>
-                <input name="reset_hits" type="button" class="button" value="<?php echo JText::_('Reset'); ?>" onclick="javascript: submitbutton('resethits');" />
-                </span>
-                </td>
+                    <td>
+                        <strong><?php echo JText::_('Hits'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo $term->hits;?>
+                        <input name="resetHits"
+                               type="button"
+                               class="button"
+                               value="<?php echo JText::_('Reset'); ?>"
+                               onclick="javascript: submitbutton('glossary.resethits');" />
+                    </td>
                 </tr>
+                <?php if ($term->reset_hits != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
-                <td>
-                <strong><?php echo JText::_('Revised'); ?></strong>
-                </td>
-                <td>
-                <?php echo $term->version;?> <?php echo JText::_('times'); ?>
-                </td>
+                    <td>
+                        <strong><?php echo JText::_('HITS LAST RESET'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo JHtml::_('date',  $term->reset_hits,  JText::_('DATE_FORMAT_LC2')); ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('REVISION'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo $term->version;?>
+                    </td>
                 </tr>
                 <tr>
                 <td>
@@ -137,48 +149,41 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                 ?>
                 </td>
                 </tr>
+                <?php if ($term->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
-                <td>
-                <strong><?php echo JText::_('Modified'); ?></strong>
-                </td>
-                <td>
-                <?php
-                if ($term->modified == $nullDate) {
-                echo JText::_('Not modified');
-                } else {
-                echo JHtml::_('date',  $term->modified, JText::_('DATE_FORMAT_LC2'));
-                }
-                ?>
-                </td>
+                    <td>
+                        <strong><?php echo JText::_('Modified'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo JHtml::_('date',  $term->modified, JText::_('DATE_FORMAT_LC2')); ?>
+                    </td>
                 </tr>
+                <?php endif; ?>
             </table>
         </fieldset>
         <?php endif; ?>
-        <!--<fieldset class="adminform">
-            <legend><?php echo JText::_('Parameters'); ?></legend>-->
-            <?php
-            jimport('joomla.html.pane');
-            $pane =& JPane::getInstance('sliders');
-            echo $pane->startPane("menu-pane");
+        <?php
+        jimport('joomla.html.pane');
+        $pane =& JPane::getInstance('sliders');
+        echo $pane->startPane("menu-pane");
 
-            $groups = $term->params->getGroups();
-            if (count($groups)) {
-                foreach($groups AS $groupname => $group) {
-                    if ($groupname == '_default') {
-                        $title = 'Term';
-                    } else {
-                        $title = ucfirst($groupname);
-                    }
-                    if ($term->params->getNumParams($groupname)) {
-                        echo $pane->startPanel(JText :: _($title), $groupname.'-page');
-                        echo $term->params->render('params', $groupname);
-                        echo $pane->endPanel();
-                    }
+        $groups = $term->params->getGroups();
+        if (count($groups)) {
+            foreach($groups AS $groupname => $group) {
+                if ($groupname == '_default') {
+                    $title = 'Term';
+                } else {
+                    $title = ucfirst($groupname);
+                }
+                if ($term->params->getNumParams($groupname)) {
+                    echo $pane->startPanel(JText :: _($title), $groupname.'-page');
+                    echo $term->params->render('params', $groupname);
+                    echo $pane->endPanel();
                 }
             }
-            echo $pane->endPane();
-            ?>
-        <!--</fieldset>-->
+        }
+        echo $pane->endPane();
+        ?>
 </div>
 
 </form>
