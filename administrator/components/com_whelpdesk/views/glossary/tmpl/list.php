@@ -108,7 +108,7 @@ defined('JPATH_BASE') or die();
                 <?php endif; ?>
             </td>
             <td align="center">
-            <?php echo JHTML::_('grid.published', $glossaryItem->published, $i); ?>
+            <?php echo JHTML::_('grid.published', $glossaryItem->published, $i, 'tick.png', 'publish_x.png', 'glossary.'); ?>
             </td>
             <td align="center">
                 <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . $glossaryItem->author); ?>">

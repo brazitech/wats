@@ -155,6 +155,29 @@ abstract class WModel {
 
         return $id;
     }
+
+    /**
+     * Get the array of IDs passed in the request. Returns an empty array on
+     * fail.
+     *
+     * @return int
+     */
+    public static function getAllIds() {
+        // attempt to get the ID normally
+        $cid = JRequest::getVar('cid');
+
+        if (!is_array($cid)) {
+            // no luck?  go for an empty array
+            $cid = array();
+        } else {
+            // make sure the IDs are safe
+            for ($i = 0, $c = count($cid); $i < $c; $i++) {
+                $cid[$i] = intval($cid[$i]);
+            }
+        }
+
+        return $cid;
+    }
 }
 
 ?>
