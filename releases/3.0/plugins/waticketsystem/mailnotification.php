@@ -160,7 +160,8 @@ class plgWaticketsystemMailnotification extends JPlugin {
         // get the notification email addresses
         $notifyEmails = array();
         if (!preg_match_all("~([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})~i", $this->params->get("email-others", ""), $notifyEmails)) {
-            return array();
+            $array = array();
+            return $array;
         }
         $notifyEmails = $notifyEmails[0];
         

@@ -409,7 +409,7 @@ class watsTicketHTML extends watsTicket
 			else
 			{
 				// create new user
-				$msgUser = new watsUserHTML( $this->_db );
+				$msgUser = new watsUserHTML();
 				$msgUser->loadWatsUser( $this->_msgList[$i]->watsId  );
 			}
 			// print message
