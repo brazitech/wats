@@ -45,8 +45,8 @@ class GlossaryHTMLWView extends WView {
         JToolbarHelper::editList('glossary.edit.start');
         JToolbarHelper::deleteList('glossary.delete.start');
         JToolbarHelper::divider();
-        JToolBarHelper::publishList('glossary.publish');
-        JToolBarHelper::unpublishList('glossary.unpublish');
+        JToolBarHelper::publishList('glossary.state.publish');
+        JToolBarHelper::unpublishList('glossary.state.unpublish');
         JToolbarHelper::divider();
         JToolbarHelper::help('glossary.list', true);
     }

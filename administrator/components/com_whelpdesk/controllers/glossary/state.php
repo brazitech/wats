@@ -13,7 +13,7 @@ wimport('application.model');
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary.php');
 
-class GlossaryPublishWController extends GlossaryWController {
+class GlossaryStateWController extends GlossaryWController {
 
     /**
      * @todo
@@ -31,7 +31,7 @@ class GlossaryPublishWController extends GlossaryWController {
         }
 
         // publish the identified terms
-        $table->publish($cid);
+        $table->publish($cid, (($stage == 'publish') ? 1 : 0));
 
         // return to the edit screen
         JRequest::setVar('task', 'glossary.list.start');
