@@ -74,6 +74,9 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'Date',      'created',   $lists['orderDirection'], $lists['order']); ?>
                 </th>
                 <th align="center" width="50">
+                    <?php echo JHTML::_('grid.sort', 'Revision',  'version',   $lists['orderDirection'], $lists['order']); ?>
+                </th>
+                <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $lists['orderDirection'], $lists['order']); ?>
                 </th>
             </tr>
@@ -120,7 +123,10 @@ defined('JPATH_BASE') or die();
                 <?php echo JHTML::_('date',  $glossaryItem->created, JText::_('DATE_FORMAT_LC4')); ?>
             </td>
             <td nowrap="nowrap" align="center">
-            <?php echo $glossaryItem->hits ?>
+                <?php echo $glossaryItem->version ?>
+            </td>
+            <td nowrap="nowrap" align="center">
+                <?php echo $glossaryItem->hits ?>
             </td>
             </tr>
             <?php endfor; ?>

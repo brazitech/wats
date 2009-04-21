@@ -1,4 +1,4 @@
-erm<?php
+<?php
 /**
  * @version $Id$
  * @copyright Copyright (C) James Kennard
@@ -59,7 +59,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                     <td>
                         <select class="inputbox" name="published" id="published">
                             <option <?php echo ($term->published == 1) ? 'selected="selected"' : ''; ?> value="1">Published</option>
-                            <option <?php echo ($term->published == 0) ? 'selected="selected"' : ''; ?>value="0">Unpublished</option>
+                            <option <?php echo ($term->published == 0) ? 'selected="selected"' : ''; ?> value="0">Unpublished</option>
                         </select>
                     </td>
                 </tr>

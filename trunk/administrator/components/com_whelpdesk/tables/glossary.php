@@ -105,7 +105,7 @@ class JTableGlossary extends WTable {
      *
      * @var int
      */
-    public $version = 1;
+    public $version = 0;
 
     /**
      * Date and time when the term was last modified
