@@ -8,7 +8,7 @@
  *
  * @author Administrator
  */
-interface TreeSessionInterface {
+interface WTreeSessionInterface {
 
     /**
      *

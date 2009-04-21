@@ -4,17 +4,17 @@
  * www.webamoeba.co.uk
  */
 
-defined("_JEXEC") or die("");
+defined('_JEXEC') or die('');
 
-hdimport("tree.treeInterface");
-hdimport("tree.standard.treeSession");
+wimport('tree.treeInterface');
+wimport('tree.treeSession');
 
 /**
  * Concrete implementation of AccessInterface
  *
  * @author Administrator
  */
-class StandardTree implements TreeInterface {
+class WTree implements WTreeInterface {
 
     /**
      * Array of names of known groups
@@ -29,7 +29,7 @@ class StandardTree implements TreeInterface {
      *
      * @param String $name Name of the new group
      * @param String $description Optional description
-     * @throws HDException Occurs when group is not successfully added
+     * @throws WException Occurs when group is not successfully added
      */
     public function addGroup($group, $description=null) {
         // preliminary check
@@ -41,16 +41,16 @@ class StandardTree implements TreeInterface {
         $db = JFactory::getDBO();
 
         // prepare query
-        $query = "INSERT INTO " . dbTable("tree_groups") . " " .
-                 "SET " . dbField("grp"). " = " . $db->Quote($group);
+        $query = 'INSERT INTO ' . dbTable('tree_groups') . ' ' .
+                 'SET ' . dbField('grp'). ' = ' . $db->Quote($group);
         if ($description != null) {
-            $query .= ", " . dbField("description"). " = " . $db->Quote($description);
+            $query .= ', ' . dbField('description'). ' = ' . $db->Quote($description);
         }
         $db->setQuery($query);
 
         // execute query
         if (!$db->query()) {
-            throw new HDException("ADD GROUP FAILED", $db->getErrorMsg());
+            throw new WException('ADD GROUP FAILED', $db->getErrorMsg());
         }
 
         // finish off by letting the access handler in the coo
@@ -71,23 +71,20 @@ class StandardTree implements TreeInterface {
 
         // tables from which records must be removed
         // in reverse order of importance, i.e. groups table is processed last
-        $tables = array("tree_groups");
-        $tables[] = "tree_types";
-        $tables[] = "tree";
+        $tables = array('tree_groups');
+        $tables[] = 'tree_types';
+        $tables[] = 'tree';
 
         // delete associated group records from tables
         $db = JFactory::getDBO();
-        $query = "";
-        $queryPartOne = " DELETE FROM ";
-        $queryPartTwo = " WHERE " . dbField("grp") . " = " . $db->Quote($group);
+        $query = '';
+        $queryPartOne = ' DELETE FROM ';
+        $queryPartTwo = ' WHERE ' . dbField('grp') . ' = ' . $db->Quote($group);
         for ($i = count($tables) - 1; $i >= 0; $i--) {
             $query = $queryPartOne . dbTable($tables[$i]) . $queryPartTwo;
             $db->setQuery();
             $db->query();
         }
-
-        // finish off by letting the access handler in the coo
-        HDFactory::getAccess()->removeGroup($group);
     }
 
     /**
@@ -98,14 +95,13 @@ class StandardTree implements TreeInterface {
      * @static
      */
     public static function groupExists($group) {
-
         // initialise cache
         if (self::$cache == null) {
             $db =& JFactory::getDBO();
 
             // prepare query
-            $query = "SELECT " . dbField("grp") . " ".
-                     "FROM " . dbTable("tree_groups");
+            $query = 'SELECT ' . dbField('grp') . ' '
+                   . 'FROM ' . dbTable('tree_groups');
             $db->setQuery($query);
 
             // populate cache
@@ -124,10 +120,32 @@ class StandardTree implements TreeInterface {
      *
      * @param String $group
      * @return AccessSessionInterface
-     * @throws HDException
+     * @throws WException
      */
     public function getSession($group) {
         return StandardTreeSession::getInstance($group);
+    }
+
+    /**
+     * Global WTree object
+     *
+     * @var WTree
+     */
+    private static $instance = array();
+
+    /**
+     * Gets the global instance of WAccess
+     *
+     * @return WTree
+     */
+    public function getInstance() {
+        // create object if it does not exist
+        if (!self::$instance) {
+            self::$instance = new WTree();
+        }
+
+        // all done, send it home!
+        return self::$instance;
     }
 }
 ?>

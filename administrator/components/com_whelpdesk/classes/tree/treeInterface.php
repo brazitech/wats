@@ -8,7 +8,7 @@
  *
  * @author Administrator
  */
-interface TreeInterface {
+interface WTreeInterface {
 
     /**
      * Adds a new group, the name of the group must be unique. If the group
@@ -20,7 +20,9 @@ interface TreeInterface {
     public function addGroup($group, $description=null);
 
     /**
-     * Removes a group
+     * Removes a group. Essentially this is a very simple method, it should
+     * remove all refernces from the persitant access data that refernces the
+     * group.
      *
      * @param String $name Name of group to remove
      */
@@ -33,6 +35,13 @@ interface TreeInterface {
      * @return TreeSessionInterface
      */
     public function getSession($group);
+
+    /**
+     * Gets the global instance of the implemnting class
+     *
+     * @return TreeInterface
+     */
+    public function getInstance();
     
 }
 
