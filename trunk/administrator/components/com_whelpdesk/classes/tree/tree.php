@@ -42,9 +42,9 @@ class WTree implements WTreeInterface {
 
         // prepare query
         $query = 'INSERT INTO ' . dbTable('tree_groups') . ' ' .
-                 'SET ' . dbField('grp'). ' = ' . $db->Quote($group);
+                 'SET ' . dbName('grp'). ' = ' . $db->Quote($group);
         if ($description != null) {
-            $query .= ', ' . dbField('description'). ' = ' . $db->Quote($description);
+            $query .= ', ' . dbName('description'). ' = ' . $db->Quote($description);
         }
         $db->setQuery($query);
 
@@ -79,7 +79,7 @@ class WTree implements WTreeInterface {
         $db = JFactory::getDBO();
         $query = '';
         $queryPartOne = ' DELETE FROM ';
-        $queryPartTwo = ' WHERE ' . dbField('grp') . ' = ' . $db->Quote($group);
+        $queryPartTwo = ' WHERE ' . dbName('grp') . ' = ' . $db->Quote($group);
         for ($i = count($tables) - 1; $i >= 0; $i--) {
             $query = $queryPartOne . dbTable($tables[$i]) . $queryPartTwo;
             $db->setQuery();
@@ -100,7 +100,7 @@ class WTree implements WTreeInterface {
             $db =& JFactory::getDBO();
 
             // prepare query
-            $query = 'SELECT ' . dbField('grp') . ' '
+            $query = 'SELECT ' . dbName('grp') . ' '
                    . 'FROM ' . dbTable('tree_groups');
             $db->setQuery($query);
 
@@ -138,7 +138,7 @@ class WTree implements WTreeInterface {
      *
      * @return WTree
      */
-    public function getInstance() {
+    public static function getInstance() {
         // create object if it does not exist
         if (!self::$instance) {
             self::$instance = new WTree();
