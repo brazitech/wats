@@ -58,8 +58,8 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                     </td>
                     <td>
                         <select class="inputbox" name="published" id="published">
-                            <option selected="selected" value="1">Published</option>
-                            <option value="0">Unpublished</option>
+                            <option <?php echo ($term->published == 1) ? 'selected="selected"' : ''; ?> value="1">Published</option>
+                            <option <?php echo ($term->published == 0) ? 'selected="selected"' : ''; ?>value="0">Unpublished</option>
                         </select>
                     </td>
                 </tr>
