@@ -51,6 +51,13 @@ abstract class GlossaryWController extends WController {
             return false;
         }
 
+        // store the data in the database table and update nulls
+        if (!$table->revise()) {
+            // failed
+            WFactory::getOut()->log('Failed to increment version counter', true);
+            return false;
+        }
+
         WFactory::getOut()->log('Commited glossary term to the database');
         return true;
     }

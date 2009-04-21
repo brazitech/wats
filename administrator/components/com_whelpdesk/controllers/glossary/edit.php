@@ -42,7 +42,7 @@ class GlossaryEditWController extends GlossaryWController {
                } else {
                    JRequest::setVar('task', 'glossary.edit.start');
                }
-               
+
                return;
             } else {
                 JError::raiseNotice('INPUT', JText::_('INVALID STUFF???'));;
@@ -69,7 +69,15 @@ class GlossaryEditWController extends GlossaryWController {
         // values to use to create new record
         $post = JRequest::get('POST');
 
-        return parent::commit($post);
+        // commit the changes
+        $wasCommitted = parent::commit($post);
+
+        // increment 
+        if ($wasCommitted) {
+
+        }
+
+        return $wasCommitted;
     }
 }
 
