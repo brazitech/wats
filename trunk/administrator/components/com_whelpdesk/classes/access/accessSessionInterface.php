@@ -13,7 +13,7 @@ defined("_JEXEC") or die("");
  *
  * @author Administrator
  */
-interface AccessSessionInterface {
+interface WAccessSessionInterface {
 
     /**
      * Instantiates a new AccessSessionInterface for the specified group. Note

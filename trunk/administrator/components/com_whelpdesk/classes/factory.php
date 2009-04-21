@@ -64,6 +64,27 @@ class WFactory {
         return self::$tables[$table];
     }
 
+    /**
+     * Gets an AccessInterface object that deals with the component permissions.
+     *
+     * @return AccessInterface
+     */
+    public static function getAccess() {
+        wimport('access.access');
+        return WAccess::getInstance();
+    }
+
+    /**
+     * Gets a AccessSessionInterface object
+     *
+     * @param String $group Group that the session will be dealing with
+     * @return AccessSessionInterface
+     */
+    public static function getAccessSession($group = 'component') {
+        // return the tree session object
+        return self::getAccess()->getSession($group);
+    }
+
 }
 
 ?>

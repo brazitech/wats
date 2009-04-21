@@ -4,16 +4,16 @@
  * www.webamoeba.co.uk
  */
 
-defined("_JEXEC") or die("");
+defined('_JEXEC') or die('');
 
-hdimport("access.accessSessionInterface");
+hdimport('access.accessSessionInterface');
 
 /**
- * Description of StandardAccessSession
+ * Description of WAccessSession
  *
  * @author Administrator
  */
-class StandardAccessSession implements AccessSessionInterface {
+class WAccessSession implements WAccessSessionInterface {
     
     /**
      * Group with which the session is dealing
@@ -60,7 +60,7 @@ class StandardAccessSession implements AccessSessionInterface {
      * @param String $type
      * @param String $control
      * @param boolean $hasAccess
-     * @throws HDExcpetion
+     * @throws WException
      */
     public function setAccess($requestType, $requestIdentifier,
                               $targetType, $targetIdentifier,
@@ -69,34 +69,34 @@ class StandardAccessSession implements AccessSessionInterface {
 
         // check request node exists
         if (!$this->treeSession->nodeExists($requestType, $requestIdentifier)) {
-            throw new HDExcpetion("NODE DOES NOT EXIST", $requestType,
+            throw new WException('NODE DOES NOT EXIST', $requestType,
                                               $requestIdentifier, $this->group);
         }
 
         // check target node exists
         if (!$this->treeSession->nodeExists($targetType, $targetIdentifier)) {
-            throw new HDExcpetion("NODE DOES NOT EXIST", $targetType,
+            throw new WException('NODE DOES NOT EXIST', $targetType,
                                                $targetIdentifier, $this->group);
         }
 
         // check control exists
         if (!$this->controlExists($targetType, $control)) {
-            throw new HDExcpetion("CONTROL DOES NOT EXIST", 
+            throw new WException('CONTROL DOES NOT EXIST',
                                            $targetType, $control, $this->group);
         }
 
         // does the control already exist?
         $db = JFactory::getDBO();
 
-        $query = "SELECT " . dbField("allow") . " " .
-                 "FROM " . dbTable("access_map") . " " .
-                 "WHERE " . dbField("grp") . " = " . $db->Quote($this->group) .
-                 " AND " . dbField("request_type") . " = " . $db->Quote($requestType) .
-                 " AND " . dbField("request_identifier") . " = " . $db->Quote($requestIdentifier) .
-                 " AND " . dbField("target_type") . " = " . $db->Quote($targetType) .
-                 " AND " . dbField("target_identifier") . " = " . $db->Quote($targetIdentifier) .
-                 " AND " . dbField("type") . " = " . $db->Quote($type) .
-                 " AND " . dbField("control") . " = " . $db->Quote($control);
+        $query = 'SELECT ' . dbName('allow') . ' ' .
+                 'FROM ' . dbTable('access_map') . ' ' .
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                 ' AND ' . dbName('request_type') . ' = ' . $db->Quote($requestType) .
+                 ' AND ' . dbName('request_identifier') . ' = ' . $db->Quote($requestIdentifier) .
+                 ' AND ' . dbName('target_type') . ' = ' . $db->Quote($targetType) .
+                 ' AND ' . dbName('target_identifier') . ' = ' . $db->Quote($targetIdentifier) .
+                 ' AND ' . dbName('type') . ' = ' . $db->Quote($type) .
+                 ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
         $db->setQuery($query);
         $allow = $db->loadResult();
 
@@ -105,41 +105,41 @@ class StandardAccessSession implements AccessSessionInterface {
             // need to insert
 
             // prepare query
-            $query = "INSERT INTO " . dbTable("access_map") . " " .
-                     "SET " . dbField("grp") . " = " . $db->Quote($this->group) .
-                     ", " . dbField("request_type") . " = " . $db->Quote($requestType) .
-                     ", " . dbField("request_identifier") . " = " . $db->Quote($requestIdentifier) .
-                     ", " . dbField("target_type") . " = " . $db->Quote($targetType) .
-                     ", " . dbField("target_identifier") . " = " . $db->Quote($targetIdentifier) .
-                     ", " . dbField("type") . " = " . $db->Quote($type) .
-                     ", " . dbField("control") . " = " . $db->Quote($control) .
-                     ", " . dbField("allow") . " = " . ($hasAccess ? 1 : 0);
+            $query = 'INSERT INTO ' . dbTable('access_map') . ' ' .
+                     'SET ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                     ', ' . dbName('request_type') . ' = ' . $db->Quote($requestType) .
+                     ', ' . dbName('request_identifier') . ' = ' . $db->Quote($requestIdentifier) .
+                     ', ' . dbName('target_type') . ' = ' . $db->Quote($targetType) .
+                     ', ' . dbName('target_identifier') . ' = ' . $db->Quote($targetIdentifier) .
+                     ', ' . dbName('type') . ' = ' . $db->Quote($type) .
+                     ', ' . dbName('control') . ' = ' . $db->Quote($control) .
+                     ', ' . dbName('allow') . ' = ' . ($hasAccess ? 1 : 0);
             $db->setQuery($query);
 
             // attempt to insert the new rule
             if (!$db->query()) {
-                throw new HDException("SET ACCESS FAILED");
+                throw new WException('SET ACCESS FAILED');
             }
             
         } elseif ((boolean)$allow != (boolean)$hasAccess) {
             // need to update
 
             // prepare query
-            $query = "UPDATE " . dbTable("access_map") . " " .
-                     "SET " . dbField("allow") . " = " . ($hasAccess ? 1 : 0) . " " .
-                     "WHERE ". dbField("grp") . " = " . $db->Quote($this->group) .
-                     " AND " . dbField("request_type") . " = " . $db->Quote($requestType) .
-                     " AND " . dbField("request_identifier") . " = " . $db->Quote($requestIdentifier) .
-                     " AND " . dbField("target_type") . " = " . $db->Quote($targetType) .
-                     " AND " . dbField("target_identifier") . " = " . $db->Quote($targetIdentifier) .
-                     " AND " . dbField("type") . " = " . $db->Quote($type) .
-                     " AND " . dbField("control") . " = " . $db->Quote($control);
+            $query = 'UPDATE ' . dbTable('access_map') . ' ' .
+                     'SET ' . dbName('allow') . ' = ' . ($hasAccess ? 1 : 0) . ' ' .
+                     'WHERE '. dbName('grp') . ' = ' . $db->Quote($this->group) .
+                     ' AND ' . dbName('request_type') . ' = ' . $db->Quote($requestType) .
+                     ' AND ' . dbName('request_identifier') . ' = ' . $db->Quote($requestIdentifier) .
+                     ' AND ' . dbName('target_type') . ' = ' . $db->Quote($targetType) .
+                     ' AND ' . dbName('target_identifier') . ' = ' . $db->Quote($targetIdentifier) .
+                     ' AND ' . dbName('type') . ' = ' . $db->Quote($type) .
+                     ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
 
             $db->setQuery($query);
 
             // attempt to update the existing rule
             if (!$db->query()) {
-                throw new HDException("SET ACCESS FAILED");
+                throw new WException('SET ACCESS FAILED');
             }
         }
 
@@ -152,9 +152,9 @@ class StandardAccessSession implements AccessSessionInterface {
      * @param String $type Type that the control is limited to
      * @param String $control The control identofiter, e.g. delete
      * @param String $description A basic description of the control for semantic purposes
-     * @throws HDException
+     * @throws WException
      */
-    public function addControl($type, $control, $description="") {
+    public function addControl($type, $control, $description='') {
         if ($this->controlExists($type, $control)) {
             // no need to continue the control already exists
             return;
@@ -163,16 +163,16 @@ class StandardAccessSession implements AccessSessionInterface {
         $db = JFactory::getDBO();
 
         // prepare query
-        $query = "INSERT INTO " . dbTable("access_controls") . " " .
-                 "SET " . dbField("grp") . " = " . $db->Quote($this->group) . " " .
-                 ", " . dbField("type") . " = " . $db->Quote($type) . " " .
-                 ", " . dbField("control") . " = " . $db->Quote($control) . " " .
-                 ", " . dbField("description") . " = " . $db->Quote($description) . " ";
+        $query = 'INSERT INTO ' . dbTable('access_controls') . ' ' .
+                 'SET ' . dbName('grp') . ' = ' . $db->Quote($this->group) . ' ' .
+                 ', ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
+                 ', ' . dbName('control') . ' = ' . $db->Quote($control) . ' ' .
+                 ', ' . dbName('description') . ' = ' . $db->Quote($description) . ' ';
         
         // insert the new record
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new HDException("ADD CONTROL FAILED", $this->group, $type, $control);
+            throw new WException('ADD CONTROL FAILED', $this->group, $type, $control);
         }
     }
 
@@ -191,18 +191,18 @@ class StandardAccessSession implements AccessSessionInterface {
         $db = JFactory::getDBO();
 
         // delete map entries
-        $query = "DELETE FROM " .dbTable("access_map") . " " .
-                 "WHERE " . dbField("grp") . " = " . $db->Quote($this->group) .
-                 " AND " . dbField("type") . " = " . $db->Quote($type) . " " .
-                 " AND " . dbField("control") . " = " . $db->Quote($control);
+        $query = 'DELETE FROM ' .dbTable('access_map') . ' ' .
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                 ' AND ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
+                 ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
         $db->setQuery($query);
         $db->query();
 
         // delete control entries
-        $query = "DELETE FROM " .dbTable("access_controls") . " " .
-                 "WHERE " . dbField("grp") . " = " . $db->Quote($this->group) .
-                 " AND " . dbField("type") . " = " . $db->Quote($type) . " " .
-                 " AND " . dbField("control") . " = " . $db->Quote($control);
+        $query = 'DELETE FROM ' .dbTable('access_controls') . ' ' .
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                 ' AND ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
+                 ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
         $db->setQuery($query);
         $db->query();
     }
@@ -251,10 +251,10 @@ class StandardAccessSession implements AccessSessionInterface {
             $db = JFactory::getDBO();
 
             // prepare the query
-            $query = "SELECT " . dbField("control") . " " .
-                     "FROM " . dbTable("access_controls") . " " .
-                     "WHERE " . dbField("grp") . " = " . $db->Quote($this->group) .
-                     " AND " . dbField("type") . " = " . $db->Quote($type);
+            $query = 'SELECT ' . dbName('control') . ' ' .
+                     'FROM ' . dbTable('access_controls') . ' ' .
+                     'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                     ' AND ' . dbName('type') . ' = ' . $db->Quote($type);
 
             // execute the query and in doing so populate the cache
             $db->setQuery($query);
