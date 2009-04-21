@@ -56,10 +56,8 @@ abstract class WTable extends JTable {
      * @return boolean
      */
     function revise($oid=null) {
-        echo 'revise me';
         // check this table suports versions before continuing
         if (!in_array('version', array_keys($this->getProperties()))) {
-            echo 'oooooooaaaaaa';
 			return true;
 		}
 
