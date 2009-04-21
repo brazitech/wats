@@ -6,7 +6,7 @@
 
 defined('_JEXEC') or die('');
 
-hdimport('access.accessSessionInterface');
+wimport('access.accessSessionInterface');
 
 /**
  * Description of WAccessSession
@@ -47,7 +47,7 @@ class WAccessSession implements WAccessSessionInterface {
 
     public function __construct($group) {
         $this->group = $group;
-        $this->treeSession = HDFactory::getTreeSession($group);
+        $this->treeSession = WTree::getInstance()->getSession($group);
     }
 
     /**
@@ -280,14 +280,149 @@ class WAccessSession implements WAccessSessionInterface {
     public function hasAccess($requestType, $requestIdentifier,
                               $targetType, $targetIdentifier,
                               $type, $control) {
+        // get the request node
+        $request = $this->treeSession->getNode($requestType, $requestIdentifier);
+        if ($request == null) {
+            // unknown node
+            throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $requestType, $requestIdentifier);
+        }
 
-                              }
+        // get the target node
+        $target = $this->treeSession->getNode($targetType, $targetIdentifier);
+        if ($target == null) {
+            // unknown node
+            throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $targetType, $targetIdentifier);
+        }
+
+        // get the DBO
+        $db = JFactory::getDBO();
+
+        // get the path of the request node
+        $query = 'SELECT ' . dbName('type') . ', ' . dbName('identifier')
+               . ' FROM ' . dbTable('tree')
+               . ' WHERE ' . dbName('lft') . ' <= ' . $db->Quote($request['lft'])
+               . ' AND ' . dbName('rgt') . ' >= ' . $db->Quote($request['rgt'])
+               . ' ORDER BY ' . dbName('rgt') . ' ASC';
+        $db->setQuery($query);
+        $requestPath = $db->loadAssocList();
+
+        // itterate over the request path and look for rules
+        for($i = 0, $c = count($requestPath); $i < $c; $i++) {
+            $requestNode = $requestPath[$i];
+
+            // get the mappings
+            $query = 'SELECT ' . dbName('allow')
+                   . ' FROM ' . dbTable('tree')       . ' AS ' . dbName('target')
+                   . ' JOIN ' . dbTable('access_map') . ' AS ' . dbName('map') . ' ON '
+                   . '('
+                   .      dbName('target.type')       . ' = ' . dbName('map.target_type') . ' AND '
+                   .      dbName('target.identifier') . ' = ' . dbName('map.target_identifier')
+                   . ')'
+                   . ' WHERE ' . dbName('map.request_type')       . ' = '  . $db->Quote($requestNode['type'])
+                   . ' AND '   . dbName('map.request_identifier') . ' = '  . $db->Quote($requestNode['identifier'])
+                   . ' AND '   . dbName('target.lft')             . ' <= ' . $db->Quote($target['lft'])
+                   . ' AND '   . dbName('target.rgt')             . ' >= ' . $db->Quote($$target['rgt'])
+                   . ' AND '   . dbName('map.type')               . ' = '  . $db->Quote($type)
+                   . ' AND '   . dbName('map.control')            . ' = '  . $db->Quote($control)
+                   . ' ORDER BY ' . dbName('target.rgt') . ' ASC';
+            $db->setQuery($query);
+            $allow = $db->loadResult();
+
+            // did we win ???
+            if ($allow === '0') {
+                return false;
+            } elseif ($allow === '1') {
+                return true;
+            }
+        }
+
+        // no rules found, assume no access!
+        return 'false';
+    }
 
     /**
-     * @todo
+     * Resets all access to the session's group, i.e. literally removes all
+     * rules that exist for the group.
      */
     public function resetAccess() {
-        
+        $db = JFactory::getDBO();
+
+        // prepare the query
+        $query = 'DELETE '
+               . ' FROM ' . dbTable('access_controls')
+               . ' WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
+
+        // execute the query and in doing so populate the cache
+        $db->setQuery($query);
+        $db->query();
+    }
+
+    /**
+     * Adds a new node to the tree. If the parentType and parentIdentifier are
+     * null, the node created as the root node, note however that a root node
+     * can only be created if the tree is empty.
+     *
+     * @param String $type Type of node to add
+     * @param String $identifier Node ID (unique to this type)
+     * @param String $parentType Type of parent node to add
+     * @param String $parentIdentifier Parent node ID
+     */
+    public function addNode($type, $identifier,
+                                     $parentType=null, $parentIdentifier=null) {
+        // delegate method
+        $this->treeSession->addNode($type, $identifier,
+                                                $parentType, $parentIdentifier);
+    }
+
+    /**
+     * Removes an existing node from the tree. Sub nodes can either be removed
+     * simultaneously, or they can be relocated into the parent container.
+     *
+     * @param String $type Type of node to remove
+     * @param String $identifier Node ID
+     * @param boolean $recursive delete sub nodes
+     */
+    public function removeNode($type, $identifier, $recursive=false) {
+        // delegate method
+        $this->treeSession->removeNode($type, $identifier, $recursive);
+    }
+
+    /**
+     *
+     * @param String $type Type of node to move
+     * @param String $identifier Node ID
+     * @param String $newParentType Type of parent node to move to
+     * @param String $newParentIdentifier Parent node ID to move tp
+     */
+    public function moveNode($type, $identifier, $newParentType, 
+                                                         $newParentIdentifier) {
+        // delegate method
+        $this->treeSession-> moveNode($type, $identifier, $newParentType,
+                                                          $newParentIdentifier);
+    }
+
+    /**
+     * Determines if a node exists in the tree, uses temporary caching to
+     * increase speed.
+     *
+     * @param String $type Type of node to look for
+     * @param String $identifier Node identifier
+     * @return <type>
+     */
+    public function nodeExists($type, $identifier) {
+        // delegate method
+        $this->treeSession->nodeExists($type, $identifier);
+    }
+
+    /**
+     * Adds a new type. Note that types cannot be removed.
+     *
+     * @param String $type Type to add, must be unique to group
+     * @param String $description Optional description
+     */
+    public function addType($type, $description='') {
+        // delegate method
+        $this->treeSession->addType($type, $description);
     }
 
 }

@@ -64,6 +64,6 @@ interface WTreeSessionInterface {
      * @param String $type Type to add, must be unique to group
      * @param String $description Optional description
      */
-    public function addType($type, $description="");
+    public function addType($type, $description='');
 }
 ?>

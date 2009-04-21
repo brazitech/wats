@@ -36,7 +36,7 @@ class WAccess implements WAccessInterface {
      */
     public function getSession($group) {
         wimport('access.accessSession');
-        return AccessSession::getInstance($group);
+        return WAccessSession::getInstance($group);
     }
 
     public function addGroup($group, $description=null) {
@@ -102,7 +102,7 @@ class WAccess implements WAccessInterface {
      *
      * @return WAccess
      */
-    public function getInstance() {
+    public static function getInstance() {
         // create object if it does not exist
         if (!self::$instance) {
             self::$instance = new WAccess();

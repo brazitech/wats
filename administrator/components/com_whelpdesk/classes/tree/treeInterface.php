@@ -41,7 +41,7 @@ interface WTreeInterface {
      *
      * @return TreeInterface
      */
-    public function getInstance();
+    public static function getInstance();
     
 }
 

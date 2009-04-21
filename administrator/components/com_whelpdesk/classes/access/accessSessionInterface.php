@@ -4,7 +4,9 @@
  * www.webamoeba.co.uk
  */
 
-defined("_JEXEC") or die("");
+defined('_JEXEC') or die('');
+
+wimport('tree.treeSessionInterface');
 
 /**
  * Objects that implement this interface deal with access control based on the
@@ -13,15 +15,7 @@ defined("_JEXEC") or die("");
  *
  * @author Administrator
  */
-interface WAccessSessionInterface {
-
-    /**
-     * Instantiates a new AccessSessionInterface for the specified group. Note
-     * that the group never changes during the life of the object.
-     *
-     * @param String $group
-     */
-    public function __construct($group);
+interface WAccessSessionInterface extends WTreeSessionInterface {
 
     /**
      * Sets access to a target node from a request node for a specific type of 

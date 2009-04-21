@@ -56,7 +56,7 @@ class StandardTreeSession implements WTreeSessionInterface {
      */
     public function __construct($group) {
         // check group is valid
-        if (!StandardTree::groupExists($group)) {
+        if (!WTree::groupExists($group)) {
             throw new WException('TREE SESSION INSTANTIATION FAILED', $group);
         }
 
@@ -120,13 +120,13 @@ echo 'K';
 
         // insert the new node
         $query = 'INSERT INTO ' . dbTable('tree') . ' ' .
-                 'SET ' . dbField('grp') . ' = ' . $db->Quote($this->group) .
-                 ', ' . dbField('type') . ' = ' . $db->Quote($type) .
-                 ', ' . dbField('identifier') . ' = ' . $db->Quote($identifier) .
-                 ', ' . dbField('parent_type') . ' = ' . $db->Quote($parentType) .
-                 ', ' . dbField('parent_identifier') . ' = ' . $db->Quote($parentIdentifier) .
-                 ', ' . dbField('rgt') . ' = ' . ($parentNode['rgt'] - 1) .
-                 ', ' . dbField('lft') . ' = ' . ($parentNode['rgt'] - 2);
+                 'SET ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
+                 ', ' . dbName('type') . ' = ' . $db->Quote($type) .
+                 ', ' . dbName('identifier') . ' = ' . $db->Quote($identifier) .
+                 ', ' . dbName('parent_type') . ' = ' . $db->Quote($parentType) .
+                 ', ' . dbName('parent_identifier') . ' = ' . $db->Quote($parentIdentifier) .
+                 ', ' . dbName('rgt') . ' = ' . ($parentNode['rgt'] - 1) .
+                 ', ' . dbName('lft') . ' = ' . ($parentNode['rgt'] - 2);
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
@@ -152,13 +152,13 @@ echo 'K';
         // update the database
         $db = JFactory::getDBO();
         $query = 'UPDATE ' . dbTable('tree') . ' ' .
-                 'SET ' . dbField('rgt') . ' = ' . dbField('rgt') . ' + ' . $holeSize . ' ' .
+                 'SET ' . dbName('rgt') . ' = ' . dbName('rgt') . ' + ' . $holeSize . ' ' .
                  // only update lft if it needs to be... hence the IF expression
-                 ', ' . dbField('lft') . ' = ' . dbField('lft') . ' + IF(' . dbField('lft') . ' > ' . (int)$before . ', ' . $holeSize . ', 0) ' .
+                 ', ' . dbName('lft') . ' = ' . dbName('lft') . ' + IF(' . dbName('lft') . ' > ' . (int)$before . ', ' . $holeSize . ', 0) ' .
                  // do not need to include lft in WHERE clause, dealt with in line above
                  // lft WHERE clause would be a subset of rgt clause anyway
-                 'WHERE ' . dbField('rgt') . ' >= ' . (int)$before . ' ' .
-                 'AND ' . dbField('grp') . ' = ' . $db->Quote($this->group);
+                 'WHERE ' . dbName('rgt') . ' >= ' . (int)$before . ' ' .
+                 'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
@@ -184,14 +184,14 @@ echo 'K';
 
         $holeSize = $end - $start + 1;
         $query = 'UPDATE ' . dbTable('tree') . ' ' .
-                 'SET ' . dbField('rgt') . ' = ' . dbField('rgt') . ' - ' . $holeSize .
-                 ', ' . dbField('lft') . ' = ' . dbField('lft') . ' - IF(' . dbField('lft') . ' > ' . $end . ', ' . $holeSize . ', 0) ' .
+                 'SET ' . dbName('rgt') . ' = ' . dbName('rgt') . ' - ' . $holeSize .
+                 ', ' . dbName('lft') . ' = ' . dbName('lft') . ' - IF(' . dbName('lft') . ' > ' . $end . ', ' . $holeSize . ', 0) ' .
                  // WHERE clause is based on rgt, modifications to lft are
                  // conditional. Note that $node is a snapshot prior to the
                  // move, thus it now identifies the hole
                  // axiom: aNode.lft < aNode.rgt
-                 'WHERE ' . dbField('rgt') . ' > ' . $end . ' ' .
-                 'AND ' . dbField('grp') . ' = ' . $db->Quote($this->group);
+                 'WHERE ' . dbName('rgt') . ' > ' . $end . ' ' .
+                 'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
@@ -214,9 +214,9 @@ echo 'K';
 
         // check the tree is empty
         $db = JFactory::getDBO();
-        $query = 'SELECT COUNT(' . dbField('grp') . ') AS count '.
+        $query = 'SELECT COUNT(' . dbName('grp') . ') AS count '.
                  'FROM ' . dbTable('tree') . ' '.
-                 'WHERE ' . dbField('grp') . ' = ' . $db->Quote($this->group);
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if ($db->loadResult() != 0) {
             throw new WException('TREE IS NOT EMPTY', $this->group);
@@ -225,11 +225,11 @@ echo 'K';
         // OK to continue, add root node!
         $db = JFactory::getDBO();
         $query = 'INSERT INTO ' . dbTable('tree') . ' ' .
-                 'SET ' . dbField('grp'). ' = ' . $db->Quote($this->group) .
-                 ', ' . dbField('type'). ' = ' . $db->Quote($type) .
-                 ', ' . dbField('identifier'). ' = ' . $db->Quote($identifier) .
-                 ', ' . dbField('lft'). ' = 1' .
-                 ', ' . dbField('rgt'). ' = 2';
+                 'SET ' . dbName('grp'). ' = ' . $db->Quote($this->group) .
+                 ', ' . dbName('type'). ' = ' . $db->Quote($type) .
+                 ', ' . dbName('identifier'). ' = ' . $db->Quote($identifier) .
+                 ', ' . dbName('lft'). ' = 1' .
+                 ', ' . dbName('rgt'). ' = 2';
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('SET ROOT NODE FAILED', $db->getErrorMsg(),
@@ -273,11 +273,11 @@ echo 'K';
             // nodes will be handled by the move() method
             $typeSafe = $db->Quote($node['type']);
             $identifierSafe = $db->Quote($node['identifier']);
-            $query = 'SELECT ' . dbField('type') . ', ' . dbField('identifier') . ' ' .
+            $query = 'SELECT ' . dbName('type') . ', ' . dbName('identifier') . ' ' .
                      'FROM ' . dbTable('tree') . ' ' .
-                     'WHERE ' . dbField('grp') . ' = ' . $db->Quote($this->group) . ' ' .
-                     'AND ' . dbField('parent_type') . ' = ' . $typeSafe . ' ' .
-                     'AND ' . dbField('parent_identifier') . ' = ' . $identifierSafe . ' ';
+                     'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) . ' ' .
+                     'AND ' . dbName('parent_type') . ' = ' . $typeSafe . ' ' .
+                     'AND ' . dbName('parent_identifier') . ' = ' . $identifierSafe . ' ';
             $db->setQuery($query);
             $subNodes = $db->loadAssocList();
 
@@ -297,8 +297,8 @@ echo 'K';
 
         // now it's time to remove the node/nodes
         $query = 'DELETE FROM ' . dbTable('tree') . ' ' .
-                 'WHERE ' . dbField('lft') . ' >= ' . $node['lft'] . ' ' .
-                 'AND ' . dbField('rgt') . ' <= ' . $node['rgt'];
+                 'WHERE ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
+                 'AND ' . dbName('rgt') . ' <= ' . $node['rgt'];
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('REMOVE NODE FAILED');
@@ -347,11 +347,11 @@ echo 'K';
         // move the node and sub nodes
         $offset = ($parentNode['rgt'] - $node['rgt']) - 1;
         $query = 'UPDATE ' . dbTable('tree') . ' ' .
-                 'SET ' . dbField('rgt') . ' = ' . dbField('rgt') . ' + ' . $offset .
-                 ', ' . dbField('lft') . ' = ' . dbField('lft') . ' + ' . $offset . ' ' .
-                 'WHERE ' . dbField('rgt') . ' <= ' . $node['rgt'] . ' ' .
-                 'AND ' . dbField('lft') . ' >= ' . $node['lft'] . ' ' .
-                 'AND ' . dbField('grp') . ' = ' . $db->Quote($this->group);
+                 'SET ' . dbName('rgt') . ' = ' . dbName('rgt') . ' + ' . $offset .
+                 ', ' . dbName('lft') . ' = ' . dbName('lft') . ' + ' . $offset . ' ' .
+                 'WHERE ' . dbName('rgt') . ' <= ' . $node['rgt'] . ' ' .
+                 'AND ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
+                 'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
@@ -378,11 +378,11 @@ echo 'K';
         // process data if not already accounted for
         if (!array_key_exists($key, $this->nodeExists)) {
             $db = JFactory::getDBO();
-            $query = 'SELECT COUNT(' . dbField('identifier'). ') AS count ' .
+            $query = 'SELECT COUNT(' . dbName('identifier'). ') AS count ' .
                      'FROM ' . dbTable('tree') . ' ' .
-                     'WHERE ' . dbField('grp'). ' = ' . $db->Quote($this->group) .
-                     '  AND ' . dbField('type'). ' = ' . $db->Quote($type) .
-                     '  AND ' . dbField('identifier'). ' = ' . $db->Quote($identifier);
+                     'WHERE ' . dbName('grp'). ' = ' . $db->Quote($this->group) .
+                     '  AND ' . dbName('type'). ' = ' . $db->Quote($type) .
+                     '  AND ' . dbName('identifier'). ' = ' . $db->Quote($identifier);
             $db->setQuery($query);
             $this->nodeExists[$key] = (boolean)$db->loadResult();
         }
@@ -400,7 +400,7 @@ echo 'K';
      * @param String $identifier
      * @return [array] Associative array that represents a node at the time of retrival
      */
-    private function getNode($type, $identifier) {
+    public function getNode($type, $identifier) {
         // create unique key
         $key = $type . '#' . $identifier;
 
@@ -415,9 +415,9 @@ echo 'K';
         $db = JFactory::getDBO();
         $query = 'SELECT * ' .
                  'FROM ' . dbTable('tree') . ' ' .
-                 'WHERE ' . dbField('grp'). ' = ' . $db->Quote($this->group) .
-                 '  AND ' . dbField('type'). ' = ' . $db->Quote($type) .
-                 '  AND' . dbField('identifier'). ' = ' . $db->Quote($identifier);
+                 'WHERE ' . dbName('grp'). ' = ' . $db->Quote($this->group) .
+                 '  AND ' . dbName('type'). ' = ' . $db->Quote($type) .
+                 '  AND' . dbName('identifier'). ' = ' . $db->Quote($identifier);
         $db->setQuery($query);
 
         // process the result and return it
@@ -446,9 +446,9 @@ echo 'K';
 
         // prepare query
         $query = 'INSERT INTO ' . dbTable('tree_types') . ' ' .
-                 'SET ' . dbField('grp'). ' = ' . $db->Quote($this->group).
-                 ', ' . dbField('type'). ' = ' . $db->Quote($type) .
-                 ', ' . dbField('description'). ' = ' . $db->Quote($description);
+                 'SET ' . dbName('grp'). ' = ' . $db->Quote($this->group).
+                 ', ' . dbName('type'). ' = ' . $db->Quote($type) .
+                 ', ' . dbName('description'). ' = ' . $db->Quote($description);
         $db->setQuery($query);
 
         // execute query
@@ -469,9 +469,9 @@ echo 'K';
             $db =& JFactory::getDBO();
 
             // prepare query
-            $query = 'SELECT ' . dbField('type') . ' '.
+            $query = 'SELECT ' . dbName('type') . ' '.
                      'FROM ' . dbTable('tree_types') . ' '.
-                     'WHERE ' . dbField('grp') . ' = ' . $db->Quote($this->group);
+                     'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
             $db->setQuery($query);
 
             // populate cache
