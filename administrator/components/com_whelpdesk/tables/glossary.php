@@ -158,6 +158,10 @@ class JTableGlossary extends WTable {
         if (trim($this->alias) == '') {
             $this->setError(JText::_('WHD GLOSSARY ALIAS MISSING'));
             $isValid = false;
+        } elseif (preg_match('/([^a-z0-9\-\_\.\(\)])/', $this->alias)) {
+            // check alias characters are acceptable
+            $this->setError(JText::_('WHD GLOSSARY ALIAS IS INVALID'));
+            $isValid = false;
         } else {
             // check alias is unique
             $db = JFactory::getDBO();
