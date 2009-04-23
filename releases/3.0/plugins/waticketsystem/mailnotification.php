@@ -92,8 +92,12 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $mailer = JFactory::getMailer();
         $users =& $this->_getRelatedUsers($ticket);
         $users = array_merge($users, $this->_getNotificationUsers());
+        if (@$ticketAsignee) {
+            $ticketAsignee->watsid = $ticketAsignee->id;
+            $users[] =& $ticketAsignee;
+        }
         
-        // we onyl want unique users, ignore duplicates!
+        // we only want unique users, ignore duplicates!
         $uniqueUsers = array();
         for ($i = 0; $i < count($users); $i++) {
             $isUnique = true;
