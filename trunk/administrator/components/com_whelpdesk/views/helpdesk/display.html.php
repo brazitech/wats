@@ -1,5 +1,7 @@
 <?php
 
-class ControlpanelHTMLWView extends WView {
+class HelpdeskHTMLWView extends WView {
 	
 }
+
+?>
