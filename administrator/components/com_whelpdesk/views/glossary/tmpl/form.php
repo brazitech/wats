@@ -110,11 +110,13 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                     </td>
                     <td>
                         <?php echo $term->hits;?>
+                        <?php if ($this->getModel('canResetHits') && $term->hits) : ?>
                         <input name="resetHits"
                                type="button"
                                class="button"
                                value="<?php echo JText::_('Reset'); ?>"
                                onclick="javascript: submitbutton('glossary.resethits');" />
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php if ($term->reset_hits != JFactory::getDBO()->getNullDate()) : ?>
