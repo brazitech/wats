@@ -20,6 +20,75 @@ try {
     wimport('dbhelper');
     wimport('database.identifiers');
 
+    $access = WFactory::getAccess();
+    //$access->addGroup('component', 'Live tree for whelpdesk');
+
+    $accessSession = WFactory::getAccessSession();
+
+    //$accessSession->addType('helpdesk', 'Webamoeba Help Desk');
+
+    //$accessSession->addNode('helpdesk', 'helpdesk');
+    
+    //$accessSession->addType('glossary', 'Glossary of terminology');
+    //$accessSession->addNode('glossary', 'glossary', 'Glossary container', 'helpdesk', 'helpdesk');
+
+    //$accessSession->addType('usergroup', 'Group of users');
+    //$accessSession->addNode('usergroup', 'users', 'User container', 'helpdesk', 'helpdesk');
+
+    //$accessSession->addType('user', 'Individual user');
+    //$accessSession->addNode('user', '42', 'admin', 'usergroup', 'users');
+
+    //$accessSession->addControl('helpdesk', 'display', 'Webamoeba Help Desk');
+    //$accessSession->addControl('glossary', 'list', 'List glossary items', 'helpdesk', 'helpdesk');
+    //$accessSession->addControl('glossary', 'create', 'Create new glossary items', 'glossary', 'list');
+    //$accessSession->addControl('glossary', 'edit', 'Edit existing glossary items', 'glossary', 'list');
+    //$accessSession->addControl('glossary', 'state', 'Publish and unpublish glossary items', 'glossary', 'list');
+    //$accessSession->addControl('glossary', 'resethits', 'Reset glossary item hit counters', 'glossary', 'edit');
+
+    $accessSession->setAccess('usergroup', 'users',     // request
+                              'helpdesk', 'helpdesk',   // target
+                              'helpdesk', 'display',    // control
+                              true);                    // hasAccess
+
+    $accessSession->setAccess('usergroup', 'users',     // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'list',       // control
+                              true);                    // hasAccess
+
+    $accessSession->setAccess('usergroup', 'users',     // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'create',     // control
+                              false);                   // hasAccess
+
+    $accessSession->setAccess('user', '42',             // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'create',     // control
+                              true);                    // hasAccess
+
+    $accessSession->setAccess('user', '42',             // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'edit',       // control
+                              true);                    // hasAccess
+
+    $accessSession->setAccess('user', '42',             // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'state',      // control
+                              true);                    // hasAccess
+
+    $accessSession->setAccess('user', '42',             // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'resethits',  // control
+                              true);                    // hasAccess
+
+    /* var_dump($accessSession->hasAccess('user', '42',            // request
+                                       'helpdesk', 'helpdesk',  // target
+                                       'helpdesk', 'display'));    // control*/
+
+    //jexit();
+
+    //$access->addGroup('controls', 'Access controls tree for whelpdesk');
+    //$accessSession->addControl('helpdesk', 'display', 'Root control');
+
     // add include paths
     JTable::addIncludePath(JPATH_COMPONENT . DS . 'tables');
 

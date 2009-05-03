@@ -6,16 +6,23 @@
  * @package helpdesk
  */
 
-class ControlpanelDisplayWController extends WController {
+// No direct access
+defined('JPATH_BASE') or die();
+
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'helpdesk.php');
+
+class HelpdeskDisplayWController extends HelpdeskWController {
 
     public function __construct() {
-        $this->setEntity('controlpanel');
+        parent::__construct();
+        $this->setUsecase('display');
     }
 
     /**
      * Displays the control panel
      */
     public function execute() {
+        parent::execute();
         $this->display();
     }
 }

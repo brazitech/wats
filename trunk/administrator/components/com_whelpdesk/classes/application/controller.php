@@ -27,10 +27,32 @@ abstract class WController {
     private $entity;
 
     /**
-     * Does the business when executed. Sub class must override this method!
+     * Name of the usevase that this controller handles. This must be set by
+     * inheriting classes.
+     *
+     * @var String
+     * @see WController::setUsecase()
+     */
+    private $usecase;
+
+    /**
+     * Does the business when executed. Sub classes must override this method!
      */
     public function execute($stage) {
-        throw new WException('METHOD NOT IMPLEMENTED');
+        // check for access
+        if (!$this->hasAccess()) {
+            // try the next control
+            $accessSession = WFactory::getAccessSession();
+            $controlPath = $accessSession->getControlPath();
+            if (count($controlPath) > 1) {
+                $nextControl = $controlPath[1];
+                JRequest::setVar('task', $nextControl['type'] . '.' . $nextControl['identifier']);
+            }
+
+            // throw an exception, this must be handled for the next control to
+            // be given a chance.
+            throw new WException('NEXT CONTROL');
+        }
     }
 
     /**
@@ -49,6 +71,24 @@ abstract class WController {
      */
     public function getEntity() {
         return $this->entity;
+    }
+
+    /**
+     * Sets the name of the usecase that this controller handles.
+     *
+     * @param String $name
+     */
+    protected function setUsecase($name) {
+        $this->usecase = (string)$name;
+    }
+
+    /**
+     * Gets the name of the entity that this controller handles.
+     *
+     * @return String
+     */
+    public function getUsecase() {
+        return $this->usecase;
     }
 
 	/**
@@ -96,6 +136,48 @@ abstract class WController {
 
         // return the controller!
         return self::$instances[$entity][$usecase];
+    }
+
+    /**
+     * Checks for access, if no access, method throws an excpetion. It is up to
+     * the caller to decide what to do with it!
+     *
+     * @param string $targetIdentifier
+     * @param string $targetType
+     * @param string $control
+     * @param string $controlType
+     * @throws WException
+     */
+    protected function hasAccess($targetIdentifier = null, $targetType = null,
+                                 $control = null, $controlType = null) {
+        // get the objects we need
+        $user          = JFactory::getUser();
+        $accessSession = WFactory::getAccessSession();
+
+        // get the values we need
+        $requestType       = 'user';
+        $requestIdentifier = $user->get('id');
+        $targetType        = ($targetType)       ? $targetType       : $this->getEntity();
+        $targetIdentifier  = ($targetIdentifier) ? $targetIdentifier : $this->getAccessTargetIdentifier();
+        $controlType       = ($controlType)      ? $controlType      : $this->getEntity();
+        $control           = ($control)          ? $control          : $this->getUsecase();
+
+        try {
+            return ($accessSession->hasAccess($requestType, $requestIdentifier,
+                                      $targetType, $targetIdentifier,
+                                      $controlType, $control));
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @return String
+     * @todo
+     */
+    protected function getAccessTargetIdentifier() {
+        return $this->getEntity();
     }
 
 }

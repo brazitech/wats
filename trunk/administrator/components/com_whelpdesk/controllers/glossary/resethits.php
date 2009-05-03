@@ -16,9 +16,25 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary
 class GlossaryResethitsWController extends GlossaryWController {
 
     /**
+     * @todo document
+     */
+    public function  __construct() {
+        parent::__construct();
+        $this->setUsecase('resethits');
+    }
+
+    /**
      * @todo
      */
     public function execute($stage) {
+        try {
+            parent::execute($stage);
+        } catch (Exception $e) {
+            // uh oh, access denied... let's give the next controller a whirl!
+            JError::raiseWarning('401', 'WHD GLOSSARY RESETHITS ACCESS DENIED');
+            return;
+        }
+        
         // get the table
         $table = WFactory::getTable('glossary');
 

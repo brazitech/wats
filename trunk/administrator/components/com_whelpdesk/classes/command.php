@@ -16,7 +16,7 @@ final class WCommand {
     /**
      * The command to execute by default
      */
-    const defaultCommand = 'controlpanel.display.start';
+    const defaultCommand = 'helpdesk.display.start';
 
     /**
      * Global instance of WCommand. We should never need more than one instance
@@ -29,7 +29,7 @@ final class WCommand {
      *
      * @var String
      */
-    private $entity = 'controlpanel';
+    private $entity = 'helpdesk';
 
     /**
      * Last usecase to be invoked

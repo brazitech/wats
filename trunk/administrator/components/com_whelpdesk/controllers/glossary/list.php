@@ -8,16 +8,33 @@
 
 wimport('application.model');
 
-class GlossaryListWController extends WController {
+/**
+ * Parent class inclusion
+ */
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary.php');
+
+/**
+ * 
+ */
+class GlossaryListWController extends GlossaryWController {
 
     public function __construct() {
-        $this->setEntity('glossary');
+        parent::__construct();
+        $this->setUsecase('list');
     }
 
     /**
      * Displays the control panel
      */
-    public function execute() {
+    public function execute($stage) {
+        try {
+            parent::execute($stage);
+        } catch (Exception $e) {
+            // uh oh, access denied... let's give the next controller a whirl!
+            JError::raiseWarning('401', 'WHD GLOSSARY LIST ACCESS DENIED');
+            return;
+        }
+
         // get the model
         $model = WModel::getInstance('glossary');
 

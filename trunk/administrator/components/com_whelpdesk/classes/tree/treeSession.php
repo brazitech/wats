@@ -6,14 +6,12 @@
 
 defined('_JEXEC') or die('');
 
-wimport('tree.treeSessionInterface');
-
 /**
  * Description of HDTreeSession
  *
  * @author James Kennard
  */
-class StandardTreeSession implements WTreeSessionInterface {
+class StandardTreeSession {
 
     /**
      * Group that the session is dealign with. A session can only deal
@@ -90,28 +88,27 @@ class StandardTreeSession implements WTreeSessionInterface {
      * @param String $parentIdentifier Parent node ID
      * @throws WException
      */
-    public function addNode($type, $identifier,
+    public function addNode($type, $identifier, $description=null,
                                      $parentType=null, $parentIdentifier=null) {
-echo 'H';
         // are we trying to add a root node?
         if ($parentType === null) {
             $this->setRootNode($type, $identifier);
             return;
         }
-echo 'I';
+
         // check node does not already exist
         if ($this->nodeExists($type, $identifier)) {
             throw new WException('NODE EXISTS', $type, $identifier,
                                                                   $this->group);
         }
-echo 'J';
+
         // get the parent and check that parent exists
         $parentNode = $this->getNode($parentType, $parentIdentifier);
         if ($parentNode == null) {
             throw new WException('NODE DOES NOT EXIST', $parentType,
                                                $parentIdentifier, $this->group);
         }
-echo 'K';
+
         // get ready for some database action
         $db = JFactory::getDBO();
 
@@ -123,6 +120,7 @@ echo 'K';
                  'SET ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
                  ', ' . dbName('type') . ' = ' . $db->Quote($type) .
                  ', ' . dbName('identifier') . ' = ' . $db->Quote($identifier) .
+                 ', ' . dbName('description') . ' = ' . $db->Quote($description) .
                  ', ' . dbName('parent_type') . ' = ' . $db->Quote($parentType) .
                  ', ' . dbName('parent_identifier') . ' = ' . $db->Quote($parentIdentifier) .
                  ', ' . dbName('rgt') . ' = ' . ($parentNode['rgt'] - 1) .
@@ -426,7 +424,35 @@ echo 'K';
         return $res ? $res : null;
     }
 
-        /**
+    /**
+     * Gets the path from a node to the root node. This is represented as an
+     * array of arrays. Each inner array includes the key pair values, type and
+     * identifier. The outter array is order from the leaf node to the root
+     * node.
+     * 
+     * @param string $type
+     * @param string $identifier
+     * @return array
+     */
+    public function getNodePath($type, $identifier) {
+        $db = JFactory::getDBO();
+        $query = 'SELECT ' . dbName('tree.type') . ', '  . dbName('tree.identifier')
+               . ' FROM ' . dbTable('tree') . ' AS ' . dbName('tree')
+               . ' JOIN ' . dbTable('tree') . ' AS ' . dbName('node')
+               . ' WHERE ' . dbName('tree.grp') . ' = ' . $db->Quote($this->group)
+               . ' AND ' . dbName('node.grp') . ' = ' . $db->Quote($this->group)
+               . ' AND ' . dbName('node.type') . ' = ' . $db->Quote($type)
+               . ' AND ' . dbName('node.identifier') . ' = ' . $db->Quote($identifier)
+               . ' AND ' . dbName('tree.lft') . ' <= ' . dbName('node.lft')
+               . ' AND ' . dbName('tree.rgt') . ' >= ' . dbName('node.rgt')
+               . ' ORDER BY ' . dbName('tree.lft') . ' DESC';
+        $db->setQuery($query);
+
+        // return the result!
+        return $db->loadAssocList();
+    }
+
+    /**
      * Adds a new type access database
      *
      * @param <type> $group

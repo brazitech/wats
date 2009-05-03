@@ -41,7 +41,8 @@ class WAccess implements WAccessInterface {
 
     public function addGroup($group, $description=null) {
         // delegate method
-        $tree->addGroup($group, $description);
+        $this->tree->addGroup($group, $description);
+        $this->tree->addGroup($group.'-access', $description.' (Access Control Tree)');
     }
 
     /**
