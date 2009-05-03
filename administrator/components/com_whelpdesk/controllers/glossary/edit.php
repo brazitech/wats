@@ -15,10 +15,23 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary
 
 class GlossaryEditWController extends GlossaryWController {
 
+    public function  __construct() {
+        parent::__construct();
+        $this->setUsecase('edit');
+    }
+
     /**
      * @todo
      */
     public function execute($stage) {
+        try {
+            parent::execute($stage);
+        } catch (Exception $e) {
+            // uh oh, access denied... let's give the next controller a whirl!
+            JError::raiseWarning('401', 'WHD GLOSSARY EDIT ACCESS DENIED');
+            return;
+        }
+
         // get the table
         $table = WFactory::getTable('glossary');
 
@@ -52,6 +65,19 @@ class GlossaryEditWController extends GlossaryWController {
             }
         }
 
+        // check if we should show the reset hits button
+        $user          = JFactory::getUser();
+        $accessSession = WFactory::getAccessSession();
+        $canResetHits = false;
+
+        try {
+            $canResetHits = $accessSession->hasAccess('user', $user->get('id'),
+                                                      'glossary', 'glossary',
+                                                      'glossary', 'resethits');
+        } catch (Exception $e) {
+            $canResetHits = false;
+        }
+
         // get the view
         $document =& JFactory::getDocument();
 		$format   =  strtolower($document->getType());
@@ -59,6 +85,9 @@ class GlossaryEditWController extends GlossaryWController {
 
         // add the default model to the view
         $view->addModel('term', $table, true);
+
+        // add the boolean value describing access to reset hits
+        $view->addModel('canResetHits', $canResetHits);
 
         // display the view!
         JRequest::setVar('view', 'form');

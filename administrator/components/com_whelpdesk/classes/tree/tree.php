@@ -52,9 +52,6 @@ class WTree implements WTreeInterface {
         if (!$db->query()) {
             throw new WException('ADD GROUP FAILED', $db->getErrorMsg());
         }
-
-        // finish off by letting the access handler in the coo
-        HDFactory::getAccess()->addGroup($group, $description=null);
     }
 
     /**

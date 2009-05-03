@@ -18,20 +18,20 @@ abstract class GlossaryWController extends WController {
     }
 
     /**
-     * Commits the $post array changes to the database
+     * Commits the $array array changes to the database
      *
-     * @param array $post values to use to create new record
+     * @param array $array values to use to create new record
      * @return b
      */
-    public function commit($post) {
+    public function commit($array) {
         // get the table
         $table = WFactory::getTable('glossary');
 
         // allow raw untrimmed value for description
-        $post['description'] = JRequest::getString('description', '', 'POST', JREQUEST_ALLOWRAW | JREQUEST_NOTRIM);
+        $array['description'] = JRequest::getString('description', '', 'POST', JREQUEST_ALLOWRAW | JREQUEST_NOTRIM);
 
         // bind $post with $table
-        if (!$table->bind($post)) {
+        if (!$table->bind($array)) {
             // failed
             WFactory::getOut()->log('Failed to bind with table', true);
             return false;

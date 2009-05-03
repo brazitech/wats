@@ -6,14 +6,12 @@
 
 defined('_JEXEC') or die('');
 
-wimport('access.accessSessionInterface');
-
 /**
  * Description of WAccessSession
  *
  * @author Administrator
  */
-class WAccessSession implements WAccessSessionInterface {
+class WAccessSession {
     
     /**
      * Group with which the session is dealing
@@ -26,7 +24,23 @@ class WAccessSession implements WAccessSessionInterface {
      *
      * @var TreeSessionInterface
      */
-    private $treeSession = null;
+    private $componentTreeSession = null;
+
+    /**
+     *
+     * @var TreeSessionInterface
+     */
+    private $accessTreeSession = null;
+
+    /**
+     * Last known control path. Acts as a cache allowing other classes to see
+     * the most recent path. Usage outside of the WAccessSession class should be
+     * implemented cautiously. This will always contain the latest path as
+     * defined by {@link WAccessSession::hasAccess()}.
+     *
+     * @var array
+     */
+    private $controlPath;
 
     /**
      * Cache of known controls. Array is in the form array[type] == array, the
@@ -45,9 +59,10 @@ class WAccessSession implements WAccessSessionInterface {
      */
     private static $instances = array();
 
-    public function __construct($group) {
+    public function __construct($group = 'component') {
         $this->group = $group;
-        $this->treeSession = WTree::getInstance()->getSession($group);
+        $this->componentTreeSession = WTree::getInstance()->getSession($group);
+        $this->accessTreeSession   = WTree::getInstance()->getSession($group.'-access');
     }
 
     /**
@@ -68,21 +83,21 @@ class WAccessSession implements WAccessSessionInterface {
                               $hasAccess) {
 
         // check request node exists
-        if (!$this->treeSession->nodeExists($requestType, $requestIdentifier)) {
+        if (!$this->componentTreeSession->nodeExists($requestType, $requestIdentifier)) {
             throw new WException('NODE DOES NOT EXIST', $requestType,
                                               $requestIdentifier, $this->group);
         }
 
         // check target node exists
-        if (!$this->treeSession->nodeExists($targetType, $targetIdentifier)) {
+        if (!$this->componentTreeSession->nodeExists($targetType, $targetIdentifier)) {
             throw new WException('NODE DOES NOT EXIST', $targetType,
                                                $targetIdentifier, $this->group);
         }
 
         // check control exists
-        if (!$this->controlExists($targetType, $control)) {
+        if (!$this->controlExists($type, $control)) {
             throw new WException('CONTROL DOES NOT EXIST',
-                                           $targetType, $control, $this->group);
+                                                 $type, $control, $this->group);
         }
 
         // does the control already exist?
@@ -154,25 +169,15 @@ class WAccessSession implements WAccessSessionInterface {
      * @param String $description A basic description of the control for semantic purposes
      * @throws WException
      */
-    public function addControl($type, $control, $description='') {
-        if ($this->controlExists($type, $control)) {
-            // no need to continue the control already exists
-            return;
-        }
-
-        $db = JFactory::getDBO();
-
-        // prepare query
-        $query = 'INSERT INTO ' . dbTable('access_controls') . ' ' .
-                 'SET ' . dbName('grp') . ' = ' . $db->Quote($this->group) . ' ' .
-                 ', ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
-                 ', ' . dbName('control') . ' = ' . $db->Quote($control) . ' ' .
-                 ', ' . dbName('description') . ' = ' . $db->Quote($description) . ' ';
-        
-        // insert the new record
-        $db->setQuery($query);
-        if (!$db->query()) {
-            throw new WException('ADD CONTROL FAILED', $this->group, $type, $control);
+    public function addControl($type, $control, $description='',
+                                        $parentType=null, $parentControl=null) {
+        try {
+            // delegate to control tree
+            $this->accessTreeSession->addNode($type, $control, $description,
+                                                   $parentType, $parentControl);
+        } catch (WException $e) {
+            //throw new WException('ADD CONTROL FAILED', $this->group, $type, $control);
+            throw $e;
         }
     }
 
@@ -182,24 +187,18 @@ class WAccessSession implements WAccessSessionInterface {
      * @param String $type
      * @param String $control
      */
-    public function removeControl($type, $control) {
-        if ($this->controlExists($type, $control)) {
-            // no need to continue the control does not exists
-            return;
+    public function removeControl($type, $control, $recursive=false) {
+        try {
+            // delegate to control tree
+            $this->accessTreeSession->removeNode($type, $control, $recursive);
+        } catch (WException $e) {
+            throw new WException('REMOVE CONTROL FAILED', $this->group, $type, $control);
         }
 
         $db = JFactory::getDBO();
 
         // delete map entries
         $query = 'DELETE FROM ' .dbTable('access_map') . ' ' .
-                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
-                 ' AND ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
-                 ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
-        $db->setQuery($query);
-        $db->query();
-
-        // delete control entries
-        $query = 'DELETE FROM ' .dbTable('access_controls') . ' ' .
                  'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
                  ' AND ' . dbName('type') . ' = ' . $db->Quote($type) . ' ' .
                  ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
@@ -246,23 +245,8 @@ class WAccessSession implements WAccessSessionInterface {
      * @static
      */
     public function controlExists($type, $control) {
-        // check cache is populated
-        if (!array_key_exists($type, $this->cache)) {
-            $db = JFactory::getDBO();
-
-            // prepare the query
-            $query = 'SELECT ' . dbName('control') . ' ' .
-                     'FROM ' . dbTable('access_controls') . ' ' .
-                     'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) .
-                     ' AND ' . dbName('type') . ' = ' . $db->Quote($type);
-
-            // execute the query and in doing so populate the cache
-            $db->setQuery($query);
-            $this->cache[$type] = $db->loadResultArray();
-        }
-
-        // return the response
-        return in_array($control, $this->cache[$type]);
+        // delegate to control tree
+        return $this->accessTreeSession->nodeExists($type, $control);
     }
 
     /**
@@ -280,64 +264,78 @@ class WAccessSession implements WAccessSessionInterface {
     public function hasAccess($requestType, $requestIdentifier,
                               $targetType, $targetIdentifier,
                               $type, $control) {
+        // get the control path
+        $this->controlPath = $this->accessTreeSession->getNodePath($type, $control);
+        if (!count($this->controlPath)) {
+            throw new WException('CONTROL DOES NOT EXIST', $type, $control);
+        }
+
         // get the request node
-        $request = $this->treeSession->getNode($requestType, $requestIdentifier);
+        $request = $this->componentTreeSession->getNode($requestType, $requestIdentifier);
         if ($request == null) {
             // unknown node
             throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $requestType, $requestIdentifier);
         }
 
         // get the target node
-        $target = $this->treeSession->getNode($targetType, $targetIdentifier);
+        $target = $this->componentTreeSession->getNode($targetType, $targetIdentifier);
         if ($target == null) {
             // unknown node
             throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $targetType, $targetIdentifier);
         }
 
-        // get the DBO
-        $db = JFactory::getDBO();
-
-        // get the path of the request node
-        $query = 'SELECT ' . dbName('type') . ', ' . dbName('identifier')
-               . ' FROM ' . dbTable('tree')
-               . ' WHERE ' . dbName('lft') . ' <= ' . $db->Quote($request['lft'])
-               . ' AND ' . dbName('rgt') . ' >= ' . $db->Quote($request['rgt'])
-               . ' ORDER BY ' . dbName('rgt') . ' ASC';
-        $db->setQuery($query);
-        $requestPath = $db->loadAssocList();
+        WFactory::getOut()->log($requestType . ', ' . $requestIdentifier
+                                . ' is looking for access to '
+                                . $targetType . ', ' . $targetIdentifier
+                                . ' for '
+                                . $type . ', ' . $control);
 
         // itterate over the request path and look for rules
-        for($i = 0, $c = count($requestPath); $i < $c; $i++) {
-            $requestNode = $requestPath[$i];
+        // get the DBO
+        $db = JFactory::getDBO();
+        for($i = count($this->controlPath); $i >= 0; $i--) {
+            $controlNode = $this->controlPath[$i];
 
             // get the mappings
             $query = 'SELECT ' . dbName('allow')
-                   . ' FROM ' . dbTable('tree')       . ' AS ' . dbName('target')
-                   . ' JOIN ' . dbTable('access_map') . ' AS ' . dbName('map') . ' ON '
+                   . ' FROM ' . dbTable('tree')        . ' AS ' . dbName('target')
+                   . ' JOIN ' . dbTable('access_map')  . ' AS ' . dbName('map') . ' ON '
                    . '('
-                   .      dbName('target.type')       . ' = ' . dbName('map.target_type') . ' AND '
-                   .      dbName('target.identifier') . ' = ' . dbName('map.target_identifier')
+                   .      dbName('target.type')        . ' = ' . dbName('map.target_type') . ' AND '
+                   .      dbName('target.identifier')  . ' = ' . dbName('map.target_identifier')
                    . ')'
-                   . ' WHERE ' . dbName('map.request_type')       . ' = '  . $db->Quote($requestNode['type'])
-                   . ' AND '   . dbName('map.request_identifier') . ' = '  . $db->Quote($requestNode['identifier'])
+                   . ' JOIN ' . dbTable('tree')        . ' AS ' . dbName('request') . ' ON '
+                   . '('
+                   .      dbName('request.type')       . ' = ' . dbName('map.request_type') . ' AND '
+                   .      dbName('request.identifier') . ' = ' . dbName('map.request_identifier')
+                   . ')'
+                   . ' WHERE ' . dbName('request.lft')            . ' <= ' . $db->Quote($request['lft'])
+                   . ' AND '   . dbName('request.rgt')            . ' >= ' . $db->Quote($request['rgt'])
                    . ' AND '   . dbName('target.lft')             . ' <= ' . $db->Quote($target['lft'])
-                   . ' AND '   . dbName('target.rgt')             . ' >= ' . $db->Quote($$target['rgt'])
-                   . ' AND '   . dbName('map.type')               . ' = '  . $db->Quote($type)
-                   . ' AND '   . dbName('map.control')            . ' = '  . $db->Quote($control)
-                   . ' ORDER BY ' . dbName('target.rgt') . ' ASC';
+                   . ' AND '   . dbName('target.rgt')             . ' >= ' . $db->Quote($target['rgt'])
+                   . ' AND '   . dbName('map.type')               . ' = '  . $db->Quote($controlNode['type'])
+                   . ' AND '   . dbName('map.control')            . ' = '  . $db->Quote($controlNode['identifier'])
+                   . ' ORDER BY ' . dbName('target.rgt') . ' ASC, ' . dbName('request.rgt') . ' ASC';
             $db->setQuery($query);
             $allow = $db->loadResult();
 
             // did we win ???
             if ($allow === '0') {
+                // access restrcited
+                WFactory::getOut()->log('Access denied at control '
+                                        . $controlNode['type'] . ', '
+                                        . $controlNode['identifier']);
                 return false;
-            } elseif ($allow === '1') {
+            } elseif ($allow === '1' && $i == 0) {
+                // access allowed and we are at the leaf node!
+                WFactory::getOut()->log('Access allowed');
                 return true;
             }
         }
 
         // no rules found, assume no access!
-        return 'false';
+        WFactory::getOut()->log('Access denied no rules found');
+        return false;
     }
 
     /**
@@ -349,12 +347,63 @@ class WAccessSession implements WAccessSessionInterface {
 
         // prepare the query
         $query = 'DELETE '
-               . ' FROM ' . dbTable('access_controls')
+               . ' FROM ' . dbTable('access_map')
                . ' WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
 
         // execute the query and in doing so populate the cache
         $db->setQuery($query);
         $db->query();
+    }
+
+    /**
+     *
+     * @param <type> $type
+     * @param <type> $control
+     * @param <type> $requireType
+     * @param <type> $requireControl
+     * @todo tidy this up
+     */
+    public function addControlRequirement($type, $control, 
+                                                $requireType, $requireControl) {
+        // check control exists
+        if (!$this->controlExists($type, $control)) {
+            throw new WException('CONTROL DOES NOT EXIST',
+                                                 $type, $control, $this->group);
+        }
+        
+        // check require control exists
+        if (!$this->controlExists($type, $control)) {
+            throw new WException('CONTROL DOES NOT EXIST',
+                                                 $type, $control, $this->group);
+        }
+
+        // check if requirement already exists
+        $db = JFactory::getDBO();
+        $query = 'SELECT ' . dbName('requireType')    . ' AS ' . dbName('require') . ',  '
+               .             dbName('requireControl') . ' AS ' . dbName('control') . '  '
+               . ' WHERE ' . dbName('type') . ' = ' . $db->Quote($type)
+               . ' AND ' .   dbName('control') . ' = ' . $db->Quote($control);
+        $db->setQuery($query);
+
+    }
+
+    /**
+     *
+     * @param <type> $type
+     * @param <type> $control
+     * @return <type>
+     * @todo tidy this up
+     */
+    public function getControlRequirements($type, $control) {
+        // query the database
+        $db = JFactory::getDBO();
+        $query = 'SELECT ' . dbName('requireType')    . ' AS ' . dbName('require') . ',  '
+               .             dbName('requireControl') . ' AS ' . dbName('control') . '  '
+               . ' WHERE ' . dbName('type') . ' = ' . $db->Quote($type)
+               . ' AND ' .   dbName('control') . ' = ' . $db->Quote($control);
+        $db->setQuery($query);
+
+        return $db->loadAssocList();
     }
 
     /**
@@ -367,10 +416,10 @@ class WAccessSession implements WAccessSessionInterface {
      * @param String $parentType Type of parent node to add
      * @param String $parentIdentifier Parent node ID
      */
-    public function addNode($type, $identifier,
+    public function addNode($type, $identifier, $description=null,
                                      $parentType=null, $parentIdentifier=null) {
         // delegate method
-        $this->treeSession->addNode($type, $identifier,
+        $this->componentTreeSession->addNode($type, $identifier, $description,
                                                 $parentType, $parentIdentifier);
     }
 
@@ -384,7 +433,7 @@ class WAccessSession implements WAccessSessionInterface {
      */
     public function removeNode($type, $identifier, $recursive=false) {
         // delegate method
-        $this->treeSession->removeNode($type, $identifier, $recursive);
+        $this->componentTreeSession->removeNode($type, $identifier, $recursive);
     }
 
     /**
@@ -397,7 +446,7 @@ class WAccessSession implements WAccessSessionInterface {
     public function moveNode($type, $identifier, $newParentType, 
                                                          $newParentIdentifier) {
         // delegate method
-        $this->treeSession-> moveNode($type, $identifier, $newParentType,
+        $this->componentTreeSession-> moveNode($type, $identifier, $newParentType,
                                                           $newParentIdentifier);
     }
 
@@ -411,7 +460,7 @@ class WAccessSession implements WAccessSessionInterface {
      */
     public function nodeExists($type, $identifier) {
         // delegate method
-        $this->treeSession->nodeExists($type, $identifier);
+        $this->componentTreeSession->nodeExists($type, $identifier);
     }
 
     /**
@@ -422,7 +471,12 @@ class WAccessSession implements WAccessSessionInterface {
      */
     public function addType($type, $description='') {
         // delegate method
-        $this->treeSession->addType($type, $description);
+        $this->componentTreeSession->addType($type, $description);
+        $this->accessTreeSession->addType($type, $description);
+    }
+
+    public function getControlPath() {
+        return $this->controlPath;
     }
 
 }
