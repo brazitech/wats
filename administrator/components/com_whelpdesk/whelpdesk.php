@@ -44,6 +44,7 @@ try {
     //$accessSession->addControl('glossary', 'edit', 'Edit existing glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'state', 'Publish and unpublish glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'resethits', 'Reset glossary item hit counters', 'glossary', 'edit');
+    //$accessSession->addControl('glossary', 'delete', 'Delete glossary items', 'glossary', 'list');
 
     $accessSession->setAccess('usergroup', 'users',     // request
                               'helpdesk', 'helpdesk',   // target
@@ -80,6 +81,11 @@ try {
                               'glossary', 'resethits',  // control
                               true);                    // hasAccess
 
+    $accessSession->setAccess('user', '42',             // request
+                              'glossary', 'glossary',   // target
+                              'glossary', 'delete',     // control
+                              true);                    // hasAccess
+    
     /* var_dump($accessSession->hasAccess('user', '42',            // request
                                        'helpdesk', 'helpdesk',  // target
                                        'helpdesk', 'display'));    // control*/

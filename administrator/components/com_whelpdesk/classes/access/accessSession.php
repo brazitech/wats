@@ -264,9 +264,19 @@ class WAccessSession {
     public function hasAccess($requestType, $requestIdentifier,
                               $targetType, $targetIdentifier,
                               $type, $control) {
+        // log the request    
+        WFactory::getOut()->log($requestType . ', ' . $requestIdentifier
+                                . ' is looking for access to '
+                                . $targetType . ', ' . $targetIdentifier
+                                . ' for '
+                                . $type . ', ' . $control);
+        
         // get the control path
         $this->controlPath = $this->accessTreeSession->getNodePath($type, $control);
         if (!count($this->controlPath)) {
+            WFactory::getOut()->log('Access denied control '
+                                    . $type . ', '
+                                    . $control . ' does not exist');
             throw new WException('CONTROL DOES NOT EXIST', $type, $control);
         }
 
@@ -274,6 +284,9 @@ class WAccessSession {
         $request = $this->componentTreeSession->getNode($requestType, $requestIdentifier);
         if ($request == null) {
             // unknown node
+            WFactory::getOut()->log('Access denied request object '
+                                    . $requestType . ', '
+                                    . $requestIdentifier . ' does not exist');
             throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $requestType, $requestIdentifier);
         }
 
@@ -281,14 +294,11 @@ class WAccessSession {
         $target = $this->componentTreeSession->getNode($targetType, $targetIdentifier);
         if ($target == null) {
             // unknown node
+            WFactory::getOut()->log('Access denied target object '
+                                    . $targetType . ', '
+                                    . $targetIdentifier . ' does not exist');
             throw new WException('HAS ACCESS FAILED NODE DOES NOT EXIST', $targetType, $targetIdentifier);
         }
-
-        WFactory::getOut()->log($requestType . ', ' . $requestIdentifier
-                                . ' is looking for access to '
-                                . $targetType . ', ' . $targetIdentifier
-                                . ' for '
-                                . $type . ', ' . $control);
 
         // itterate over the request path and look for rules
         // get the DBO

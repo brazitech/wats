@@ -65,9 +65,20 @@ class GlossaryEditWController extends GlossaryWController {
             }
         }
 
-        // check if we should show the reset hits button
+        // check if we should show the state buttons
         $user          = JFactory::getUser();
         $accessSession = WFactory::getAccessSession();
+        $canChangeState = false;
+
+        try {
+            $canChangeState = $accessSession->hasAccess('user', $user->get('id'),
+                                                        'glossary', 'glossary',
+                                                        'glossary', 'state');
+        } catch (Exception $e) {
+            $canChangeState = false;
+        }
+        
+        // check if we should show the reset hits button
         $canResetHits = false;
 
         try {
@@ -88,6 +99,7 @@ class GlossaryEditWController extends GlossaryWController {
 
         // add the boolean value describing access to reset hits
         $view->addModel('canResetHits', $canResetHits);
+        $view->addModel('canChangeState', $canChangeState);
 
         // display the view!
         JRequest::setVar('view', 'form');
@@ -97,16 +109,24 @@ class GlossaryEditWController extends GlossaryWController {
     public function commit() {
         // values to use to create new record
         $post = JRequest::get('POST');
-
-        // commit the changes
-        $wasCommitted = parent::commit($post);
-
-        // increment 
-        if ($wasCommitted) {
-
+        
+        // check if we should allow state change
+        $user          = JFactory::getUser();
+        $accessSession = WFactory::getAccessSession();
+        $canChangeState = false;
+        try {
+            $canChangeState = $accessSession->hasAccess('user', $user->get('id'),
+                                                        'glossary', 'glossary',
+                                                        'glossary', 'state');
+        } catch (Exception $e) {
+            $canChangeState = false;
+        }
+        if (!$canChangeState) {
+            unset($post['published']);
         }
 
-        return $wasCommitted;
+        // commit the changes
+        return parent::commit($post);
     }
 }
 

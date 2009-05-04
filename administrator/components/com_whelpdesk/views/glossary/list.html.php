@@ -41,12 +41,20 @@ class GlossaryHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        JToolbarHelper::addNew('glossary.create.start');
-        JToolbarHelper::editList('glossary.edit.start');
-        JToolbarHelper::deleteList('glossary.delete.start');
-        JToolbarHelper::divider();
-        JToolBarHelper::publishList('glossary.state.publish');
-        JToolBarHelper::unpublishList('glossary.state.unpublish');
+        if ($this->getModel('canCreate')) {
+            JToolbarHelper::addNew('glossary.create.start');
+        }
+        if ($this->getModel('canEdit')) {
+            JToolbarHelper::editList('glossary.edit.start');
+        }
+        if ($this->getModel('canDelete')) {
+            JToolbarHelper::deleteList('glossary.delete.start');
+        }
+        if ($this->getModel('canChangeState')) {
+            JToolbarHelper::divider();
+            JToolBarHelper::publishList('glossary.state.publish');
+            JToolBarHelper::unpublishList('glossary.state.unpublish');
+        }
         JToolbarHelper::divider();
         JToolbarHelper::help('glossary.list', true);
     }

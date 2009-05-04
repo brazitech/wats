@@ -75,7 +75,7 @@ class GlossaryCreateWController extends GlossaryWController {
         $post = JRequest::get('POST');
 
         // do not provide an ID
-        $post['id'] = false;
+        unset($post['id']);
 
         return parent::commit($post);
     }
