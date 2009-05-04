@@ -51,6 +51,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                                value="<?php echo $term->term; ?>"
                                onchange="populateAlias();" />
                     </td>
+                    <?php if (!$term->id || $this->getModel('canChangeState')): ?>
                     <td class="key">
                         <label>
                             <?php echo JText::_('Published'); ?>
@@ -62,6 +63,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                             <option <?php echo ($term->published == 0) ? 'selected="selected"' : ''; ?> value="0">Unpublished</option>
                         </select>
                     </td>
+                    <?php endif; ?>
                 </tr>
                 <tr>
                     <td class="key">

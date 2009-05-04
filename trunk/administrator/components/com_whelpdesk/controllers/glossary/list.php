@@ -40,6 +40,48 @@ class GlossaryListWController extends GlossaryWController {
 
         // get the list data
         $list = $model->getList();
+        
+        // check if we should show the state buttons
+        $user          = JFactory::getUser();
+        $accessSession = WFactory::getAccessSession();
+        $canChangeState = false;
+        try {
+            $canChangeState = $accessSession->hasAccess('user', $user->get('id'),
+                                                        'glossary', 'glossary',
+                                                        'glossary', 'state');
+        } catch (Exception $e) {
+            $canChangeState = false;
+        }
+        
+        // check if we should show the edit button
+        $canEdit = false;
+        try {
+            $canEdit = $accessSession->hasAccess('user', $user->get('id'),
+                                                 'glossary', 'glossary',
+                                                 'glossary', 'edit');
+        } catch (Exception $e) {
+            $canEdit = false;
+        }
+        
+        // check if we should show the create button
+        $canCreate = false;
+        try {
+            $canCreate = $accessSession->hasAccess('user', $user->get('id'),
+                                                   'glossary', 'glossary',
+                                                   'glossary', 'create');
+        } catch (Exception $e) {
+            $canCreate = false;
+        }
+        
+        // check if we should show the delete button
+        $canDelete = false;
+        try {
+            $canDelete = $accessSession->hasAccess('user', $user->get('id'),
+                                                   'glossary', 'glossary',
+                                                   'glossary', 'delete');
+        } catch (Exception $e) {
+            $canDelete = false;
+        }
 
         // get the view
         $document =& JFactory::getDocument();
@@ -48,6 +90,12 @@ class GlossaryListWController extends GlossaryWController {
 
         // add the default model to the view
         $view->addModel('terms', $list, true);
+        
+        // add the boolean value describing access to change state
+        $view->addModel('canCreate', $canCreate);
+        $view->addModel('canEdit', $canEdit);
+        $view->addModel('canDelete', $canDelete);
+        $view->addModel('canChangeState', $canChangeState);
 
         // add the total number of terms to the view
         $view->addModel('total', $model->getTotal());
