@@ -39,7 +39,8 @@ try {
     //$accessSession->addNode('user', '42', 'admin', 'usergroup', 'users');
 
     //$accessSession->addControl('helpdesk', 'display', 'Webamoeba Help Desk');
-    //$accessSession->addControl('glossary', 'list', 'List glossary items', 'helpdesk', 'helpdesk');
+    //$accessSession->addControl('helpdesk', 'about', 'Webamoeba Help Desk informational screen', 'helpdesk', 'display');
+    //$accessSession->addControl('glossary', 'list', 'List glossary items', 'helpdesk', 'display');
     //$accessSession->addControl('glossary', 'create', 'Create new glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'edit', 'Edit existing glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'state', 'Publish and unpublish glossary items', 'glossary', 'list');
@@ -51,6 +52,11 @@ try {
                               'helpdesk', 'display',    // control
                               true);                    // hasAccess
 
+    $accessSession->setAccess('usergroup', 'users',     // request
+                              'helpdesk', 'helpdesk',   // target
+                              'helpdesk', 'about',      // control
+                              true);                    // hasAccess
+    
     $accessSession->setAccess('usergroup', 'users',     // request
                               'glossary', 'glossary',   // target
                               'glossary', 'list',       // control
