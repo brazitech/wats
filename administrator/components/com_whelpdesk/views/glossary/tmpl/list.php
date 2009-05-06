@@ -14,7 +14,7 @@ defined('JPATH_BASE') or die();
 
 <form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="adminForm">
 
-    <?php $lists = $this->getModel('lists'); ?>
+    <?php $filters = $this->getModel('filters'); ?>
     <table>
         <tr>
             <td width="100%">
@@ -22,7 +22,7 @@ defined('JPATH_BASE') or die();
                 <input type="text"
                        name="search"
                        id="search"
-                       value="<?php echo $lists['search'];?>"
+                       value="<?php echo $filters['search'];?>"
                        class="text_area"
                        onchange="this.adminForm.submit();" />
                 <button onclick="this.form.submit();">
@@ -33,8 +33,7 @@ defined('JPATH_BASE') or die();
                 </button>
             </td>
             <td nowrap="nowrap">
-                <?php echo $lists["bespoke"];?>
-                <?php echo $lists["state"];?>
+                <?php echo JHTML::_("grid.state", $filters["state"]); ?>
             </td>
         </tr>
     </table>
@@ -46,8 +45,8 @@ defined('JPATH_BASE') or die();
     <input type="hidden" name="hidemainmenu" value="0" />
     <input type="hidden" name="limit"        value="0" />
     <!--<input type="hidden" name="redirect" value="<?php echo $this->redirect;?>" />-->
-    <input type="hidden" name="filter_order" value="<?php echo $lists['order']; ?>" />
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $lists['orderDirection']; ?>" />
+    <input type="hidden" name="filter_order" value="<?php echo $filters['order']; ?>" />
+    <input type="hidden" name="filter_order_Dir" value="<?php echo $filters['orderDirection']; ?>" />
     <?php echo JHTML::_('form.token'); ?>
 
     <?php $glossaryItems = $this->getModel(); ?>
@@ -62,22 +61,22 @@ defined('JPATH_BASE') or die();
                     <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($glossaryItems); ?>);" />
                 </th>
                 <th class="title">
-                    <?php echo JHTML::_('grid.sort', 'Term',     'term',       $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Term',     'term',       $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th width="60" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'Published', 'published', $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Published', 'published', $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th  class="title" width="15%" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'Author',    'author',    $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Author',    'author',    $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'Date',      'created',   $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Date',      'created',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'Revision',  'version',   $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Revision',  'version',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $lists['orderDirection'], $lists['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $filters['orderDirection'], $filters['order']); ?>
                 </th>
             </tr>
         </thead>
