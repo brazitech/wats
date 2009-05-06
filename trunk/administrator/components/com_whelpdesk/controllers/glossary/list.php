@@ -39,7 +39,10 @@ class GlossaryListWController extends GlossaryWController {
         $model = WModel::getInstance('glossary');
 
         // get the list data
-        $list = $model->getList();
+        $terms = $model->getList();
+
+        // get the filters
+        $filters = $model->getFilters();
         
         // check if we should show the state buttons
         $user          = JFactory::getUser();
@@ -89,7 +92,10 @@ class GlossaryListWController extends GlossaryWController {
         $view = WView::getInstance('glossary', 'list', $format);
 
         // add the default model to the view
-        $view->addModel('terms', $list, true);
+        $view->addModel('terms', $terms, true);
+
+        // add the filters to the view
+        $view->addModel('filters', $filters);
         
         // add the boolean value describing access to change state
         $view->addModel('canCreate', $canCreate);

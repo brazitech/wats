@@ -42,6 +42,15 @@ abstract class WModel {
     private $limitstart = null;
 
     /**
+     * Default column by which to order lists
+     *
+     * @var string
+     * @see WModel::getDefaultFilterOrder()
+     * @see WModel::setDefaultFilterOrder()
+     */
+    private $defaultFilterOrder = '';
+
+    /**
      * Sets the name of the model
      *
      * @param String $name
@@ -114,7 +123,7 @@ abstract class WModel {
         return JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.state',
                                                                    'filter_state',
                                                                    $default,
-                                                                   'word');;
+                                                                   'word');
     }
 
     /**
@@ -133,14 +142,21 @@ abstract class WModel {
     /**
      * Get the current order by column filter for this model.
      *
-     * @param string $default
      * @return string
      */
-    public function getFilterOrder($default) {
+    public function getFilterOrder() {
         return JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order',
                                                                    'filter_order',
-                                                                   $default,
+                                                                   $this->getDefaultFilterOrder(),
                                                                    'cmd');
+    }
+
+    public function getDefaultFilterOrder() {
+        return $this->defaultFilterOrder;
+    }
+
+    protected function setDefaultFilterOrder($default) {
+        $this->defaultFilterOrder = $default;
     }
 
     /**
@@ -149,12 +165,27 @@ abstract class WModel {
      * @param string $default
      * @return string
      */
-    public function getFilterOrderDirection($default='ASC') {
-        $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order',
-                                                                        'filter_order',
+    public function getFilterOrderDirection() {
+        $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order.direction',
+                                                                        'filter_order_Dir',
                                                                          $default,
                                                                          'cmd');
-        return (strtoupper($direction) == 'ASC') ? 'ASC' : 'DESC';
+        return (strtoupper($direction) == 'DESC') ? 'DESC' : 'ASC';
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getFilters() {
+        $filters = array();
+
+        $filters['state']           = $this->getFilterState();
+        $filters['search']          = $this->getFilterSearch();
+        $filters['order']           = $this->getFilterOrder($this->getDefaultFilterOrder());
+        $filters['orderDirection']  = $this->getFilterOrderDirection();
+        
+        return $filters;
     }
 
     /**

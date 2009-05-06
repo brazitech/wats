@@ -13,6 +13,7 @@ class GlossaryWModel extends WModel {
 
     public function  __construct() {
         $this->setName('glossary');
+        $this->setDefaultFilterOrder('term');
     }
 
     /**
@@ -115,7 +116,7 @@ class GlossaryWModel extends WModel {
 
     private function buildQueryOrderBy() {
         // ordering
-        $order = $this->getFilterOrder('term');
+        $order = $this->getFilterOrder();
 
         // ordering direction
         $orderDirection = $this->getFilterOrderDirection();
