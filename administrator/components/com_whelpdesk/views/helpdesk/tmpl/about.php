@@ -152,7 +152,7 @@ span img{
 	});
 </script>
 
-<p class="buttons" style="height: 2em; background-color: #F6F6F6; padding: 1em; border: 1px solid #CCCCCC; margin-bottom: 0px;">
+<p class="buttons" style="height: 2em; background-color: #F6F6F6; padding: 1em; border: 1px solid #CCCCCC; margin-bottom: 0px; margin-top: 0px;">
     <span class="prev" id="slidesPrev" style="float: left;  background-color: #0B55C4; color: #FFFFFF; padding: 0.2em 1em; cursor: pointer;">&lt;&lt; Previous</span>
     <span class="next" id="slidesNext" style="float: right; background-color: #0B55C4; color: #FFFFFF; padding: 0.2em 1em; cursor: pointer;">Next &gt;&gt;</span>
 </p>
@@ -161,12 +161,12 @@ span img{
 <div id="slidesPane1">
     <h1>Overview</h1>
     
-    <p>The Webamoeba Help Desk is a Joomla! 1.6 component. Previously called Webamoeba Ticket System, or WATS for short, the component provides a comprehensive help desk solution for small to medium sized businesses.</p>
+    <p>The Webamoeba Help Desk is a Joomla! 1.6 component. Previously called Webamoeba Ticket System, or WATS for short, the component provides a comprehensive help desk solution for small to medium sized organisations.</p>
     
     <h2>Developers</h2>
 
     <p>James Kennard</p>
-    <p><a href="http://www.webamoeba.co.uk">www.webamoeba.co.uk</a></p>
+    <p><a href="http://www.webamoeba.co.uk" target="_blank">www.webamoeba.co.uk</a></p>
 
     <h2>Getting Help</h2>
 
@@ -179,35 +179,172 @@ span img{
     
     <h2>Support Webamoeba Help Desk</h2>
     
-    <p>If you like the Webamoeba Help Desk and you want to help support the component, please wire a review or submit your rating of the component at <a href="http://extensions.joomla.org/extensions/clients/help-desk/151/details" target="_blank">extensions.joomla.org</a></p>
+    <p>If you like the Webamoeba Help Desk and you want to help support the component, please write a review or submit your rating of the component at <a href="http://extensions.joomla.org/extensions/clients/help-desk/151/details" target="_blank">extensions.joomla.org</a></p>
 </div>
 <div id="slidesPane2">
     <h1>Translations</h1>
 
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/gb.png"> English - James Kennard <a href="mailto:james@webamoeba.com">james@webamoeba.com</a> (<a href="http://www.webamoeba.co.uk" target="_blank">www.webamoeba.co.uk</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/fr.png"> French - Johan Aubry <a href="mailto:jaubry@a-itservices.com">jaubry@a-itservices.com</a> (<a href="http://www.a-itservices.com" target="_blank">www.a-itservices.com</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/de.png"> German - Chr.G&auml;rtner
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/pt.png"> Portuguese - Jorge Rosado <a href="mailto:info@jrpi.pt">info@jrpi.pt</a> (<a href="http://www.jrpi.pt" target="_blank">www.jrpi.pt</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/si.png"> Slovak - Daniel K·Ëer <a href="mailto:kacer@aceslovakia.sk">kacer@aceslovakia.sk</a> (<a href="http://www.aceslovakia.sk" target="_blank">www.aceslovakia.sk</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/it.png"> Italian - Leonardo Lombardi (<a href="http://www.dimsat.unicas.it" target="_blank">www.dimsat.unicas.it</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/es.png"> Spanish - Urano Gonzalez <a href="mailto:urano@uranogonzalez.com">urano@uranogonzalez.com</a> (<a href="http://www.uranogonzalez.com" target="_blank">www.uranogonzalez.com</a>)
-    </p>
-    <p>
-    <img src="components/com_whelpdesk/assets/flags/se.png"> Swedish  - Thomas Westman <a href="mailto:Westman%20info@backupnow.se">info@backupnow.se</a> (<a href="http://www.backupnow.se" target="_blank">www.backupnow.se</a>)
-    </p>
+    <p>If you have made a translation to another language not listed below, or have created a more complete or acurate translation of a language listed below, please feel free to submit your translation.</p>
+
+    <table class="adminlist">
+        <thead>
+            <tr>
+                <th>
+                    &nbsp;
+                </th>
+                <th>
+                    Language
+                </th>
+                <th>
+                    Translator
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Website
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="row0">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/gb.png">
+                </td>
+                <td>
+                    English
+                </td>
+                <td>
+                    James Kennard
+                </td>
+                <td>
+                    <a href="mailto:james@webamoeba.com">james@webamoeba.com</a>
+                </td>
+                <td>
+                    <a href="http://www.webamoeba.co.uk" target="_blank">www.webamoeba.co.uk</a>
+                </td>
+            </tr>
+            <tr class="row1">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/fr.png">
+                </td>
+                <td>
+                    French
+                </td>
+                <td>
+                    Johan Aubry
+                </td>
+                <td>
+                    <a href="mailto:jaubry@a-itservices.com">jaubry@a-itservices.com</a>
+                </td>
+                <td>
+                    <a href="http://www.a-itservices.com" target="_blank">www.a-itservices.com</a>)
+                </td>
+            </tr>
+            <tr class="row0">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/de.png">
+                </td>
+                <td>
+                    German
+                </td>
+                <td>
+                    Chr.G&auml;rtner
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="row1">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/pt.png">
+                </td>
+                <td>
+                    Portuguese
+                </td>
+                <td>
+                    Jorge Rosado
+                </td>
+                <td>
+                    <a href="mailto:info@jrpi.pt">info@jrpi.pt</a>
+                </td>
+                <td>
+                    <a href="http://www.jrpi.pt" target="_blank">www.jrpi.pt</a>
+                </td>
+            </tr>
+            <tr class="row0">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/si.png">
+                </td>
+                <td>
+                    Slovak
+                </td>
+                <td>
+                    Daniel K·Ëer
+                </td>
+                <td>
+                    <a href="mailto:kacer@aceslovakia.sk">kacer@aceslovakia.sk</a>
+                </td>
+                <td>
+                    <a href="http://www.aceslovakia.sk" target="_blank">www.aceslovakia.sk</a>
+                </td>
+            </tr>
+            <tr class="row1">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/it.png">
+                </td>
+                <td>
+                    Italian
+                </td>
+                <td>
+                    Leonardo Lombardi
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <a href="http://www.dimsat.unicas.it" target="_blank">www.dimsat.unicas.it</a>
+                </td>
+            </tr>
+            <tr class="row0">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/es.png">
+                </td>
+                <td>
+                    Spanish
+                </td>
+                <td>
+                    Urano Gonzalez
+                </td>
+                <td>
+                    <a href="mailto:urano@uranogonzalez.com">urano@uranogonzalez.com</a>
+                </td>
+                <td>
+                    <a href="http://www.uranogonzalez.com" target="_blank">www.uranogonzalez.com</a>
+                </td>
+            </tr>
+            <tr class="row1">
+                <td>
+                    <img src="components/com_whelpdesk/assets/flags/se.png">
+                </td>
+                <td>
+                    Swedish
+                </td>
+                <td>
+                    Thomas Westman
+                </td>
+                <td>
+                    <a href="mailto:Westman%20info@backupnow.se">info@backupnow.se</a>
+                </td>
+                <td>
+                    <a href="http://www.backupnow.se" target="_blank">www.backupnow.se</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div id="slidesPane3">
 	<h1>Special Thanks</h1>
@@ -243,7 +380,7 @@ span img{
     you also get the satisfaction of knowing that you are helping the Joomla! project. But how can this be?
     Joomla! and Packt aren't linked...!! Packt have an Open Source royalty policy. This means that whenever
     anyone buys a book from Packt about an Open Source project Packt makes a donation to that project.</p>
-    <p>Why not show your support for Joomla! buy buying a Joomla! book from Packt today.</p>
+    <p>Why not show your support for Joomla! by buying a Joomla! book from Packt today.</p>
 	<h2>Mastering Joomla! 1.5 Extension and Framework Development</h2>
     <!--<a href="#" title="Mastering Joomla! 1.5 Extension and Framework Development" onclick="window.open('http://www.amazon.co.uk/gp/product/1847192823?ie=UTF8&tag=mythix-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1847192823','help','scrollbars=yes,resizable=yes,width=600,height=725,left=180,top=20'); return false;"><img title="Mastering Joomla! 1.5 Extension and Framework Development" class="left" alt="Mastering Joomla! 1.5 Extension and Framework Development" src="http://ecx.images-amazon.com/images/I/51rVtasYRqL._SL500_AA240_.jpg" widtht="99" border="0" heightt="123" style="float: right; padding-left: 30px;"></a>-->
     <ul>
