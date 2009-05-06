@@ -43,7 +43,8 @@ class GlossaryWModel extends WModel {
 
     public function getTotal() {
         // get the total number of terms in the glossary
-        $sql = 'SELECT COUNT(*) FROM ' . dbTable('glossary');
+        $sql = 'SELECT COUNT(*) FROM ' . dbTable('glossary')
+            . $this->buildQueryWhere();
         $database = JFactory::getDBO();
         $database->setQuery($sql);
         
@@ -71,16 +72,10 @@ class GlossaryWModel extends WModel {
         $application =& JFactory::getApplication();
 
         // get the state filter (publishing)
-        $state = $application->getUserStateFromRequest('com_whelpdesk.glossary.filter.state',
-                                                       'filter_state',
-                                                       '',
-                                                       'word');
+        $state = $this->getFilterState();
 
         // get the free text search filter
-        $search = $application->getUserStateFromRequest('com_whelpdesk.glossary.filter.search',
-                                                        'search',
-                                                        '',
-                                                        'string');
+        $search = $this->getFilterSearch();
         $search = JString::strtolower($search);
 
         // prepare to build WHERE clause as an array
@@ -108,7 +103,7 @@ class GlossaryWModel extends WModel {
         // build the WHERE clause
         if (count($where)) {
             // building from array
-            $where = " WHERE ". implode(" AND ", $where);
+            $where = ' WHERE ' . implode(' AND ', $where);
         } else {
             // array is empty... nothing to do!
             $where = "";
@@ -119,21 +114,11 @@ class GlossaryWModel extends WModel {
     }
 
     private function buildQueryOrderBy() {
-        // get everything we need
-        $application = JFactory::getApplication();
-        
         // ordering
-        $order = $application->getUserStateFromRequest("com_whelpdesk.glossary.filter.order",
-                                                       "filter_order",
-                                                       "term",
-                                                       "cmd");
+        $order = $this->getFilterOrder('term');
 
         // ordering direction
-        $orderDirection = $application->getUserStateFromRequest("com_whelpdesk.glossary.filter.orderDirection",
-                                                                "filter_order_Dir",
-                                                                "ASC",
-                                                                "cmd");
-        $orderDirection = strtoupper($orderDirection) == 'ASC' ? 'ASC' : 'DESC';
+        $orderDirection = $this->getFilterOrderDirection();
 
         return ' ORDER BY ' . JFactory::getDBO()->nameQuote($order) . ' ' . $orderDirection;
     }
