@@ -9,7 +9,7 @@
 abstract class HelpdeskWController extends WController {
 
     public function __construct() {
-        $this->setEntity('helpdesk');
+        $this->setType('helpdesk');
     }
 
     /**
