@@ -14,7 +14,7 @@ wimport('application.model');
 abstract class GlossaryWController extends WController {
 
     public function __construct() {
-        $this->setEntity('glossary');
+        $this->setType('glossary');
     }
 
     /**
