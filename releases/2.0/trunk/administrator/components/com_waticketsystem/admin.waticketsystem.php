@@ -534,7 +534,7 @@ function watsOption( &$task, &$act )
 									$editUser->group = intval($_POST['grpId']);
 								}
 								// update organistation
-								$editUser->organisation = htmlspecialchars( addslashes( $_POST['organisation'] ) );
+								$editUser->organisation = htmlspecialchars( $_POST['organisation'] );
 								// save changes
 								if ( $editUser->updateUser() )
 								{

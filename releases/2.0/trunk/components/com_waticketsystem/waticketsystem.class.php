@@ -142,13 +142,25 @@ class watsUser extends mosUser
 	 */
 	function makeUser( $watsId, $grpId, $organisation, &$database )
 	{
-		// check doesn't already exist
+		$watsId = intval($watsId);
+        
+        // check doesn't already exist
 		$database->setQuery( "SELECT wu.watsid FROM #__wats_users AS wu WHERE watsid=".$watsId);
 		$database->query();
 		if ( $database->getNumRows() == 0 )
 		{
 			// create SQL
-			$database->setQuery( "INSERT INTO #__wats_users ( watsid , organisation , agree , grpid ) VALUES ( '".$watsId."', '".$organisation."', '0000-00-00', '".$grpId."' );" );
+			$database->setQuery('INSERT INTO ' . $database->NameQuote('#__wats_users') .
+                                ' ( ' . $database->NameQuote('watsid') . ', ' .
+                                '   ' . $database->NameQuote('organisation') . ', ' .
+                                '   ' . $database->NameQuote('agree') . ', ' .
+                                '   ' . $database->NameQuote('grpid') .
+                                ' ) ' .
+                                ' VALUES (' . $database->Quote($watsId) . ', ' .
+                                '   ' . $database->Quote($organisation) . ', ' .
+                                '   ' . $database->Quote('0000-00-00') . ', ' . 
+                                '   ' . intval($grpId) .
+                                ' )' );
 			// execute
 			$database->query();
 			return true;
@@ -170,7 +182,11 @@ class watsUser extends mosUser
 		if ( $this->_db->getNumRows() != 0 )
 		{
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$this->_db->setQuery('UPDATE ' . $this->_db->NameQuote('#__wats_users') .
+                                 ' SET ' . $this->_db->NameQuote('organisation') . ' = ' . $this->_db->Quote($this->organisation) . ', ' .
+                                 '     ' . $this->_db->NameQuote('agree') . ' = ' . $this->_db->Quote($this->agree) . ', ' .
+                                 '     ' . $this->_db->NameQuote('grpid') . ' = ' . $this->_db->Quote($this->group) .
+                                 ' WHERE ' . $this->_db->NameQuote('watsid') . ' = ' . intval($this->id));
 			// execute
 			$this->_db->query();
 			return true;
@@ -186,7 +202,9 @@ class watsUser extends mosUser
 	 * @param groupId
 	 */
 	function setGroup( $groupId )
-	{
+    {
+        $groupId = intval($groupId);
+    
 		// check group exists and get name
 		$this->_db->setQuery( "SELECT g.name, g.image FROM #__wats_groups AS g WHERE grpid=".$groupId);
 		$groupDetails = $this->_db->loadObjectList();
@@ -197,7 +215,7 @@ class watsUser extends mosUser
 			$this->groupName = $groupDetails[0]->name;
 			$this->image = $groupDetails[0]->image;
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$this->_db->setQuery( "UPDATE #__wats_users SET grpid='".$this->group."' WHERE watsid='".intval($this->id)."';" );
 			// execute
 			$this->_db->query();
 			return true;
@@ -398,14 +416,39 @@ class watsTicket
 	function save()
 	{
 		// ticket
-		$queryTicket = "INSERT INTO #__wats_ticket SET watsid=".$this->watsId.", ticketname='".$this->name."', lifecycle=".$this->lifeCycle.", datetime=".$this->datetime.", category=".$this->category;
-		$this->_db->setQuery( $queryTicket );
+		$queryTicket = 'INSERT INTO ' . $this->_db->NameQuote('#__wats_ticket')
+                     . ' (' . $this->_db->NameQuote('watsid') . ', '
+                     . '  ' . $this->_db->NameQuote('ticketname') . ', ' 
+                     . '  ' . $this->_db->NameQuote('lifecycle') . ', '
+                     . '  ' . $this->_db->NameQuote('datetime') . ', '
+                     . '  ' . $this->_db->NameQuote('category')
+                     . ' )'
+                     . ' VALUES ( '
+                     . '  ' . intval($this->watsId) . ', '
+                     . '  ' . $this->_db->Quote($this->name) . ', '
+                     . '  ' . $this->_db->Quote($this->lifeCycle) . ', '
+                     . '  ' . $this->_db->Quote($this->datetime) . ', '
+                     . '  ' . $this->_db->Quote($this->category)
+                     . ' )';
+		$this->_db->setQuery($queryTicket);
 		$this->_db->query();
 		$this->ticketId = $this->_db->insertid();
-		// message
-		$queryMsg = "INSERT INTO #__wats_msg SET watsid=".$this->watsId.", ticketid='".$this->ticketId."',msg='".$this->_msgList[0]->msg."', datetime=".$this->datetime;
-		$this->_db->setQuery( $queryMsg );
-		$this->_db->query();
+		
+        // message
+        $queryMsg = 'INSERT INTO ' . $this->_db->NameQuote('#__wats_msg')
+             . ' (' . $this->_db->NameQuote('ticketid') . ', '
+             . '  ' . $this->_db->NameQuote('watsid') . ', '
+             . '  ' . $this->_db->NameQuote('msg') . ', '
+             . '  ' . $this->_db->NameQuote('datetime') 
+             . ' )'
+             . ' VALUES ( '
+             . '  ' . intval($this->ticketId) . ', '
+             . '  ' . intval($this->watsId) . ', '
+             . '  ' . $this->_db->Quote($this->_msgList[0]->msg) . ', '
+             . '  ' . $this->_db->Quote($this->datetime)
+             . ' )';
+        $this->_db->setQuery($queryMsg);
+        $this->_db->query();
 	}
 
 	/**
@@ -500,7 +543,22 @@ class watsTicket
 	function addMsg( $msg, $watsId, $datetime )
 	{
 		// create SQL and execute
-		$this->_db->setQuery( "INSERT INTO #__wats_msg ( ticketid, watsid, msg, datetime ) VALUES ( '".$this->ticketId."', '".$watsId."', '".$msg."', ".$datetime.");" );
+        $db =& $this->_db;
+        
+        $sql = 'INSERT INTO ' . $db->NameQuote('#__wats_msg')
+             . ' (' . $db->NameQuote('ticketid') . ', '
+             . '  ' . $db->NameQuote('watsid') . ', '
+             . '  ' . $db->NameQuote('msg') . ', '
+             . '  ' . $db->NameQuote('datetime') 
+             . ') '
+             . ' VALUES ( '
+             . '  ' . intval($this->ticketId) . ', '
+             . '  ' . intval($watsId) . ', '
+             . '  ' . $db->Quote($msg) . ', '
+             . '  ' . $db->Quote($datetime)
+             . ')';
+        
+		$this->_db->setQuery($sql);
 		$this->_db->query();
 		$this->_msgList[ count( $this->_msgList ) ] = new watsMsg( $this->ticketId, $msg, $watsId, $datetime );
 		$this->msgNumberOf ++;

@@ -118,13 +118,25 @@ class watsUser extends mosUser
 	 */
 	function makeUser( $watsId, $grpId, $organisation, &$database )
 	{
-		// check doesn't already exist
+		$watsId = intval($watsId);
+        
+        // check doesn't already exist
 		$database->setQuery( "SELECT wu.watsid FROM #__wats_users AS wu WHERE watsid=".$watsId);
 		$database->query();
 		if ( $database->getNumRows() == 0 )
 		{
 			// create SQL
-			$database->setQuery( "INSERT INTO #__wats_users ( watsid , organisation , agree , grpid ) VALUES ( '".$watsId."', '".$organisation."', '0000-00-00', '".$grpId."' );" );
+			$database->setQuery('INSERT INTO ' . $database->NameQuote('#__wats_users') .
+                                ' ( ' . $database->NameQuote('watsid') . ', ' .
+                                '   ' . $database->NameQuote('organisation') . ', ' .
+                                '   ' . $database->NameQuote('agree') . ', ' .
+                                '   ' . $database->NameQuote('grpid') .
+                                ' ) ' .
+                                ' VALUES (' . $database->Quote($watsId) . ', ' .
+                                '   ' . $database->Quote($organisation) . ', ' .
+                                '   ' . $database->Quote('0000-00-00') . ', ' . 
+                                '   ' . intval($grpId) .
+                                ' )' );
 			// execute
 			$database->query();
 			return true;
@@ -146,7 +158,11 @@ class watsUser extends mosUser
 		if ( $this->_db->getNumRows() != 0 )
 		{
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$this->_db->setQuery('UPDATE ' . $this->_db->NameQuote('#__wats_users') .
+                                 ' SET ' . $this->_db->NameQuote('organisation') . ' = ' . $this->_db->Quote($this->organisation) . ', ' .
+                                 '     ' . $this->_db->NameQuote('agree') . ' = ' . $this->_db->Quote($this->agree) . ', ' .
+                                 '     ' . $this->_db->NameQuote('grpid') . ' = ' . $this->_db->Quote($this->group) .
+                                 ' WHERE ' . $this->_db->NameQuote('watsid') . ' = ' . intval($this->id));
 			// execute
 			$this->_db->query();
 			return true;
@@ -163,6 +179,8 @@ class watsUser extends mosUser
 	 */
 	function setGroup( $groupId )
 	{
+        $groupId = intval($groupId);
+        
 		// check group exists and get name
 		$this->_db->setQuery( "SELECT g.name, g.image FROM #__wats_groups AS g WHERE grpid=".$groupId);
 		$groupDetails = $this->_db->loadObjectList();
@@ -173,7 +191,7 @@ class watsUser extends mosUser
 			$this->groupName = $groupDetails[0]->name;
 			$this->image = $groupDetails[0]->image;
 			// update SQL
-			$this->_db->setQuery( "UPDATE #__wats_users SET organisation='".$this->organisation."', agree='".$this->agree."', grpid='".$this->group."' WHERE watsid='".$this->id."';" );
+			$this->_db->setQuery( "UPDATE #__wats_users SET grpid='".$this->group."' WHERE watsid='".intval($this->id)."';" );
 			// execute
 			$this->_db->query();
 			return true;
