@@ -19,8 +19,8 @@ class AliasBuildWController extends WController {
     }
 
     public function execute($stage) {
-        $name = JRequest::getVar('name');
-        $alias = WAliasHelper::buildAlias($name);
+        $name = JRequest::getVar('name', JREQUEST_ALLOWRAW);
+        $alias = WAliasHelper::buildAlias($name, true);
         
         // get the view
         $document =& JFactory::getDocument();
