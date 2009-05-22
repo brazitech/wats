@@ -25,11 +25,11 @@ final class WCommand {
     private static $instance = null;
 
     /**
-     * Last entity to be invoked
+     * Last type to be invoked
      *
      * @var String
      */
-    private $entity = 'helpdesk';
+    private $type = 'helpdesk';
 
     /**
      * Last usecase to be invoked
@@ -57,12 +57,12 @@ final class WCommand {
         JRequest::setVar('task', null);
 
         // get and execute the controller
-        $controller = WController::getInstance($this->entity, $this->usecase);
-        WFactory::getOut()->log('Executing ' . $this->entity . ', ' .
+        $controller = WController::getInstance($this->type, $this->usecase);
+        WFactory::getOut()->log('Executing ' . $this->type . ', ' .
                                                $this->usecase . ', ' .
                                                $this->stage . ' usecase stage');
         $controller->execute($this->stage);
-        WFactory::getOut()->log('Executed ' . $this->entity . ', ' .
+        WFactory::getOut()->log('Executed ' . $this->type . ', ' .
                                               $this->usecase . ', ' .
                                               $this->stage . ' usecase stage');
 
@@ -79,7 +79,7 @@ final class WCommand {
 
         // check that we have a complete command
         if ($numberOfCommands >= 2) {
-            $this->entity  = $command[0];
+            $this->type  = $command[0];
             $this->usecase = $command[1];
             if ($numberOfCommands >= 3) {
                 $this->stage   = $command[2];
@@ -111,8 +111,8 @@ final class WCommand {
      *
      * @return String
      */
-    public function getEntity() {
-        return $this->entity;
+    public function getType() {
+        return $this->type;
     }
 
     /**
