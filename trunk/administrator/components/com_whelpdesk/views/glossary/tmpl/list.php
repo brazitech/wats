@@ -62,6 +62,7 @@ defined('JPATH_BASE') or die();
                 </th>
                 <th class="title">
                     <?php echo JHTML::_('grid.sort', 'Term',     'term',       $filters['orderDirection'], $filters['order']); ?>
+                    (<?php echo JHTML::_('grid.sort', 'Alias',   'alias',      $filters['orderDirection'], $filters['order']); ?>)
                 </th>
                 <th width="60" nowrap="nowrap">
                     <?php echo JHTML::_('grid.sort', 'Published', 'published', $filters['orderDirection'], $filters['order']); ?>
