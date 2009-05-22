@@ -18,13 +18,13 @@ abstract class WController {
     private static $instances = array();
 
     /**
-     * Name of the entity that this controller handles. This must be set by
+     * Name of the type that this controller handles. This must be set by
      * inheriting classes.
      *
      * @var String
-     * @see WController::setEntity()
+     * @see WController::setType()
      */
-    private $entity;
+    private $type;
 
     /**
      * Name of the usevase that this controller handles. This must be set by
@@ -60,8 +60,8 @@ abstract class WController {
      *
      * @param String $name
      */
-    protected function setEntity($name) {
-        $this->entity = (string)$name;
+    protected function setType($name) {
+        $this->type = (string)$name;
     }
 
     /**
@@ -69,8 +69,8 @@ abstract class WController {
      * 
      * @return String
      */
-    public function getEntity() {
-        return $this->entity;
+    public function getType() {
+        return $this->type;
     }
 
     /**
@@ -104,7 +104,7 @@ abstract class WController {
 		$viewName =  JRequest::getCmd('view', $command->getUsecase());
 
         // get the view
-        $view = WView::getInstance($this->getEntity(), $viewName, $format);
+        $view = WView::getInstance($this->getType(), $viewName, $format);
 
         // output the view!
         $view->render();
@@ -157,9 +157,9 @@ abstract class WController {
         // get the values we need
         $requestType       = 'user';
         $requestIdentifier = $user->get('id');
-        $targetType        = ($targetType)       ? $targetType       : $this->getEntity();
+        $targetType        = ($targetType)       ? $targetType       : $this->getType();
         $targetIdentifier  = ($targetIdentifier) ? $targetIdentifier : $this->getAccessTargetIdentifier();
-        $controlType       = ($controlType)      ? $controlType      : $this->getEntity();
+        $controlType       = ($controlType)      ? $controlType      : $this->getType();
         $control           = ($control)          ? $control          : $this->getUsecase();
 
         try {
@@ -177,7 +177,7 @@ abstract class WController {
      * @todo
      */
     protected function getAccessTargetIdentifier() {
-        return $this->getEntity();
+        return $this->getType();
     }
 
 }
