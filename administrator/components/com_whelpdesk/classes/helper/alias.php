@@ -9,6 +9,9 @@
 class WAliasHelper {
 
     static function buildAlias($name, $sympathetic = true, $replacement = '') {
+        // make sure we are dealing with a UTF-8 string
+        $name = utf8_encode($name);
+        
         // replace HTML entities with their actual UTF-8 character representation
         $name = html_entity_decode($name, ENT_QUOTES, 'UTF-8');
         
@@ -20,9 +23,9 @@ class WAliasHelper {
         $notAllowedStart = '~^\.\.?\/~';
         if ($sympathetic) {
             // replace bad characters
-            $name = preg_replace($notAllowed,      $replacement, $name)
-            $name = preg_replace($notAllowedStart, $replacement, $name)
-        } elseif (preg_match($notAllowed, $name) || preg_match(, $name)) {
+            $name = preg_replace($notAllowed,      $replacement, $name);
+            $name = preg_replace($notAllowedStart, $replacement, $name);
+        } elseif (preg_match($notAllowed, $name) || preg_match($notAllowedStart, $name)) {
             // contains bad characters and we are not ina good mood! bad method caller bad!
             throw new WExcpetion('DISALLOWED CHARACTERS DETECTED IN TITLE');
         }
