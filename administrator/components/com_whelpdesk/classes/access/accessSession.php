@@ -303,7 +303,7 @@ class WAccessSession {
         // itterate over the request path and look for rules
         // get the DBO
         $db = JFactory::getDBO();
-        for($i = count($this->controlPath); $i >= 0; $i--) {
+        for($i = count($this->controlPath) - 1; $i >= 0; $i--) {
             $controlNode = $this->controlPath[$i];
 
             // get the mappings

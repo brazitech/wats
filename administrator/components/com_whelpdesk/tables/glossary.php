@@ -113,6 +113,13 @@ class JTableGlossary extends WTable {
      * @var String
      */
     public $modified = null;
+    
+    /**
+     * Date and time when the term was last modified
+     *
+     * @var String
+     */
+    //public $metadata_description = null;
 
     /**
      *
@@ -179,6 +186,11 @@ class JTableGlossary extends WTable {
         // check for description
         if (trim($this->description) == '') {
             $this->setError(JText::_('WHD GLOSSARY DESCRIPTION MISSING'));
+            $isValid = false;
+        }
+
+        // let the parent have a look
+        if (!parent::check()) {
             $isValid = false;
         }
 
