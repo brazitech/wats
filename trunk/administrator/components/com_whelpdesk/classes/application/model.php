@@ -96,7 +96,7 @@ abstract class WModel {
      */
     public function getLimitStart() {
         // determine limitstart if we don't already know what it is
-        if ($this->limiststart === null) {
+        if ($this->limitstart === null) {
             $application =& JFactory::getApplication();
 
             if ($application->isSite()) {
@@ -165,7 +165,7 @@ abstract class WModel {
      * @param string $default
      * @return string
      */
-    public function getFilterOrderDirection() {
+    public function getFilterOrderDirection($default='ASC') {
         $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order.direction',
                                                                         'filter_order_Dir',
                                                                          $default,

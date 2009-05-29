@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id$
+ * @version $Id: form.php 120 2009-05-22 14:05:02Z webamoeba $
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk
@@ -144,7 +144,13 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                 <strong><?php echo JText::_('Created'); ?></strong>
                 </td>
                 <td>
-                <?php echo JHtml::_('date',  $term->created,  JText::_('DATE_FORMAT_LC2')); ?>
+                <?php
+                if ($term->created == $nullDate) {
+                echo JText::_('New document');
+                } else {
+                echo JHtml::_('date',  $term->created,  JText::_('DATE_FORMAT_LC2'));
+                }
+                ?>
                 </td>
                 </tr>
                 <?php if ($term->modified != JFactory::getDBO()->getNullDate()) : ?>
@@ -160,7 +166,28 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
             </table>
         </fieldset>
         <?php endif; ?>
-        <?php echo $this->loadLayout('dataset_simpleform'); ?>
+        <?php
+        jimport('joomla.html.pane');
+        $pane =& JPane::getInstance('sliders');
+        echo $pane->startPane("menu-pane");
+
+        $groups = $term->params->getGroups();
+        if (count($groups)) {
+            foreach($groups AS $groupname => $group) {
+                if ($groupname == '_default') {
+                    $title = 'Term';
+                } else {
+                    $title = ucfirst($groupname);
+                }
+                if ($term->params->getNumParams($groupname)) {
+                    echo $pane->startPanel(JText :: _($title), $groupname.'-page');
+                    echo $term->params->render('params', $groupname);
+                    echo $pane->endPanel();
+                }
+            }
+        }
+        echo $pane->endPane();
+        ?>
 </div>
 
 </form>

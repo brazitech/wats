@@ -53,6 +53,8 @@ abstract class WView {
 	 * Constructor
 	 */
 	public function __construct() {
+        // add the generic templates path
+        $this->addLayoutPath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'assets' . DS . 'tmpl');
 	}
 
     /**

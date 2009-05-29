@@ -21,7 +21,7 @@ class GlossaryEditWController extends GlossaryWController {
     }
 
     /**
-     * @todo
+     * @todo check token
      */
     public function execute($stage) {
         try {
@@ -65,6 +65,11 @@ class GlossaryEditWController extends GlossaryWController {
             }
         }
 
+        // get the dataset definition for this model
+        wimport('data.dataset');
+        $dataset = WDataset::getInstance('glossary');
+        $dataset->setData($table);
+
         // check if we should show the state buttons
         $user          = JFactory::getUser();
         $accessSession = WFactory::getAccessSession();
@@ -96,6 +101,10 @@ class GlossaryEditWController extends GlossaryWController {
 
         // add the default model to the view
         $view->addModel('term', $table, true);
+
+        // add the dataset to the model
+        $view->addModel('dataset', $dataset);
+        $view->addModel('dataset-data', $table);
 
         // add the boolean value describing access to reset hits
         $view->addModel('canResetHits', $canResetHits);

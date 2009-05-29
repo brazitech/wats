@@ -8,12 +8,96 @@
 
 // import JTable
 jimport('joomla.database.table');
+wimport('data.dataset');
 
 /**
  *
  */
 abstract class WTable extends JTable {
 
+    /**
+     *
+     * @var <type>
+     */
+    private $dataset;
+
+    private $init = false;
+
+    public function __construct($table, $key, &$db) {
+        // we need to deal with the custom fields for whelpdesk tables
+        // each custom field required an instance variable
+        if (preg_match('~^\#\_\_whelpdesk\_(.+)~', $table, $matches)) {
+            // get the names of the groups associated with this table
+            $this->dataset = WDataset::getInstance($matches[1]);
+            $groupNames = $this->dataset->getGroupNames();
+
+            // itterate over the fields
+            $fields = $this->dataset->getFields();
+            $this->init = true;
+            for ($z = 0, $t = count($fields); $z < $t; $z++) {
+                $field = $fields[$z];
+                $this->set($field->getName(), $field->getDefault());
+            }
+            $this->init = false;
+        }
+        
+        // let JTable take over
+        parent::__construct($table, $key, $db);
+    }
+
+    /**
+     * Sets the value of a property.
+     *
+     * @param string $var
+     * @param mixed $val
+     * @return mixed
+     */
+    public function __set($var, $val) {
+        if ($this->init && !array_key_exists($var, get_object_vars($this))) {
+            // we are in initialisation mode
+            // this is a new property - lets create it
+            return $this->{$var} = $val;
+        }
+        
+        // carry on as normal way
+        return parent::__set($var, $val);
+	}
+
+    public function check() {
+        if (!$this->dataset) {
+            // there is no dataset so we can continue
+            return true;
+        }
+
+        // do some prep work
+        $isValid = true;
+        $fields = $this->dataset->getFields();
+
+        // itterate over fields if there are any
+        if (count($fields)) {
+            foreach ($fields as $field) {
+                // deal with field
+                $value = $this->{$field->getName()};
+                if ($field->isValid($value) != true) {
+                    // field is not valid
+                    // get the error message and set the return value
+                    $isValid = false;
+                    $this->setError($field->getError());
+                }
+            }
+        }
+
+        return $isValid;
+    }
+
+
+    /**
+     * Resets the hit counter for the specified record or for the current 
+     * record. If the table has a reset_hits field this will be updated to 
+     * reflect the current date and time.
+     *
+     * @param int|string $oid
+     */
     function resetHits($oid=null) {
         // check this table suports hits before continuing
         if (!in_array('hits', array_keys($this->getProperties()))) {
