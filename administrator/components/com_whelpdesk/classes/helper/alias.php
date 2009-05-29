@@ -10,7 +10,10 @@ class WAliasHelper {
 
     static function buildAlias($name, $sympathetic = true, $replacement = '') {
         // make sure we are dealing with a UTF-8 string
-        $name = utf8_encode($name);
+        $currentEncoding = mb_detect_encoding($name) ;
+        if($currentEncoding != "UTF-8" && !mb_check_encoding($name,"UTF-8")) {
+            $name = utf8_encode($name); 
+        }
         
         // replace HTML entities with their actual UTF-8 character representation
         $name = html_entity_decode($name, ENT_QUOTES, 'UTF-8');
