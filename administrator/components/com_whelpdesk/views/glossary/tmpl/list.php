@@ -79,6 +79,13 @@ defined('JPATH_BASE') or die();
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $filters['orderDirection'], $filters['order']); ?>
                 </th>
+                <?php if(count($this->getModel('customFields'))) : ?>
+                <?php foreach($this->getModel('customFields') as $field) : ?>
+                <th align="center" width="50">
+                    <?php echo JHTML::_('grid.sort', $field->getLabel(), $field->getName(), $filters['orderDirection'], $filters['order']); ?>
+                </th>
+                <?php endforeach; ?>
+                <?php endif; ?>
             </tr>
         </thead>
         <tfoot>
@@ -128,6 +135,13 @@ defined('JPATH_BASE') or die();
             <td nowrap="nowrap" align="center">
                 <?php echo $glossaryItem->hits ?>
             </td>
+            <?php if(count($this->getModel('customFields'))) : ?>
+            <?php foreach($this->getModel('customFields') as $field) : ?>
+            <td align="center">
+                <?php echo $field->getFormattedValue($glossaryItem->{$field->getName()}); ?>
+            </td>
+            <?php endforeach; ?>
+            <?php endif; ?>
             </tr>
             <?php endfor; ?>
         </tbody>

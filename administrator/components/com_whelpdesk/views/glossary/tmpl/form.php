@@ -160,7 +160,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
             </table>
         </fieldset>
         <?php endif; ?>
-        <?php echo $this->loadLayout('dataset_simpleform'); ?>
+        <?php echo $this->loadLayout('fieldset_simpleform'); ?>
 </div>
 
 </form>

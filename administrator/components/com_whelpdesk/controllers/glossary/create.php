@@ -58,8 +58,8 @@ class GlossaryCreateWController extends GlossaryWController {
         }
 
         // get the dataset definition for this model
-        wimport('data.dataset');
-        $dataset = WDataset::getInstance('glossary');
+        wimport('database.fieldset');
+        $dataset = WFieldset::getInstance('glossary');
         $dataset->setData($table);
 
         // get the view
