@@ -25,9 +25,11 @@ try {
 
     $accessSession = WFactory::getAccessSession();
 
-    //$accessSession->addType('helpdesk', 'Webamoeba Help Desk');
+    //$accessSession->addType('helpdesk', 'Webamoeba Help Desk', 'Root');
 
     //$accessSession->addNode('helpdesk', 'helpdesk');
+    
+    //$accessSession->addNode('knowledgedomain', 'knowledgedomain', 'Knowledge Domain container', 'helpdesk', 'helpdesk');
     
     //$accessSession->addType('glossary', 'Glossary of terminology');
     //$accessSession->addNode('glossary', 'glossary', 'Glossary container', 'helpdesk', 'helpdesk');
@@ -46,8 +48,15 @@ try {
     //$accessSession->addControl('glossary', 'state', 'Publish and unpublish glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'resethits', 'Reset glossary item hit counters', 'glossary', 'edit');
     //$accessSession->addControl('glossary', 'delete', 'Delete glossary items', 'glossary', 'list');
+    //$accessSession->addControl('knowledgedomains', 'list', 'List knowledge domain', 'helpdesk', 'display');
+    //$accessSession->addControl('knowledgedomains', 'create', 'Create new knowledge domain', 'knowledgedomains', 'list');
+    //$accessSession->addControl('knowledgedomain', 'edit', 'Edit knowledge domain', 'knowledgedomains', 'list');
+    //$accessSession->addControl('knowledgedomain', 'state', 'Publish and unpublish knowledge domain', 'knowledgedomains', 'list');
+    //$accessSession->addControl('knowledgedomains', 'display', 'Display knowledge domains', 'helpdesk', 'display');
+    //$accessSession->addControl('knowledgedomain', 'display', 'Display knowledge domain', 'knowledgedomains', 'display');
+    //$accessSession->addControl('knowledge', 'edit', 'Edit knowledge', 'knowledgedomain', 'display');
 
-    $accessSession->setAccess('usergroup', 'users',     // request
+    /*$accessSession->setAccess('usergroup', 'users',     // request
                               'helpdesk', 'helpdesk',   // target
                               'helpdesk', 'display',    // control
                               true);                    // hasAccess
@@ -92,11 +101,54 @@ try {
                               'glossary', 'delete',     // control
                               true);                    // hasAccess
     
+    $accessSession->setAccess('usergroup', 'users',                     // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomains', 'display',            // control
+                              true);                                    // hasAccess
+
+    $accessSession->setAccess('usergroup', 'users',                     // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomain', 'display',             // control
+                              true);                                    // hasAccess
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomains', 'list',               // control
+                              true);                                    // hasAccess
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomains', 'create',             // control
+                              true);                                    // hasAccess
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomain',  'edit',               // control
+                              true);                                    // hasAccess
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledgedomain',  'state',              // control
+                              true);                                    // hasAccess
+
     /* var_dump($accessSession->hasAccess('user', '42',            // request
                                        'helpdesk', 'helpdesk',  // target
-                                       'helpdesk', 'display'));    // control*/
+                                       'helpdesk', 'display'));    // control
+
+    // JUST TO TEST...
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomain',  '14',   // target
+                              'knowledgedomain',  'state',              // control
+                              FALSE);                                    // hasAccess
+     *
+     */
 
     //jexit();
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'knowledgedomains', 'knowledgedomains',   // target
+                              'knowledge', 'edit',                      // control
+                              true);                                    // hasAccess
 
     //$access->addGroup('controls', 'Access controls tree for whelpdesk');
     //$accessSession->addControl('helpdesk', 'display', 'Root control');
@@ -113,6 +165,7 @@ try {
 
 } catch (WException $e) {
     // deal with applicaion specific exceptions
+    var_dump($e);
     jexit($e);
 } catch (Exception $e) {
     // deal with general exceptions

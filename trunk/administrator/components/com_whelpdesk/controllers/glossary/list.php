@@ -86,6 +86,10 @@ class GlossaryListWController extends GlossaryWController {
             $canDelete = false;
         }
 
+        // get the custom fields that can be displayed
+        wimport('database.fieldset');
+        $customFields = WFieldset::getInstance('glossary')->getListFields();
+
         // get the view
         $document =& JFactory::getDocument();
 		$format =  strtolower($document->getType());
@@ -96,6 +100,9 @@ class GlossaryListWController extends GlossaryWController {
 
         // add the filters to the view
         $view->addModel('filters', $filters);
+
+        // add the custom fields to the view
+        $view->addModel('customFields', $customFields);
         
         // add the boolean value describing access to change state
         $view->addModel('canCreate', $canCreate);

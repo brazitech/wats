@@ -6,9 +6,9 @@
  * @package helpdesk
  */
 
-// import JTable
+// import library classes
 jimport('joomla.database.table');
-wimport('data.dataset');
+wimport('database.fieldset');
 
 /**
  *
@@ -28,7 +28,7 @@ abstract class WTable extends JTable {
         // each custom field required an instance variable
         if (preg_match('~^\#\_\_whelpdesk\_(.+)~', $table, $matches)) {
             // get the names of the groups associated with this table
-            $this->dataset = WDataset::getInstance($matches[1]);
+            $this->dataset = WFieldset::getInstance($matches[1]);
             $groupNames = $this->dataset->getGroupNames();
 
             // itterate over the fields
