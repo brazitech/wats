@@ -13,10 +13,6 @@
  */
 abstract class WToolbarHelper implements WToolbarHelperInterface {
 
-	public static function title($title, $icon = 'whelpdesk') {
-		JToolbarHelper::title($title, $icon);
-	}
-
 	public static function divider() {
 		JToolbarHelper::divider();
 	}
@@ -127,5 +123,33 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
 		// Add an edit button
 		JToolBar::getInstance('toolbar')->appendButton('Standard', 'delete', $alt, $task, false, false);
     }
+
+    private static $permissions = false;
+
+    public static function permissions($task = 'permissions', $alt = 'Permissions') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'permissions', $alt, $task, false, false);
+
+        if (!self::$permissions) {
+            // add CSS
+            $style = ".icon-32-permissions { background-image: url(components/com_whelpdesk/assets/icons/32-lock.png); }";
+            JFactory::getDocument()->addStyleDeclaration($style);
+            self::$permissions = true;
+        }
+	}
+
+    private static $move = false;
+
+    public static function move($task = 'move', $alt = 'Move') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'move', $alt, $task, false, false);
+
+        if (!self::$move) {
+            // add CSS
+            $style = ".icon-32-move { background-image: url(components/com_whelpdesk/assets/icons/32-windows_fullscreen.png); }";
+            JFactory::getDocument()->addStyleDeclaration($style);
+            self::$move = true;
+        }
+	}
 
 }

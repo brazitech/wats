@@ -14,15 +14,15 @@ jimport('joomla.html.pane');
 $pane =& JPane::getInstance('sliders');
 
 // get the groups from the datset to process
-$groups = $this->getModel('dataset')->getGroupNames();
-$data   = $this->getModel('dataset-data');
+$groups = $this->getModel('fieldset')->getGroupNames();
+$data   = $this->getModel('fieldset-data');
 
 ?>
 
-<?php echo $pane->startPane("dataset-pane"); ?>
+<?php echo $pane->startPane("fieldset-pane"); ?>
 
     <?php for($i = 0, $c = count($groups); $i < $c; $i++) : ?>
-    <?php $group = $this->getModel('dataset')->getGroup($groups[$i]); ?>
+    <?php $group = $this->getModel('fieldset')->getGroup($groups[$i]); ?>
     <?php echo $pane->startPanel(JText:: _($group->label), $groups[$i].'-panel'); ?>
         <table class="paramlist admintable" width="100%" cellspacing="1">
             <tbody>

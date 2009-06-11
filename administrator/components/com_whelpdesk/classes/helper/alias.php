@@ -46,4 +46,23 @@ class WAliasHelper {
         return $name;
     }
 
+    /**
+     * Determines if an alias is well formed
+     *
+     * @param string $alias
+     */
+    static function isValid($alias) {
+        if (!is_string($alias)) {
+            throw new Exception('WHD ALIAS MUST BE A STRING');
+        }
+
+        if (!strlen($alias)) {
+            // alias must contain at least one character
+            return false;
+        }
+
+        // compare against a true alias - if they are equal the alias is valid
+        return (self::buildAlias($alias) == $alias);
+    }
+
 }

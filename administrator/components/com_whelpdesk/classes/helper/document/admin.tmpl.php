@@ -20,7 +20,7 @@ $showLinks = ((JRequest::getInt('hidemainmenu', 0)) == 0);
 
     <?php if (count(self::$pathway)) : ?>
     <div id="wpathway">
-        <span class="wpathway-item wpathway-item-home">
+        <span class="wpathway-item wpathway-item-home" <?php echo (!$showLinks) ? 'style="color:gray;"' : ''; ?>>
             <?php if ($showLinks) : ?>
             <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk'); ?>">
             <?php endif; ?>
@@ -30,7 +30,7 @@ $showLinks = ((JRequest::getInt('hidemainmenu', 0)) == 0);
             <?php endif; ?>
         </span>
         <?php for ($i = 0, $c = count(self::$pathway); $i < $c ; $i++) : ?>
-        <span class="wpathway-item<?php echo ($i == $c - 1) ?  ' wpathway-item-current' : '';?>">
+        <span class="wpathway-item<?php echo ($i == $c - 1) ?  ' wpathway-item-current' : '';?>" <?php echo (!$showLinks) ? 'style="color:gray;"' : ''; ?>>
             &#9658;
             <?php if ($showLinks && strlen(self::$pathway[$i]->link)) : ?>
             <a href="<?php echo JRoute::_(self::$pathway[$i]->link); ?>"

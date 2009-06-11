@@ -57,11 +57,6 @@ class GlossaryCreateWController extends GlossaryWController {
             }
         }
 
-        // get the dataset definition for this model
-        wimport('database.fieldset');
-        $dataset = WFieldset::getInstance('glossary');
-        $dataset->setData($table);
-
         // get the view
         $document =& JFactory::getDocument();
 		$format   =  strtolower($document->getType());
@@ -70,9 +65,9 @@ class GlossaryCreateWController extends GlossaryWController {
         // add the default model to the view
         $view->addModel('term', $table, true);
 
-        // add the dataset to the model
-        $view->addModel('dataset', $dataset);
-        $view->addModel('dataset-data', $table);
+        // add the fieldset to the model
+        $view->addModel('fieldset', $table->getFieldset());
+        $view->addModel('fieldset-data', $table);
 
         // display the view!
         JRequest::setVar('view', 'form');

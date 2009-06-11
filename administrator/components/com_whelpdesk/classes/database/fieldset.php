@@ -16,8 +16,6 @@ class WFieldset {
 
     private $groups = array();
 
-    private $data;
-
     private static $instances = array();
 
     /**
@@ -115,19 +113,6 @@ class WFieldset {
         }
 
         return $allFields;
-    }
-
-    /**
-     *
-     * @param object|array $data
-     */
-    public function setData($data) {
-        // covert data to object if necessary
-        if (is_array($data)) {
-            $data = JArrayHelper::toObject();
-        }
-
-        $this->data = $data;
     }
 
     public function getListFields() {

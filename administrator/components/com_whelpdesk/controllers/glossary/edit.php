@@ -65,11 +65,6 @@ class GlossaryEditWController extends GlossaryWController {
             }
         }
 
-        // get the dataset definition for this model
-        wimport('database.fieldset');
-        $dataset = WFieldset::getInstance('glossary');
-        $dataset->setData($table);
-
         // check if we should show the state buttons
         $user          = JFactory::getUser();
         $accessSession = WFactory::getAccessSession();
@@ -103,8 +98,8 @@ class GlossaryEditWController extends GlossaryWController {
         $view->addModel('term', $table, true);
 
         // add the dataset to the model
-        $view->addModel('dataset', $dataset);
-        $view->addModel('dataset-data', $table);
+        $view->addModel('fieldset', $table->getFieldset());
+        $view->addModel('fieldset-data', $table);
 
         // add the boolean value describing access to reset hits
         $view->addModel('canResetHits', $canResetHits);

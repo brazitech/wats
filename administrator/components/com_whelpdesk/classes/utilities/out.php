@@ -29,7 +29,7 @@ final class WOut {
     public function  __construct() {
         $this->enabled = WFactory::getConfig()->get('debug');
         $this->enabled = true;
-        $this->log('Output buffer opened');
+        $this->log('Output log opened');
     }
 
     /**

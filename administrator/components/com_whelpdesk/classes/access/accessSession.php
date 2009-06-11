@@ -90,7 +90,7 @@ class WAccessSession {
 
         // check target node exists
         if (!$this->componentTreeSession->nodeExists($targetType, $targetIdentifier)) {
-            throw new WException('NODE DOES NOT EXIST', $targetType,
+            throw new WException('NODE DOES NOT EXIST %s, %s', $targetType,
                                                $targetIdentifier, $this->group);
         }
 

@@ -79,12 +79,20 @@ abstract class WView {
 	 * @param String $name The name of the model (optional)
 	 * @return mixed model
 	 */
-	public function getModel($name = '') {
-		if ($name === '') {
+	public function getModel($name = '', $default=null) {
+		$name = (string)$name;
+
+        if ($name === '') {
 			return $this->defaultModel;
 		}
-        
-		return $this->models[(string)$name];
+
+        // send the model back if we know it
+        if (array_key_exists($name, $this->models)) {
+            return $this->models[(string)$name];
+        }
+
+        // send the default value, we don't know this model
+		return $default;
 	}
 
 	/**

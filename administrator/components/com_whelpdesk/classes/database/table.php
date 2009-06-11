@@ -19,7 +19,7 @@ abstract class WTable extends JTable {
      *
      * @var <type>
      */
-    private $dataset;
+    private $fieldset;
 
     private $init = false;
 
@@ -28,11 +28,11 @@ abstract class WTable extends JTable {
         // each custom field required an instance variable
         if (preg_match('~^\#\_\_whelpdesk\_(.+)~', $table, $matches)) {
             // get the names of the groups associated with this table
-            $this->dataset = WFieldset::getInstance($matches[1]);
-            $groupNames = $this->dataset->getGroupNames();
+            $this->fieldset = WFieldset::getInstance($matches[1]);
+            $groupNames = $this->fieldset->getGroupNames();
 
             // itterate over the fields
-            $fields = $this->dataset->getFields();
+            $fields = $this->fieldset->getFields();
             $this->init = true;
             for ($z = 0, $t = count($fields); $z < $t; $z++) {
                 $field = $fields[$z];
@@ -64,14 +64,14 @@ abstract class WTable extends JTable {
 	}
 
     public function check() {
-        if (!$this->dataset) {
+        if (!$this->fieldset) {
             // there is no dataset so we can continue
             return true;
         }
 
         // do some prep work
         $isValid = true;
-        $fields = $this->dataset->getFields();
+        $fields = $this->fieldset->getFields();
 
         // itterate over fields if there are any
         if (count($fields)) {
@@ -158,6 +158,9 @@ abstract class WTable extends JTable {
         return($this->_db->query());
     }
 
+    public function getFieldset() {
+        return $this->fieldset;
+    }
 
 }
 
