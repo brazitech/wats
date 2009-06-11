@@ -100,6 +100,8 @@ span img{
 
 ?>
 
+<?php WDocumentHelper::render(); ?>
+
 <script type="text/javascript">
     window.addEvent('domready', function(){
     

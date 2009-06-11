@@ -15,7 +15,7 @@
                 <div id="cpanel">
                     <div style="float: left;">
                         <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=knowledgedomain.list'); ?>">
+                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=knowledgedomains.list'); ?>">
                                 <img alt="<?php echo JText::_('KNOWLEDGE DOMAINS'); ?>" src="components/com_whelpdesk/assets/icons/48-karbon.png"/>
                                 <span><?php echo JText::_('KNOWLEDGE DOMAINS'); ?></span>
                             </a>
@@ -45,7 +45,7 @@
                 <div id="cpanel">
                     <div style="float: left;">
                         <div class="icon">
-                            <a href="">
+                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display'); ?>">
                                 <img alt="<?php echo JText::_('DOCUMENTS'); ?>" src="components/com_whelpdesk/assets/icons/48-folder_documents.png"/>
                                 <span><?php echo JText::_('DOCUMENTS'); ?></span>
                             </a>
