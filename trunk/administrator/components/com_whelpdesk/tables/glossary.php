@@ -10,6 +10,7 @@
 defined('JPATH_BASE') or die();
 
 wimport('database.table');
+wimport('helper.alias');
 
 /**
  * Representation of the #__whelpdesk_glossary table
@@ -165,7 +166,7 @@ class JTableGlossary extends WTable {
         if (trim($this->alias) == '') {
             $this->setError(JText::_('WHD GLOSSARY ALIAS MISSING'));
             $isValid = false;
-        } elseif (preg_match('/([^a-z0-9\-\_\.\(\)])/', $this->alias)) {
+        } elseif (!WAliasHelper::isValid($this->alias)) {
             // check alias characters are acceptable
             $this->setError(JText::_('WHD GLOSSARY ALIAS IS INVALID'));
             $isValid = false;

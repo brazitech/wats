@@ -35,7 +35,7 @@ class TextareaWField extends WField {
         return '<textarea name="' . $this->getName() . '" '
              .           'class="text_area" '
              .           'rows="' . (($this->params->rows) ? $this->params->rows : '5') . '" '
-             .           'cols="' . (($this->params->cols) ? $this->params->cols : '30') . '"> '
+             .           'cols="' . (($this->params->cols) ? $this->params->cols : '30') . '">'
              .     $value
              . '</textarea>';
     }
