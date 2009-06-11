@@ -27,6 +27,9 @@ class GlossaryHTMLWView extends WView {
         // populate the toolbar
         $this->toolbar();
 
+        // add metadata to the document
+        $this->document();
+
         // add the editor
         $this->addModel('editor', JFactory::getEditor());
 
@@ -46,6 +49,22 @@ class GlossaryHTMLWView extends WView {
         JToolBarHelper::cancel('glossary.list');
         JToolbarHelper::divider();
         JToolbarHelper::help('glossary.form', true);
+    }
+
+    private function document() {
+        // add glossary to the pathway
+        WDocumentHelper::addPathwayItem(JText::_('GLOSSARY'), null, 'index.php?option=com_whelpdesk&task=glossary.list');
+
+        // work with the current term...
+        $term = $this->getModel();
+        if ($term->id) {
+            WDocumentHelper::addPathwayItem($term->term);
+            // set the subtitle
+            WDocumentHelper::subtitle(JText::sprintf('EDITING GLOSSARY TERM %s', $term->term));
+        } else {
+            WDocumentHelper::addPathwayItem(JText::_('NEW GLOSSARY ITEM'));
+            WDocumentHelper::subtitle(JText::_('NEW GLOSSARY ITEM'));
+        }
     }
 
 }
