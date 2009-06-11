@@ -27,6 +27,9 @@ class GlossaryHTMLWView extends WView {
         // populate the toolbar
         $this->toolbar();
 
+        // add metadata to the document
+        $this->document();
+
         // get the pagination
         $this->pagination();
 
@@ -68,6 +71,14 @@ class GlossaryHTMLWView extends WView {
         // create JPagination object
         jimport('joomla.html.pagination');
         $this->addModel('pagination', new JPagination($this->getModel('total'), $limitstart, $limit));
+    }
+
+    private function document() {
+        // set the subtitle
+        WDocumentHelper::subtitle(JText::_('GLOSSARY'));
+
+        // add the current item to the end of the pathway
+        WDocumentHelper::addPathwayItem(JText::_('GLOSSARY'));
     }
 
 }

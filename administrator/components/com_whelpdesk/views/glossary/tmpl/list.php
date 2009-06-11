@@ -11,6 +11,7 @@ defined('JPATH_BASE') or die();
 
 ?>
 
+<?php WDocumentHelper::render(); ?>
 
 <form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="adminForm">
 
