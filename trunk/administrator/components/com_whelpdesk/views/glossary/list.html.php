@@ -52,25 +52,14 @@ class GlossaryHTMLWView extends WView {
         }
         if ($this->getModel('canChangeState')) {
             JToolbarHelper::divider();
+
             JToolBarHelper::publishList('glossary.state.publish');
             JToolBarHelper::unpublishList('glossary.state.unpublish');
         }
+        WToolbarHelper::divider();
+        WToolbarHelper::permissions();
         JToolbarHelper::divider();
         JToolbarHelper::help('glossary.list', true);
-    }
-
-    private function pagination() {
-        // get the application object
-        $app =& JFactory::getApplication();
-
-        // get the limit and limitstart
-        $limit = $app->getUserStateFromRequest("com_whelpdesk.glossary.list.limit", "limit", 0, "int");
-        $limitstart = $app->getUserStateFromRequest("com_whelpdesk.glossary.list.limitstart", "limitstart", 0, "int");
-        $limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
-
-        // create JPagination object
-        jimport('joomla.html.pagination');
-        $this->addModel('pagination', new JPagination($this->getModel('total'), $limitstart, $limit));
     }
 
     private function document() {

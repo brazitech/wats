@@ -110,8 +110,10 @@ class GlossaryListWController extends GlossaryWController {
         $view->addModel('canDelete', $canDelete);
         $view->addModel('canChangeState', $canChangeState);
 
-        // add the total number of terms to the view
-        $view->addModel('total', $model->getTotal());
+        // add the pagination data to the view
+        $view->addModel('paginationTotal',      $model->getTotal());
+        $view->addModel('paginationLimit',      $model->getLimit());
+        $view->addModel('paginationLimitStart', $model->getLimitStart());
 
         // display the view!
         $this->display();
