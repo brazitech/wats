@@ -176,6 +176,16 @@ abstract class WView {
         $this->layout       = 'default';
     }
 
+    protected function pagination() {
+        // create JPagination object
+        if (!class_exists('JPagination')) {
+            jimport('joomla.html.pagination');
+        }
+        $this->addModel('pagination', new JPagination($this->getModel('paginationTotal'),
+                                                      $this->getModel('paginationLimitStart'),
+                                                      $this->getModel('paginationLimit')));
+    }
+
 
     /**
      * Gets a WView object. Remember that WView objects are cached, and

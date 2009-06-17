@@ -108,6 +108,14 @@ abstract class WModel {
                                                                           'limitstart',
                                                                           0);
             }
+            
+            // correct value as necessary
+            $limit = $this->getLimit();
+            $total = $this->getTotal();
+            if ($this->limitstart > $total) {
+                $this->limitstart = $total;
+            }
+            $this->limitstart = ($limit != 0 ? (floor($this->limitstart / $limit) * $limit) : 0);
         }
 
         return $this->limitstart;
@@ -166,7 +174,7 @@ abstract class WModel {
      * @return string
      */
     public function getFilterOrderDirection($default='ASC') {
-        $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order.direction',
+        $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.direction',
                                                                         'filter_order_Dir',
                                                                          $default,
                                                                          'cmd');
@@ -182,7 +190,7 @@ abstract class WModel {
 
         $filters['state']           = $this->getFilterState();
         $filters['search']          = $this->getFilterSearch();
-        $filters['order']           = $this->getFilterOrder($this->getDefaultFilterOrder());
+        $filters['order']           = $this->getFilterOrder();
         $filters['orderDirection']  = $this->getFilterOrderDirection();
         
         return $filters;
