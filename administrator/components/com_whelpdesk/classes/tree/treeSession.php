@@ -452,6 +452,55 @@ class StandardTreeSession {
         return $db->loadAssocList();
     }
 
+    public function getNodes($branchType, $branchIdentifier) {
+        $database = JFactory::getDBO();
+        $query = 'SELECT ' . dbName('tree.*')
+               . ' FROM ' . dbTable('tree') . ' AS ' . dbName('tree')
+               . ' JOIN ' . dbTable('tree') . ' AS ' . dbName('branch')
+               . ' WHERE ' . dbName('tree.grp') . ' = ' . $database->Quote($this->group)
+               . ' AND ' . dbName('branch.grp') . ' = ' . $database->Quote($this->group)
+               . ' AND ' . dbName('branch.type') . ' = ' . $database->Quote($branchType)
+               . ' AND ' . dbName('branch.identifier') . ' = ' . $database->Quote($branchIdentifier)
+               . ' AND ' . dbName('tree.lft') . ' >= ' . dbName('branch.lft')
+               . ' AND ' . dbName('tree.rgt') . ' <= ' . dbName('branch.rgt')
+               . ' ORDER BY ' . dbName('tree.lft') . ' ASC';
+        $database->setQuery($query);
+        $branch = $database->loadObjectList();
+
+        // check the branch exists
+        if (count($branch) == 0) {
+             throw new WException('UNKNOWN BRANCH %s %s', $branchType, $branchIdentifier);
+        }
+
+        // process branch
+        $branchProcessed = array($branch[0]);
+        $current = $branch[0];
+        $current->parent = null;
+        for ($i = 1, $c = count($branch); $i < $c; $i++) {
+            $stick = $branch[$i];
+            $stick->children = array();
+
+            // stick is a direct child of the current node
+            if ($stick->parent_type == $current->type && $stick->parent_identifier == $current->identifier) {
+                // add the stick to the current node
+                $current->children[] = $stick;
+                $stick->parent = $current;
+                $current = $stick;
+            } else {
+                // stick belongs to something further up the tree, try again
+                $current = $current->parent;
+                if ($current == null) {
+                    // uh oh, we just met the top level node...
+                   throw new WException('FAILED TO BUILD TREE, TREE MIGHT BE CORRUPT');
+                }
+                $i--;
+            }
+        }
+
+        // all done!
+        return $branchProcessed;
+    }
+
     /**
      * Adds a new type access database
      *
