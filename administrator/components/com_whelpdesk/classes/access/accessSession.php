@@ -254,9 +254,20 @@ class WAccessSession {
      */
     public function clearAccess($requestType, $requestIdentifier,
                                 $targetType, $targetIdentifier,
-                                $control=null) {
+                                $controlType=null, $control=null) {
+        $database = JFactory::getDBO();
 
-                                }
+        $query = 'DELETE FROM ' . dbTable('access_map')
+               . ' WHERE ' . dbName('grp') . ' = ' . $database->Quote($this->group)
+               . ' AND '  . dbName('request_type')       . ' = ' . $database->Quote($requestType)
+               . ' AND '  . dbName('request_identifier') . ' = ' . $database->Quote($requestIdentifier)
+               . ' AND '  . dbName('target_type')        . ' = ' . $database->Quote($targetType)
+               . ' AND '  . dbName('target_identifier')  . ' = ' . $database->Quote($targetIdentifier)
+               . (($controlType != null) ? ' AND '  . dbName('type')    . ' = ' . $database->Quote($controlType) : '')
+               . (($control != null)     ? ' AND '  . dbName('control') . ' = ' . $database->Quote($control) : '');
+        $database->setQuery($query);
+        return $database->query();
+    }
     
     /**
      * @todo
@@ -346,6 +357,42 @@ class WAccessSession {
         // no rules found, assume no access!
         WFactory::getOut()->log('Access denied no rules found');
         return false;
+    }
+
+    public function getRule($requestType, $requestIdentifier,
+                            $targetType, $targetIdentifier,
+                            $type, $control) {
+        $database = JFactory::getDBO();
+
+        // prepare the query
+        $query = 'SELECT ' . dbName('allow')
+               . ' FROM ' . dbTable('access_map')
+               . ' WHERE ' . dbName('grp') . ' = ' . $database->Quote($this->group)
+               . ' AND ' . dbName('request_type') . ' = ' . $database->Quote($requestType)
+               . ' AND ' . dbName('request_identifier') . ' = ' . $database->Quote($requestIdentifier)
+               . ' AND ' . dbName('target_type') . ' = ' . $database->Quote($targetType)
+               . ' AND ' . dbName('target_identifier') . ' = ' . $database->Quote($targetIdentifier)
+               . ' AND ' . dbName('control') . ' = ' . $database->Quote($control)
+               . ' AND ' . dbName('type') . ' = ' . $database->Quote($type);
+
+        // execute the query and in doing so populate the cache
+        $database->setQuery($query);
+        $status = $database->loadResult();
+
+        switch ($status) {
+            case '1':
+                $status = 'allow';
+                break;
+
+            case '0':
+                $status = 'deny';
+                break;
+
+            default:
+                $status = 'inherit';
+        }
+        
+        return $status;
     }
 
     /**
@@ -456,8 +503,8 @@ class WAccessSession {
     public function moveNode($type, $identifier, $newParentType, 
                                                          $newParentIdentifier) {
         // delegate method
-        $this->componentTreeSession-> moveNode($type, $identifier, $newParentType,
-                                                          $newParentIdentifier);
+        $this->componentTreeSession->moveNode($type, $identifier, 
+                                          $newParentType, $newParentIdentifier);
     }
 
     /**
@@ -470,7 +517,7 @@ class WAccessSession {
      */
     public function nodeExists($type, $identifier) {
         // delegate method
-        $this->componentTreeSession->nodeExists($type, $identifier);
+        return $this->componentTreeSession->nodeExists($type, $identifier);
     }
 
     /**
@@ -487,6 +534,14 @@ class WAccessSession {
 
     public function getControlPath() {
         return $this->controlPath;
+    }
+
+    public function getNodes($branchType, $branchIdentifier) {
+        return $this->componentTreeSession->getNodes($branchType, $branchIdentifier);
+    }
+
+    public function getAccessNodes($branchType, $branchIdentifier) {
+        return $this->accessTreeSession->getNodes($branchType, $branchIdentifier);
     }
 
 }
