@@ -264,6 +264,12 @@ function com_install()
                                                                       `name` = 'notifyemail'");
             $database->query();	
             break;
+        /**
+		 * patch from 3.0.0 to 3.0.1
+		 */	
+		case '3.0.0':
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='1' WHERE `name`='versionpatch';" );
+			$database->query();
 	}
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
@@ -281,7 +287,7 @@ function com_install()
 						<th>
 							<div style=\"text-align: center;\">
 								WebAmoeba Ticket System<br />
-								3.0.0 ( release candidate )
+								3.0.1
 							</div>
 						</th>
 					</tr>
