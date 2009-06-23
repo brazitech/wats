@@ -79,9 +79,9 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $view->assignRef("ticketOwner", $ticketOwner);
         $lastMessageOwner =& JFactory::getUser();
         $view->assignRef("lastMessageOwner", $lastMessageOwner);
-        if (@$ticket->assign) {
-            $ticketAsignee =& JFactory::getUser($ticket->assign);
-            $view->assignRef("ticketAsignee", $ticketAsignee);
+        if (@$ticket->assignId) {
+            $ticketAsignee =& JFactory::getUser($ticket->assignId);
+            $view->assignRef("assignee", $ticketAsignee);
         }
         
         // determine the templates to use
@@ -92,8 +92,12 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $mailer = JFactory::getMailer();
         $users =& $this->_getRelatedUsers($ticket);
         $users = array_merge($users, $this->_getNotificationUsers());
+        if (@$ticketAsignee) {
+            $ticketAsignee->watsid = $ticketAsignee->id;
+            $users[] =& $ticketAsignee;
+        }
         
-        // we onyl want unique users, ignore duplicates!
+        // we only want unique users, ignore duplicates!
         $uniqueUsers = array();
         for ($i = 0; $i < count($users); $i++) {
             $isUnique = true;
@@ -160,7 +164,8 @@ class plgWaticketsystemMailnotification extends JPlugin {
         // get the notification email addresses
         $notifyEmails = array();
         if (!preg_match_all("~([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})~i", $this->params->get("email-others", ""), $notifyEmails)) {
-            return array();
+            $array = array();
+            return $array;
         }
         $notifyEmails = $notifyEmails[0];
         

@@ -11,6 +11,11 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 $wats =& WFactory::getConfig();
+
+// create the URL, make suire this includes the host!
+$uri =& JURI::getInstance();
+$url = JRoute::_('index.php?option=com_waticketsystem&act=ticket&task=view&ticketid='.$this->ticket->ticketId);
+$url = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port')) . ((!preg_match('~^/~', $url)) ? '/' : '') . $url;
 ?>
  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -36,7 +41,7 @@ $wats =& WFactory::getConfig();
             <tbody>
                 <tr>
                     <td><strong><?php echo JText::_("Ticket Name"); ?></strong></td>
-                    <td><a href="<?php echo JRoute::_("index.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->ticket->ticketId); ?>"><?php echo $this->ticket->name; ?></a></td>
+                    <td><a href="<?php echo $url; ?>"><?php echo $this->ticket->name; ?></a></td>
                 </tr>
                 <tr>
                     <td><strong><?php echo JText::_("WATS_TICKETS_ID"); ?></strong></td>
