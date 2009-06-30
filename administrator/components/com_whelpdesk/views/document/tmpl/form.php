@@ -42,22 +42,43 @@ $document->addScriptDeclaration("function populateAlias(force) {
 
 <?php WDocumentHelper::render(); ?>
 
-<?php $container = $this->getModel(); ?>
+<?php $document = $this->getModel(); ?>
 <form action="<?php echo JRoute::_('index.php'); ?>"
       method="post"
       name="adminForm"
-      onsubmit="populateAlias();">
+      onsubmit="javascript: populateAlias();"
+      enctype="multipart/form-data">
 
     <!-- request options -->
     <input type="hidden" name="option" value="com_whelpdesk" />
-    <input type="hidden" name="task"   value="glossary.create" />
+    <input type="hidden" name="task"   value="document.upload" />
     <input type="hidden" name="stage"  value="commit" />
-    <input type="hidden" name="id"     value="<?php echo $container->id; ?>" />
-    <input type="hidden" name="parent" value="<?php echo $container->parent; ?>" />
-    <!--<input type="hidden" name="redirect" value="<?php echo $this->redirect;?>" />-->
+    <input type="hidden" name="id"     value="<?php echo $document->id; ?>" />
+    <input type="hidden" name="parent" value="<?php echo $document->parent; ?>" />
     <?php echo JHTML::_('form.token'); ?>
 
     <div class="col width-70">
+        <?php if (!$document->id) : ?>
+        <fieldset class="adminform">
+            <table  class="admintable">
+                <tr>
+                    <td class="key">
+                        <label for="upload">
+                            <?php echo JText::_('UPLOAD FILE'); ?>
+                        </label>
+                    </td>
+                    <td>
+                        <input class="input_box"
+                               name="upload"
+                               id="upload"
+                               type="file"
+                               size="80" /><br />
+                        <?php echo JText::sprintf('MAXIMUM FILE SIZE IS %sMB', $this->getModel('maxFileSize')); ?>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <?php endif; ?>
         <fieldset class="adminform">
             <table  class="admintable">
                 <tr>
@@ -73,7 +94,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                                id="name"
                                size="40"
                                maxlength="500"
-                               value="<?php echo $container->name; ?>"
+                               value="<?php echo $document->name; ?>"
                                onchange="populateAlias(false);" />
                     </td>
                 </tr>
@@ -84,7 +105,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                         </label>
                     </td>
                     <td>
-                        <input class="inputbox" type="text" name="alias" id="alias" size="34" maxlength="255" value="<?php echo $container->alias; ?>" />
+                        <input class="inputbox" type="text" name="alias" id="alias" size="34" maxlength="255" value="<?php echo $document->alias; ?>" />
                         <img id="rebuildAlias"
                              src="components/com_whelpdesk/assets/javascript/wall-disable.png"
                              alt="<?php echo JText::_('Rebuild Alias'); ?>"
@@ -96,12 +117,28 @@ $document->addScriptDeclaration("function populateAlias(force) {
                              onmouseover="javascript: this.src = 'components/com_whelpdesk/assets/javascript/wall-build.gif'"
                              onmouseout="javascript: this.src = 'components/com_whelpdesk/assets/javascript/wall-disable.png'" />
                     </td>
+                    <?php if ($document->id) : ?>
+                    <td class="key">
+                        <label for="filename">
+                            <?php echo JText::_('FILENAME'); ?>
+                        </label>
+                    </td>
+                    <td>
+                        <input class="inputbox" 
+                               type="text"
+                               name="filename"
+                               id="filename"
+                               size="34"
+                               maxlength="255"
+                               value="<?php echo $document->filename; ?>" />
+                    </td>
+                    <?php endif; ?>
                 </tr>
             </table>
             <table class="admintable" width="100%">
                 <tr>
                     <td>
-                        <?php echo $this->getModel('editor')->display('description',  $container->description, '100%', '200', '75', '20', false) ; ?>
+                        <?php echo $this->getModel('editor')->display('description',  $document->description, '100%', '200', '75', '20', false) ; ?>
                     </td>
                 </tr>
             </table>
@@ -109,7 +146,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
     </div>
 
     <div class="col width-30">
-        <?php if ($container->id) : ?>
+        <?php if ($document->id) : ?>
         <fieldset class="adminform" style="border: 1px dashed silver; margin: 0px 0px 10px 0px;">
             <table class="admintable" style="padding: 0px; margin-bottom: 0px; width: 100%;">
                 <tr>
@@ -117,7 +154,10 @@ $document->addScriptDeclaration("function populateAlias(force) {
                         <strong><?php echo JText::_('CREATED BY'); ?></strong>
                     </td>
                     <td>
-                        <?php echo $this->getModel('creator')->get('username'); ?>
+                        <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&cid[]='.$this->getModel('creator')->get('id')); ?>"
+                           target="__blank">
+                            <?php echo $this->getModel('creator')->get('username'); ?>
+                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -125,16 +165,16 @@ $document->addScriptDeclaration("function populateAlias(force) {
                         <strong><?php echo JText::_('CREATED'); ?></strong>
                     </td>
                     <td>
-                        <?php echo JHTML::_('date',  $container->created,  JText::_('DATE_FORMAT_LC2')); ?>
+                        <?php echo JHTML::_('date',  $document->created,  JText::_('DATE_FORMAT_LC2')); ?>
                     </td>
                 </tr>
-                <?php if ($container->modified != JFactory::getDBO()->getNullDate()) : ?>
+                <?php if ($document->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
                         <strong><?php echo JText::_('MODIFIED'); ?></strong>
                     </td>
                     <td>
-                        <?php echo JHTML::_('date',  $container->modified, JText::_('DATE_FORMAT_LC2')); ?>
+                        <?php echo JHTML::_('date',  $document->modified, JText::_('DATE_FORMAT_LC2')); ?>
                     </td>
                 </tr>
                 <?php endif; ?>
@@ -144,16 +184,38 @@ $document->addScriptDeclaration("function populateAlias(force) {
                     </td>
                     <td>
                         <input onclick="this.select();"
-                               value="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display&id='.$container->id); ?>"
+                               value="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=document.display&id='.$document->id); ?>"
                                readonly="readonly"
                                id="webAddress"
                                style="width: 100%;"/>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('DOWNLOADS'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo $document->hits;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('SIZE'); ?></strong>
+                    </td>
+                    <td>
+                        <?php if ($document->bytes < 1024) : ?>
+                        <?php echo $document->bytes; ?> B
+                        <?php elseif (round(($document->bytes / 1048576), 1) < 0.1) : ?>
+                        <?php echo round(($document->bytes / 1024), 1); ?> KB
+                        <?php else : ?>
+                        <?php echo round(($document->bytes / 1048576), 1); ?> MB
+                        <?php endif; ?>
+                    </td>
+                </tr>
             </table>
         </fieldset>
         <?php endif; ?>
-        <?php echo $this->loadLayout('fieldset_simpleform'); ?>
+        <?php //echo $this->loadLayout('fieldset_simpleform'); ?>
 </div>
 
 </form>

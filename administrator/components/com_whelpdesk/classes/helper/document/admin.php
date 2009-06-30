@@ -6,11 +6,15 @@
  * @license		GNU/GPL
  */
 
+JFactory::getDocument()->addStyleDeclaration('.icon-48-whelpdesk {
+background-image: url(components/com_whelpdesk/assets/icon-48.png);
+}');
+
 /**
  * Interface that all implementing classes must implement. This is used to 
  * create a generic class interface for all WToolbarHelper implementations.
  */
-class WDocumentHelper implements WDocumentHelperInterface {
+abstract class WDocumentHelper implements WDocumentHelperInterface {
 
     private static $subtitle = 'Webamoeba Help Desk';
     private static $description = '';
@@ -40,6 +44,12 @@ class WDocumentHelper implements WDocumentHelperInterface {
     }
 
     public function render() {
+
+        $document = JFactory::getDocument();
+        $documentTitle = $document->getTitle();
+        $documentTitle .= ' - Webamoeba Help Desk - ' . self::$subtitle;
+        $document->setTitle($documentTitle);
+
         include('admin.tmpl.php');
     }
 }

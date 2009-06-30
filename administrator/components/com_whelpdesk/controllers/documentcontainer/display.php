@@ -56,7 +56,7 @@ class DocumentcontainerDisplayWController extends DocumentcontainerWController {
         try {
             $canCreateDocument = $accessSession->hasAccess('user', $user->get('id'),
                                                            'documentcontainer', $table->id,
-                                                           'document', 'create');
+                                                           'documentcontainer', 'upload');
         } catch (Exception $e) {
             $canCreateDocument = false;
         }
@@ -109,7 +109,11 @@ class DocumentcontainerDisplayWController extends DocumentcontainerWController {
 		$format =  strtolower($document->getType());
         $view = WView::getInstance('documentcontainer', 'display', $format);
 
+        // add the default model - the container itself
         $view->addModel('container', $table, true);
+
+        // add the creator to the view
+        $view->addModel('creator', JFactory::getUser($table->creator));
 
         // add children to the view
         $view->addModel('documentcontainers', $documentcontainers);

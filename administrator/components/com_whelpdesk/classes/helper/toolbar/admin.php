@@ -126,7 +126,7 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
 
     private static $permissions = false;
 
-    public static function permissions($task = 'permissions', $alt = 'Permissions') {
+    public static function permissions($task = 'permissions.menu', $alt = 'Permissions') {
 		// Add a standard button
 		JToolBar::getInstance('toolbar')->appendButton('Standard', 'permissions', $alt, $task, false, false);
 
@@ -151,5 +151,34 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
             self::$move = true;
         }
 	}
+
+    private static $here = false;
+
+    public static function here($task = 'here', $alt = 'Here') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'here', $alt, $task, false, false);
+
+        if (!self::$here) {
+            // add CSS
+            $style = ".icon-32-here { background-image: url(components/com_whelpdesk/assets/icons/32-windows_nofullscreen.png); }";
+            JFactory::getDocument()->addStyleDeclaration($style);
+            self::$here = true;
+        }
+	}
+
+    public static function next($task = 'next', $alt = 'Next') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'forward', $alt, $task, false, false);
+	}
+
+    public static function back($task = 'back', $alt = 'Back') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'back', $alt, $task, false, false);
+	}
+
+    public static function link($url, $alt, $icon) {
+		// Add a link button
+		JToolBar::getInstance('toolbar')->appendButton('Link', $icon, $alt, $url);
+    }
 
 }

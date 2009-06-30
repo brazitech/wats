@@ -7,7 +7,7 @@
  */
 
 // determine if we should be showing links
-$showLinks = ((JRequest::getInt('hidemainmenu', 0)) == 0);
+$showLinks = (!JRequest::getBool('hidemainmenu', false) && !JRequest::getBool('modal', false));
 
 ?>
 
@@ -15,7 +15,11 @@ $showLinks = ((JRequest::getInt('hidemainmenu', 0)) == 0);
     <h1 id="wsubheading-name"><?php echo htmlentities(self::$subtitle, ENT_NOQUOTES, 'UTF-8'); ?></h1>
 
     <?php if (strlen(self::$description)) : ?>
-    <div id="wsubheading-description"><?php echo self::$description; ?></div>
+    <div id="wsubheading-description">
+        <p style="margin-top: 0;">
+            <?php echo self::$description; ?>
+        </p>
+    </div>
     <?php endif; ?>
 
     <?php if (count(self::$pathway)) : ?>

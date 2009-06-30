@@ -44,19 +44,23 @@ class DocumentcontainerHTMLWView extends WView {
             WToolBarHelper::addNew('documentcontainer.create', 'New Folder');
         }
         if ($this->getModel('canCreateDocument')) {
-            WToolBarHelper::addNew('document.create', 'New File');
+            WToolBarHelper::addNew('document.upload', 'Upload File');
         }
         if ($this->getModel('canEdit')) {
             WToolbarHelper::edit('documentcontainer.edit.start');
-        }
-        if ($this->getModel('canMove')) {
-            WToolbarHelper::move('documentcontainer.move.start');
         }
         if ($this->getModel()->id != 1 && $this->getModel('canDelete')) {
             WToolbarHelper::delete('documentcontainer.delete.start');
         }
         WToolbarHelper::divider();
-        WToolbarHelper::permissions('documentcontainer.delete.start');
+        if ($this->getModel()->id != 1 && $this->getModel('canMove')) {
+            WToolbarHelper::move('documentcontainer.move.start');
+        }
+        if ($this->getModel()->id != 1 && $this->getModel('canMove')) {
+            WToolbarHelper::here('documentcontainer.move.here');
+        }
+        WToolbarHelper::divider();
+        WToolbarHelper::permissions();
         WToolbarHelper::divider();
         WToolbarHelper::help('documents.display', true);
     }

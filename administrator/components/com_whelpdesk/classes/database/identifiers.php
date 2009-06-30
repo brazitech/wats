@@ -20,6 +20,10 @@ function dbName($name, $table=false) {
     if ($table && substr($name, 0, 3) != '#__') {
         $name = "#__whelpdesk_" . $name;
     }
+
+    if (!is_string($name)) {
+        var_dump(debug_backtrace());
+    }
     
     // dealing with multipart-name?
     if (strpos($name, '.')) {

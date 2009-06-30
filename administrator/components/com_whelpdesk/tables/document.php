@@ -15,7 +15,7 @@ wimport('helper.alias');
 /**
  * Representation of the #__whelpdesk_glossary table
  */
-class JTableDocumentcontainer extends WTable {
+class JTableDocument extends WTable {
 
     /**
      * PK
@@ -55,39 +55,82 @@ class JTableDocumentcontainer extends WTable {
     public $description = '';
 
     /**
-     * Date and time when the container was created.
+     * Date and time when the document was created.
      *
      * @var string
      */
     public $created = '0000-00-00 00:00:00';
 
     /**
-     * ID of the user who created the container
+     * User who the document was uploaded by
      *
      * @var int
      */
-    public $creator = 0;
+    public $created_by;
 
     /**
-     * Date and time when the container was last modified.
+     * Date and time when the document was modified.
      *
      * @var string
      */
     public $modified = '0000-00-00 00:00:00';
 
     /**
-     * User to whom the container is checked out
+     * User to whom the document is checked out
      *
      * @var int
      */
     public $checked_out = 0;
 
     /**
-     * Time at which the container was checked out
+     * Time at which the document was checked out
      *
      * @var string
      */
     public $checked_out_time = '0000-00-00 00:00:00';
+
+    /**
+     * Number of times the document has been downloaded
+     *
+     * @var int
+     */
+    public $hits = 0;
+
+    /**
+     * Time at which the hits were last reset
+     *
+     * @var string
+     */
+    public $hits_reset = '0000-00-00 00:00:00';
+
+    /**
+     * The MIME type of the payload
+     *
+     * @var string
+     */
+    public $mime_type = '';
+
+    /**
+     * Name of the file as it should be when downloaded - this is generllay the
+     * orginal filename.
+     *
+     * @var string
+     */
+    public $filename = '';
+
+    /**
+     * The size of the payload measured in bytes
+     *
+     * @var int
+     */
+    public $bytes = 0;
+
+    /**
+     * The file contents
+     *
+     * @var string
+     */
+    public $payload = '';
 
     /**
      *
@@ -95,7 +138,7 @@ class JTableDocumentcontainer extends WTable {
      * @todo document
      */
     function __construct($database) {
-        parent::__construct('#__whelpdesk_document_containers', 'id', $database);
+        parent::__construct('#__whelpdesk_documents', 'id', $database);
     }
 
     /**
@@ -114,43 +157,49 @@ class JTableDocumentcontainer extends WTable {
 
         // check for name
         if (trim($this->name) == '') {
-            $this->setError(JText::_('WHD DOCUMENT CONTAINER NAME MISSING'));
+            $this->setError(JText::_('WHD DOCUMENT NAME MISSING'));
             $isValid = false;
         } else {
             // check name is unique
             $db = JFactory::getDBO();
             $sql = 'SELECT COUNT(*) ' .
-                   'FROM ' . dbTable('document_containers') . ' ' .
+                   'FROM ' . dbTable('documents') . ' ' .
                    'WHERE ' . dbName('name') . ' = ' . $db->Quote($this->name) .
                    ' AND ' . dbName('id') . ' != ' . intval($this->id) .
                    ' AND ' . dbName('parent') . ' = ' . intval($this->parent);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD DOCUMENT CONTAINER NAME %s MUST BE UNIQUE', $this->name));
+                $this->setError(JText::sprintf('WHD DOCUMENT NAME %s MUST BE UNIQUE', $this->name));
                 $isValid = false;
             }
         }
 
         // check for alias
         if (trim($this->alias) == '') {
-            $this->setError(JText::_('WHD DOCUMENT CONTAINER ALIAS MISSING'));
+            $this->setError(JText::_('WHD DOCUMENT ALIAS MISSING'));
             $isValid = false;
         } elseif (!WAliasHelper::isValid($this->alias)) {
             // check alias characters are acceptable
-            $this->setError(JText::_('WHD DOCUMENT CONTAINER ALIAS IS INVALID'));
+            $this->setError(JText::_('WHD DOCUMENT ALIAS IS INVALID'));
             $isValid = false;
         } else {
             // check alias is unique
             $db = JFactory::getDBO();
             $sql = 'SELECT COUNT(*) ' .
-                   'FROM ' . dbTable('document_containers') . ' ' .
+                   'FROM ' . dbTable('documents') . ' ' .
                    'WHERE ' . dbName('alias') . ' = ' . $db->Quote($this->alias) .
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD DOCUMENT CONTAINER ALIAS %s MUST BE GLOBALLY UNIQUE', $this->alias));
+                $this->setError(JText::sprintf('WHD DOCUMENT ALIAS %s MUST BE GLOBALLY UNIQUE', $this->alias));
                 $isValid = false;
             }
+        }
+
+        // check for file name
+        if (trim($this->filename) == '') {
+            $this->setError(JText::_('WHD DOCUMENT FILENAME MISSING'));
+            $isValid = false;
         }
 
         // let the parent have a look
