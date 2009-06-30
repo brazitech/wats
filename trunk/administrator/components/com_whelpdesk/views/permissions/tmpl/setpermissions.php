@@ -178,7 +178,7 @@ JFactory::getDocument()->addScriptDeclaration($script);
                 'control' : control
             },
             onComplete: function(response) {
-                response = eval('(' + trim(response) + ')');
+                response = eval('(' + response + ')');
                 var ui = document.getElementById('request-object-' + response.requestIdentifier + '-' + response.controlType + '-' + response.control);
 
                 var icon = null;

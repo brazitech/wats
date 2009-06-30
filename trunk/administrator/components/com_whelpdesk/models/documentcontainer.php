@@ -148,8 +148,10 @@ class DocumentcontainerWModel extends WModel {
      * @see DocumentcontainerWModel::getDocumentcontainers()
      */
     private function buildDocumentsQuery($parent) {
-        return 'SELECT ' . dbName('d.*') .
+        return 'SELECT ' . dbName('d.*') . ', IFNULL(' . dbName('i.icon') . ', ' . JFactory::getDBO()->Quote('unknown') . ') ' . ' AS ' . dbName('icon') .
                ' FROM ' . dbTable('documents') . ' AS ' . dbName('d') .
+               ' LEFT JOIN ' . dbTable('mime_icon') . ' AS ' . dbName('i') .
+               '     ON ' . dbName('d.mime_type') . ' = ' . dbName('i.mime_type') .
                ' JOIN ' . dbTable('tree') . ' AS ' . dbName('t') .
                '     ON ' . dbName('t.identifier') . ' = ' . dbName('d.id') .
                '         AND ' . dbName('t.grp') .   ' = ' . JFactory::getDBO()->Quote('component') .

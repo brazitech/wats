@@ -10,7 +10,7 @@
 defined('JPATH_BASE') or die();
 
 
-class DocumentcontainerHTMLWView extends WView {
+class DocumentHTMLWView extends WView {
 
     /**
 	 * Constructor
@@ -45,11 +45,11 @@ class DocumentcontainerHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        JToolBarHelper::save('documentcontainer.'.WFactory::getCommand()->getUsecase().'.save');
-        JToolBarHelper::apply('documentcontainer.'.WFactory::getCommand()->getUsecase().'.apply');
-        JToolBarHelper::cancel('documentcontainer.'.WFactory::getCommand()->getUsecase().'.cancel');
+        JToolBarHelper::save('document.'.WFactory::getCommand()->getUsecase().'.save');
+        JToolBarHelper::apply('document.'.WFactory::getCommand()->getUsecase().'.apply');
+        JToolBarHelper::cancel('documentcontainer.display');
         JToolbarHelper::divider();
-        JToolbarHelper::help('documentcontainer.form', true);
+        JToolbarHelper::help('document.form', true);
     }
 
     private function document() {
@@ -62,14 +62,14 @@ class DocumentcontainerHTMLWView extends WView {
         }
 
         // work with the current contaioner...
-        $container = $this->getModel();
-        if ($container->id) {
-            WDocumentHelper::addPathwayItem($container->name);
+        $document = $this->getModel();
+        if ($document->id) {
+            WDocumentHelper::addPathwayItem($document->name);
             // set the subtitle
-            WDocumentHelper::subtitle(JText::sprintf('EDITING DOCUMENT CONTAINER %s', $container->name));
+            WDocumentHelper::subtitle(JText::sprintf('EDITING DOCUMENT %s', $document->name));
         } else {
-            WDocumentHelper::addPathwayItem(JText::_('NEW DOCUMENT CONTAINER'));
-            WDocumentHelper::subtitle(JText::_('NEW DOCUMENT CONTAINER'));
+            WDocumentHelper::addPathwayItem(JText::_('UPLOAD DOCUMENT'));
+            WDocumentHelper::subtitle(JText::_('UPLOAD DOCUMENT'));
         }
     }
 

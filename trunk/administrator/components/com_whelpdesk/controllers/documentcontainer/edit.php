@@ -7,6 +7,7 @@
  */
 
 wimport('application.model');
+jimport('joomla.utilities.date');
 
 /**
  * Parent class inclusion
@@ -39,27 +40,44 @@ class DocumentcontainerEditWController extends DocumentcontainerWController {
         $table = WFactory::getTable('documentcontainer');
         $table->load($this->getAccessTargetIdentifier());
 
+        // make sure the record isn;t already checked out
+        if ($table->isCheckedOut(JFactory::getUser()->get('id'))) {
+            WFactory::getOut()->log('Document container has been checked out by another user');
+            JError::raiseWarning('500', 'WHD DOCUMENT CONTAINER IS ALREADY CHECKED OUT');
+            return;
+        }
+
         // check where in the usecase we are
-        if ($stage == 'save' || $stage == 'apply') {
+        switch ($stage) {
+            case 'cancel':
+                // stop editing, checkin the record
+                $table->checkIn();
+                JRequest::setVar('task', 'documentcontainer.display.start');
+                return;
+                break;
+            case 'save':
+            case 'apply':
+                // attempt to save
+                if ($this->commit()) {
+                   JError::raiseNotice('INPUT', JText::_('WHD DOCUMENT CONTAINER SAVED'));
+                   if ($stage == 'save') {
+                       JRequest::setVar('id',   $table->id);
+                       JRequest::setVar('task', 'documentcontainer.display.start');
+                       // check in the table record
+                       $table->checkin();
+                       return;
+                   }/* else {
+                       JRequest::setVar('task', 'documentcontainer.edit.start');
+                       // @todo set request id
+                   }
 
-            // attempt to save
-            if ($this->commit()) {
-               JError::raiseNotice('INPUT', JText::_('WHD DOCUMENT CONTAINER SAVED'));
-               if ($stage == 'save') {
-                   JRequest::setVar('id',   $table->id);
-                   JRequest::setVar('task', 'documentcontainer.display.start');
-               } else {
-                   JRequest::setVar('task', 'documentcontainer.edit.start');
-                   // @todo set request id
-               }
-
-               return;
-            } else {
-                JError::raiseNotice('INPUT', JText::_('INVALID STUFF???'));;
-                foreach($table->getErrors() AS $error) {
-                    JError::raiseNotice('INPUT', $error);
+                   return;*/
+                } else {
+                    JError::raiseNotice('INPUT', JText::_('INVALID STUFF???'));;
+                    foreach($table->getErrors() AS $error) {
+                        JError::raiseNotice('INPUT', $error);
+                    }
                 }
-            }
         }
 
         // get the model
@@ -73,7 +91,11 @@ class DocumentcontainerEditWController extends DocumentcontainerWController {
 		$format =  strtolower($document->getType());
         $view = WView::getInstance('documentcontainer', 'form', $format);
 
+        // add the deafult model, the container
         $view->addModel('container', $table, true);
+
+        // add the creator to the view
+        $view->addModel('creator', JFactory::getUser($table->creator));
 
         // add the fieldset to the model
         $view->addModel('fieldset', $table->getFieldset());
@@ -81,6 +103,9 @@ class DocumentcontainerEditWController extends DocumentcontainerWController {
 
         // add the parents to the view
         $view->addModel('parents', $parents);
+
+        // check out the table record
+        $table->checkOut(JFactory::getUser()->id);
 
         // display the view!
         JRequest::setVar('view', 'form');
@@ -94,6 +119,10 @@ class DocumentcontainerEditWController extends DocumentcontainerWController {
         // make sure ID and the parent are integers
         $post['id']     = intval($post['id']);
         $post['parent'] = intval($post['parent']);
+
+        // set the updated date and time to now
+        $now = new JDate();
+        $post['modified'] = $now->toMySQL();
 
         return parent::commit($post);
     }

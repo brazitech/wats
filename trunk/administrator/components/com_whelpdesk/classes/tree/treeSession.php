@@ -1,10 +1,15 @@
 <?php
 /**
- * Help Desk for Joomla!
- * www.webamoeba.co.uk
+ * @version $Id$
+ * @copyright Copyright (C) James Kennard
+ * @license GNU/GPL
+ * @package helpdesk
  */
 
-defined('_JEXEC') or die('');
+// No direct access
+defined('JPATH_BASE') or die();
+
+wimport('tree.treeNode');
 
 /**
  * Description of HDTreeSession
@@ -290,16 +295,32 @@ class StandardTreeSession {
             // IMPORTANT
             // we must now update the node snapshot to reflect the changes, this
             // will then be used to remove any nodes
-            $node = $this->getNode($type, $identifier);
+            $node = $this->getNode($type, $identifier, true);
         }
 
         // now it's time to remove the node/nodes
+        // first lets get the nodes we need to notify after deletion
+        $query = 'SELECT * FROM ' . dbTable('tree') . ' ' .
+                 'WHERE ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
+                 'AND ' . dbName('rgt') . ' <= ' . $node['rgt'];
+        $db->setQuery($query);
+        $deletedNodes = $db->loadObjectList();
+
+        // now remove the nodes from the tree
         $query = 'DELETE FROM ' . dbTable('tree') . ' ' .
                  'WHERE ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
                  'AND ' . dbName('rgt') . ' <= ' . $node['rgt'];
         $db->setQuery($query);
         if (!$db->query()) {
             throw new WException('REMOVE NODE FAILED');
+        }
+
+        // tidy up the deleted nodes where applicable
+        foreach ($deletedNodes as $deletedNode) {
+            $treeNode = TreeNode::getInstance($deletedNode->type);
+            if ($treeNode != null) {
+                $treeNode->delete($deletedNode->identifier);
+            }
         }
 
         // close the hole in the tree
@@ -396,6 +417,7 @@ class StandardTreeSession {
      *
      * @param String $type
      * @param String $identifier
+     * @param Boolean $refresh
      * @return [array] Associative array that represents a node at the time of retrival
      */
     public function getNode($type, $identifier) {
@@ -445,7 +467,7 @@ class StandardTreeSession {
                . ' AND ' . dbName('node.identifier') . ' = ' . $db->Quote($identifier)
                . ' AND ' . dbName('tree.lft') . ' <= ' . dbName('node.lft')
                . ' AND ' . dbName('tree.rgt') . ' >= ' . dbName('node.rgt')
-               . ' ORDER BY ' . dbName('tree.lft') . ' DESC';
+               . ' ORDER BY ' . dbName('tree.lft') . ' DESC /*getNodePath*/';
         $db->setQuery($query);
 
         // return the result!
