@@ -263,8 +263,9 @@ class watsUserSet
 		{
 			$db =& JFactory::getDBO();
 		
-			$db->setQuery("SELECT u.* FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
+			$db->setQuery("SELECT u.*, wu.organisation, g.name AS groupname FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
                           "JOIN " . WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " ON " . WDBHelper::nameQuote("u.id") . " = " . WDBHelper::nameQuote("wu.watsid") .
+                          "JOIN " . WDBHelper::nameQuote("#__wats_groups") . " AS " . WDBHelper::nameQuote("g") . " ON " . WDBHelper::nameQuote("g.grpid") . " = " . WDBHelper::nameQuote("wu.grpid") .
 			              "ORDER BY " . WDBHelper::nameQuote("username") . " /* watsUserSet::load() */" );
 			$set = $db->loadObjectList();
 			$this->noOfUsers = count( $set );
@@ -276,6 +277,8 @@ class watsUserSet
 				$this->userSet[$i]->id = $set[$i]->id;
                 $this->userSet[$i]->name = $set[$i]->name;
                 $this->userSet[$i]->username = $set[$i]->username;
+                $this->userSet[$i]->organisation = $set[$i]->organisation;
+                $this->userSet[$i]->groupName = $set[$i]->groupname;
                 $this->userSet[$i]->email = $set[$i]->email;
                 $this->userSet[$i]->usertype = $set[$i]->usertype;
                 $this->userSet[$i]->block = $set[$i]->block;
