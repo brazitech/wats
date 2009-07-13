@@ -454,7 +454,7 @@ class watsTicketSetHTML extends watsTicketSet
 	 * @param start
 	 */
 	function view($limit, $limitstart) {
-		$wats =& JFactory::getConfig();
+		$wats =& WFactory::getConfig();
 		
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminlist\">
 				<thead>
