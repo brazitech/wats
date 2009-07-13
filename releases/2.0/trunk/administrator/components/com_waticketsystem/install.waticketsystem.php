@@ -219,6 +219,13 @@ function com_install()
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='8' WHERE `name`='versionpatch';" );
 			$database->query();
 			break;
+        /**
+		 * patch from 2.0.8 to 2.0.9
+		 */	
+		case '2.0.8':
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='9' WHERE `name`='versionpatch';" );
+			$database->query();
+			break;
 	}
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
