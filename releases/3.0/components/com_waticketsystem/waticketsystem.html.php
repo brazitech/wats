@@ -706,7 +706,7 @@ class watsTicketSetHTML extends watsTicketSet
 	 */
 	function view( $finish, $start = 0 )
 	{
-		global $Itemid;
+		global $Itemid, $watsUser;
 		
 		$wats =& WFactory::getConfig();
 		
@@ -769,18 +769,20 @@ class watsTicketSetHTML extends watsTicketSet
 					<td>".$this->_ticketList[$i]->msgNumberOf."</td>
 					<td><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_ticketList[$i]->lastMsg )."</span></td>
 					<td>";
-			if ( $this->_ticketList[$i]->lifeCycle != 1)
+            $canDelete =  $watsUser->checkPermission($this->_ticketList[$i]->category, 'd');
+			if (
+                $this->_ticketList[$i]->lifeCycle != 1 && 
+                (
+                    $canDelete == 2 ||
+                    (
+                        $canDelete == 1 &&
+                        $this->_ticketList[$i]->watsId == $watsUser->id
+                    )
+                )
+                )
 			{
-				echo "<a href=\"" .
-
-JRoute::_("
-index.php?option=com_waticketsystem&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&returnUrl=".$returnUrl) . "\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
-
-
-
-
-
-}
+				echo "<a href=\"" . JRoute::_("index.php?option=com_waticketsystem&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&returnUrl=".$returnUrl) . "\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
+            }
 			echo "</td>
 				  </tr>";
 			$i ++;
