@@ -10,6 +10,8 @@
 defined('JPATH_BASE') or die();
 
 wimport('tree.treeNode');
+wimport('exceptions.tree');
+wimport('exceptions.tree.consistency');
 
 /**
  * Description of HDTreeSession
@@ -55,12 +57,12 @@ class StandardTreeSession {
      *
      * @param string $group Group to handle in session
      * @see HDTree::getInstance()
-     * @throws WException
+     * @throws WTreeException
      */
     public function __construct($group) {
         // check group is valid
         if (!WTree::groupExists($group)) {
-            throw new WException('TREE SESSION INSTANTIATION FAILED', $group);
+            throw new WTreeException('TREE SESSION INSTANTIATION FAILED', $group);
         }
 
         $this->group = $group;
@@ -91,7 +93,7 @@ class StandardTreeSession {
      * @param String $identifier Node ID (unique to this type)
      * @param String $parentType Type of parent node to add
      * @param String $parentIdentifier Parent node ID
-     * @throws WException
+     * @throws WTreeException
      */
     public function addNode($type, $identifier, $description=null,
                                      $parentType=null, $parentIdentifier=null) {
@@ -103,14 +105,14 @@ class StandardTreeSession {
 
         // check node does not already exist
         if ($this->nodeExists($type, $identifier)) {
-            throw new WException('NODE EXISTS', $type, $identifier,
+            throw new WTreeException('NODE EXISTS', $type, $identifier,
                                                                   $this->group);
         }
 
         // get the parent and check that parent exists
         $parentNode = $this->getNode($parentType, $parentIdentifier);
         if ($parentNode == null) {
-            throw new WException('NODE DOES NOT EXIST', $parentType,
+            throw new WTreeException('NODE DOES NOT EXIST', $parentType,
                                                $parentIdentifier, $this->group);
         }
 
@@ -132,7 +134,7 @@ class StandardTreeSession {
                  ', ' . dbName('lft') . ' = ' . ($parentNode['rgt'] - 2);
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
+            throw new WTreeException('COULD NOT UPDATE TREE', $db->getErrorMsg());
         }
 
         // update the cache
@@ -157,14 +159,14 @@ class StandardTreeSession {
         $query = 'UPDATE ' . dbTable('tree') . ' ' .
                  'SET ' . dbName('rgt') . ' = ' . dbName('rgt') . ' + ' . $holeSize . ' ' .
                  // only update lft if it needs to be... hence the IF expression
-                 ', ' . dbName('lft') . ' = ' . dbName('lft') . ' + IF(' . dbName('lft') . ' > ' . (int)$before . ', ' . $holeSize . ', 0) ' .
+                 ', ' . dbName('lft') . ' = ' . dbName('lft') . ' + IF(' . dbName('lft') . ' > ' . $before . ', ' . $holeSize . ', 0) ' .
                  // do not need to include lft in WHERE clause, dealt with in line above
                  // lft WHERE clause would be a subset of rgt clause anyway
-                 'WHERE ' . dbName('rgt') . ' >= ' . (int)$before . ' ' .
+                 'WHERE ' . dbName('rgt') . ' >= ' . $before . ' ' .
                  'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
+            throw new WTreeException('COULD NOT UPDATE TREE', $db->getErrorMsg());
         }
 
         // return the new position of $before
@@ -197,7 +199,7 @@ class StandardTreeSession {
                  'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
+            throw new WTreeException('COULD NOT UPDATE TREE', $db->getErrorMsg());
         }
     }
 
@@ -207,14 +209,9 @@ class StandardTreeSession {
      *
      * @param String $type
      * @param String $identifier
-     * @throws WException
+     * @throws WTreeException
      */
     private function setRootNode($type, $identifier) {
-        // check the type is valid
-        if (!$this->typeExists($type)) {
-            throw new WException('TYPE DOES NOT EXIST', $type, $this->group);
-        }
-
         // check the tree is empty
         $db = JFactory::getDBO();
         $query = 'SELECT COUNT(' . dbName('grp') . ') AS count '.
@@ -222,7 +219,7 @@ class StandardTreeSession {
                  'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if ($db->loadResult() != 0) {
-            throw new WException('TREE IS NOT EMPTY', $this->group);
+            throw new WTreeException('TREE IS NOT EMPTY', $this->group);
         }
 
         // OK to continue, add root node!
@@ -235,7 +232,7 @@ class StandardTreeSession {
                  ', ' . dbName('rgt'). ' = 2';
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('SET ROOT NODE FAILED', $db->getErrorMsg(),
+            throw new WTreeException('SET ROOT NODE FAILED', $db->getErrorMsg(),
                                               $this->group, $type, $identifier);
         }
 
@@ -253,11 +250,23 @@ class StandardTreeSession {
      * @param String $type Type of node to remove
      * @param String $identifier Node ID
      * @param boolean $recursive delete sub nodes
+     * @throws WTreeException
      */
-    public function removeNode($type, $identifier, $recursive=false) {
+    public function deleteNode($type, $identifier, $recursive=false) {
         // prepare some bits and pieces
         $node = $this->getNode($type, $identifier);
+        if (!$node) {
+            throw new WTreeException('NODE DOES NOT EXIST', $type, $identifier,
+                                                                  $this->group);
+        }
         $db = JFactory::getDBO();
+
+        $deleteTreeNode = TreeNode::getInstance($node['type']);
+        if ($deleteTreeNode != null) {
+            if (!$deleteTreeNode->canDelete($node)) {
+                throw new WTreeException('YOU DO NOT HAVE PERM');
+            }
+        }
 
         // if this is not recursive and there are sub nodes, we need to move
         // the sub nodes.
@@ -268,7 +277,7 @@ class StandardTreeSession {
                 // this could screw up the tree, remeber this only applies if
                 // the node has sub nodes, i.e. it is OK if the tree only
                 // consists of a root node.
-                throw new WException('REMOVE NODE FAILED');
+                throw new WTreeException('REMOVE NODE FAILED');
             }
 
             // OK, time to relocate the sub nodes
@@ -301,18 +310,20 @@ class StandardTreeSession {
         // now it's time to remove the node/nodes
         // first lets get the nodes we need to notify after deletion
         $query = 'SELECT * FROM ' . dbTable('tree') . ' ' .
-                 'WHERE ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) . ' ' .
+                 'AND ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
                  'AND ' . dbName('rgt') . ' <= ' . $node['rgt'];
         $db->setQuery($query);
         $deletedNodes = $db->loadObjectList();
 
         // now remove the nodes from the tree
         $query = 'DELETE FROM ' . dbTable('tree') . ' ' .
-                 'WHERE ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
+                 'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group) . ' ' .
+                 'AND ' . dbName('lft') . ' >= ' . $node['lft'] . ' ' .
                  'AND ' . dbName('rgt') . ' <= ' . $node['rgt'];
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('REMOVE NODE FAILED');
+            throw new WTreeException('REMOVE NODE FAILED');
         }
 
         // tidy up the deleted nodes where applicable
@@ -338,6 +349,8 @@ class StandardTreeSession {
      * @param String $identifier Node ID
      * @param String $newParentType Type of parent node to move to
      * @param String $newParentIdentifier Parent node ID to move to
+     * @throws WTreeException
+     * @throws WTreeConsistencyException
      */
     public function moveNode($type, $identifier, $newParentType,
                                                          $newParentIdentifier) {
@@ -345,15 +358,32 @@ class StandardTreeSession {
         // get the node to move
         $node = $this->getNode($type, $identifier);
         if (!$node) {
-            throw new WException('NODE DOES NOT EXIST', $type, $identifier,
-                                                                  $this->group);
+            throw new WTreeException(
+                'NODE DOES NOT EXIST',
+                $type,
+                $identifier,
+                $this->group
+            );
+        }
+
+        // make sure the move is required
+        if (
+            $node['parent_type'] == $newParentType &&
+            $node['parent_identifier'] == $newParentIdentifier
+        ) {
+            // no work!
+            return;
         }
 
         // get the new parent node
         $parentNode = $this->getNode($newParentType, $newParentIdentifier);
         if (!$parentNode) {
-            throw new WException('NODE DOES NOT EXIST', $type, $identifier,
-                                                                  $this->group);
+            throw new WTreeException(
+                'NODE DOES NOT EXIST',
+                $newParentType,
+                $newParentIdentifier,
+                $this->group
+            );
         }
 
         // make a hole in the tree
@@ -364,7 +394,7 @@ class StandardTreeSession {
         $db = JFactory::getDBO();
 
         // move the node and sub nodes
-        $offset = ($parentNode['rgt'] - $node['rgt']) - 1;
+        $offset = ($parentNode['rgt'] - $node['rgt']) - 2;
         $query = 'UPDATE ' . dbTable('tree') . ' ' .
                  'SET ' . dbName('rgt') . ' = ' . dbName('rgt') . ' + ' . $offset .
                  ', ' . dbName('lft') . ' = ' . dbName('lft') . ' + ' . $offset . ' ' .
@@ -373,8 +403,18 @@ class StandardTreeSession {
                  'AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
         $db->setQuery($query);
         if (!$db->query()) {
-            throw new WException('COULD NOT UPDATE TREE', $db->getErrorMsg());
+            throw new WTreeConsistencyException('CREATED HOLE, FAILED TO MOVE NODES TO HOLE', $db->getErrorMsg());
         }
+
+        // update the node parent pointers
+        $query = 'UPDATE ' . dbTable('tree')
+               . ' SET ' . dbName('parent_type') . ' = ' . $db->Quote($newParentType)
+               . ' , ' . dbName('parent_identifier') . ' = ' . $db->Quote($newParentIdentifier)
+               . ' WHERE ' . dbName('type') . ' = ' . $db->Quote($type)
+               . ' AND ' . dbName('identifier') . ' = ' . $db->Quote($identifier)
+               . ' AND ' . dbName('grp') . ' = ' . $db->Quote($this->group);
+        $db->setQuery($query);
+        $db->query();
 
         // close gap in the tree
         $this->fillHole($node['lft'], $node['rgt']);
@@ -455,6 +495,7 @@ class StandardTreeSession {
      * @param string $type
      * @param string $identifier
      * @return array
+     * @throws WTreeException
      */
     public function getNodePath($type, $identifier) {
         $db = JFactory::getDBO();
@@ -491,7 +532,7 @@ class StandardTreeSession {
 
         // check the branch exists
         if (count($branch) == 0) {
-             throw new WException('UNKNOWN BRANCH %s %s', $branchType, $branchIdentifier);
+             throw new WTreeException('UNKNOWN BRANCH %s %s', $branchType, $branchIdentifier);
         }
 
         // process branch
@@ -513,7 +554,7 @@ class StandardTreeSession {
                 $current = $current->parent;
                 if ($current == null) {
                     // uh oh, we just met the top level node...
-                   throw new WException('FAILED TO BUILD TREE, TREE MIGHT BE CORRUPT');
+                   throw new WTreeException('FAILED TO BUILD TREE, TREE MIGHT BE CORRUPT');
                 }
                 $i--;
             }
@@ -523,63 +564,5 @@ class StandardTreeSession {
         return $branchProcessed;
     }
 
-    /**
-     * Adds a new type access database
-     *
-     * @param <type> $group
-     * @param <type> $type
-     * @param <type> $description
-     * @return <type>
-     * @throws WException
-     */
-    public function addType($type, $description='') {
-        // preliminary check
-        if ($this->typeExists($type)) {
-            // it's OK, the type already exists
-            return;
-        }
-
-        $db = JFactory::getDBO();
-
-        // prepare query
-        $query = 'INSERT INTO ' . dbTable('tree_types') . ' ' .
-                 'SET ' . dbName('grp'). ' = ' . $db->Quote($this->group).
-                 ', ' . dbName('type'). ' = ' . $db->Quote($type) .
-                 ', ' . dbName('description'). ' = ' . $db->Quote($description);
-        $db->setQuery($query);
-
-        // execute query
-        if (!$db->query()) {
-            throw new WException('ADD TYPE FAILED', $db->getErrorMsg());
-        }
-    }
-
-    /**
-     * Determines if a specified type exists for the current session group.
-     *
-     * @param String $type Type to check for
-     * @return boolean
-     */
-    public function typeExists($type) {
-        // initialise type cache
-        if ($this->cache == null) {
-            $db =& JFactory::getDBO();
-
-            // prepare query
-            $query = 'SELECT ' . dbName('type') . ' '.
-                     'FROM ' . dbTable('tree_types') . ' '.
-                     'WHERE ' . dbName('grp') . ' = ' . $db->Quote($this->group);
-            $db->setQuery($query);
-
-            // populate cache
-            $this->cache = $db->loadResultArray(0);
-        }
-
-        // do the business
-        // type must be restricted to 100 characters as per the database setup
-        // note we only deal with UTF-8 compatible MySQL servers, hence characters not bytes
-        $type = JString::substr($type, 0, 100);
-        return in_array($type, $this->cache);
-    }
 }
 ?>
