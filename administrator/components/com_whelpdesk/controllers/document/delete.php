@@ -50,7 +50,7 @@ class DocumentDeleteWController extends DocumentWController {
         }
 
         // attempt to delete the node and document
-        // note that the treeSession will deal with the document dlete as well
+        // note that the treeSession will deal with the document delete as well
         // as the node delete
         $treeSession = WTree::getInstance()->getSession('component');
         try {

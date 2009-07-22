@@ -8,7 +8,7 @@
 
 function wimport($path) {
     if (!JLoader::import($path, dirname(__FILE__))) {
-        throw new WException('IMPORT FAILED');
+        throw new WException(JText::sprintf('IMPORT %s FAILED', $path));
     }
 }
 

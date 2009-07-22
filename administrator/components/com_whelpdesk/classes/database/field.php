@@ -129,6 +129,10 @@ class WField extends JObject {
         throw new WException();
     }
 
+    public function getHTML($value=null) {
+        return $value;
+    }
+
     public function isListField() {
         return $this->list;
     }

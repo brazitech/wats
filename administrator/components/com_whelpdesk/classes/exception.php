@@ -24,7 +24,7 @@ class WException extends Exception {
      *
      * @param String $message The exception message
      */
-    function __construct($message) {
+    public function __construct($message) {
         $this->detail = func_get_args();
         $message = call_user_func_array(array("JText", "sprintf"), $this->detail);
         array_shift($this->detail);
@@ -36,7 +36,7 @@ class WException extends Exception {
      * 
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         return "Help-Desk-Exception: {$this->getMessage()}";
     }
 
@@ -47,9 +47,17 @@ class WException extends Exception {
      * 
      * @return array Details of the exception
      */
-    function getDetail() {
+    public function getDetail() {
         return $this->detail;
     }
 
+    public static function getInstance($name) {
+        wimport('exceptions.'.strtolower($name));
+
+        $parameters = func_get_args();
+        array_shift($parameters);
+
+        return new call_user_func(array($name, '__construct'), $parameters);
+    }
+
 }
-?>
