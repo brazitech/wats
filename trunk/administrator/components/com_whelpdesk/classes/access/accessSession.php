@@ -190,7 +190,7 @@ class WAccessSession {
     public function removeControl($type, $control, $recursive=false) {
         try {
             // delegate to control tree
-            $this->accessTreeSession->removeNode($type, $control, $recursive);
+            $this->accessTreeSession->deleteNode($type, $control, $recursive);
         } catch (WException $e) {
             throw new WException('REMOVE CONTROL FAILED', $this->group, $type, $control);
         }
@@ -204,6 +204,24 @@ class WAccessSession {
                  ' AND ' . dbName('control') . ' = ' . $db->Quote($control);
         $db->setQuery($query);
         $db->query();
+    }
+
+    /**
+     *
+     * @param String $type Type of control to move
+     * @param String $identifier Control ID
+     * @param String $newParentType Type of parent control to move to
+     * @param String $newParentIdentifier Parent control ID to move to
+     */
+    public function moveControl($type, $identifier, $newParentType,
+                                                         $newParentIdentifier) {
+        // delegate method
+        $this->accessTreeSession->moveNode(
+            $type,
+            $identifier,
+            $newParentType,
+            $newParentIdentifier
+        );
     }
 
     /**
@@ -488,9 +506,9 @@ class WAccessSession {
      * @param String $identifier Node ID
      * @param boolean $recursive delete sub nodes
      */
-    public function removeNode($type, $identifier, $recursive=false) {
+    public function deleteNode($type, $identifier, $recursive=false) {
         // delegate method
-        $this->componentTreeSession->removeNode($type, $identifier, $recursive);
+        $this->componentTreeSession->deleteNode($type, $identifier, $recursive);
     }
 
     /**

@@ -11,6 +11,8 @@ defined('JPATH_BASE') or die();
 
 define('WHD_TREE_NODE_CLASS_PATH', JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'tree' . DS . 'node');
 
+wimport('exceptions.notimplemented');
+
 abstract class TreeNode {
 
     private static $instances = array();
@@ -51,15 +53,15 @@ abstract class TreeNode {
      * @param mixed  $parentIdentifier Node identifier of the new parent node
      */
     public function move($node, $parentType, $parentIdentifier) {
-        throw WException::getInstance('notimplemented');
+        throw new WNotImplementedException();
     }
 
     public function canDelete($node) {
-        throw WException::getInstance('notimplemented');
+        return true;
     }
 
     public function readyToDelete($node) {
-       throw WException::getInstance('notimplemented');
+       throw new WNotImplementedException();
     }
 
     /**
@@ -68,15 +70,15 @@ abstract class TreeNode {
      * @param mixed $node
      */
     public function delete($node) {
-        throw WException::getInstance('notimplemented');
+        throw new WNotImplementedException();
     }
 
     public function redirectOnDeleteSuccess($node) {
-        throw WException::getInstance('notimplemented');
+        throw new WNotImplementedException();
     }
 
     public function redirectOnDeleteFail($node) {
-         throw WException::getInstance('notimplemented');
+         throw new WNotImplementedException();
     }
 
 }

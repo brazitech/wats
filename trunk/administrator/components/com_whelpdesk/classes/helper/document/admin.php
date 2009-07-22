@@ -7,7 +7,7 @@
  */
 
 JFactory::getDocument()->addStyleDeclaration('.icon-48-whelpdesk {
-background-image: url(components/com_whelpdesk/assets/icon-48.png);
+background-image: url(components/com_whelpdesk/assets/title.png);
 }');
 
 /**
@@ -21,7 +21,7 @@ abstract class WDocumentHelper implements WDocumentHelperInterface {
     private static $pathway = array();
 
     public static function title($title, $icon = 'whelpdesk') {
-		JToolbarHelper::title($title, $icon);
+		JToolbarHelper::title('&nbsp;<!--'.$title.'-->', $icon);
 	}
 
     public function subtitle($subtitle) {
