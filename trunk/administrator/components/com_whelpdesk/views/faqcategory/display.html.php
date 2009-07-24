@@ -33,13 +33,15 @@ class FaqcategoryHTMLWView extends WView {
 
     private function document() {
         // add glossary to the pathway
-        WDocumentHelper::addPathwayItem(JText::_('FAQ CATEGORIES'), null, 'index.php?option=com_whelpdesk&task=faqcategories.display');
+        WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:CATEGORIES'), null, 'index.php?option=com_whelpdesk&task=faqcategories.display');
 
         // work with the current term...
         $category = $this->getModel();
         WDocumentHelper::addPathwayItem($category->name);
         // set the subtitle
         WDocumentHelper::subtitle($category->name);
+
+        WDocumentHelper::description($category->description);
     }
 
 }

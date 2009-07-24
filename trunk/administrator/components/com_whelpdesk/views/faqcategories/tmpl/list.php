@@ -66,10 +66,10 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'CATEGORY', 'f.name',       $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th width="60" nowrap="nowrap">
-                    <?php echo JText::_('List'); ?>
+                    <?php echo JText::_('WHD:LIST'); ?>
                 </th>
                 <th width="60" nowrap="nowrap">
-                    <?php echo JText::_('Browse'); ?>
+                    <?php echo JText::_('WHD:DISPLAY'); ?>
                 </th>
                 <th  class="title" width="15%" nowrap="nowrap">
                     <?php echo JHTML::_('grid.sort', 'Author',    'u.name',    $filters['orderDirection'], $filters['order']); ?>
@@ -78,7 +78,7 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'Date',      'f.created',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'FAQS',     'pages',     $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_FAQ:FAQS',     'pages',     $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <?php if(count($this->getModel('customFields'))) : ?>
                 <?php foreach($this->getModel('customFields') as $field) : ?>

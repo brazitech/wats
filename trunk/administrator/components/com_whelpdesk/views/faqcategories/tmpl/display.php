@@ -14,6 +14,11 @@ defined('JPATH_BASE') or die();
 
 <?php $categories = $this->getModel(); ?>
 
+<form name="adminForm" method="post" action="/WATS/svn_4.0/administrator/index.php">
+    <input type="hidden" value="com_whelpdesk" name="option"/>
+    <input type="hidden" value="faqcategories.display" name="task"/>
+</form>
+
 <?php
 for ($i = 0, $n = count($categories); $i < $n; $i++) :
 $category = $categories[$i];

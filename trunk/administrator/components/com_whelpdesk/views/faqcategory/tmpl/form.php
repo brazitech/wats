@@ -14,7 +14,29 @@ JHTML::_('behavior.tooltip');
 $document = JFactory::getDocument();
 
 $document->addScript('components/com_whelpdesk/assets/javascript/php.js/urlencode.js');
-$document->addScriptDeclaration("function populateAlias() {if (document.getElementById('alias').value == '') {document.getElementById('alias').value = document.getElementById('name').value.toLowerCase().replace(/(\s+)/g, '-').replace(/([^a-z0-9\-\_\.\(\)])/g, '')}}");
+$document->addScriptDeclaration("function populateAlias(force) {
+    if (document.getElementById('alias').value == '' || force == true) {
+        var req = new Request({
+            method: 'post',
+            url: 'index.php',
+            onRequest: function() {
+                document.getElementById('alias').setStyle('background-image', 'url(components/com_whelpdesk/assets/javascript/ajax-loader-2.gif)');
+            },
+            data: {
+                'option' : 'com_whelpdesk',
+                'task'   : 'alias.build',
+                'format' : 'json',
+                'name'   : document.getElementById('name').value
+            },
+            onComplete: function(response) {
+                response = eval('(' + response + ')');
+                document.getElementById('alias').value = response.alias;
+                document.getElementById('alias').setStyle('background-image', '');
+                document.getElementById('rebuildAlias').src = 'components/com_whelpdesk/assets/javascript/wall-disable.png';
+            }
+        }).send();
+    }
+}");
 
 ?>
 
@@ -65,9 +87,19 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
                                type="text"
                                name="alias"
                                id="alias"
-                               size="40"
+                               size="34"
                                maxlength="255"
                                value="<?php echo $knowledgeDomain->alias; ?>" />
+                        <img id="rebuildAlias"
+                             src="components/com_whelpdesk/assets/javascript/wall-disable.png"
+                             alt="<?php echo JText::_('Rebuild Alias'); ?>"
+                             title="<?php echo JText::_('Rebuild Alias'); ?>"
+                             class="hasTip"
+                             align="middle"
+                             style="cursor: pointer;"
+                             onclick="javascript: populateAlias(true);"
+                             onmouseover="javascript: this.src = 'components/com_whelpdesk/assets/javascript/wall-build.gif'"
+                             onmouseout="javascript: this.src = 'components/com_whelpdesk/assets/javascript/wall-disable.png'" />
                     </td>
                 </tr>
             </table>
@@ -87,15 +119,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
             <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('FAQ CATEGORY ID'); ?>:</strong>
-                    </td>
-                    <td>
-                        <?php echo $knowledgeDomain->id; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong><?php echo JText::_('CREATED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHtml::_('date',  $knowledgeDomain->created,  JText::_('DATE_FORMAT_LC2')); ?>

@@ -57,10 +57,10 @@ class FaqHTMLWView extends WView {
 
     private function document() {
         // set the subtitle
-        WDocumentHelper::subtitle(JText::_('FAQs'));
+        WDocumentHelper::subtitle(JText::_('WHD_FAQ:FAQs'));
 
         // add the current item to the end of the pathway
-        WDocumentHelper::addPathwayItem(JText::_('FAQs'));
+        WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:FAQs'));
     }
 }
 
