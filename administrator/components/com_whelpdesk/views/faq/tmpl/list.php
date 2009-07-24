@@ -77,7 +77,7 @@ defined('JPATH_BASE') or die();
                     <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($faqs); ?>);" />
                 </th>
                 <th class="title">
-                    <?php echo JHTML::_('grid.sort', 'QUESTION', 'f.question',  $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_FAQ:QUESTION', 'f.question',  $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th width="60" nowrap="nowrap">
                     <?php echo JHTML::_('grid.sort', 'Published', 'f.published', $filters['orderDirection'], $filters['order']); ?>
@@ -92,7 +92,7 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'Date',      'f.created',    $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'Revision',  'f.version',     $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_DATA:Revision',  'f.version',     $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <?php if(count($this->getModel('customFields'))) : ?>
                 <?php foreach($this->getModel('customFields') as $field) : ?>

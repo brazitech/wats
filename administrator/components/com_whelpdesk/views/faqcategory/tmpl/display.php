@@ -35,13 +35,6 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
     <?php echo JHTML::_('form.token'); ?>
 
     <div class="col width-70">
-        <table class="admintable" width="100%">
-            <tr>
-                <td>
-                    <?php echo $category->description; ?>
-                </td>
-            </tr>
-        </table>
         <ul>
             <?php $faqs = $this->getModel('faqs'); ?>
             <?php for ($i = 0, $c = count($faqs); $i < $c; $i++) : ?>

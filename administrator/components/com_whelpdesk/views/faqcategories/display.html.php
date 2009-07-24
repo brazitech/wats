@@ -33,15 +33,15 @@ class FaqcategoriesHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        JToolbarHelper::help('knowledgedomain.list', true);
+        WToolbarHelper::showList('faqcategories.list');
     }
 
     private function document() {
         // add glossary to the pathway
-        WDocumentHelper::addPathwayItem(JText::_('FAQ CATEGORIES'));
+        WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:CATEGORIES'));
 
         // set the subtitle
-        WDocumentHelper::subtitle(JText::_('FAQ CATEGORIES'));
+        WDocumentHelper::subtitle(JText::_('WHD_FAQ:CATEGORIES'));
     }
 }
 

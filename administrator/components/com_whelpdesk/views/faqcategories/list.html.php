@@ -47,6 +47,8 @@ class FaqcategoriesHTMLWView extends WView {
             WToolbarHelper::deleteList(JText::_('ARE YOU SURE YOU WANT TO DELETE THE SELCTED FAQ CATEGORIES?'), 'faqcategory.delete.start');
         }
         WToolbarHelper::divider();
+        WToolbarHelper::display('faqcategories.display.start');
+        WToolbarHelper::divider();
         WToolBarHelper::permissions();
         WToolbarHelper::divider();
         WToolbarHelper::help('faqcategory.list', true);
@@ -54,10 +56,10 @@ class FaqcategoriesHTMLWView extends WView {
 
     private function document() {
         // set the subtitle
-        WDocumentHelper::subtitle(JText::_('FAQ CATEGORIES'));
+        WDocumentHelper::subtitle(JText::_('WHD_FAQ:CATEGORIES'));
 
         // add the current item to the end of the pathway
-        WDocumentHelper::addPathwayItem(JText::_('FAQ CATEGORIES'));
+        WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:CATEGORIES'));
     }
 }
 

@@ -58,17 +58,17 @@ class FaqcategoryHTMLWView extends WView {
 
     private function document() {
         // add glossary to the pathway
-        WDocumentHelper::addPathwayItem(JText::_('FAQ CATEGORIES'), null, 'index.php?option=com_whelpdesk&task=faqcategories.list');
+        WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:CATEGORIES'), null, 'index.php?option=com_whelpdesk&task=faqcategories.list');
 
         // work with the current term...
         $category = $this->getModel();
         if ($category->id) {
             WDocumentHelper::addPathwayItem($category->name);
             // set the subtitle
-            WDocumentHelper::subtitle(JText::sprintf('EDITING FAQ CATEGORY %s', $category->name));
+            WDocumentHelper::subtitle(JText::sprintf('WHD_FAQ:EDIT FAQ CATEGORY %s', $category->name));
         } else {
-            WDocumentHelper::addPathwayItem(JText::_('NEW FAQ CATEGORY'));
-            WDocumentHelper::subtitle(JText::_('NEW FAQ CATEGORY'));
+            WDocumentHelper::addPathwayItem(JText::_('WHD_FAQ:NEW FAQ CATEGORY'));
+            WDocumentHelper::subtitle(JText::_('WHD_FAQ:NEW FAQ CATEGORY'));
         }
     }
 

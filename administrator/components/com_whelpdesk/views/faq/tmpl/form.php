@@ -62,7 +62,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="question">
-                            <?php echo JText::_('QUESTION'); ?>
+                            <?php echo JText::_('WHD_FAQ:QUESTION'); ?>
                         </label>
                     </td>
                     <td>
@@ -156,14 +156,6 @@ $document->addScriptDeclaration("function populateAlias(force) {
             <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('FAQ ID'); ?>:</strong>
-                    </td>
-                    <td>
-                        <?php echo $faq->id; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <strong><?php echo JText::_('STATE'); ?>:</strong>
                     </td>
                     <td>
@@ -172,7 +164,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('REVISION'); ?>:</strong>
+                        <strong><?php echo JText::_('WHD_DATA:REVISION'); ?>:</strong>
                     </td>
                     <td>
                         <?php echo ($faq->version) ? $faq->version : JText::_('NOT REVISED'); ?>
@@ -180,7 +172,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHtml::_('date',  $faq->created,  JText::_('DATE_FORMAT_LC2')); ?>
