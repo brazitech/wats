@@ -25,6 +25,7 @@ defined('JPATH_BASE') or die();
                        id="search"
                        value="<?php echo $filters['search'];?>"
                        class="text_area"
+                       size="60"
                        onchange="this.adminForm.submit();" />
                 <button onclick="this.form.submit();">
                     <?php echo JText::_("GO"); ?>
@@ -64,7 +65,7 @@ defined('JPATH_BASE') or die();
                     <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($glossaryItems); ?>);" />
                 </th>
                 <th class="title">
-                    <?php echo JHTML::_('grid.sort', 'Term',     'term',       $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_GLOSSARY:TERM',     'term',       $filters['orderDirection'], $filters['order']); ?>
                     (<?php echo JHTML::_('grid.sort', 'Alias',   'alias',      $filters['orderDirection'], $filters['order']); ?>)
                 </th>
                 <th width="60" nowrap="nowrap">
@@ -77,7 +78,7 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'Date',      'created',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'Revision',  'version',   $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_DATA:REVISION',  'version',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $filters['orderDirection'], $filters['order']); ?>

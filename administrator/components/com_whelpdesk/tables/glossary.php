@@ -146,7 +146,7 @@ class JTableGlossary extends WTable {
 
         // check for term
         if (trim($this->term) == '') {
-            $this->setError(JText::_('WHD GLOSSARY TERM MISSING'));
+            $this->setError(JText::_('WHD_GLOSSARY:TERM MISSING'));
             $isValid = false;
         } else {
             // check term is unique
@@ -157,18 +157,18 @@ class JTableGlossary extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD GLOSSARY TERM %s MUST BE UNIQUE', $this->term));
+                $this->setError(JText::sprintf('WHD_GLOSSARY:TERM %s MUST BE UNIQUE', $this->term));
                 $isValid = false;
             }
         }
 
         // check for alias
         if (trim($this->alias) == '') {
-            $this->setError(JText::_('WHD GLOSSARY ALIAS MISSING'));
+            $this->setError(JText::_('WHD_DATA:ALIAS MISSING'));
             $isValid = false;
         } elseif (!WAliasHelper::isValid($this->alias)) {
             // check alias characters are acceptable
-            $this->setError(JText::_('WHD GLOSSARY ALIAS IS INVALID'));
+            $this->setError(JText::_('WHD_DATA:ALIAS IS INVALID'));
             $isValid = false;
         } else {
             // check alias is unique
@@ -179,14 +179,14 @@ class JTableGlossary extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD GLOSSARY ALIAS %s MUST BE UNIQUE', $this->alias));
+                $this->setError(JText::sprintf('WHD_DATA:ALIAS %s MUST BE UNIQUE', $this->alias));
                 $isValid = false;
             }
         }
 
         // check for description
         if (trim($this->description) == '') {
-            $this->setError(JText::_('WHD GLOSSARY DESCRIPTION MISSING'));
+            $this->setError(JText::_('WHD_GLOSSARY:DESCRIPTION MISSING'));
             $isValid = false;
         }
 

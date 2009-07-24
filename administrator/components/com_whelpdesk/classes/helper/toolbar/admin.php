@@ -181,4 +181,28 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
 		JToolBar::getInstance('toolbar')->appendButton('Link', $icon, $alt, $url);
     }
 
+    public static function display($task = 'display', $alt = 'WHD:Display') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'display', $alt, $task, false, false);
+
+        if (!self::$here) {
+            // add CSS
+            $style = ".icon-32-display { background-image: url(components/com_whelpdesk/assets/icons/imagegallery.png); }";
+            JFactory::getDocument()->addStyleDeclaration($style);
+            self::$here = true;
+        }
+    }
+
+    public static function showList($task = 'list', $alt = 'WHD:List') {
+		// Add a standard button
+		JToolBar::getInstance('toolbar')->appendButton('Standard', 'display', $alt, $task, false, false);
+
+        if (!self::$here) {
+            // add CSS
+            $style = ".icon-32-display { background-image: url(components/com_whelpdesk/assets/icons/view_text.png); }";
+            JFactory::getDocument()->addStyleDeclaration($style);
+            self::$here = true;
+        }
+    }
+
 }
