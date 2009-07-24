@@ -11,8 +11,15 @@ defined('JPATH_BASE') or die();
 
 wimport('application.model');
 
+/**
+ * Get the parent class GlossaryWController
+ */
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary.php');
 
+/**
+ * Resets the hits counter for glossary items. Can only deal with a maximum of
+ * one term at a time.
+ */
 class GlossaryResethitsWController extends GlossaryWController {
 
     /**
@@ -31,7 +38,7 @@ class GlossaryResethitsWController extends GlossaryWController {
             parent::execute($stage);
         } catch (Exception $e) {
             // uh oh, access denied... let's give the next controller a whirl!
-            JError::raiseWarning('401', 'WHD GLOSSARY RESETHITS ACCESS DENIED');
+            JError::raiseWarning('401', 'WHD_GLOSSARY:RESET HITS ACCESS DENIED');
             return;
         }
         
@@ -42,10 +49,19 @@ class GlossaryResethitsWController extends GlossaryWController {
         $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'glossary.list.start');
-            JError::raiseNotice('INPUT', JText::_('WHD GLOSSARY UNKNOWN TERM'));
+            JError::raiseNotice('INPUT', JText::_('WHD_GLOSSARY:TERM DOES NOT EXIST'));
             return;
         }
         $table->load($id);
+
+        // make sure the record isn't already checked out
+        // this should never occur unless a user has been very tardy with their
+        // session and windows/tabs.
+        if ($table->isCheckedOut(JFactory::getUser()->get('id'))) {
+            JError::raiseWarning('500', 'WHD_GLOSSARY:TERM IS CHECKEDOUT');
+            JRequest::setVar('task', 'glossary.list.start');
+            return;
+        }
 
         // reset the hit vounter
         $table->resetHits();

@@ -12,7 +12,7 @@ $showLinks = (!JRequest::getBool('hidemainmenu', false) && !JRequest::getBool('m
 ?>
 
 <div id="wsubheading">
-    <h1 id="wsubheading-name"><?php echo htmlentities(self::$subtitle, ENT_NOQUOTES, 'UTF-8'); ?></h1>
+    <h1 id="wsubheading-name" style="margin-top: 0;"><?php echo htmlentities(self::$subtitle, ENT_NOQUOTES, 'UTF-8'); ?></h1>
 
     <?php if (strlen(self::$description)) : ?>
     <div id="wsubheading-description">

@@ -16,7 +16,6 @@ $document = JFactory::getDocument();
 $document->addScript('components/com_whelpdesk/assets/javascript/php.js/urlencode.js');
 $document->addScriptDeclaration("function populateAlias(force) {
     if (document.getElementById('alias').value == '' || force == true) {
-        //document.getElementById('alias').value = document.getElementById('term').value.toLowerCase().replace(/(\s+)/g, '-').replace(/([^a-z0-9\-\_\.\(\)])/g, '')
         var req = new Request({
             method: 'post',
             url: 'index.php',
@@ -30,7 +29,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 'name'   : document.getElementById('term').value
             },
             onComplete: function(response) {
-                response = eval('(' + trim(response) + ')');
+                response = eval('(' + response + ')');
                 document.getElementById('alias').value = response.alias;
                 document.getElementById('alias').setStyle('background-image', '');
                 document.getElementById('rebuildAlias').src = 'components/com_whelpdesk/assets/javascript/wall-disable.png';
@@ -54,7 +53,6 @@ $document->addScriptDeclaration("function populateAlias(force) {
     <input type="hidden" name="task"   value="glossary.create" />
     <input type="hidden" name="stage"  value="commit" />
     <input type="hidden" name="id"     value="<?php echo $term->id; ?>" />
-    <!--<input type="hidden" name="redirect" value="<?php echo $this->redirect;?>" />-->
     <?php echo JHTML::_('form.token'); ?>
 
     <div class="col width-70">
@@ -63,7 +61,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="term">
-                            <?php echo JText::_('Term'); ?>
+                            <?php echo JText::_('WHD_GLOSSARY:TERM'); ?>
                         </label>
                     </td>
                     <td>
@@ -127,14 +125,6 @@ $document->addScriptDeclaration("function populateAlias(force) {
             <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('Term ID'); ?>:</strong>
-                    </td>
-                    <td>
-                        <?php echo $term->id; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <strong><?php echo JText::_('State'); ?></strong>
                     </td>
                     <td>
@@ -168,7 +158,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('REVISION'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:REVISION'); ?></strong>
                     </td>
                     <td>
                         <?php echo $term->version;?>
@@ -176,7 +166,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 </tr>
                 <tr>
                 <td>
-                <strong><?php echo JText::_('Created'); ?></strong>
+                <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                 </td>
                 <td>
                 <?php echo JHtml::_('date',  $term->created,  JText::_('DATE_FORMAT_LC2')); ?>

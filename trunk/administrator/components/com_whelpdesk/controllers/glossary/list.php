@@ -14,7 +14,9 @@ wimport('application.model');
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary.php');
 
 /**
- * 
+ * Lists all of the glossary items. Lists are essentially for management
+ * purposes. Only users who are going to edit glossary items should be able to
+ * access this controller.
  */
 class GlossaryListWController extends GlossaryWController {
 
@@ -31,17 +33,15 @@ class GlossaryListWController extends GlossaryWController {
             parent::execute($stage);
         } catch (Exception $e) {
             // uh oh, access denied... let's give the next controller a whirl!
-            JError::raiseWarning('401', 'WHD GLOSSARY LIST ACCESS DENIED');
+            JError::raiseWarning('401', 'WHD_GLOSSARY:LIST ACCESS DENIED');
             return;
         }
 
         // get the model
         $model = WModel::getInstance('glossary');
 
-        // get the list data
+        // get the list data and current filters
         $terms = $model->getList();
-
-        // get the filters
         $filters = $model->getFilters();
         
         // check if we should show the state buttons
@@ -95,20 +95,18 @@ class GlossaryListWController extends GlossaryWController {
 		$format =  strtolower($document->getType());
         $view = WView::getInstance('glossary', 'list', $format);
 
-        // add the default model to the view
+        // add the default model and the filters to the view
         $view->addModel('terms', $terms, true);
-
-        // add the filters to the view
         $view->addModel('filters', $filters);
-
-        // add the custom fields to the view
-        $view->addModel('customFields', $customFields);
         
-        // add the boolean value describing access to change state
+        // add the boolean values describing permissions
         $view->addModel('canCreate', $canCreate);
         $view->addModel('canEdit', $canEdit);
         $view->addModel('canDelete', $canDelete);
         $view->addModel('canChangeState', $canChangeState);
+
+        // add the custom fields to the view
+        $view->addModel('customFields', $customFields);
 
         // add the pagination data to the view
         $view->addModel('paginationTotal',      $model->getTotal());

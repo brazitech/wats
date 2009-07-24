@@ -21,7 +21,7 @@ abstract class GlossaryWController extends WController {
      * Commits the $array array changes to the database
      *
      * @param array $array values to use to create new record
-     * @return b
+     * @return bool|int On fail returns boolean false, on success returns the PK value
      */
     public function commit($array) {
         // get the table
@@ -59,7 +59,7 @@ abstract class GlossaryWController extends WController {
         }
 
         WFactory::getOut()->log('Commited glossary term to the database');
-        return true;
+        return $table->id;
     }
 }
 

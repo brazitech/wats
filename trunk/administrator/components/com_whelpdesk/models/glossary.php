@@ -23,6 +23,16 @@ class GlossaryWModel extends WModel {
      * @param int $limitstart
      * @return stdClass[]
      */
+    public function getDisplayList() {
+        // get the terms in the glossary
+        $db = JFactory::getDBO();
+        $sql = 'SELECT * FROM ' . dbTable('glossary') . ' '
+             . 'WHERE ' . dbName('published') . ' = 1 '
+             . 'ORDER BY ' . dbName('term');
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+
     public function getList($limitstart = null, $limit = null) {
         // get the limitstart value
         if ($limitstart === null) {

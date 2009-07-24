@@ -44,26 +44,30 @@ class GlossaryHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        JToolBarHelper::save('glossary.'.WFactory::getCommand()->getUsecase().'.save');
-        JToolBarHelper::apply('glossary.'.WFactory::getCommand()->getUsecase().'.apply');
-        JToolBarHelper::cancel('glossary.list');
-        JToolbarHelper::divider();
-        JToolbarHelper::help('glossary.form', true);
+        WToolBarHelper::save('glossary.'.WFactory::getCommand()->getUsecase().'.save');
+        WToolBarHelper::apply('glossary.'.WFactory::getCommand()->getUsecase().'.apply');
+        if ($this->getModel()->id) {
+            WToolBarHelper::cancel('glossary.'.WFactory::getCommand()->getUsecase().'.cancel');
+        } else {
+            WToolBarHelper::cancel('glossary.list');
+        }
+        WToolbarHelper::divider();
+        WToolbarHelper::help('glossary.form', true);
     }
 
     private function document() {
         // add glossary to the pathway
-        WDocumentHelper::addPathwayItem(JText::_('GLOSSARY'), null, 'index.php?option=com_whelpdesk&task=glossary.list');
+        WDocumentHelper::addPathwayItem(JText::_('WHD_GLOSSARY'), null, 'index.php?option=com_whelpdesk&task=glossary.list');
 
         // work with the current term...
         $term = $this->getModel();
         if ($term->id) {
             WDocumentHelper::addPathwayItem($term->term);
             // set the subtitle
-            WDocumentHelper::subtitle(JText::sprintf('EDITING GLOSSARY TERM %s', $term->term));
+            WDocumentHelper::subtitle(JText::sprintf('WHD_GLOSSARY:EDITING TERM %s', $term->term));
         } else {
-            WDocumentHelper::addPathwayItem(JText::_('NEW GLOSSARY ITEM'));
-            WDocumentHelper::subtitle(JText::_('NEW GLOSSARY ITEM'));
+            WDocumentHelper::addPathwayItem(JText::_('WHD_GLOSSARY:NEW GLOSSARY ITEM'));
+            WDocumentHelper::subtitle(JText::_('WHD_GLOSSARY:NEW GLOSSARY ITEM'));
         }
     }
 
