@@ -165,7 +165,8 @@ class FaqcategoryWModel extends WModel {
         $sql = 'SELECT ' . dbName('f.*') . ' '
              . 'FROM ' . dbTable('faqs') . ' AS ' . dbName('f') . ' '
              . 'WHERE ' . dbName('f.category') . ' = ' . $id . ' '
-             . 'AND ' . dbName('f.published') . ' = 1';
+             . 'AND ' . dbName('f.published') . ' = 1 '
+             . 'ORDER BY ' . dbName('f.question');
         $db->setQuery($sql);
         return $db->loadObjectList();
     }

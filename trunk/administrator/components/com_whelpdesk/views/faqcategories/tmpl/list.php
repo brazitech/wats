@@ -120,13 +120,13 @@ defined('JPATH_BASE') or die();
                 </td>
                 <td align="center">
                     <a href="<?php echo 'index.php?option=com_whelpdesk&task=faq.list&filterCategory='.$category->id; ?>">
-                        <img src="components/com_whelpdesk/assets/icons/16-preview.png"
+                        <img src="components/com_whelpdesk/assets/icons/view_text-16.png"
                              alt="<?php echo JText::_('LIST'); ?>">
                     </a>
                 </td>
                 <td align="center">
                     <a href="<?php echo 'index.php?option=com_whelpdesk&task=faqcategory.display&id='.$category->id; ?>">
-                        <img src="components/com_whelpdesk/assets/icons/16-preview.png"
+                        <img src="components/com_whelpdesk/assets/icons/imagegallery-16.png"
                              alt="<?php echo JText::_('BROWSE'); ?>">
                     </a>
                 </td>

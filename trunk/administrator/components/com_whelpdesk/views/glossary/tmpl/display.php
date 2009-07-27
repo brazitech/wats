@@ -59,13 +59,24 @@ JFactory::getDocument()->addStyleSheet('components/com_whelpdesk/assets/css/hori
     ?>
     <h2>
         <a name="glossary-<?php echo $current; ?>">
-            <?php echo $glossaryItem->term[0]; ?>
+            <?php echo $current; ?>
         </a>
     </h2>
     <?php endif; ?>
     <div>
         <h4>
             <?php echo $glossaryItem->term; ?>
+            <?php $showSlash = false;
+            if (strlen($glossaryItem->field_related_acronyms)) :
+            echo '<br/>(';
+            foreach (preg_split('~[\,\;\s]+~', $glossaryItem->field_related_acronyms) AS $acronym) :
+            echo ($showSlash) ? '/' : '';
+            $showSlash = true;
+            echo $acronym;
+            endforeach;
+            echo ')';
+            endif;
+            ?>
         </h4>
         <p>
             <?php echo $glossaryItem->description; ?>

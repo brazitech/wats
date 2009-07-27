@@ -52,7 +52,9 @@ class DocumentcontainerHTMLWView extends WView {
         if ($this->getModel()->id != 1 && $this->getModel('canDelete')) {
             WToolbarHelper::delete('documentcontainer.delete.start');
         }
-        WToolbarHelper::divider();
+        if ($this->getModel()->id != 1 && ($this->getModel('canMove') || $this->getModel('canMove'))) {
+            WToolbarHelper::divider();
+        }
         if ($this->getModel()->id != 1 && $this->getModel('canMove')) {
             WToolbarHelper::move('documentcontainer.move.start');
         }
