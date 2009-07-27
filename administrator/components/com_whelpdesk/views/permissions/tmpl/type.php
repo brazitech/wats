@@ -29,6 +29,9 @@ defined('JPATH_BASE') or die();
 <table width="100%">
     <thead>
         <th>
+            Visitors
+        </th>
+        <th>
             Users
         </th>
         <th>
@@ -37,8 +40,14 @@ defined('JPATH_BASE') or die();
     </thead>
     <tbody>
         <tr>
-            <td width="50%" align="center">
-                <img src="components/com_whelpdesk/assets/icons/128-userconfig.png" 
+            <td width="33%" align="center">
+                <img src="components/com_whelpdesk/assets/icons/128-userconfig-bw.png"
+                     alt="Visitors"
+                     onclick="javascript: submitform('permissions.edit.findUserRequestNode');"
+                     style="cursor: pointer;"/>
+            </td>
+            <td width="33%" align="center">
+                <img src="components/com_whelpdesk/assets/icons/128-userconfig.png"
                      alt="Users"
                      onclick="javascript: submitform('permissions.edit.findUserRequestNode');"
                      style="cursor: pointer;"/>

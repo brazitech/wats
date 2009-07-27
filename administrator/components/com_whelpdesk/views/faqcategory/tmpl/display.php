@@ -35,7 +35,7 @@ $document->addScriptDeclaration("function populateAlias() {if (document.getEleme
     <?php echo JHTML::_('form.token'); ?>
 
     <div class="col width-70">
-        <ul>
+        <ul style="margin-top: 0;">
             <?php $faqs = $this->getModel('faqs'); ?>
             <?php for ($i = 0, $c = count($faqs); $i < $c; $i++) : ?>
             <?php $faq = $faqs[$i]; ?>

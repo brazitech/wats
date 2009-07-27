@@ -95,13 +95,6 @@ class JTableGlossary extends WTable {
     public $reset_hits = 0;
 
     /**
-     * Extra parameters
-     *
-     * @var JParameter
-     */
-    public $params = null;
-
-    /**
      * Version of the record, incremented on every save
      *
      * @var int
@@ -131,7 +124,6 @@ class JTableGlossary extends WTable {
         parent::__construct("#__whelpdesk_glossary", "id", $database);
 
         // prepare default values
-        $this->params = new JParameter('', JPATH_COMPONENT_ADMINISTRATOR . DS . 'models' . DS . 'glossary.xml');
         $this->author = JFactory::getUser()->get('id');
     }
 
@@ -209,6 +201,11 @@ class JTableGlossary extends WTable {
         $ignore[] = 'params';
 
         return parent::bind($from, $ignore);
+    }
+
+    public function reset() {
+        parent::reset();
+        $this->author = JFactory::getUser()->get('id');
     }
 }
 

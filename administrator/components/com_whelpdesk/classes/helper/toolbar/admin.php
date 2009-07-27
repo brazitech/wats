@@ -103,6 +103,14 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
 	public static function save($task = 'save', $alt = 'Save') {
 		JToolBarHelper::save($task, $alt);
 	}
+    
+    public static function saveAndAddNew($task = 'save', $alt = 'JTOOLBAR_SAVE_AND_NEW') {
+        JToolBar::getInstance('toolbar')->appendButton('Standard', 'new', $alt, $task, false, false);
+    }
+
+    public static function saveAsCopy($task = 'copy', $alt = 'JTOOLBAR_SAVE_AS_COPY') {
+        JToolBar::getInstance('toolbar')->appendButton('Standard', 'copy', $alt, $task, false, false);
+    }
 
 	public static function cancel($task = 'cancel', $alt = 'Cancel') {
 		JToolBarHelper::cancel($task, $alt);
