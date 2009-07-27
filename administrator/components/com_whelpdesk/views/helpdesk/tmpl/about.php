@@ -370,6 +370,12 @@ span img{
     </ul>
 </div>
 <div id="slidesPane4">
+	<h1>Support Joomla!</h1>
+    <p>When you buy a book from Packt Publishing that is all about Joomla!, you not only get a great book
+    you also get the satisfaction of knowing that you are helping the Joomla! project. But how can this be?
+    Joomla! and Packt aren't linked...!! Packt have an Open Source royalty policy. This means that whenever
+    anyone buys a book from Packt about an Open Source project Packt makes a donation to that project.</p>
+    <p>Why not show your support for Joomla! by buying a Joomla! book from Packt today.</p>
     <iframe src="http://rcm-uk.amazon.co.uk/e/cm?t=mythix-21&o=2&p=8&l=as1&asins=1847192823&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0B55C4&bc1=FFFFFF&bg1=FBFBFB&f=ifr"
             style="width:120px;height:240px; float: right; margin-left: 5px; margin-bottom: 5px; " 
             scrolling="no" 
@@ -377,13 +383,25 @@ span img{
             marginheight="0" 
             frameborder="0">
     </iframe>
-	<h1>Support Joomla!</h1>
-    <p>When you buy a book from Packt Publishing that is all about Joomla!, you not only get a great book
-    you also get the satisfaction of knowing that you are helping the Joomla! project. But how can this be?
-    Joomla! and Packt aren't linked...!! Packt have an Open Source royalty policy. This means that whenever
-    anyone buys a book from Packt about an Open Source project Packt makes a donation to that project.</p>
-    <p>Why not show your support for Joomla! by buying a Joomla! book from Packt today.</p>
 	<h2>Mastering Joomla! 1.5 Extension and Framework Development</h2>
+    <!--<a href="#" title="Mastering Joomla! 1.5 Extension and Framework Development" onclick="window.open('http://www.amazon.co.uk/gp/product/1847192823?ie=UTF8&tag=mythix-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1847192823','help','scrollbars=yes,resizable=yes,width=600,height=725,left=180,top=20'); return false;"><img title="Mastering Joomla! 1.5 Extension and Framework Development" class="left" alt="Mastering Joomla! 1.5 Extension and Framework Development" src="http://ecx.images-amazon.com/images/I/51rVtasYRqL._SL500_AA240_.jpg" widtht="99" border="0" heightt="123" style="float: right; padding-left: 30px;"></a>-->
+    <ul>
+        <li>In-depth guide to programming Joomla!</li>
+        <li>Design and build secure and robust components, modules and plugins</li>
+        <li>Includes a comprehensive reference to the major areas of the Joomla! framework</li>
+    </ul>
+    <h3>In Detail</h3>
+    <p>Joomla! is the world's hottest open-source content management system, and the winner of the 2006 Open Source CMS Prize. Out of the box, Joomla! does a great job of managing the content needed to make your website sing. But for many people, the true power of Joomla! lies in its application framework that makes it possible for thousands of developers around the world to create powerful add-ons and extensions. Many companies or organizations have requirements that go beyond what is available in the basic Joomla! package or in a freely available extension. Thankfully, Joomla! offers a powerful application framework that makes it easy for developers to create sophisticated add-ons that extend the power of Joomla! into virtually unlimited directions.<br><br>If you use PHP programming to extend or customize Joomla!, this book is essential reading. If you feel that you've mastered the basics of creating Joomla! extensions, then this book will take you to the next level. Packed with expert advice on all aspects of development with Joomla!, you will learn about best-practice design and coding for Joomla! components, modules, plugins and other extensions.</p>
+    <p>You will also learn about customizing the page output, using JavaScript effects, making use of Web Services from within Joomla! and ensuring that your code is secure and error-free.</p>
+    <p>A unique and comprehensive reference to the main areas of interest within the Joomla! framework is also included in the book.</p>
+    <iframe src="http://rcm-uk.amazon.co.uk/e/cm?t=mythix-21&o=2&p=8&l=as1&asins=1847192823&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0B55C4&bc1=FFFFFF&bg1=FBFBFB&f=ifr"
+            style="width:120px;height:240px; float: right; margin-left: 5px; margin-bottom: 5px; " 
+            scrolling="no" 
+            marginwidth="0" 
+            marginheight="0" 
+            frameborder="0">
+    </iframe>
+	<h2>Joomla! 1.5 Cookbook</h2>
     <!--<a href="#" title="Mastering Joomla! 1.5 Extension and Framework Development" onclick="window.open('http://www.amazon.co.uk/gp/product/1847192823?ie=UTF8&tag=mythix-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1847192823','help','scrollbars=yes,resizable=yes,width=600,height=725,left=180,top=20'); return false;"><img title="Mastering Joomla! 1.5 Extension and Framework Development" class="left" alt="Mastering Joomla! 1.5 Extension and Framework Development" src="http://ecx.images-amazon.com/images/I/51rVtasYRqL._SL500_AA240_.jpg" widtht="99" border="0" heightt="123" style="float: right; padding-left: 30px;"></a>-->
     <ul>
         <li>In-depth guide to programming Joomla!</li>
