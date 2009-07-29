@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <install version="1.5" type="plugin" group="waticketsystem">
     <name>Webamoeba Ticket System - Email Notification</name>
-    <version>1.0.1</version>
-    <creationDate>March 2009</creationDate>
+    <version>1.0.2</version>
+    <creationDate>July 2009</creationDate>
     <author>James Kennard</author>
     <authorEmail>james@webamoeba.co.uk</authorEmail>
     <authorUrl>http://www.webamoeba.co.uk</authorUrl>
