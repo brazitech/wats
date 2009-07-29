@@ -898,7 +898,7 @@ class watsCategorySet
 		
 		$this->categorySet = array();
 		// load categories
-		$db->setQuery( "SELECT * FROM " . WDBHelper::nameQuote("#__wats_category") . " /* watsCategorySet::watsCategorySet() */ " );
+		$db->setQuery( "SELECT * FROM " . WDBHelper::nameQuote("#__wats_category") . ' ORDER BY ' . WDBHelper::nameQuote("name") . " /* watsCategorySet::watsCategorySet() */ " );
 		$vars = $db->loadObjectList();
 		// create category objects
 		$i = 0;

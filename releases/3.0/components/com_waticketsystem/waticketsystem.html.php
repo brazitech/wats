@@ -1086,10 +1086,13 @@ class watsCategorySetHTML extends watsCategorySet
 		$wats =& WFactory::getConfig();
 		
 		foreach($this->categorySet as $category) {
-			echo "<div class=\"watsCategoryViewWithTicketSet\" id=\"watsCategory".$category->catid."\">";
-			$category->viewTicketSet( $finish, $start );
-			$category->pageNav( $wats->get( 'ticketssub' ), 0, $wats->get( 'ticketsfront' ), $watsUser );
-			echo "</div>";
+            // onyl display a category if there are any tickets in the category
+            if ($category->ticketSet->ticketNumberOf) {
+                echo "<div class=\"watsCategoryViewWithTicketSet\" id=\"watsCategory".$category->catid."\">";
+                $category->viewTicketSet( $finish, $start );
+                $category->pageNav( $wats->get( 'ticketssub' ), 0, $wats->get( 'ticketsfront' ), $watsUser );
+                echo "</div>";
+            }
 		}
 	}
 
