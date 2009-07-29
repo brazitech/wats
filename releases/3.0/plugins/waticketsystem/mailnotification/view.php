@@ -10,13 +10,27 @@
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+/**
+ * Create the templates path constant
+ */
 define("WPATH_PLUGIN_MAILNOTIFICATION_TEMPLATES", WPATH_PLUGINS . DS . "mailnotification");
 
 jimport("joomla.filesystem.file");
-jimport("joomla.filesystem.file");
 
+/**
+ * This view class works in a similar way to the concrete JView classes. It allows
+ * us to assign data to the view and to render the view. The rendering process returns
+ * a string which is designed for use as the body text of an email. It is assumed that 
+ * there are two types of body template, HTML and TEXT. When sending HTML emails it is
+ * advisable to also produce a TEXT equivalent for email clients that cannot read HTML.
+ */
 class WEmailView {
 
+    /**
+     * Path to the template that is currently being used by the view to generate the email body
+     *
+     * @var string
+     */
     var $_tmplPath = "";
 
     /**
