@@ -150,39 +150,6 @@ function com_install()
 			$database->setQuery( "INSERT INTO `#__wats_settings` (`name`,`value`) VALUES ('iconset','mdn_'),
                                                                                          ('highlight','!'),
                                                                                          ('enhighlight','1'),
-                                                                                         ('ticketsfront','5'),
-                                                                                         ('ticketssub','15'),
-                                                                                         ('sourceemail',''),
-                                                                                         ('msgbox','bbcode'),
-                                                                                         ('name','Webamoeba Ticket System'),
-                                                                                         ('users','0'),
-                                                                                         ('agree','0'),
-                                                                                         ('agreei',''),
-                                                                                         ('agreelw','You must agree to the following terms to use this system'),
-                                                                                         ('agreen','agreement'),
-                                                                                         ('agreela','If you have read the terms please continue'),
-                                                                                         ('agreeb','continue'),
-                                                                                         ('view','a'),
-                                                                                         ('msgboxh','10'),
-                                                                                         ('msgboxw','58'),
-                                                                                         ('msgboxt','1'),
-                                                                                         ('dorganisation','individual'),
-                                                                                         ('copyright','WebAmoeba Ticket System for Mambo and Joomla'),
-                                                                                         ('date','j-M-Y (h:i)'),
-                                                                                         ('defaultmsg','type here...'),
-                                                                                         ('dateshort','j-M-Y'),
-                                                                                         ('assignname','Assigned Tickets'),
-                                                                                         ('assigndescription','Tickets assigned to you to answer'),
-                                                                                         ('assignimage',''),
-                                                                                         ('versionmajor','2'),
-                                                                                         ('versionminor','0'),
-                                                                                         ('versionpatch','0'),
-                                                                                         ('css','disable'),
-                                                                                         ('versionname','stable'),
-                                                                                         ('upgrade','0'),
-                                                                                         ('userdefault','1'),
-                                                                                         ('usersimport','0'),
-                                                                                         ('debug','0'),
                                                                                          ('debugmessage','Continue >>');");
 			$database->query();
 			$database->setQuery( "INSERT INTO `#__wats_groups` (`grpid`,`name`,`image`,`userrites`) VALUES (1,'user','components/com_waticketsystem/images/mdn_userSmall.jpg','----'),(2,'advisor','components/com_waticketsystem/images/mdn_userSmallGreen.jpg','V---'),(3,'administrator','components/com_waticketsystem/images/mdn_userSmallRed.jpg','VMED');");
@@ -269,6 +236,12 @@ function com_install()
 		 */	
 		case '3.0.0':
 			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='1' WHERE `name`='versionpatch';" );
+			$database->query();
+        /**
+		 * patch from 3.0.1 to 3.0.2
+		 */	
+		case '3.0.1':
+			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='2' WHERE `name`='versionpatch';" );
 			$database->query();
 	}
 

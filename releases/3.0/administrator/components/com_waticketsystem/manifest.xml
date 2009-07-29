@@ -7,7 +7,7 @@
     <license>GNU/GPL</license>
     <authorEmail>james@webamoeba.co.uk</authorEmail>
     <authorUrl>www.webamoeba.co.uk</authorUrl>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
     <description>Help ticket system</description>
     <administration>
         <menu>WATicketSystem</menu>
@@ -34,6 +34,7 @@
         </files>
         <languages folder="administrationLanguages">
             <language tag="en-GB">en-GB.com_waticketsystem.ini</language>
+            <language tag="sr-SR">sr-RS.com_waticketsystem.ini</language>
         </languages>
     </administration>
     <install>
@@ -71,10 +72,12 @@
         <language tag="ru-RU">ru-RU.com_waticketsystem.ini</language>
         <language tag="sk-SK">sk-SK.com_waticketsystem.ini</language>
         <language tag="sl-SI">sl-SI.com_waticketsystem.ini</language>
+        <language tag="sr-RS">sr-RS.com_waticketsystem.ini</language>
         <language tag="sv-SE">sv-SE.com_waticketsystem.ini</language>
         <language tag="tr-TR">tr-TR.com_waticketsystem.ini</language>
         <!-- mail plugin language files -->
         <language tag="en-GB">en-GB.plg_waticketsystem_mailnotification.ini</language>
         <language tag="sl-SI">sl-SI.plg_waticketsystem_mailnotification.ini</language>
+        <language tag="sr-RS">sr-RS.plg_waticketsystem_mailnotification.ini</language>
     </languages>
 </install>
