@@ -469,7 +469,8 @@ class watsTicketHTML extends watsTicket
                                return returnValue;
                            }';
                 $document =& JFactory::getDocument();
-                $document->addScriptDeclaration($script);
+                //$document->addScriptDeclaration($script);
+                $document->addCustomTag('<script type="text/javascript" defer="defer">'.$script.'</script>');
                 // end message box
 
 				echo "   </td>
@@ -631,7 +632,8 @@ class watsTicketHTML extends watsTicket
                        return returnValue;
                    }';
         $document =& JFactory::getDocument();
-        $document->addScriptDeclaration($script);
+        //$document->addScriptDeclaration($script);
+        $document->addCustomTag('<script type="text/javascript" defer="defer">'.$script.'</script>');
         // end message box
 
 		// submit button
@@ -680,7 +682,8 @@ class watsTicketHTML extends watsTicket
 	return returnValue;
 }';
         $document =& JFactory::getDocument();
-        $document->addScriptDeclaration($script);
+        //$document->addScriptDeclaration($script);
+        $document->addCustomTag('<script type="text/javascript" defer="defer">'.$script.'</script>');
         // end message box
 		echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
 			    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
