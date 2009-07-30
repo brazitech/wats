@@ -22,44 +22,27 @@ abstract class GlossaryWController extends WController {
      *
      * @param array $array values to use to create new record
      * @return bool|int On fail returns boolean false, on success returns the PK value
+     * @throws WCompositeException This exception is thrown when errors exist in the data
      */
-    public function commit($array) {
-        // get the table
-        $table = WFactory::getTable('glossary');
+    public function commit($id, $data) {
+        // get the model
+        $model = WModel::getInstance('glossary');
 
-        // allow raw untrimmed value for description
-        $array['description'] = JRequest::getString('description', '', 'POST', JREQUEST_ALLOWRAW | JREQUEST_NOTRIM);
+        try {
+            // attempt to save the data
+            $id = $model->save($id, $data);
+        } catch (WCompositeException $e) {
+            // data is not valid - output errors
+            $id = false;
+            JError::raiseWarning('500', JText::_('WHD_GLOSSARY:INVALID TERM DATA'));;
+            foreach($e->getMessages() AS $message) {
+                JError::raiseWarning('500', $message);
+            }
 
-        // bind $post with $table
-        if (!$table->bind($array)) {
-            // failed
-            WFactory::getOut()->log('Failed to bind with table', true);
             return false;
         }
 
-        // check the data is valid
-        if (!$table->check()) {
-            // failed
-            WFactory::getOut()->log('Table data failed to check', true);
-            return false;
-        }
-
-        // store the data in the database table and update nulls
-        if (!$table->store(true)) {
-            // failed
-            WFactory::getOut()->log('Failed to save changes', true);
-            return false;
-        }
-
-        // store the data in the database table and update nulls
-        if (!$table->revise()) {
-            // failed
-            WFactory::getOut()->log('Failed to increment version counter', true);
-            return false;
-        }
-
-        WFactory::getOut()->log('Commited glossary term to the database');
-        return $table->id;
+        return $id;
     }
 }
 

@@ -32,10 +32,7 @@ class GlossaryEditWController extends GlossaryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('glossary');
-
-        // load the table data
+        // get the ID of the term we want to edit
         $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'glossary.list.start');
@@ -43,15 +40,21 @@ class GlossaryEditWController extends GlossaryWController {
             JRequest::setVar('task', 'glossary.list.start');
             return;
         }
-        if(!$table->load($id)) {
+
+        // get the data
+        $model = WModel::getInstance('glossary');
+        $term = $model->getTerm($id);
+
+        // make sure the data loaded
+        if(!$term) {
             JRequest::setVar('task', 'glossary.list.start');
             JError::raiseWarning('INPUT', JText::_('WHD_GLOSSARY:UNKNOWN TERM'));
             JRequest::setVar('task', 'glossary.list.start');
             return;
         }
 
-        // make sure the record isn't already checked out
-        if ($table->isCheckedOut(JFactory::getUser()->get('id'))) {
+        // make sure the term isn't already checked out
+        if ($term->isCheckedOut(JFactory::getUser()->get('id'))) {
             WFactory::getOut()->log('WHD_GLOSSARY:TERM ALREADY CHECKEDOUT');
             JError::raiseWarning('500', 'WHD_GLOSSARY:TERM ALREADY CHECKEDOUT');
             JRequest::setVar('task', 'glossary.list.start');
@@ -62,7 +65,7 @@ class GlossaryEditWController extends GlossaryWController {
         switch ($stage) {
             case 'cancel':
                 // stop editing, checkin the record
-                $table->checkIn();
+                $model->checkIn($id);
                 JRequest::setVar('task', 'glossary.list.start');
                 return;
                 break;
@@ -72,24 +75,18 @@ class GlossaryEditWController extends GlossaryWController {
                 shouldHaveToken();
 
                 // attempt to save
-                $id = $this->commit();
+                $id = $this->commit($id);
                 if ($id !== false) {
                    // successfullt saved changes
                    WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:UPDATED TERM %s', JRequest::getString('term')));
                    if ($stage == 'save') {
                        JRequest::setVar('task', 'glossary.list.start');
-                       $table->checkIn();
+                       $model->checkIn($id);
                    } else {
                        JRequest::setVar('task', 'glossary.edit.start');
                        JRequest::setVar('id',   $id);
                    }
                    return;
-                } else {
-                    // An error occured, display the errors
-                    JError::raiseNotice('500', JText::_('WHD_FORM:INVALID'));;
-                    foreach($table->getErrors() AS $error) {
-                        JError::raiseNotice('500', $error);
-                    }
                 }
         }
 
@@ -123,18 +120,18 @@ class GlossaryEditWController extends GlossaryWController {
         );
 
         // add the default model to the view
-        $view->addModel('term', $table, true);
+        $view->addModel('term', $term, true);
 
         // add the custom fields to the model
-        $view->addModel('fieldset', $table->getFieldset());
-        $view->addModel('fieldset-data', $table);
+        $view->addModel('fieldset', $term->getFieldset());
+        $view->addModel('fieldset-data', $term);
 
         // add the boolean value describing access to reset hits
         $view->addModel('canResetHits', $canResetHits);
         $view->addModel('canChangeState', $canChangeState);
 
         // check out the record
-        $table->checkOut(JFactory::getUser()->id);
+        $model->checkOut($id);
 
         // display the view!
         JRequest::setVar('view', 'form');
@@ -147,9 +144,10 @@ class GlossaryEditWController extends GlossaryWController {
      * state change permissions such that the state cannot be changed through
      * this method unless the user has the necessary permissions.
      *
+     * @param int ID of the record to commit
      * @return bool|int On fail returns boolean false, on success returns the PK value
      */
-    public function commit() {
+    public function commit($id) {
         // values to use to create new record
         $post = JRequest::get('POST');
         
@@ -167,7 +165,7 @@ class GlossaryEditWController extends GlossaryWController {
         }
 
         // commit the changes
-        return parent::commit($post);
+        return parent::commit($id, $post);
     }
 }
 

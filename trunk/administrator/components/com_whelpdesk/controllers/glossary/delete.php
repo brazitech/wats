@@ -32,10 +32,10 @@ class GlossaryDeleteWController extends GlossaryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('glossary');
+        // get the model
+        $model = WModel::getInstance('glossary');
 
-        // load the table data
+        // get the IDs of the terms we want to delete
         $cid = WModel::getAllIds();
         if (!count($cid)) {
             JRequest::setVar('task', 'glossary.list.start');
@@ -47,16 +47,17 @@ class GlossaryDeleteWController extends GlossaryWController {
         // itterate over glossary terms
         $unknownTerms = 0;
         foreach($cid AS $id) {
-            if(!$table->load($id)) {
+            $term = $model->getTerm($id);
+            if(!$term) {
                 // term failed to load, assume it is unknown
                 $unknownTerms++;
-            } elseif($table->isCheckedOut(JFactory::getUser()->get('id'))) {
+            } elseif($term->isCheckedOut(JFactory::getUser()->get('id'))) {
                 // term is checked out - cannot delete
-                JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %S IS CHECKEDOUT', $table->term));
+                JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %S IS CHECKEDOUT', $term->term));
             } else {
                 // okay to delete the term!
-                $table->delete();
-                WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:DELETED TERM %s', $table->term));
+                $model->delete($id);
+                WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:DELETED TERM %s', $term->term));
             }
         }
 

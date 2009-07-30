@@ -21,6 +21,10 @@ abstract class WTable extends JTable {
      */
     private $fieldset;
 
+    /**
+     *
+     * @var boolean
+     */
     private $init = false;
 
     public function __construct($table, $key, &$db) {
@@ -60,9 +64,23 @@ abstract class WTable extends JTable {
         }
         
         // carry on as normal way
-        return parent::__set($var, $val);
+        //debug_print_backtrace();
+        //return parent::__set($var, $val);
 	}
 
+    /**
+	 * @todo add security to ignore fields we cannot edit
+	 */
+	public function bind($src, $ignore = array()) {
+        return parent::bind($src, $ignore);
+    }
+
+    /**
+     * Checks the table data for validity - if the table is valid boolean true
+     * is returned, otherwise 
+     *
+     * @return int|array
+     */
     public function check() {
         if (!$this->fieldset) {
             // there is no dataset so we can continue
@@ -70,7 +88,7 @@ abstract class WTable extends JTable {
         }
 
         // do some prep work
-        $isValid = true;
+        $messages = array();
         $fields = $this->fieldset->getFields();
 
         // itterate over fields if there are any
@@ -82,12 +100,17 @@ abstract class WTable extends JTable {
                     // field is not valid
                     // get the error message and set the return value
                     $isValid = false;
-                    $this->setError($field->getError());
+                    $messages[] = $field->getError();
                 }
             }
         }
 
-        return $isValid;
+        // if there are
+        if (count($messages)) {
+            return $messages;
+        }
+
+        return true;
     }
 
 
@@ -106,31 +129,41 @@ abstract class WTable extends JTable {
 
 		// get the table PK and value of the PK we are working with
         $k = $this->_tbl_key;
-		if ($oid !== null) {
-			$this->$k = intval($oid);
+		if ($oid == null) {
+			$oid = $this->$k;
 		}
 
-		$query = 'UPDATE '. $this->_tbl
-		       . ' SET hits = 0'
-               . ' WHERE '. $this->_tbl_key .'='. $this->_db->Quote($this->$k);
-		$this->_db->setQuery($query);
-        $this->_db->query();
-        $this->hits = 0;
+        // get the names of the fields in this table
+        $fieldNames = array_keys($this->getProperties());
 
-        // check this table suports hits reset date and time before continuing
-        if (!in_array('reset_hits', array_keys($this->getProperties()))) {
-			return;
+        // make sure this table has a hits field
+        if (!in_array('hits', $fieldNames)) {
+			throw new WNotImplementedException();
 		}
 
+        // get ready to deal with the date
         jimport('joomla.utilities.date');
-
         $date  = new JDate();
-        $query = 'UPDATE '. dbTable($this->_tbl)
-               . ' SET '.   dbName('reset_hits')    . ' = ' . $this->_db->Quote($date->toMySQL())
-               . ' WHERE '. dbName($this->_tbl_key) . ' = ' . $this->_db->Quote($this->$k);
+
+        // update the actual table
+		$query = 'UPDATE '. $this->_tbl
+		       . ' SET ' . dbName('hits') . ' = 0 '
+               . (in_array('hits_reset', $fieldNames)    ? ', ' . dbName('hits_reset') . ' = ' . $this->_db->Quote($date->toMySQL()) : '')
+               . (in_array('hits_reset_by', $fieldNames) ? ', ' . dbName('hits_reset_by') . ' = ' . $this->_db->Quote(JFactory::getUser()->get('id')) : '')
+               . ' WHERE '. $this->_tbl_key .'='. $this->_db->Quote($oid);
 		$this->_db->setQuery($query);
         $this->_db->query();
-        $this->reset_hits = $date->toMySQL();
+
+        // update the local table data values if this is the same record
+        if ($oid == $this->$k) {
+            $this->hits = 0;
+            if (in_array('hits_reset', $fieldNames)) {
+                $this->hits_reset = $date->toMySQL();
+            }
+            if (in_array('hits_reset_by', $fieldNames)) {
+                $this->hits_reset_by = JFactory::getUser()->get('id');
+            }
+        }
     }
 
     /**
@@ -141,25 +174,38 @@ abstract class WTable extends JTable {
      */
     function revise($oid=null) {
         // check this table suports versions before continuing
-        if (!in_array('version', array_keys($this->getProperties()))) {
+        if (!in_array('revised', array_keys($this->getProperties()))) {
 			return true;
 		}
 
         // get the table PK and value of the PK we are working with
         $k = $this->_tbl_key;
-		if ($oid !== null) {
-			$this->$k = intval($oid);
+		if ($oid == null) {
+			$oid = $this->$k;
 		}
 
         $query = 'UPDATE '. dbTable($this->_tbl)
-               . ' SET '.   dbName('version')       . ' = ('.dbName('version').' + 1)'
-               . ' WHERE '. dbName($this->_tbl_key) . ' = ' . $this->_db->Quote($this->$k);
+               . ' SET '.   dbName('revised')       . ' = ('.dbName('revised').' + 1)'
+               . ' WHERE '. dbName($this->_tbl_key) . ' = ' . $this->_db->Quote($oid);
 		$this->_db->setQuery($query);
-        return($this->_db->query());
+        $result = $this->_db->query();
+
+        if ($result && $oid == $this->$k) {
+            $this->revision++;
+        }
+
+        return $result;
     }
 
     public function getFieldset() {
         return $this->fieldset;
+    }
+
+    /**
+     * Not supported by WTable objects
+     */
+    public function save() {
+        throw new WNotImplementedException();
     }
 
 }

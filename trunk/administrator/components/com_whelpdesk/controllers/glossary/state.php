@@ -43,9 +43,9 @@ class GlossaryStateWController extends GlossaryWController {
             JError::raiseWarning('403', 'WHD_GLOSSARY:STATE ACCESS DENIED');
             return;
         }
-        
-        // get the table
-        $table = WFactory::getTable('glossary');
+
+        // before saving or applying the new term, make sure the token is valid
+        shouldHaveToken();
 
         // load the IDs
         $cid = WModel::getAllIds();
@@ -55,16 +55,44 @@ class GlossaryStateWController extends GlossaryWController {
             return;
         }
 
-        // publish the identified terms
-        $table->publish($cid, (($stage == 'publish') ? 1 : 0));
+        // get the model
+        $model = WModel::getInstance('glossary');
+
+        // itterate over glossary terms
+        $unknownTerms = 0;
+        foreach($cid AS $id) {
+            $term = $model->getTerm($id);
+            if(!$term) {
+                // term failed to load, assume it is unknown
+                $unknownTerms++;
+            } elseif($term->isCheckedOut(JFactory::getUser()->get('id'))) {
+                // term is checked out - cannot delete
+                JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %s IS CHECKEDOUT', $term->term));
+            } elseif($term->published == 1 && ($stage == 'publish')) {
+                // term is checked out - cannot delete
+                JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %s IS ALREADY PUBLISHED', $term->term));
+            } elseif($term->published == 0 && ($stage != 'publish')) {
+                // term is checked out - cannot delete
+                JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %s IS ALREADY UNPUBLISHED', $term->term));
+            } else {
+                // okay to delete the term!
+                $model->changeState($id, ($stage == 'publish'));
+                if ($stage == 'publish') {
+                    WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:PUBLISHED TERM %s', $term->term));
+                } else {
+                    WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:UNPUBLISHED TERM %s', $term->term));
+                }
+            }
+        }
+
+        if ($unknownTerms == 1) {
+            JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM DOES NOT EXIST', $unknownTerms));
+        } elseif ($unknownTerms > 1) {
+            JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:%D TERMS DO NOT EXIST', $unknownTerms));
+        }
 
         // return to the edit screen
         JRequest::setVar('task', 'glossary.list.start');
-        if ($stage == 'publish') {
-            WMessageHelper::message(JText::_('WHD_GLOSSARY:PUBLISHED TERMS'));
-        } else {
-            WMessageHelper::message(JText::_('WHD_GLOSSARY:UNPUBLISHED TERMS'));
-        }
     }
 }
 

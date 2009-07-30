@@ -122,7 +122,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
     <div class="col width-30">
         <?php if ($term->id) : ?>
         <fieldset class="adminform" style="border: 1px dashed silver; margin: 0px 0px 10px 0px;">
-            <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
+            <table class="admintable" style="padding: 0px; margin-bottom: 0px;" width="100%">
                 <tr>
                     <td>
                         <strong><?php echo JText::_('State'); ?></strong>
@@ -146,22 +146,32 @@ $document->addScriptDeclaration("function populateAlias(force) {
                         <?php endif; ?>
                     </td>
                 </tr>
-                <?php if ($term->reset_hits != JFactory::getDBO()->getNullDate()) : ?>
+                <?php if ($term->hits_reset != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('HITS LAST RESET'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:HITS RESET'); ?></strong>
                     </td>
                     <td>
-                        <?php echo JHtml::_('date',  $term->reset_hits,  JText::_('DATE_FORMAT_LC2')); ?>
+                        <?php echo JHtml::_('date',  $term->hits_reset,  JText::_('DATE_FORMAT_LC2')); ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($term->hits_reset_by) : ?>
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('WHD_DATA:HITS RESET BY'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo JFactory::getUser($term->hits_reset_by)->username; ?>
                     </td>
                 </tr>
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('WHD_DATA:REVISION'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:REVISED'); ?></strong>
                     </td>
                     <td>
-                        <?php echo $term->version;?>
+                        <?php echo $term->revised;?>
                     </td>
                 </tr>
                 <tr>

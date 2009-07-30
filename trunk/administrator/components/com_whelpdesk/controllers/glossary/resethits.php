@@ -31,7 +31,7 @@ class GlossaryResethitsWController extends GlossaryWController {
     }
 
     /**
-     * @todo
+     * Resets the hit counter
      */
     public function execute($stage) {
         try {
@@ -41,34 +41,49 @@ class GlossaryResethitsWController extends GlossaryWController {
             JError::raiseWarning('401', 'WHD_GLOSSARY:RESET HITS ACCESS DENIED');
             return;
         }
-        
-        // get the table
-        $table = WFactory::getTable('glossary');
 
-        // load the table data
+        // get the ID of the term we want to reset the hits for
         $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'glossary.list.start');
-            JError::raiseNotice('INPUT', JText::_('WHD_GLOSSARY:TERM DOES NOT EXIST'));
+            JError::raiseNotice('INPUT', JText::_('WHD_GLOSSARY:NO TERM SELECTED'));
             return;
         }
-        $table->load($id);
 
-        // make sure the record isn't already checked out
-        // this should never occur unless a user has been very tardy with their
-        // session and windows/tabs.
-        if ($table->isCheckedOut(JFactory::getUser()->get('id'))) {
-            JError::raiseWarning('500', 'WHD_GLOSSARY:TERM IS CHECKEDOUT');
+        // get the model
+        $model = WModel::getInstance('glossary');
+        $term = $model->getTerm($id);
+
+        // make sure term is valid
+        if (!$term) {
+            // term failed to load, assume it is unknown
+            JError::raiseNotice('INPUT', JText::_('WHD_GLOSSARY:TERM DOES NOT EXIST'));
             JRequest::setVar('task', 'glossary.list.start');
             return;
         }
 
-        // reset the hit vounter
-        $table->resetHits();
+        // make sure term is not chekced out by anyone else
+        if ($term->isCheckedOut(JFactory::getUser()->get('id'))) {
+            // term is checked out by another user - cannot reset hits
+            JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %S IS CHECKEDOUT', $term->term));
+            JRequest::setVar('task', 'glossary.list.start');
+            return;
+        }
 
-        // return to the edit screen
+        // make sure we actually need to do this...
+        if (!$term->hits) {
+            // term hits are already zero - no need to reset!
+            JError::raiseWarning('500', JText::sprintf('WHD_GLOSSARY:TERM %S HITS ARE ALREADY ZERO', $term->term));
+            JRequest::setVar('task', 'glossary.list.start');
+            return;
+        } else {
+            // okay to reset hits
+            $model->resetHits($id);
+            WMessageHelper::message(JText::sprintf('WHD_GLOSSARY:RESET TERM %s HITS', $term->term));
+        }
+
+        // go back to the edit screen
         JRequest::setVar('task', 'glossary.edit.start');
-        JError::raiseNotice('INPUT', JText::_('WHD GLOSSARY RESET HITS'));
     }
 }
 

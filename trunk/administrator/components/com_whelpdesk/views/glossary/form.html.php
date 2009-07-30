@@ -44,7 +44,9 @@ class GlossaryHTMLWView extends WView {
      * Setup the toolbar
      */
     private function toolbar() {
-        WToolBarHelper::saveAsCopy('glossary.copy.start');
+        if (WFactory::getCommand()->getUsecase() == 'edit') {
+            WToolBarHelper::saveAsCopy('glossary.copy.start');
+        }
         WToolBarHelper::save('glossary.'.WFactory::getCommand()->getUsecase().'.save');
         WToolBarHelper::apply('glossary.'.WFactory::getCommand()->getUsecase().'.apply');
         if ($this->getModel()->id) {

@@ -39,8 +39,9 @@ class GlossaryCreateWController extends GlossaryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('glossary');
+        // get the model
+        $model = WModel::getInstance('glossary');
+        $term = $model->getTerm(0);
 
         // check where in the usecase we are
         if ($stage == 'save' || $stage == 'apply') {
@@ -62,12 +63,6 @@ class GlossaryCreateWController extends GlossaryWController {
                }
                // no need to continue we will now be going to the list or edit page
                return;
-            } else {
-                // form input is not valid - output errors
-                JError::raiseWarning('500', JText::_('WHD_FORM:INVALID'));;
-                foreach($table->getErrors() AS $error) {
-                    JError::raiseWarning('500', $error);
-                }
             }
         }
 
@@ -79,11 +74,11 @@ class GlossaryCreateWController extends GlossaryWController {
         );
 
         // add the default model to the view
-        $view->addModel('term', $table, true);
+        $view->addModel('term', $term, true);
 
         // add the custom fields to the view
-        $view->addModel('fieldset', $table->getFieldset());
-        $view->addModel('fieldset-data', $table);
+        $view->addModel('fieldset', $term->getFieldset());
+        $view->addModel('fieldset-data', $term);
 
         // display the view!
         JRequest::setVar('view', 'form');
@@ -103,7 +98,7 @@ class GlossaryCreateWController extends GlossaryWController {
         // do not provide an ID
         unset($post['id']);
 
-        return parent::commit($post);
+        return parent::commit(0, $post);
     }
 }
 
