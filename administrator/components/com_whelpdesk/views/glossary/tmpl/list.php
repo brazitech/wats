@@ -72,13 +72,13 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('grid.sort', 'Published', 'published', $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th  class="title" width="15%" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'Author',    'author',    $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Creator',    'created_by',    $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Date',      'created',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
-                    <?php echo JHTML::_('grid.sort', 'WHD_DATA:REVISION',  'version',   $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_DATA:REVISION',  'revised',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Hits',      'hits',      $filters['orderDirection'], $filters['order']); ?>
@@ -118,7 +118,7 @@ defined('JPATH_BASE') or die();
                     <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=glossary.edit&cid[]='. $glossaryItem->id); ?>">
                         <?php echo htmlspecialchars($glossaryItem->term, ENT_QUOTES); ?>
                     </a><br/>
-                    <small>(<?php echo htmlspecialchars($glossaryItem->alias, ENT_QUOTES); ?>)</small>
+                    <small>[glossary[<?php echo htmlspecialchars($glossaryItem->alias, ENT_QUOTES); ?>]]</small>
                     <?php endif; ?>
                 </td>
                 <td align="center">
@@ -134,7 +134,7 @@ defined('JPATH_BASE') or die();
                     <?php echo JHTML::_('date',  $glossaryItem->created, JText::_('DATE_FORMAT_LC4')); ?>
                 </td>
                 <td nowrap="nowrap" align="center">
-                    <?php echo $glossaryItem->version ?>
+                    <?php echo $glossaryItem->revised ? $glossaryItem->revised : '&nbsp;' ?>
                 </td>
                 <td nowrap="nowrap" align="center">
                     <?php echo $glossaryItem->hits ?>

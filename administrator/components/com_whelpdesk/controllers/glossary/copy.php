@@ -35,26 +35,24 @@ class GlossaryCopyWController extends GlossaryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('glossary');
+        // before saving or applying the new term, make sure the token is valid
+        shouldHaveToken();
 
-        // load the table data so as we can checkin the record we are copying from
+        // get the model and the term
         $id = WModel::getId();
-        if ($id) {
-            if($table->load($id)) {
-                // make sure the record isn't checked out by anyone else
-                if (!$table->isCheckedOut(JFactory::getUser()->get('id'))) {
-                    // stop editing, checkin the record
-                    $table->checkIn();
-                }
-            }
+        $model = WModel::getInstance('glossary');
+        $term = $model->getTerm($id);
+
+        // make sure the source data exists
+        if(!$term) {
+            JError::raiseError(JText::_('WHD_GLOSSARY:UNKNOWN TERM'));
         }
 
-        // reset the data - we have to reset id manually because the
-        // JTable::reset() method ignores the PK... for some unknown reason...
-        JRequest::setVar('id', null);
-        $table->id = null;
-        $table->reset();
+        // make sure the record isn't checked out by anyone else
+        if (!$term->isCheckedOut(JFactory::getUser()->get('id'))) {
+            // stop editing/checkin the record
+            $model->checkIn($id);
+        }
 
         // now we can create the copy!
         JRequest::setVar('task', 'glossary.create.apply');

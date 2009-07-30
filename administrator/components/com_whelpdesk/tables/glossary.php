@@ -46,18 +46,18 @@ class JTableGlossary extends WTable {
     public $description = '';
 
     /**
-     * ID of the user who created the term
-     *
-     * @var int
-     */
-    public $author = 0;
-
-    /**
      * Date and time when the term was created.
      *
      * @var string
      */
     public $created = '0000-00-00 00:00:00';
+
+    /**
+     * ID of the user who created the term
+     *
+     * @var int
+     */
+    public $created_by = 0;
 
     /**
      * Published state
@@ -92,14 +92,21 @@ class JTableGlossary extends WTable {
      *
      * @var String
      */
-    public $reset_hits = 0;
+    public $hits_reset = '0000-00-00 00:00:00';
+
+    /**
+     * user by whom the hits counter was last reset
+     *
+     * @var String
+     */
+    public $hits_reset_by = 0;
 
     /**
      * Version of the record, incremented on every save
      *
      * @var int
      */
-    public $version = 0;
+    public $revised = 0;
 
     /**
      * Date and time when the term was last modified
@@ -134,12 +141,11 @@ class JTableGlossary extends WTable {
      */
     public function check() {
         // initialise return value
-        $isValid = true;
+        $messages = array();
 
         // check for term
         if (trim($this->term) == '') {
-            $this->setError(JText::_('WHD_GLOSSARY:TERM MISSING'));
-            $isValid = false;
+            $messages[] = JText::_('WHD_GLOSSARY:TERM MISSING');
         } else {
             // check term is unique
             $db = JFactory::getDBO();
@@ -149,19 +155,17 @@ class JTableGlossary extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD_GLOSSARY:TERM %s MUST BE UNIQUE', $this->term));
-                $isValid = false;
+                $messages[] = JText::sprintf('WHD_GLOSSARY:TERM %s MUST BE UNIQUE', $this->term);
             }
         }
 
         // check for alias
         if (trim($this->alias) == '') {
-            $this->setError(JText::_('WHD_DATA:ALIAS MISSING'));
+            $messages[] = JText::_('WHD_DATA:ALIAS MISSING');
             $isValid = false;
         } elseif (!WAliasHelper::isValid($this->alias)) {
             // check alias characters are acceptable
-            $this->setError(JText::_('WHD_DATA:ALIAS IS INVALID'));
-            $isValid = false;
+            $messages[] = JText::_('WHD_DATA:ALIAS IS INVALID');
         } else {
             // check alias is unique
             $db = JFactory::getDBO();
@@ -171,34 +175,43 @@ class JTableGlossary extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD_DATA:ALIAS %s MUST BE UNIQUE', $this->alias));
-                $isValid = false;
+                $messages[] = JText::sprintf('WHD_DATA:ALIAS %s MUST BE UNIQUE', $this->alias);
             }
         }
 
         // check for description
         if (trim($this->description) == '') {
-            $this->setError(JText::_('WHD_GLOSSARY:DESCRIPTION MISSING'));
-            $isValid = false;
+            $messages[] = JText::_('WHD_GLOSSARY:DESCRIPTION MISSING');
         }
 
         // let the parent have a look
-        if (!parent::check()) {
-            $isValid = false;
+        $parentCheck = parent::check();
+        if (is_array($parentCheck)) {
+            $messages = array_merge($messages, $parentCheck);
         }
 
-        return $isValid;
+        return count($messages) ? $messages : true;
     }
 
-    public function bind($from, $ignore=array()) {
+    public function bind($from, $ignore=array(), $safe=false) {
         if (is_array($from)) {
             $from['published'] = $from['published'] ? 1 : 0;
         } elseif (is_object($from)) {
             $from->published = $from->published ? 1 : 0;
         }
 
-        // we will deal with params ourselves
-        $ignore[] = 'params';
+        if ($safe) {
+            // ignore protected fields
+            $ignore[] = 'hits';
+            $ignore[] = 'hits_reset';
+            $ignore[] = 'hits_reset_by';
+            $ignore[] = 'hits_reset';
+            $ignore[] = 'checked_out';
+            $ignore[] = 'checked_out_time';
+            $ignore[] = 'revised';
+            $ignore[] = 'created';
+            $ignore[] = 'created_by';
+        }
 
         return parent::bind($from, $ignore);
     }
