@@ -24,7 +24,7 @@ class FaqcategoryDeleteWController extends FaqcategoryWController {
      * @todo
      */
     public function execute($stage) {
-        // what ever happens we will want to return to the FAQ categpries list
+        // what ever happens we will want to return to the FAQ categories list
         JRequest::setVar('task', 'faqcategories.list.start');
 
         // load the IDs
@@ -34,33 +34,33 @@ class FaqcategoryDeleteWController extends FaqcategoryWController {
             return;
         }
 
-        $table = WFactory::getTable('faqcategory');
+        // get the model
+        $model = WModel::getInstance('faqcategory');
 
         // itterate over FAQ categories
         foreach ($cid AS $id) {
-            $table->load($id);
+            $category = $model->getCategory($id);
+
+            if (!$category) {
+                JError::raiseWarning('500', JText::sprintf('WHD_FAQCATEGORY:CANNOT DELETE CATEGORY %d, CATEGORY DOES NOT EXIST', $id));
+                continue;
+            }
 
             // check access control
             if (!$this->hasAccess($id)) {
                 // no access :(
-                JError::raiseWarning('401', JText::sprintf('WHD FAQ CATEGORY %s DELETE ACCESS DENIED', $table->name));
+                JError::raiseWarning('401', JText::sprintf('WHD_FAQCATEGORY:DELETE ACCESS DENIED %s', $category->name));
                 continue;
             }
 
             // make sure the FAQ isn't checked out
-            if ($table->isCheckedOut(JFactory::getUser()->get('id'))) {
-                JError::raiseWarning('500', 'WHD FAQ CATEGORY CANNOT DELETE FAQ CATEGORY %s FAQ CATEGORY IS CHECKED OUT', $table->name);
+            if ($category->isCheckedOut(JFactory::getUser()->get('id'))) {
+                JError::raiseWarning('500', 'WHD_FAQCATEGORY:CANNOT DELETE FAQ CATEGORY %s FAQ CATEGORY IS CHECKED OUT', $category->name);
             } else {
-                // attempt to delete the node and FAQ category
-                // note that the treeSession will deal with the FAQ category
-                // delete as well as the node delete
-                $accessSession = WFactory::getAccessSession();
-                try {
-                    // delete the nodes from the tree that represent the category
-                    $accessSession->deleteNode('faqcategory', $id, true);
-                    WMessageHelper::message(JText::sprintf('WHD DELETED FAQ CATEGORY %s', $table->name));
-                } catch (Exception $e) {
-                    JError::raiseWarning('500', 'WHD DELETE FAQ CATEGORY %s FAILED', $table->question);
+                if ($model->delete($category->id)) {
+                    WMessageHelper::message(JText::sprintf('WHD DELETED FAQ CATEGORY %s', $category->name));
+                } else {
+                    JError::raiseWarning('500', 'WHD_FAQCATEGORY:DELETE FAQ CATEGORY %s FAILED', $category->name);
                 }
             }
         }

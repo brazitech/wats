@@ -72,10 +72,13 @@ defined('JPATH_BASE') or die();
                     <?php echo JText::_('WHD:DISPLAY'); ?>
                 </th>
                 <th  class="title" width="15%" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'Author',    'u.name',    $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'Creator',    'u.name',    $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'Date',      'f.created',   $filters['orderDirection'], $filters['order']); ?>
+                </th>
+                <th align="center" width="50">
+                    <?php echo JHTML::_('grid.sort', 'WHD_DATA:REVISION', 'f.revised',   $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th align="center" width="50">
                     <?php echo JHTML::_('grid.sort', 'WHD_FAQ:FAQS',     'pages',     $filters['orderDirection'], $filters['order']); ?>
@@ -138,6 +141,9 @@ defined('JPATH_BASE') or die();
                 </td>
                 <td nowrap="nowrap" align="center">
                     <?php echo JHTML::_('date',  $category->created, JText::_('DATE_FORMAT_LC4')); ?>
+                </td>
+                <td nowrap="nowrap" align="center">
+                    <?php echo $category->revised ? $category->revised : ''; ?>
                 </td>
                 <td nowrap="nowrap" align="center">
                     <?php echo $category->pages; ?>

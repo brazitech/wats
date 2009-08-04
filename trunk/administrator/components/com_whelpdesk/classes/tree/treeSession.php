@@ -271,8 +271,7 @@ class StandardTreeSession {
         // if this is not recursive and there are sub nodes, we need to move
         // the sub nodes.
         if ($recursive == false && ($node['rgt'] - $node['lft'] > 1)) {
-            if ($node['parent_type'] == null &&
-                                           $node['parent_identifier'] == null) {
+            if ($node['parent_type'] == null && $node['parent_identifier'] == null) {
                 // we cannot remove the root node if recursive is false because
                 // this could screw up the tree, remeber this only applies if
                 // the node has sub nodes, i.e. it is OK if the tree only
