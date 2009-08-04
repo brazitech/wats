@@ -13,7 +13,6 @@ JHTML::_('behavior.tooltip');
 
 $document = JFactory::getDocument();
 
-$document->addScript('components/com_whelpdesk/assets/javascript/php.js/urlencode.js');
 $document->addScriptDeclaration("function populateAlias(force) {
     if (document.getElementById('alias').value == '' || force == true) {
         var req = new Request({
@@ -117,6 +116,22 @@ $document->addScriptDeclaration("function populateAlias(force) {
         <?php if ($knowledgeDomain->id) : ?>
         <fieldset class="adminform" style="border: 1px dashed silver; margin: 0px 0px 10px 0px;">
             <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('WHD_DATA:REVISED'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo $knowledgeDomain->revised; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED BY'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo JFactory::getUser($knowledgeDomain->created_by)->get('name'); ?>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>

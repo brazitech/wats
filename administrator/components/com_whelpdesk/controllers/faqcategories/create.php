@@ -40,41 +40,48 @@ class FaqcategoriesCreateWController extends FaqcategoriesWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('faqcategory');
+        // get the model and a new category
+        $model = WModel::getInstance('faqcategory');
+        $category = $model->getCategory(0);
 
         // check where in the usecase we are
         if ($stage == 'save' || $stage == 'apply') {
 
+            // before saving or applying the new category, make sure the token is valid
+            shouldHaveToken();
+
             // attempt to save
-            if ($this->commit()) {
-               JError::raiseNotice('INPUT', JText::_('WHD FAQ CATEGORY SAVED'));
+            $id = $this->commit();
+            if ($id !== false) {
+               WMessageHelper::message(JText::sprintf('WHD_FAQCATEGORY:SAVED CATEGORY %s', JRequest::getString('name')));
                if ($stage == 'save') {
+                   // return to the list
                    JRequest::setVar('task', 'faqcategories.list.start');
                } else {
-                   JRequest::setVar('task', 'faqcategories.edit.start');
+                   // goto the edit page
+                   JRequest::setVar('task', 'faqcategory.edit.start');
+                   JRequest::setVar('id',   $id);
                }
-               
+               // no need to continue we will now be going to the list or edit page
                return;
-            } else {
-                JError::raiseNotice('INPUT', JText::_('INVALID STUFF???'));;
-                foreach($table->getErrors() AS $error) {
-                    JError::raiseNotice('INPUT', $error);
-                }
             }
         }
 
         // get the view
-        $document =& JFactory::getDocument();
-		$format   =  strtolower($document->getType());
-        $view     = WView::getInstance('faqcategories', 'form', $format);
+        $view = WView::getInstance(
+            'faqcategories',
+            'form',
+            strtolower(
+                JFactory::getDocument()->getType()
+            )
+        );
 
         // add the default model to the view
-        $view->addModel('faqcategory', $table, true);
+        $view->addModel('faqcategory', $category, true);
 
         // add the fieldset to the model
-        $view->addModel('fieldset', $table->getFieldset());
-        $view->addModel('fieldset-data', $table);
+        $view->addModel('fieldset', $category->getFieldset());
+        $view->addModel('fieldset-data', $category);
 
         // display the view!
         JRequest::setVar('view', 'form');
@@ -82,9 +89,10 @@ class FaqcategoriesCreateWController extends FaqcategoriesWController {
     }
 
     /**
-     * Commits a new knowledge domain to the database. This method extracts data
+     * Commits a new FAQ category to the database. This method extracts data
      * from the POST request. Note that it also removes ID from the data so as
-     * to ensure we don't update an existing KD instead of creating a new one.
+     * to ensure we don't update an existing FAQ category instead of creating a
+     * new one.
      *
      * @return boolean
      */
@@ -95,7 +103,7 @@ class FaqcategoriesCreateWController extends FaqcategoriesWController {
         // do not provide an ID
         unset($post['id']);
 
-        return parent::commit($post);
+        return parent::commit(0, $post);
     }
 }
 

@@ -23,8 +23,35 @@ abstract class FaqcategoryWController extends WController {
      * @param array $array values to use to create new record
      * @return b
      */
-    public function commit($array) {
-        // get the table
+    public function commit($id, $array) {
+        // get the model
+        $model = WModel::getInstance('faqcategory');
+
+        try {
+            // attempt to save the data
+            $id = $model->save($id, $array);
+        } catch (WCompositeException $e) {
+            // data is not valid - output errors
+            $id = false;
+            JError::raiseWarning('500', JText::_('WHD_FAQCATEGORY:INVALID CATEGORY DATA'));;
+            foreach($e->getMessages() AS $message) {
+                JError::raiseWarning('500', $message);
+            }
+
+            return false;
+        }
+
+        return $id;
+
+
+
+
+
+
+
+
+
+        /*// get the table
         $table = WFactory::getTable('faqcategory');
 
         // allow raw untrimmed value for description
@@ -64,7 +91,7 @@ abstract class FaqcategoryWController extends WController {
         }
 
         WFactory::getOut()->log('Commited FAQ category to the database');
-        return true;
+        return true;*/
     }
 
 }
