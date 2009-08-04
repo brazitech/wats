@@ -505,6 +505,7 @@ class WAccessSession {
      * @param String $type Type of node to remove
      * @param String $identifier Node ID
      * @param boolean $recursive delete sub nodes
+     * @throws WTreeException
      */
     public function deleteNode($type, $identifier, $recursive=false) {
         // delegate method

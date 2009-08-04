@@ -35,6 +35,17 @@ class FaqcategoryWModel extends WModel {
         return $table;
     }
 
+    public function checkIn($id) {
+        $this->getCategory($id)->checkIn();
+    }
+
+    public function checkOut($id, $uid=0) {
+        if (!$uid) {
+            $uid = JFactory::getUser()->id;
+        }
+        $this->getCategory($id)->checkOut($uid);
+    }
+
     /**
      * Gets an array of the faq categpries
      *
@@ -149,7 +160,7 @@ class FaqcategoryWModel extends WModel {
      *
      * @param int $id
      * @throws WException
-     */
+     
     public function delete($id) {
         // make sure ID is an integer
         $id = (int)$id;
@@ -176,7 +187,7 @@ class FaqcategoryWModel extends WModel {
         $db = JFactory::getDBO();
         $db->setQuery($sql);
         $db->query();
-    }
+    }*/
 
     public function getFaqs($id) {
         $id = intval($id);
@@ -243,10 +254,12 @@ class FaqcategoryWModel extends WModel {
         }
 
         // store the data in the database table and update nulls
-        if (!$table->revise()) {
-            // failed
-            WFactory::getOut()->log('Failed to increment revision counter', true);
-            return false;
+        if ($id) {
+            if (!$table->revise()) {
+                // failed
+                WFactory::getOut()->log('Failed to increment revision counter', true);
+                return false;
+            }
         }
 
         // add to the tree if necessary
@@ -263,6 +276,26 @@ class FaqcategoryWModel extends WModel {
 
         WFactory::getOut()->log('Commited FAQ category to the database');
         return $table->id;
+    }
+
+    public function delete($id) {
+        // get the record
+        $table = WFactory::getTable('faqcategory');
+        $table->load($id);
+
+        // attempt to delete the node and FAQ category
+        // note that the treeSession will deal with the FAQ category
+        // delete as well as the node delete
+        $accessSession = WFactory::getAccessSession();
+        try {
+            // delete the node from the tree that represent the category
+            $accessSession->deleteNode('faqcategory', $id, true);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        // success!
+        return true;
     }
 
 }

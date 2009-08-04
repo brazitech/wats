@@ -32,20 +32,17 @@ class FaqcategoryDisplayWController extends FaqcategoryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('faqcategory');
-
-        // load the table data
+        // get the ID
         $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'faqcategories.list.start');
             JError::raiseNotice('INPUT', JText::_('WHD FAQ CATEGORY UNKNOWN'));
             return;
         }
-        $table->load($id);
 
         // get the model
         $model = WModel::getInstance('faqcategory');
+        $category = $model->getCategory($id);
 
         // get the view
         $document = JFactory::getDocument();
@@ -53,14 +50,14 @@ class FaqcategoryDisplayWController extends FaqcategoryWController {
         $view     = WView::getInstance('faqcategory', 'display', $format);
 
         // add the default model to the view
-        $view->addModel('faqcategory', $table, true);
+        $view->addModel('faqcategory', $category, true);
 
         // add the fieldset to the model
-        $view->addModel('fieldset', $table->getFieldset());
-        $view->addModel('fieldset-data', $table);
+        $view->addModel('fieldset', $category->getFieldset());
+        $view->addModel('fieldset-data', $category);
 
         // add the faqs
-        $view->addModel('faqs', $model->getFaqs($table->id));
+        $view->addModel('faqs', $model->getFaqs($category->id));
 
         // display the view!
         JRequest::setVar('view', 'display');

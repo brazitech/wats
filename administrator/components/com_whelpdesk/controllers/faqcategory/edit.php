@@ -32,43 +32,44 @@ class FaqcategoryEditWController extends FaqcategoryWController {
             return;
         }
 
-        // get the table
-        $table = WFactory::getTable('faqcategory');
-
-        // load the table data
+        // get the ID
         $id = WModel::getId();
         if (!$id) {
             JRequest::setVar('task', 'faqcategories.list.start');
             JError::raiseNotice('INPUT', JText::_('WHD FAQ CATEGORY UNKNOWN'));
             return;
         }
-        $table->load($id);
+
+        // get the model
+        $model = WModel::getInstance('faqcategory');
+        $category = $model->getCategory($id);
 
         // check where in the usecase we are
         switch ($stage) {
             case 'cancel':
                 // stop editing, checkin the record
-                $table->checkIn();
+                $model->checkIn($id);
                 JRequest::setVar('task', 'faqcategories.list.start');
                 return;
                 break;
             case 'save':
             case 'apply':
+                // before saving or applying the term, make sure the token is valid
+                shouldHaveToken();
+
                 // attempt to save
-                if ($this->commit()) {
-                   JError::raiseNotice('INPUT', JText::_('WHD FAQ CATEGORY SAVED'));
+                $id = $this->commit($id);
+                if ($id !== false) {
+                   // successfully saved changes
+                   WMessageHelper::message(JText::sprintf('WHD_FAQCATEGORY:UPDATED CATEGORY %s', JRequest::getString('name')));
                    if ($stage == 'save') {
                        JRequest::setVar('task', 'faqcategories.list.start');
+                       $model->checkIn($id);
                    } else {
                        JRequest::setVar('task', 'faqcategory.edit.start');
+                       JRequest::setVar('id',   $id);
                    }
-
                    return;
-                } else {
-                    JError::raiseNotice('INPUT', JText::_('INVALID STUFF???'));;
-                    foreach($table->getErrors() AS $error) {
-                        JError::raiseNotice('INPUT', $error);
-                    }
                 }
         }
 
@@ -78,26 +79,26 @@ class FaqcategoryEditWController extends FaqcategoryWController {
         $view     = WView::getInstance('faqcategory', 'form', $format);
 
         // add the default model to the view
-        $view->addModel('faqcategory', $table, true);
+        $view->addModel('faqcategory', $category, true);
 
         // add the fieldset to the model
-        $view->addModel('fieldset', $table->getFieldset());
-        $view->addModel('fieldset-data', $table);
+        $view->addModel('fieldset', $category->getFieldset());
+        $view->addModel('fieldset-data', $category);
 
         // check out the table record
-        $table->checkOut(JFactory::getUser()->id);
+        $category->checkOut(JFactory::getUser()->id);
 
         // display the view!
         JRequest::setVar('view', 'form');
         $this->display();
     }
 
-    public function commit() {
-        // values to use to create new record
+    public function commit($id) {
+        // values to use to edit record
         $post = JRequest::get('POST');
 
         // commit the changes
-        return parent::commit($post);
+        return parent::commit($id, $post);
     }
 
     /**
