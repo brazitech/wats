@@ -81,6 +81,13 @@ class JTableFaqcategory extends WTable {
     public $modified = null;
 
     /**
+     * Number of times the category has been modified
+     *
+     * @var int
+     */
+    public $revised = null;
+
+    /**
      *
      * @param JDatabase $database
      * @todo document
@@ -99,12 +106,11 @@ class JTableFaqcategory extends WTable {
      */
     public function check() {
         // initialise return value
-        $isValid = true;
+        $messages = array();
 
         // check for term
         if (trim($this->name) == '') {
-            $this->setError(JText::_('WHD FAQ CATEGORY NAME MISSING'));
-            $isValid = false;
+            $messages[] = JText::_('WHD FAQ CATEGORY NAME MISSING');
         } else {
             // check name is unique
             $db = JFactory::getDBO();
@@ -114,19 +120,16 @@ class JTableFaqcategory extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD FAQ CATEGORY NAME %s MUST BE UNIQUE', $this->name));
-                $isValid = false;
+                $messages[] = JText::sprintf('WHD FAQ CATEGORY NAME %s MUST BE UNIQUE', $this->name);
             }
         }
 
         // check for alias
         if (trim($this->alias) == '') {
-            $this->setError(JText::_('WHD FAQ CATEGORY ALIAS MISSING'));
-            $isValid = false;
+            $messages[] = JText::_('WHD FAQ CATEGORY ALIAS MISSING');
         } elseif (!WAliasHelper::isValid($this->alias)) {
             // check alias characters are acceptable
-            $this->setError(JText::_('WHD FAQ CATEGORY ALIAS IS INVALID'));
-            $isValid = false;
+            $messages[] = JText::_('WHD FAQ CATEGORY ALIAS IS INVALID');
         } else {
             // check alias is unique
             $db = JFactory::getDBO();
@@ -136,21 +139,36 @@ class JTableFaqcategory extends WTable {
                    ' AND ' . dbName('id') . ' != ' . intval($this->id);
             $db->setQuery($sql);
             if ($db->loadResult() > 0) {
-                $this->setError(JText::sprintf('WHD FAQ CATEGORY ALIAS %s MUST BE UNIQUE', $this->alias));
-                $isValid = false;
+                $messages[] = JText::sprintf('WHD FAQ CATEGORY ALIAS %s MUST BE UNIQUE', $this->alias);
             }
         }
 
         // let the parent have a look
-        if (!parent::check()) {
-            $isValid = false;
+        $parentCheck = parent::check();
+        if (is_array($parentCheck)) {
+            $messages = array_merge($messages, $parentCheck);
         }
 
-        return $isValid;
+        return count($messages) ? $messages : true;
     }
 
-    public function bind($from, $ignore=array()) {
+    public function bind($from, $ignore=array(), $safe=false) {
+        if ($safe) {
+            // ignore protected fields
+            $ignore[] = 'checked_out';
+            $ignore[] = 'checked_out_time';
+            $ignore[] = 'revised';
+            $ignore[] = 'modified';
+            $ignore[] = 'created';
+            $ignore[] = 'created_by';
+        }
+
         return parent::bind($from, $ignore);
+    }
+
+    public function reset() {
+        parent::reset();
+        $this->created_by = JFactory::getUser()->get('id');
     }
 }
 

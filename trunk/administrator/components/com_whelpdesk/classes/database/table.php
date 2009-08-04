@@ -69,10 +69,69 @@ abstract class WTable extends JTable {
 	}
 
     /**
+	 * Method to load a row from the database based on the alias and bind the
+     * fields to the WTable instance properties. This only works on tables that
+     * have an alias field.
+	 *
+	 * @param	mixed	Optional alias value to load the row by.  If not set the instance property value is used.
+     * @param   array   additional keys and values that need to match - note that the values are not escaped, we must do this ourselves
+	 * @param	boolean	True to reset the default values before loading the new row.
+	 * @return	boolean	True if successful. False if row not found or on error (internal error state set in that case).
+	 */
+	public function loadFromAlias($alias = null, $grouping = array(), $reset = true) {
+        if (!$this->hasField('alias')) {
+            throw new WNotImplementedException();
+        }
+
+		$alias = (is_null($alias)) ? $this->alias : $alias;
+
+		// Check we have an alias
+		if ($alias === null) {
+			return false;
+		}
+
+		// Reset the object values
+		if ($reset) {
+			$this->reset();
+		}
+
+		// Load the row by alias.
+        $sql = 'SELECT *' .
+			' FROM ' . dbTable($this->_tbl) .
+			' WHERE ' . dbName('alias') . ' = ' . $this->_db->quote($alias);
+		if (count($grouping)) {
+            foreach ($grouping as $field => $value) {
+                $sql .= ' AND ' . dbName($field) . ' = ' . $value;
+            }
+        }
+        $this->_db->setQuery($sql);
+		$row = $this->_db->loadAssoc();
+
+		// Check for a database error.
+		if ($this->_db->getErrorNum()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		// Check that we have a result.
+		if (empty($row)) {
+			return false;
+		}
+
+		// Bind the object with the row and return.
+		return $this->bind($row);
+	}
+
+
+    /**
 	 * @todo add security to ignore fields we cannot edit
 	 */
 	public function bind($src, $ignore = array()) {
         return parent::bind($src, $ignore);
+    }
+
+    public function hasField($fieldName) {
+        return in_array($fieldName, array_keys($this->getProperties()));
     }
 
     /**

@@ -9,6 +9,10 @@
 // Don't allow direct linking
 defined('_JEXEC') or die('Restricted Access');
 
+if (JRequest::getBool('modal')) {
+    JRequest::setVar('tmpl', 'component');
+}
+
 // wrap everything to catch any unexepcted errors
 try {
 
@@ -18,7 +22,15 @@ try {
     // import the classes we need
     wimport('factory');
     wimport('dbhelper');
+    wimport('helper.toolbar');
+    wimport('helper.document');
+    wimport('helper.message');
     wimport('database.identifiers');
+    wimport('router');
+    wimport('exceptions.invalidtoken');
+
+    // import plugins
+    JPluginHelper::importPlugin('WHD_Linker');
 
     $access = WFactory::getAccess();
     //$access->addGroup('component', 'Live tree for whelpdesk');
@@ -40,7 +52,18 @@ try {
     //$accessSession->addType('user', 'Individual user');
     //$accessSession->addNode('user', '42', 'admin', 'usergroup', 'users');
 
+    //$accessSession->addNode('documentcontainer', 'documents', 'Root document container', 'helpdesk', 'helpdesk');
+
+    //$accessSession->addNode('document', '2', 'Example document', 'documentcontainer', '9');
+
+    //$accessSession->addNode('usergroup', '2', 'advisors', 'usergroup', '1');
+    //$accessSession->addNode('user', '43', 't1', 'usergroup', '1');
+    //$accessSession->addNode('user', '44', 't2', 'usergroup', '2');
+    //$accessSession->addNode('user', '45', 't3', 'usergroup', '2');
+
     //$accessSession->addControl('helpdesk', 'display', 'Webamoeba Help Desk');
+    //$accessSession->addControl('helpdesk', 'permissions', 'Set default permissions', 'helpdesk', 'display');
+
     //$accessSession->addControl('helpdesk', 'about', 'Webamoeba Help Desk informational screen', 'helpdesk', 'display');
     //$accessSession->addControl('glossary', 'list', 'List glossary items', 'helpdesk', 'display');
     //$accessSession->addControl('glossary', 'create', 'Create new glossary items', 'glossary', 'list');
@@ -48,13 +71,58 @@ try {
     //$accessSession->addControl('glossary', 'state', 'Publish and unpublish glossary items', 'glossary', 'list');
     //$accessSession->addControl('glossary', 'resethits', 'Reset glossary item hit counters', 'glossary', 'edit');
     //$accessSession->addControl('glossary', 'delete', 'Delete glossary items', 'glossary', 'list');
+    //$accessSession->addControl('glossary', 'permissions', 'Edit glossary permissions', 'glossary', 'list');
     //$accessSession->addControl('knowledgedomains', 'list', 'List knowledge domain', 'helpdesk', 'display');
     //$accessSession->addControl('knowledgedomains', 'create', 'Create new knowledge domain', 'knowledgedomains', 'list');
     //$accessSession->addControl('knowledgedomain', 'edit', 'Edit knowledge domain', 'knowledgedomains', 'list');
     //$accessSession->addControl('knowledgedomain', 'state', 'Publish and unpublish knowledge domain', 'knowledgedomains', 'list');
     //$accessSession->addControl('knowledgedomains', 'display', 'Display knowledge domains', 'helpdesk', 'display');
+    //$accessSession->addControl('knowledgedomains', 'permissions', 'Change permissions of knowledge domains', 'knowledgedomains', 'list');
     //$accessSession->addControl('knowledgedomain', 'display', 'Display knowledge domain', 'knowledgedomains', 'display');
+    //$accessSession->addControl('knowledgedomain', 'list', 'List knowledge', 'knowledgedomains', 'list');
     //$accessSession->addControl('knowledge', 'edit', 'Edit knowledge', 'knowledgedomain', 'display');
+    //$accessSession->addControl('documentcontainer', 'list', 'List contents of a document container', 'helpdesk', 'display');
+    //$accessSession->addControl('documentcontainer', 'create', 'Create new document containers', 'documentcontainer', 'list');
+    //$accessSession->addControl('documentcontainer', 'edit', 'Edit document container', 'documentcontainer', 'list');
+    //$accessSession->addControl('documentcontainer', 'state', 'Publish and unpublish document container', 'documentcontainer', 'list');
+    //$accessSession->addControl('documentcontainer', 'delete', 'Delete document container', 'documentcontainer', 'list');
+    //$accessSession->addControl('documentcontainer', 'permissions', 'Edit documentcontainer permissions', 'documentcontainer', 'display');
+    //$accessSession->addControl('documentcontainer', 'upload', 'Upload document to document container', 'documentcontainer', 'display');
+    //$accessSession->addControl('documentcontainer', 'move', 'Move document container to a new location', 'documentcontainer', 'edit');
+
+    //$accessSession->addControl('document', 'display', 'Display document', 'documentcontainer', 'display');
+    //$accessSession->addControl('document', 'download', 'Download document', 'document', 'display');
+    //$accessSession->addControl('document', 'delete', 'Delete document', 'document', 'display');
+    //$accessSession->addControl('document', 'edit', 'Edit document', 'document', 'display');
+    //$accessSession->addControl('document', 'move', 'Move document to a new location', 'document', 'edit');
+
+    //$accessSession->addControl('usergroup', 'list', 'List user groups', 'helpdesk', 'display');
+    //$accessSession->addControl('usergroup', 'create', 'Create user groups', 'usergroup', 'list');
+    //$accessSession->addControl('usergroup', 'edit', 'Create user groups', 'usergroup', 'list');
+    //$accessSession->addControl('usergroup', 'setpermissions', 'Create user groups', 'usergroup', 'edit');
+    //$accessSession->addControl('usergroup', 'delete', 'Create user groups', 'usergroup', 'list');
+
+    //$accessSession->addControl('faqcategories', 'list', 'List FAQ categories', 'helpdesk', 'display');
+    //$accessSession->addControl('faqcategories', 'create', 'Create new FAQ categories', 'helpdesk', 'display');
+    //$accessSession->addControl('faqcategory', 'edit', 'Edit FAQ categories (new improved)', 'faqcategories', 'list');
+    //$accessSession->addControl('faqcategories', 'permissions', 'Edit FAQ category permissions', 'faqcategories', 'list');
+    //$accessSession->addControl('faqcategory', 'delete', 'Delete FAQ category', 'faqcategories', 'list');
+    //$accessSession->addNode('faqcategories', 'faqcategories', 'FAQ categories container', 'helpdesk', 'helpdesk');
+
+    //$accessSession->moveControl('faq', 'list', 'faqcategories', 'list');
+    //$accessSession->addControl('faq', 'edit', 'Edit FAQs', 'faq', 'list');
+
+    //$accessSession->addControl('faqcategories', 'display', 'Display FAQ Categories', 'helpdesk', 'display');
+    //$accessSession->addControl('faqcategory', 'display', 'Display FAQ Category', 'faqcategories', 'display');
+
+    //$accessSession->addControl('faq', 'create', 'Create new FAQs', 'faq', 'list');
+    //$accessSession->addControl('faq', 'state', 'Publish and unpublish FAQs', 'faq', 'list');
+    //$accessSession->addControl('faq', 'delete', 'Delete FAQs', 'faq', 'list');
+
+    //$accessSession->moveControl('faqcategories', 'permissions', 'faqcategories', 'list');
+    //$accessSession->moveControl('faqcategories', 'permissions', 'helpdesk', 'display');
+
+    //$accessSession->addControl('user', 'setpermissions', 'Set user permissions', 'usergroup', 'setpermissions');
 
     /*$accessSession->setAccess('usergroup', 'users',     // request
                               'helpdesk', 'helpdesk',   // target
@@ -141,45 +209,60 @@ try {
                               'knowledgedomain',  'state',              // control
                               FALSE);                                    // hasAccess
      *
-     */
+    
 
     //jexit();
 
     $accessSession->setAccess('user', '42',                             // request
-                              'knowledgedomains', 'knowledgedomains',   // target
-                              'knowledge', 'edit',                      // control
-                              true);                                    // hasAccess
+                              'documentcontainer', 'documentcontainer',         // target
+                              'documentcontainer', 'display',              // control
+                              true);                                     // hasAccess
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'documentcontainer', '1',                 // target
+                              'documentcontainer', 'create',              // control
+                              true);
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'documentcontainer', '1',                 // target
+                              'documentcontainer', 'permissions',       // control
+                              true);
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'usergroup', '1',                 // target
+                              'usergroup', 'setpermissions',       // control
+                              true);*/
 
     //$access->addGroup('controls', 'Access controls tree for whelpdesk');
     //$accessSession->addControl('helpdesk', 'display', 'Root control');
+
+    $accessSession->setAccess('user', '42',                             // request
+                              'faqcategories', 'faqcategories',                 // target
+                              'faqcategories', 'permissions',       // control
+                              true);
 
     // add include paths
     JTable::addIncludePath(JPATH_COMPONENT . DS . 'tables');
 
     // set the default toolbar title
-    JToolBarHelper::title("Webamoeba Help Desk");
-    JFactory::getDocument()->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/images/icon-48-watshead.png );}");
+    WDocumentHelper::title("Webamoeba Help Desk");
+    JFactory::getDocument()->addStyleDeclaration(".icon-48-wats { background-image:url(components/com_whelpdesk/assets/icon-48.png );}");
     
     // execute the request
     WFactory::getCommand()->execute();
 
-} catch (WException $e) {
+} catch (WInvalidTokenException $e) {
+    // deal with applicaion specific exceptions
+    JError::raiseError('403', $e->getMessage());
+    jexit($e->getMessage());
+}  catch (WException $e) {
     // deal with applicaion specific exceptions
     var_dump($e);
     jexit($e);
 } catch (Exception $e) {
     // deal with general exceptions
     jexit($e);
-}
-
-    // output the output buffer
-    echo '<div style="clear: both;"></div><div><ul>';
-    foreach(WFactory::getOut()->getLogs() AS $line) {
-        echo '<li style="color: #'.($line[1] ? 'FF1111' : '000000').';">' . $line[0] . '</li>';
-    }
-    echo '</ul></div>';
-
-    
+}   
 
 if (1 == 2) {
 
@@ -199,7 +282,7 @@ $document->addScript("../components/com_whelpdesk/wats.js");
 
 
 // set heading
-JToolBarHelper::title("Webamoeba Help Desk", "wats");
+//WToolBarHelper::title('Webamoeba Help Desk', "wats");
 
 // get settings
 $wats = WFactory::getConfig();

@@ -9,11 +9,30 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
+wimport('exceptions.composite');
+jimport('joomla.utilities.date');
+
 class FaqcategoryWModel extends WModel {
 
     public function  __construct() {
         $this->setName('faqcategory');
         $this->setDefaultFilterOrder('f.name');
+    }
+
+    public function getCategory($id, $reload = false) {
+        $table = WFactory::getTable('faqcategory');
+        if ($id) {
+            if ($reload || $table->id != $id) {
+                if (!$table->load($id)) {
+                    return false;
+                }
+            }
+        } else {
+            $table->reset();
+            $table->id = 0;
+        }
+
+        return $table;
     }
 
     /**
@@ -169,6 +188,81 @@ class FaqcategoryWModel extends WModel {
              . 'ORDER BY ' . dbName('f.question');
         $db->setQuery($sql);
         return $db->loadObjectList();
+    }
+
+    /**
+     *
+     * @param int $id
+     * @param array $data
+     * @throws WCompositeException This exception is thrown when errors exist in the data
+     */
+    function save($id, $data) {
+        // get the table and reset the data
+        $table = WFactory::getTable('faqcategory');
+        $table->reset();
+        $table->id = $id;
+
+        // make sure we do not override the supplied ID
+        unset($data['id']);
+
+        // load the base values
+        if ($id) {
+            if (!$table->load($id)) {
+                WFactory::getOut()->log('Failed to load base data from table', true);
+                return false;
+            }
+        }
+
+        // bind data with the table
+        if (!$table->bind($data, array(), true)) {
+            // failed
+            WFactory::getOut()->log('Failed to bind with table', true);
+            return false;
+        }
+
+        // deal with created and modified dates
+        $date  = new JDate();
+        $table->modified = $date->toMySQL();
+        if (!$id) {
+            $table->created = $date->toMySQL();
+        }
+
+        // check the data is valid
+        $check = $table->check();
+        if (is_array($check)) {
+            // failed
+            WFactory::getOut()->log('Table data failed to check', true);
+            throw new WCompositeException($check);
+        }
+
+        // store the data in the database table and update nulls
+        if (!$table->store(true)) {
+            // failed
+            WFactory::getOut()->log('Failed to save changes', true);
+            return false;
+        }
+
+        // store the data in the database table and update nulls
+        if (!$table->revise()) {
+            // failed
+            WFactory::getOut()->log('Failed to increment revision counter', true);
+            return false;
+        }
+
+        // add to the tree if necessary
+        if (!$id) {
+            try {
+                $accessSession = WFactory::getAccessSession();
+                $accessSession->addNode('faqcategory', $table->id, $table->alias, 'faqcategories', 'faqcategories');
+                WFactory::getOut()->log('Commited FAQ category to the tree');
+            } catch (Exception $e) {
+                WFactory::getOut()->log('Failed to commit FAQ category to the tree', $e->getMessage());
+                return false;
+            }
+        }
+
+        WFactory::getOut()->log('Commited FAQ category to the database');
+        return $table->id;
     }
 
 }
