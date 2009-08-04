@@ -131,7 +131,7 @@ class JTableGlossary extends WTable {
         parent::__construct("#__whelpdesk_glossary", "id", $database);
 
         // prepare default values
-        $this->author = JFactory::getUser()->get('id');
+        $this->created_by = JFactory::getUser()->get('id');
     }
 
     /**
@@ -218,7 +218,7 @@ class JTableGlossary extends WTable {
 
     public function reset() {
         parent::reset();
-        $this->author = JFactory::getUser()->get('id');
+        $this->created_by = JFactory::getUser()->get('id');
     }
 }
 
