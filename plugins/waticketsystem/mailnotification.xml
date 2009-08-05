@@ -1,34 +1,34 @@
 <?xml version="1.0" ?>
 <install version="1.5" type="plugin" group="waticketsystem">
-	<name>Webamoeba Ticket System - Email Notification</name>
-	<version>1.0</version>
-	<creationDate>March 2009</creationDate>
-	<author>James Kennard</author>
-	<authorEmail>james@webamoeba.co.uk</authorEmail>
-	<authorUrl>http://www.webamoeba.co.uk</authorUrl>
-	<copyright>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</copyright>
-	<license>GPL</license>
-	<description>Notifies user's by email about updates to tickets</description>
-	<files>
-		<filename plugin="mailnotification">mailnotification.php</filename>
+    <name>Webamoeba Ticket System - Email Notification</name>
+    <version>1.0.2</version>
+    <creationDate>July 2009</creationDate>
+    <author>James Kennard</author>
+    <authorEmail>james@webamoeba.co.uk</authorEmail>
+    <authorUrl>http://www.webamoeba.co.uk</authorUrl>
+    <copyright>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</copyright>
+    <license>GPL</license>
+    <description>Notifies user's by email about updates to tickets</description>
+    <files>
+        <filename plugin="mailnotification">mailnotification.php</filename>
         <folder>mailnotification</folder>
-	</files>
-	<params>
+    </files>
+    <params>
         <param name="email-allow-html"
                type="radio" 
                default="1"
                label="ALLOW HTML LABEL"
                description="ALLOW HTML DESCRIPTION">
- 			<option value="1">YES</option>
- 			<option value="0">NO</option>
- 		</param>
+             <option value="1">YES</option>
+             <option value="0">NO</option>
+         </param>
         <param name="new-enabled" 
                type="radio" 
                default="1" 
                label="NEW ENABLED LABEL" 
                description="NEW ENABLED DESCRIPTION">
             <option value="1">YES</option>
- 			<option value="0">NO</option>
+            <option value="0">NO</option>
         </param>
         <param name="reply-enabled" 
                type="radio" 
@@ -36,7 +36,7 @@
                label="REPLY ENABLED LABEL" 
                description="REPLY ENABLED DESCRIPTION">
             <option value="1">YES</option>
- 			<option value="0">NO</option>
+            <option value="0">NO</option>
         </param>
         <param name="reopen-enabled"
                type="radio"
@@ -44,7 +44,7 @@
                label="REOPEN ENABLED LABEL"
                description="REOPEN ENABLED DESCRIPTION">
             <option value="1">YES</option>
- 			<option value="0">NO</option>
+            <option value="0">NO</option>
         </param>
         <param name="assign-enabled"
                type="radio"
@@ -52,7 +52,7 @@
                label="ASSIGN ENABLED LABEL"
                description="ASSIGN ENABLED DESCRIPTION">
             <option value="1">YES</option>
- 			<option value="0">NO</option>
+            <option value="0">NO</option>
         </param>
         <param name="email-others"
                type="text" 
