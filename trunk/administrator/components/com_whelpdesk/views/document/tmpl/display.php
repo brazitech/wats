@@ -58,7 +58,7 @@ JHTML::_('behavior.tooltip');
                      border="0"
                      title="<?php echo JText::_('DOWNLOAD'); ?>"
                      style="margin: 1.5em;"><br />
-                <?php echo JText::_('DOWNLOAD'); ?>
+                <?php echo JText::_('WHD_DOC:DOCUMENT DOWNLOAD'); ?>
             </a>
         </div>
         <div>
@@ -71,7 +71,7 @@ JHTML::_('behavior.tooltip');
             <table class="admintable" style="padding: 0px; margin-bottom: 0px; width: 100%;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED BY'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED BY'); ?></strong>
                     </td>
                     <td>
                         <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&cid[]='.$this->getModel('creator')->get('id')); ?>"
@@ -82,7 +82,7 @@ JHTML::_('behavior.tooltip');
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $document->created,  JText::_('DATE_FORMAT_LC2')); ?>
@@ -91,7 +91,7 @@ JHTML::_('behavior.tooltip');
                 <?php if ($document->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('MODIFIED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:MODIFIED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $document->modified, JText::_('DATE_FORMAT_LC2')); ?>
@@ -100,7 +100,7 @@ JHTML::_('behavior.tooltip');
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('WEB ADDRESS'); ?></strong>
+                        <strong><?php echo JText::_('WHD:WWWADDRESS'); ?></strong>
                     </td>
                     <td>
                         <input onclick="this.select();"
@@ -112,7 +112,7 @@ JHTML::_('behavior.tooltip');
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('DOWNLOADS'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DOC:DOCUMENT DOWNLOADS'); ?></strong>
                     </td>
                     <td>
                         <?php echo $document->hits;?>
@@ -120,7 +120,7 @@ JHTML::_('behavior.tooltip');
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('SIZE'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DOC:DOCUMENT SIZE'); ?></strong>
                     </td>
                     <td>
                         <?php if ($document->bytes < 1024) : ?>

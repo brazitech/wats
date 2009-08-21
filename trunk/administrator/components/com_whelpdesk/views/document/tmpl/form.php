@@ -64,7 +64,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="upload">
-                            <?php echo JText::_('UPLOAD FILE'); ?>
+                            <?php echo JText::_('WHD_DOC:UPLOAD DOCUMENT'); ?>
                         </label>
                     </td>
                     <td>
@@ -73,7 +73,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                                id="upload"
                                type="file"
                                size="80" /><br />
-                        <?php echo JText::sprintf('MAXIMUM FILE SIZE IS %sMB', $this->getModel('maxFileSize')); ?>
+                        <?php echo JText::sprintf('WHD_DOC:MAXIMUM DOCUMENT SIZE IS %sMB', $this->getModel('maxFileSize')); ?>
                     </td>
                 </tr>
             </table>
@@ -84,7 +84,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="name">
-                            <?php echo JText::_('NAME'); ?>
+                            <?php echo JText::_('WHD_DOC:DOCUMENT NAME'); ?>
                         </label>
                     </td>
                     <td>
@@ -101,15 +101,15 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="alias">
-                            <?php echo JText::_('Alias'); ?>
+                            <?php echo JText::_('WHD_DOC:DOCUMENT ALIAS'); ?>
                         </label>
                     </td>
                     <td>
                         <input class="inputbox" type="text" name="alias" id="alias" size="34" maxlength="255" value="<?php echo $document->alias; ?>" />
                         <img id="rebuildAlias"
                              src="components/com_whelpdesk/assets/javascript/wall-disable.png"
-                             alt="<?php echo JText::_('Rebuild Alias'); ?>"
-                             title="<?php echo JText::_('Rebuild Alias'); ?>"
+                             alt="<?php echo JText::_('WHD:REBUILD ALIAS'); ?>"
+                             title="<?php echo JText::_('WHD:REBUILD ALIAS'); ?>"
                              class="hasTip"
                              align="middle"
                              style="cursor: pointer;"
