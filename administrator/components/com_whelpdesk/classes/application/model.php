@@ -235,14 +235,22 @@ abstract class WModel {
      *
      * @return int
      */
-    public static function getId() {
+    public static function getId($raw = false) {
         // attempt to get the ID normally
-        $id = JRequest::getInt('id');
+        if ($raw) {
+            $id = JRequest::getVar('id');
+        } else {
+            $id = JRequest::getInt('id');
+        }
 
         // no luck?  try the cid array
         if (!$id) {
             $cid = JRequest::getVar('cid');
-            $id = (int)$cid[0];
+            if ($raw) {
+                $id = $cid[0];
+            } else {
+                $id = (int)$cid[0];
+            }
         }
 
         return $id;

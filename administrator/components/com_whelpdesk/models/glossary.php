@@ -227,6 +227,7 @@ class GlossaryWModel extends WModel {
         $check = $table->check();
         if (is_array($check)) {
             // failed
+            var_dump($table->id);
             WFactory::getOut()->log('Table data failed to check', true);
             throw new WCompositeException($check);
         }

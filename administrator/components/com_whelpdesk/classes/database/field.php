@@ -50,12 +50,19 @@ class WField extends JObject {
     protected $params;
 
     /**
-     * Gets a cached instance of a WField object
+     * Group to which the field belongs
+     * 
+     * @var object
+     */
+    private $group;
+
+    /**
+     * Gets an instance of a WField object
      *
      * @param string $type
      * @return WField
      */
-    public static function getInstance($type, $definition) {
+    public static function getInstance($type, $group, $definition) {
         // sanitize type
         $type = strtolower($type);
 
@@ -78,22 +85,64 @@ class WField extends JObject {
         }
 
         // create an instance of the class and return it
-        return new $className($definition);
+        return new $className($group, $definition);
     }
 
-    public function  __construct($definition) {
+    public function  __construct($group, $definition) {
         $this->name        = $definition['name'];
         $this->label       = $definition['label'];
         $this->description = $definition['description'];
         $this->default     = $definition['default'];
         $this->list        = (bool)$definition['list'];
         $this->params      = json_decode($definition['params']);
+        $this->group       = $group;
         if (!is_object($this->params)) {
             $this->params = new stdClass();
         }
     }
 
-    //public abstract function addToTable($table);
+    private static $fieldTypes;
+
+    public static function getFieldTypes() {
+        if (!self::$fieldTypes) {
+            self::$fieldTypes = JFolder::files(
+                JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'database' . DS . 'fields',
+                '\.xml$'
+            );
+
+            for ($i = count(self::$fieldTypes) - 1; $i >= 0; $i--) {
+                self::$fieldTypes[$i] = JFile::stripExt(self::$fieldTypes[$i]);
+            }
+        }
+
+        return self::$fieldTypes;
+    }
+
+    /**
+     *
+     * @param string $fieldType
+     * @param string $tableName
+     * @param string $groupName
+     * @param object $field
+     * @return boolean
+     */
+    public static function addToTable($fieldType, $tableName, $groupName, $field) {
+        $fieldTypeClassName = ucfirst(strtolower($fieldType)) . 'WField';
+        wimport('database.fields.'.strtolower($fieldType));
+        return call_user_func(array($fieldTypeClassName, 'addToTable'), $tableName, $groupName, $field);
+    }
+
+    public static function updateTable($fieldType, $tableName, $groupName, $field) {
+        $fieldTypeClassName = ucfirst(strtolower($fieldType)) . 'WField';
+        wimport('database.fields.'.strtolower($fieldType));
+        return call_user_func(array($fieldTypeClassName, 'updateTable'), $tableName, $groupName, $field);
+    }
+
+    public static function check($fieldType, $fieldParameters) {
+        $fieldTypeClassName = ucfirst(strtolower($fieldType)) . 'WField';
+        wimport('database.fields.'.strtolower($fieldType));
+        return call_user_func(array($fieldTypeClassName, 'check'), $fieldParameters);
+    }
 
     public function isValid($value) {
         return true;
@@ -109,8 +158,16 @@ class WField extends JObject {
 
     //public abstract function getHTML_FormElement($value=null);
 
+    public function getGroup() {
+        return $this->group;
+    }
+
     public function getName() {
         return $this->name;
+    }
+
+    public function getFullName() {
+        return 'field_' . $this->group->name . '_' . $this->name;
     }
 
     public function getLabel($translate=true) {

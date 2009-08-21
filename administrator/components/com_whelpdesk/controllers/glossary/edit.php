@@ -131,7 +131,7 @@ class GlossaryEditWController extends GlossaryWController {
         $view->addModel('canChangeState', $canChangeState);
 
         // check out the record
-        $model->checkOut($id);
+        $model->checkOut($term->id);
 
         // display the view!
         JRequest::setVar('view', 'form');

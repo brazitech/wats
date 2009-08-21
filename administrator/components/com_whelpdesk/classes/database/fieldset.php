@@ -23,8 +23,8 @@ class WFieldset {
      * @param string $table
      * @return WFieldset
      */
-    public function getInstance($table) {
-        if (!array_key_exists($table, self::$instances)) {
+    public function getInstance($table, $reload=false) {
+        if (!array_key_exists($table, self::$instances) || $reload) {
             self::$instances[$table] = new WFieldset($table);
         }
 
@@ -37,9 +37,12 @@ class WFieldset {
         $this->table = $table;
         
         // get the groups
-        $sql = 'SELECT * FROM ' . dbTable('data_groups')
-             . ' WHERE ' . dbName('table') . ' = ' . $db->Quote($table)
-             . ' ORDER BY ' . dbName('ordering');
+        $sql = 'SELECT ' . dbName('g.*')
+             . ' FROM ' . dbTable('data_groups') . ' AS ' . dbName('g')
+             . ' JOIN ' . dbTable('data_tables') . ' AS ' . dbName('t')
+             . ' ON ' . dbName('t.id') . ' = ' . dbName('g.table')
+             . ' WHERE ' . dbName('t.table') . ' = ' . $db->Quote($table)
+             . ' ORDER BY ' . dbName('g.ordering');
         $db->setQuery($sql);
         $this->groups = $db->loadObjectList('name');
 
@@ -51,7 +54,8 @@ class WFieldset {
             $this->groups[$groupName]->fields  = array();
 
             // query the database for fields
-            $sql = 'SELECT * FROM ' . dbTable('data_fields')
+            $sql = 'SELECT * '
+                 . ' FROM ' . dbTable('data_fields')
                  . ' WHERE ' . dbName('group') . ' = ' . $db->Quote($this->groups[$groupName]->id)
                  . ' ORDER BY ' . dbName('ordering');
             $db->setQuery($sql);
@@ -59,7 +63,7 @@ class WFieldset {
 
             // add the fields to the group
             for ($z = 0, $t = count($fields); $z < $t; $z++) {
-                $field = WField::getInstance($fields[$z]['type'], $fields[$z]);
+                $field = WField::getInstance($fields[$z]['type'], $this->groups[$groupName], $fields[$z]);
                 $this->groups[$groupName]->fields[] = $field;
             }
         }
