@@ -37,7 +37,8 @@ $data   = $this->getModel('fieldset-data');
                     </label>
                 </td>
                 <td class="paramlist_value">
-                    <?php echo $field->getHTML_FormElement($data->{$field->getName()}); ?>
+                    <?php //echo $field->getHTML_FormElement($data->{'field_'.$groups[$i].'_'.$field->getName()}); ?>
+                    <?php echo $field->getHTML_FormElement($data->{$field->getFullName()}); ?>
                 </td>
             </tr>
             <?php endfor; ?>

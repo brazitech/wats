@@ -36,13 +36,14 @@ abstract class WTable extends JTable {
             $groupNames = $this->fieldset->getGroupNames();
 
             // itterate over the fields
-            $fields = $this->fieldset->getFields();
             $this->init = true;
+            $fields = $this->fieldset->getFields();
             for ($z = 0, $t = count($fields); $z < $t; $z++) {
                 $field = $fields[$z];
-                $this->set($field->getName(), $field->getDefault());
+                $this->set($field->getFullName(), $field->getDefault());
             }
             $this->init = false;
+            
         }
         
         // let JTable take over
@@ -148,18 +149,25 @@ abstract class WTable extends JTable {
 
         // do some prep work
         $messages = array();
-        $fields = $this->fieldset->getFields();
+        $groupNames = $this->fieldset->getGroupNames();
 
-        // itterate over fields if there are any
-        if (count($fields)) {
-            foreach ($fields as $field) {
-                // deal with field
-                $value = $this->{$field->getName()};
-                if ($field->isValid($value) != true) {
-                    // field is not valid
-                    // get the error message and set the return value
-                    $isValid = false;
-                    $messages[] = $field->getError();
+        // itterate over groups
+        if (count($groupNames)) {
+            foreach ($groupNames as $groupName) {
+                // get the groups fields
+                $fields = $this->fieldset->getFields($groupName);
+                // itterate over fields if there are any
+                if (count($fields)) {
+                    foreach ($fields as $field) {
+                        // deal with field
+                        $value = $this->{'field_'.$groupName.'_'.$field->getName()};
+                        if ($field->isValid($value) != true) {
+                            // field is not valid
+                            // get the error message and set the return value
+                            $isValid = false;
+                            $messages[] = $field->getError();
+                        }
+                    }
                 }
             }
         }

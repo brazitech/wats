@@ -11,12 +11,30 @@ class UriWField extends WField {
 
     static $uriPattern = "#(?:(?:http)://(?:(?:(?:(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]*)?[a-zA-Z0-9])[.])*(?:[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9]|[a-zA-Z])[.]?)|(?:[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+)))(?::(?:(?:[0-9]*)))?(?:/(?:(?:(?:(?:(?:(?:[a-zA-Z0-9\-_.!~*'():@&=+$,]+|(?:%[a-fA-F0-9][a-fA-F0-9]))*)(?:;(?:(?:[a-zA-Z0-9\-_.!~*'():@&=+$,]+|(?:%[a-fA-F0-9][a-fA-F0-9]))*))*)(?:/(?:(?:(?:[a-zA-Z0-9\-_.!~*'():@&=+$,]+|(?:%[a-fA-F0-9][a-fA-F0-9]))*)(?:;(?:(?:[a-zA-Z0-9\-_.!~*'():@&=+$,]+|(?:%[a-fA-F0-9][a-fA-F0-9]))*))*))*))(?:[?](?:(?:(?:[;/?:@&=+$,a-zA-Z0-9\-_.!~*'()]+|(?:%[a-fA-F0-9][a-fA-F0-9]))*)))?))?)#";
 
-    public function __construct($definition) {
-        parent::__construct($definition);
+    public function __construct($group, $definition) {
+        parent::__construct($group, $definition);
     }
 
-    public function addToTable($table) {
+    /**
+     * Checks if the parameters are valid for this field type (text)
+     *
+     * @param JParameter params
+     */
+    public static function check($params) {
+        return true;
+    }
+
+    public static function addToTable($tableName, $groupName, $field) {
         $db = JFactory::getDBO();
+        $db->setQuery(
+            'ALTER TABLE ' . dbTable($tableName) .
+            ' ADD COLUMN ' . dbName('field_'.$groupName.'_'.$field->name) . ' VARCHAR(255)'
+        );
+        return $db->query();
+    }
+
+    public static function updateTable($tableName, $groupName, $field) {
+        return true;
     }
 
     public function isValid($value) {
@@ -36,7 +54,7 @@ class UriWField extends WField {
 
     public function getHTML_FormElement($value=null) {
         return '<input type="text" '
-                    . 'name="' . $this->getName() . '" '
+                    . 'name="' .$this->getFullName() . '" '
                     . 'value="' . $value . '" '
                     . 'maxlength="400" '
                     . 'size="30"'

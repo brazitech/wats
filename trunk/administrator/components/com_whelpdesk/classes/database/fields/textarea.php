@@ -9,12 +9,30 @@
 
 class TextareaWField extends WField {
 
-    public function __construct($definition) {
-        parent::__construct($definition);
+    public function __construct($group, $definition) {
+        parent::__construct($group, $definition);
     }
 
-    public function addToTable($table) {
+    /**
+     * Checks if the parameters are valid for this field type (text)
+     *
+     * @param JParameter params
+     */
+    public static function check($params) {
+        return true;
+    }
+
+    public static function addToTable($tableName, $groupName, $field) {
         $db = JFactory::getDBO();
+        $db->setQuery(
+            'ALTER TABLE ' . dbTable($tableName) .
+            ' ADD COLUMN ' . dbName('field_'.$groupName.'_'.$field->name) . ' VARCHAR(1024)'
+        );
+        return $db->query();
+    }
+
+    public static function updateTable($tableName, $groupName, $field) {
+        return true;
     }
 
     public function isValid($value) {
@@ -32,7 +50,7 @@ class TextareaWField extends WField {
     }
 
     public function getHTML_FormElement($value=null) {
-        return '<textarea name="' . $this->getName() . '" '
+        return '<textarea name="' . $this->getFullName() . '" '
              .           'class="text_area" '
              .           'rows="' . (($this->params->rows) ? $this->params->rows : '5') . '" '
              .           'cols="' . (($this->params->cols) ? $this->params->cols : '30') . '">'
