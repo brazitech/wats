@@ -113,22 +113,22 @@ window.addEvent('domready', function() {
     <div class="contextmenu-link"></div>
     <li>
         <a href="#display" class="display">
-            <?php echo JText::_('Display'); ?>
+            <?php echo JText::_('WHD_DOC:DISPLAY DOCUMENT CONTAINER'); ?>
         </a>
     </li>
 	<li class="separator">
         <a href="#edit" class="edit">
-            <?php echo JText::_('Edit'); ?>
+            <?php echo JText::_('WHD_DOC:EDIT DOCUMENT CONTAINER'); ?>
         </a>
     </li>
 	<li>
         <a href="#del" class="del">
-            <?php echo JText::_('Delete'); ?>
+            <?php echo JText::_('WHD_DOC:DELETE DOCUMENT CONTAINER'); ?>
         </a>
     </li>
     <li>
         <a href="#move" class="move">
-            <?php echo JText::_('Move'); ?>
+            <?php echo JText::_('WHD_DOC:MOVE DOCUMENT CONTAINER'); ?>
         </a>
     </li>
 </ul>
@@ -137,27 +137,27 @@ window.addEvent('domready', function() {
     <div class="contextmenu-link"></div>
     <li>
         <a href="#display" class="display">
-            <?php echo JText::_('Display'); ?>
+            <?php echo JText::_('WHD_DOC:DISPLAY DOCUMENT'); ?>
         </a>
     </li>
 	<li>
         <a href="#download" class="download">
-            <?php echo JText::_('Download'); ?>
+            <?php echo JText::_('WHD_DOC:DOWNLOAD DOCUMENT'); ?>
         </a>
     </li>
 	<li class="separator">
         <a href="#edit" class="edit">
-            <?php echo JText::_('Edit'); ?>
+            <?php echo JText::_('WHD_DOC:EDIT DOCUMENT'); ?>
         </a>
     </li>
 	<li>
         <a href="#del" class="del">
-            <?php echo JText::_('Delete'); ?>
+            <?php echo JText::_('WHD_DOC:DELETE DOCUMENT'); ?>
         </a>
     </li>
     <li>
         <a href="#move" class="move">
-            <?php echo JText::_('Move'); ?>
+            <?php echo JText::_('WHD_DOC:MOVE DOCUMENT'); ?>
         </a>
     </li>
 </ul>
@@ -192,7 +192,7 @@ window.addEvent('domready', function() {
         </p>
         <?php else : ?>
         <?php if (count($documentcontainers) > 0) : ?>
-        <h2 style="margin-top: 0;">Folders</h2>
+        <h2 style="margin-top: 0;"><?php echo JText::_('WHD_DOC:DOCUMENT CONTAINERS'); ?></h2>
         <div id="documentcontainers">
             <?php for ($i = 0, $c = count($documentcontainers) ; $i < $c ; $i++) : ?>
             <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display&id='.$documentcontainers[$i]->id); ?>"
@@ -219,7 +219,9 @@ window.addEvent('domready', function() {
         <?php endif; ?>
         <?php if (count($documents) > 0) : ?>
         <div style="clear: both;"></div>
-        <h2 style="<?php echo (count($documentcontainers) == 0) ? ' margin-top: 0;' : ''; ?>">Files</h2>
+        <h2 style="<?php echo (count($documentcontainers) == 0) ? ' margin-top: 0;' : ''; ?>">
+            <?php echo JText::_('WHD_DOC:DOCUMENTS'); ?>
+        </h2>
         <div id="documents">
             <?php for ($i = 0, $c = count($documents) ; $i < $c ; $i++) : ?>
             <a class="modal"
@@ -263,7 +265,7 @@ window.addEvent('domready', function() {
             <table class="admintable" style="padding: 0px; margin-bottom: 0px; width: 100%;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED BY'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED BY'); ?></strong>
                     </td>
                     <td>
                         <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&cid[]='.$this->getModel('creator')->get('id')); ?>">
@@ -273,7 +275,7 @@ window.addEvent('domready', function() {
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $container->created,  JText::_('DATE_FORMAT_LC2')); ?>
@@ -282,7 +284,7 @@ window.addEvent('domready', function() {
                 <?php if ($container->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('MODIFIED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:MODIFIED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $container->modified, JText::_('DATE_FORMAT_LC2')); ?>
@@ -291,7 +293,7 @@ window.addEvent('domready', function() {
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('WEB ADDRESS'); ?></strong>
+                        <strong><?php echo JText::_('WHD:WWWADDRESS'); ?></strong>
                     </td>
                     <td>
                         <input onclick="this.select();"

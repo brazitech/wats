@@ -63,7 +63,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="name">
-                            <?php echo JText::_('NAME'); ?>
+                            <?php echo JText::_('WHD_DOC:DOCUMENT CONTAINER NAME'); ?>
                         </label>
                     </td>
                     <td>
@@ -80,7 +80,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="alias">
-                            <?php echo JText::_('Alias'); ?>
+                            <?php echo JText::_('WHD_DOC:DOCUMENT CONTAINER ALIAS'); ?>
                         </label>
                     </td>
                     <td>
@@ -114,7 +114,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
             <table class="admintable" style="padding: 0px; margin-bottom: 0px; width: 100%;">
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED BY'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED BY'); ?></strong>
                     </td>
                     <td>
                         <?php echo $this->getModel('creator')->get('username'); ?>
@@ -122,7 +122,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 </tr>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('CREATED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $container->created,  JText::_('DATE_FORMAT_LC2')); ?>
@@ -131,7 +131,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <?php if ($container->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('MODIFIED'); ?></strong>
+                        <strong><?php echo JText::_('WHD_DATA:MODIFIED'); ?></strong>
                     </td>
                     <td>
                         <?php echo JHTML::_('date',  $container->modified, JText::_('DATE_FORMAT_LC2')); ?>
@@ -140,7 +140,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('WEB ADDRESS'); ?></strong>
+                        <strong><?php echo JText::_('WHD:WWWADDRESS'); ?></strong>
                     </td>
                     <td>
                         <input onclick="this.select();"
