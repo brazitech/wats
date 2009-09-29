@@ -12,6 +12,10 @@ defined('JPATH_BASE') or die();
 $filteringByTable = false;
 $filteringByGroup = false;
 
+$doc =& JFactory::getDocument();
+$doc->addStyleDeclaration('.custom-element {width: 100px; float: left;}');
+$doc->addStyleDeclaration('.custom-element-separator {width: 30px; float: left; text-align: center;}');
+
 ?>
 
 <?php WDocumentHelper::render(); ?>
@@ -85,7 +89,11 @@ $filteringByGroup = false;
                     <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($fields); ?>);" />
                 </th>
                 <th class="title">
-                    <?php echo JHTML::_('grid.sort', 'WHD_CD:FIELDS', 'f.label',  $filters['orderDirection'], $filters['order']); ?>
+                    <?php echo JHTML::_('grid.sort', 'WHD_CD:TABLE',  't.id',     $filters['orderDirection'], $filters['order']); ?>
+                    &#9658;
+                    <?php echo JHTML::_('grid.sort', 'WHD_CD:GROUP',  'g.id',   $filters['orderDirection'], $filters['order']); ?>
+                    &#9658;
+                    <?php echo JHTML::_('grid.sort', 'WHD_CD:FIELD',  'f.label',  $filters['orderDirection'], $filters['order']); ?>
                 </th>
                 <th  class="title" width="50px" nowrap="nowrap">
                     <?php echo JHTML::_('grid.sort', 'WHD_CD:FIELD LIST',  'f.list',   $filters['orderDirection'], $filters['order']); ?>
@@ -99,12 +107,6 @@ $filteringByGroup = false;
                 </th>
                 <th  class="title" width="50" nowrap="nowrap">
                     <?php echo JHTML::_('grid.sort', 'WHD_DATA:REVISION',  'f.revision',   $filters['orderDirection'], $filters['order']); ?>
-                </th>
-                <th  class="title" width="15%" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'WHD_CD:GROUP',  'g.id',   $filters['orderDirection'], $filters['order']); ?>
-                </th>
-                <th  class="title" width="15%" nowrap="nowrap">
-                    <?php echo JHTML::_('grid.sort', 'WHD_CD:TABLE',    't.id',     $filters['orderDirection'], $filters['order']); ?>
                 </th>
             </tr>
         </thead>
@@ -130,15 +132,29 @@ $filteringByGroup = false;
                     <?php echo JHTML::_('grid.checkedout', $field, $i); ?>
                 </td>
                 <td>
-                    <?php if ($field->system) : ?>
-                    <img border="0" alt="**Published**" src="components/com_whelpdesk/assets/icons/gear.png"/>
-                    <?php endif; ?>
+                    <span class="custom-element">
+                        <?php echo JText::_($field->tableName); ?>
+                    </span>
+                    <span class="custom-element-separator">
+                        &#9658;
+                    </span>
+                    <span class="custom-element">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=datagroup.edit&id=' . $field->group); ?>">
+                            <?php echo $field->groupName; ?> 
+                        </a>
+                    </span>
+                    <span class="custom-element-separator">
+                        &#9658;
+                    </span>
                     <?php if (JTable::isCheckedOut(JFactory::getUser()->get('id'), $field->checked_out)) : ?>
                     <?php echo $field->label; ?>
                     <?php else : ?>
                     <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=field.edit&cid[]='.$field->id); ?>">
                         <?php echo htmlspecialchars($field->label, ENT_QUOTES); ?>
                     </a>
+                    <?php endif; ?>
+                    <?php if ($field->system) : ?>
+                    <img border="0" alt="<?php echo JText::_('WHD_CD:SYSTEM FIELD'); ?>" src="components/com_whelpdesk/assets/icons/gear.png"/>
                     <?php endif; ?>
                 </td>
                 <td align="center">
@@ -176,14 +192,6 @@ $filteringByGroup = false;
                 </td>
                 <td align="center">
                     <?php echo $field->version ? $field->version : ''; ?>
-                </td>
-                <td align="center">
-                    <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faqcategory.edit&id=' . $field->group); ?>">
-                        <?php echo $field->groupName; ?>
-                    </a>
-                </td>
-                <td align="center">
-                    <?php echo JText::_($field->tableName); ?>
                 </td>
             </tr>
             <?php endfor; ?>
