@@ -2,39 +2,21 @@
 <field>
 	<params>
 		<param
-			name="maximumCharacterLength"
-			type="text"
-			default=""
-			label="WHD_CD:TEXT:MAXIMUM CHARACTER LENGTH LABEL"
-			description="WHD_CD:TEXT:MAXIMUM CHARACTER LENGTH DESCRIPTION"
-            size="10" />
+			name="required"
+			type="radio"
+			default="0"
+			label="WHD_CD:URI:REQUIRED LABEL"
+			description="WHD_CD:URI:REQUIRED DESCRIPTION"
+            size="10" >
+            <option value="1">YES</option>
+            <option value="0">NO</option>
+        </param>
 		<param
-			name="minimumCharacterLength"
+			name="invalidMessage"
 			type="text"
 			default=""
-			label="WHD_CD:TEXT:MINIMUM CHARACTER LENGTH LABEL"
-			description="WHD_CD:TEXT:MINIMUM CHARACTER LENGTH DESCRIPTION"
-            size="10" />
-        <param
-			name="fieldSize"
-			type="text"
-			default=""
-			label="WHD_CD:TEXT:FIELD SIZE LABEL"
-			description="WHD_CD:TEXT:FIELD SIZE DESCRIPTION"
-            size="10" />
-        <param
-			name="regularExpressionPattern"
-			type="text"
-			default=""
-			label="WHD_CD:TEXT:REGULAR EXPRESSION PATTERN LABEL"
-			description="WHD_CD:TEXT:REGULAR EXPRESSION PATTERN DESCRIPTION"
-            size="40" />
-		<param
-			name="regularExpressionMatchFailedMessage"
-			type="text"
-			default=""
-			label="WHD_CD:TEXT:REGULAR EXPRESSION ERROR MESSAGE LABEL"
-			description="WHD_CD:TEXT:REGULAR EXPRESSION ERROR MESSAGE DESCRIPTION"
+			label="WHD_CD:URI:INVALID MESSAGE LABEL"
+			description="WHD_CD:TEXT:INVALID MESSAGE DESCRIPTION"
             size="40" />
     </params>
 </field>

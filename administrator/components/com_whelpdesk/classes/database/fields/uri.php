@@ -16,19 +16,46 @@ class UriWField extends WField {
     }
 
     /**
-     * Checks if the parameters are valid for this field type (text)
+     * Checks if the parameters are valid for this field type (uri)
      *
      * @param JParameter params
      */
     public static function check($params) {
-        return true;
+        $messages = array();
+
+        // check required field
+        $params->set(
+            'required',
+            intval($params->get('required'))
+        );
+        if ($params->get('required') < 0 || $params->get('required') > 1) {
+            $messages[] = JText::_('WHD_CD:URI:INVALID REQUIRED VALUE');
+        }
+
+        // check invalidMessage
+        if (strlen($params->get('invalidMessage') < 0)) {
+            $messages[] = JText::_('WHD_CD:URI:MISSING INVALID MESSAGE');
+        }
+
+        return count($messages) ? $messages : true;
     }
 
+    /**
+     * Assumes maximum length of URLs to be 2,083 characters. This is the IE URL
+     * charachter limiit. Technically there is no defined limit however for 
+     * practical reasons we must assume a limit of some description.
+     * 
+     * @param <type> $tableName
+     * @param <type> $groupName
+     * @param <type> $field
+     * @return <type> 
+     */
     public static function addToTable($tableName, $groupName, $field) {
+
         $db = JFactory::getDBO();
         $db->setQuery(
             'ALTER TABLE ' . dbTable($tableName) .
-            ' ADD COLUMN ' . dbName('field_'.$groupName.'_'.$field->name) . ' VARCHAR(255)'
+            ' ADD COLUMN ' . dbName('field_'.$groupName.'_'.$field->name) . ' VARCHAR(2083)'
         );
         return $db->query();
     }

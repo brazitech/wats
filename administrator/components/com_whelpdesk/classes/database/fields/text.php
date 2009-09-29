@@ -22,10 +22,14 @@ class TextWField extends WField {
         $messages = array();
         
         // check maximumCharacterLength
+        $params->set(
+            'maximumCharacterLength',
+            intval($params->get('maximumCharacterLength'))
+        );
         if ($params->get('maximumCharacterLength') < 1) {
-            $messages[] = JText::_('WHD_CD:TEXT:MAXIMUM CHARACHTER LENGTH MUST BE GREATER THAN 0');
+            $messages[] = JText::_('WHD_CD:TEXT:MAXIMUM CHARACTER LENGTH MUST BE GREATER THAN 0');
         } else if ($params->get('maximumCharacterLength') > 255) {
-            $messages[] = JText::_('WHD_CD:TEXT:MAXIMUM CHARACHTER LENGTH MUST BE LESS THAN 256');
+            $messages[] = JText::_('WHD_CD:TEXT:MAXIMUM CHARACTER LENGTH MUST BE LESS THAN 256');
         }
 
         // check minimumCharacterLength
@@ -34,9 +38,14 @@ class TextWField extends WField {
             intval($params->get('minimumCharacterLength'))
         );
         if ($params->get('minimumCharacterLength') < 0) {
-            $messages[] = JText::_('WHD_CD:TEXT:MINIMUM CHARACHTER LENGTH MUST BE GREATER THAN -1');
+            $messages[] = JText::_('WHD_CD:TEXT:MINIMUM CHARACTER LENGTH MUST BE GREATER THAN -1');
         } elseif ($params->get('minimumCharacterLength') > $params->get('maximumCharacterLength')) {
-            $messages[] = JText::_('WHD_CD:TEXT:MINIMUM CHARACHTER LENGTH MUST BE LESS THAN MAXIMUM CHRACHTER LENGTH');
+            $messages[] = JText::_('WHD_CD:TEXT:MINIMUM CHARACTER LENGTH MUST BE LESS THAN MAXIMUM CHRACHTER LENGTH');
+        }
+
+        // check validity of minimum gaianst maximum
+        if ($params->get('minimumCharacterLength') > $params->get('maximumCharacterLength')) {
+            $messages[] = JText::_('WHD_CD:TEXT:MINIMUM CHARACTER LENGTH MUST BE LESS THAN MAXIMUM CHARACTER LENGTH');
         }
 
         // check fieldSize
