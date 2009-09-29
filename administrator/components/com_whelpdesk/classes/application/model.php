@@ -262,7 +262,7 @@ abstract class WModel {
      *
      * @return int
      */
-    public static function getAllIds() {
+    public static function getAllIds($raw = false) {
         // attempt to get the ID normally
         $cid = JRequest::getVar('cid');
 
@@ -270,9 +270,11 @@ abstract class WModel {
             // no luck?  go for an empty array
             $cid = array();
         } else {
-            // make sure the IDs are safe
-            for ($i = 0, $c = count($cid); $i < $c; $i++) {
-                $cid[$i] = intval($cid[$i]);
+            if (!$raw) {
+                // make sure the IDs are safe
+                for ($i = 0, $c = count($cid); $i < $c; $i++) {
+                    $cid[$i] = intval($cid[$i]);
+                }
             }
         }
 
