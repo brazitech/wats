@@ -28,8 +28,8 @@ class HelpdeskHTMLWView extends WView {
     }
 
     private function document() {
-        WDocumentHelper::subtitle(JText::_('ABOUT'));
-        WDocumentHelper::addPathwayItem(JText::_('ABOUT'));
+        WDocumentHelper::subtitle(JText::_('WHD:ABOUT'));
+        WDocumentHelper::addPathwayItem(JText::_('WHD:ABOUT'));
     }
     
 }
