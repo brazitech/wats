@@ -29,9 +29,10 @@ class FieldWModel extends WModel {
         if (!array_key_exists($cacheKey, self::$fields)) {
             $db = JFactory::getDBO();
             $sql = 'SELECT ' . dbName('f.*')
-                 . ' , ' . dbName('g.name')  . ' AS ' . dbName('groupName')
-                 . ' , ' . dbName('g.label') . ' AS ' . dbName('groupLabel')
-                 . ' , ' . dbName('t.name')  . ' AS ' . dbName('tableName')
+                 . ' , ' . dbName('g.name')   . ' AS ' . dbName('groupName')
+                 . ' , ' . dbName('g.label')  . ' AS ' . dbName('groupLabel')
+                 . ' , ' . dbName('t.name')   . ' AS ' . dbName('tableName')
+                 . ' , ' . dbName('t.table')  . ' AS ' . dbName('table')
                  . ' FROM ' . dbTable('data_fields') . ' AS ' . dbName('f')
                  . ' LEFT JOIN ' . dbTable('data_groups') . ' AS ' . dbName('g')
                  . ' ON ' . dbName('g.id') . ' = ' . dbName('f.group')
@@ -434,6 +435,41 @@ class FieldWModel extends WModel {
 
         WFactory::getOut()->log('Commited field to the database');
         return $field;
+    }
+
+    /**
+     * Deletes a field from a table
+     * 
+     * @param int    $group
+     * @param string $name
+     * @return <type> 
+     */
+    public function delete($group, $name) {
+        $field = $this->getField($group, $name);
+        if (!$field) {
+            return false;
+        }
+
+        // cannot delete system fields
+        if ($field->system) {
+            return false;
+        }
+
+        // remove metadata
+        $db = JFactory::getDBO();
+        $sql = 'DELETE FROM ' . dbTable('data_fields')
+             . ' WHERE ' . dbName('group') . ' = ' . $db->Quote($group)
+             . ' AND '   . dbName('name')  . ' = ' . $db->Quote($name);
+        $db->setQuery($sql);
+        if (!$db->query()) {
+            return false;
+        }
+
+        // remove physical column
+        $sql = 'ALTER TABLE ' . dbTable($field->table)
+             . ' DROP ' . dbName('field_' . $field->groupName . '_' . $field->name);
+        $db->setQuery($sql);
+        return (bool)$db->query();
     }
 
     private function check($data) {
