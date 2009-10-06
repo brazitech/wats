@@ -168,7 +168,7 @@ function watsOption( $task, $act )
 						}
 						else
 						{
-							echo JText::_("WATS_ERROR_ACCESS") . " :( ";
+							echo JText::_("WATS_ERROR_ACCESS");
 						}
 					}
 					else
@@ -191,7 +191,8 @@ function watsOption( $task, $act )
 					if ( $rite > 0 )
 					{
 						// allow user make ticket
-						$createDatetime = date('YmdHis');
+						$createDatetime = JFactory::getDate();
+                        $createDatetime = $createDatetime->toMySQL();
 						$parsedMsg = parseMsg( JRequest::getString('msg', '', 'REQUEST', JREQUEST_ALLOWRAW) );
 						$ticket = new watsTicketHTML(null, null, JRequest::getString('ticketname'), $watsUser->id, null, $createDatetime, 1, null, null, 1, JRequest::getInt('catid') );
 						$ticket->_msgList[0] = new watsMsg( null, $parsedMsg, $watsUser->id, $createDatetime );
@@ -250,8 +251,10 @@ function watsOption( $task, $act )
 						{
 							// allow user to reply
 							$parsedMsg = parseMsg(JRequest::getString("msg", "", "REQUEST", JREQUEST_ALLOWRAW));
-							
-							$ticket->addMsg( $parsedMsg, $watsUser->id, date('YmdHis') );
+
+                            $updatedDatetime = JFactory::getDate();
+                            $updatedDatetime = $updatedDatetime->toMySQL();
+							$ticket->addMsg( $parsedMsg, $watsUser->id, $updatedDatetime );
 							// check for close
 							if ( JRequest::getInt('close', 0) == 1 )
 							{

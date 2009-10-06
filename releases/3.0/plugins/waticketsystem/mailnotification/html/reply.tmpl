@@ -52,7 +52,7 @@ $url = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port')) . ((!preg
                 </tr>
                 <tr>
                     <td><strong><?php echo JText::_("REPLY SUBMITTED"); ?></strong></td>
-                    <td><?php echo date($wats->get("date"), strtotime($this->lastMessage->datetime)); ?></td>
+                    <td><?php echo JHTML::_('date', $this->lastMessage->datetime, $wats->get('date')); ?></td>
                 </tr>
                 <tr>
                     <td><strong><?php echo JText::_("REPLY SUBMITTED BY"); ?></strong></td>

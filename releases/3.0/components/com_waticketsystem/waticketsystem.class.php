@@ -527,6 +527,8 @@ class watsTicket
 	function _highlightUpdate( $watsId )
 	{
 		$db =& JFactory::getDBO();
+        $datetime = JFactory::getDate();
+        $datetime = $datetime->toMySQL();
 	
 		// check for existing record
 		$queryHighlight = "SELECT " . WDBHelper::nameQuote("datetime") . " " .
@@ -539,7 +541,7 @@ class watsTicket
 		{
 			// update record
 			$queryHighlight = "UPDATE " . WDBHelper::nameQuote("#__wats_highlight") . " " .
-			                  "SET " . WDBHelper::nameQuote("datetime") . " = " . $db->Quote(date('YmdHis')) . " " .
+			                  "SET " . WDBHelper::nameQuote("datetime") . " = " . $db->Quote($datetime) . " " .
 							  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " AND " .
 							             WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . " /* watsTicket::_highlightUpdate*/";
 		}
@@ -549,7 +551,7 @@ class watsTicket
 			$queryHighlight = "INSERT INTO " . WDBHelper::nameQuote("#__wats_highlight") . " " .
 			                  "SET " . WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . ", " . 
 							           WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . ", " .
-									   WDBHelper::nameQuote("datetime") . " = " . $db->Quote(date('YmdHis')) . " /* watsTicket::_highlightUpdate() */";
+									   WDBHelper::nameQuote("datetime") . " = " . $db->Quote($datetime) . " /* watsTicket::_highlightUpdate() */";
 		}
 		// perform query
 		$db->setQuery( $queryHighlight );
@@ -581,7 +583,7 @@ class watsTicket
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$db->setQuery("SELECT *, UNIX_TIMESTAMP(" . WDBHelper::nameQuote("m.datetime") . ") AS " . WDBHelper::nameQuote("unixDatetime") . " " .
+		$db->setQuery("SELECT * " .
 		              "FROM " . WDBHelper::nameQuote("#__wats_msg") . " AS " . WDBHelper::nameQuote("m") . " " .
 					  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " " .
 					  "ORDER BY " . WDBHelper::nameQuote("datetime") . " /* watsTicket::loadMsgList() */ " );
@@ -591,7 +593,7 @@ class watsTicket
 		foreach( $messages as $message )
 		{
 			// create object
-		    $this->_msgList[$i] = new watsMsg( $message->msgid, $message->msg, $message->watsid, $message->unixDatetime );
+		    $this->_msgList[$i] = new watsMsg( $message->msgid, $message->msg, $message->watsid, $message->datetime );
 			// increment counter
 			$i ++;
 			$this->msgNumberOf ++;
@@ -674,12 +676,12 @@ class watsTicketSet
 							   WDBHelper::nameQuote("t.ticketname") . ", " .
 							   WDBHelper::nameQuote("t.category") . ", " .
 							   WDBHelper::nameQuote("t.lifecycle") . ", " .
-							   "UNIX_TIMESTAMP(" . WDBHelper::nameQuote("t.datetime") . ") AS " . WDBHelper::nameQuote("firstpost") . ", " .
-							   "UNIX_TIMESTAMP(" . WDBHelper::nameQuote("h.datetime") . ") AS " . WDBHelper::nameQuote("lastview") . ", " .
+							   WDBHelper::nameQuote("t.datetime") . " AS " . WDBHelper::nameQuote("firstpost") . ", " .
+							   WDBHelper::nameQuote("h.datetime") . " AS " . WDBHelper::nameQuote("lastview") . ", " .
 							   "SUBSTRING(MIN(CONCAT(DATE_FORMAT(" . WDBHelper::nameQuote("m1.datetime") . ", " . $db->Quote("%Y-%m-%d %H:%i:%s") . "), " . WDBHelper::nameQuote("m1.msgid") . ")), 20) AS " . WDBHelper::nameQuote("firstmsg") . ", " .
 							   "SUBSTRING(MAX(CONCAT(DATE_FORMAT(" . WDBHelper::nameQuote("m1.datetime") . ", " . $db->Quote("%Y-%m-%d %H:%i:%s") . "), " . WDBHelper::nameQuote("m1.msgid") . ")), 20) AS " . WDBHelper::nameQuote("lastpostid") . ", " .
 							   "SUBSTRING(MAX(CONCAT(DATE_FORMAT(" . WDBHelper::nameQuote("m1.datetime") . ", " . $db->Quote("%Y-%m-%d %H:%i:%s") . "), " . WDBHelper::nameQuote("m1.watsid") . ")), 20) AS " . WDBHelper::nameQuote("lastid") . ", " .
-							   "UNIX_TIMESTAMP(MAX( " . WDBHelper::nameQuote("m1.datetime") . ")) AS " . WDBHelper::nameQuote("lastdate") . ", " .
+							   "MAX( " . WDBHelper::nameQuote("m1.datetime") . ") AS " . WDBHelper::nameQuote("lastdate") . ", " .
 							   WDBHelper::nameQuote("o.username") . " AS " . WDBHelper::nameQuote("username") . ", " .
 							   "SUBSTRING(MAX(CONCAT(DATE_FORMAT(" . WDBHelper::nameQuote("m1.datetime") . ", " . $db->Quote("%Y-%m-%d %H:%i:%s") . "), " .
 							   WDBHelper::nameQuote("p.username") . ")), 20) AS " . WDBHelper::nameQuote("poster") . " " .
@@ -753,10 +755,10 @@ class watsMsg
 	 */
 	function watsMsg( $msgId, $msg = null, $watsId = null, $datetime = null )
 	{
-		$this->msgId=$msgId;
-		$this->msg=$msg;
-		$this->watsId=$watsId;
-		$this->datetime=$datetime;
+		$this->msgId    = $msgId;
+		$this->msg      = $msg;
+		$this->watsId   = $watsId;
+		$this->datetime = $datetime;
 	}
 	
 	/**

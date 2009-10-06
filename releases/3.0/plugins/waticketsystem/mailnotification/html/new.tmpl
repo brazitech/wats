@@ -48,7 +48,7 @@ $url = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port')) . ((!preg
                     <td>WATS-<?php echo $this->ticket->ticketId; ?></td>
                 <tr>
                     <td><strong><?php echo JText::_("Submitted"); ?></strong></td>
-                    <td><?php echo date($wats->get("date"), strtotime($this->ticket->datetime)); ?></td>
+                    <td><?php echo JHTML::_('date', $this->ticket->datetime, $wats->get("date")); ?></td>
                 </tr>
                 <tr>
                     <td><strong><?php echo JText::_("Submitted By"); ?></strong></td>

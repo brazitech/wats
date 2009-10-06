@@ -418,7 +418,7 @@ class watsTicketHTML extends watsTicket
 				    <tr>
 					  <th scope=\"col\">";
 			$msgUser->viewSimple();
-		 	echo "<br /><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_msgList[$i]->datetime )."</span></th>
+		 	echo "<br /><span class=\"watsDate\">".JHTML::_('date', $this->_msgList[$i]->datetime, $wats->get('date'))."</span></th>
 				    </tr>
 				    <tr>
 					  <td>".$this->_msgList[$i]->msg."</td>
@@ -763,14 +763,13 @@ class watsTicketSetHTML extends watsTicketSet
 			echo "  </td>
 					<td>";
 			// highlight
-			if ( $this->_ticketList[$i]->lastView < $this->_ticketList[$i]->lastMsg )
-			{
+            if (($this->_ticketList[$i]->lastView) < ($this->_ticketList[$i]->lastMsg)) {
 				echo "<span class=\"watsTicketHighlight\">".$wats->get( 'highlight' )."</span> ";
 			}
 			// end highlight
-			echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=view&ticketid=".$this->_ticketList[$i]->ticketId."\">".$this->_ticketList[$i]->name."</a><br />".$this->_ticketList[$i]->username.": <span class=\"watsDate\">".date( $wats->get( 'dateshort' ), $this->_ticketList[$i]->datetime )."</span></td>
+			echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=view&ticketid=".$this->_ticketList[$i]->ticketId."\">".$this->_ticketList[$i]->name."</a><br />".$this->_ticketList[$i]->username.": <span class=\"watsDate\">".JHTML::_('date', $this->_ticketList[$i]->datetime, $wats->get('dateshort'))."</span></td>
 					<td>".$this->_ticketList[$i]->msgNumberOf."</td>
-					<td><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_ticketList[$i]->lastMsg )."</span></td>
+					<td><span class=\"watsDate\">" . JHTML::_('date', $this->_ticketList[$i]->lastMsg, $wats->get('date')) . "</span></td>
 					<td>";
             $canDelete =  $watsUser->checkPermission($this->_ticketList[$i]->category, 'd');
 			if (

@@ -11,7 +11,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 function changeIcon( $name, $icon ) {
 	$database = JFactory::getDBO();
-	$database->setQuery( "UPDATE #__components SET admin_menu_img=\"".$icon."\" WHERE `name`=\"".$name."\" AND `option`=\"com_waticketsystem\";");
+	$database->setQuery( "UPDATE #__components SET admin_menu_img=\"".$icon."\" WHERE " . $database->nameQuote('name') . "=\"".$name."\" AND " . $database->nameQuote('option') . "=\"com_waticketsystem\";");
 	$database->query();
 	}
 
@@ -54,242 +54,254 @@ function com_install()
 		 * new install
 		 */	
 		case '0.0.0':
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_category`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_category') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_category` (
-					  `catid` int(11) NOT NULL auto_increment,
-					  `name` varchar(50) NOT NULL default '',
-					  `description` varchar(255) default NULL,
-					  `image` varchar(255) default NULL,
-					  PRIMARY KEY  (`catid`),
-					  UNIQUE KEY `name` (`name`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_category') . " (
+					  " . $database->nameQuote('catid') . " int(11) NOT NULL auto_increment,
+					  " . $database->nameQuote(name) . " varchar(50) NOT NULL default '',
+					  " . $database->nameQuote('description') . " varchar(255) default NULL,
+					  " . $database->nameQuote('image') . " varchar(255) default NULL,
+					  PRIMARY KEY  (" . $database->nameQuote('catid') . "),
+					  UNIQUE KEY " . $database->nameQuote('name') . " (" . $database->nameQuote('name') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_category`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_category') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_category` (
-					  `catid` int(11) NOT NULL auto_increment,
-					  `name` varchar(50) NOT NULL default '',
-					  `description` varchar(255) default NULL,
-					  `image` varchar(255) default NULL,
-					  PRIMARY KEY  (`catid`),
-					  UNIQUE KEY `name` (`name`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_category') . " (
+					  " . $database->nameQuote('catid') . " int(11) NOT NULL auto_increment,
+					  " . $database->nameQuote('name') . " varchar(50) NOT NULL default '',
+					  " . $database->nameQuote('description') . " varchar(255) default NULL,
+					  " . $database->nameQuote('image') . " varchar(255) default NULL,
+					  PRIMARY KEY  (" . $database->nameQuote('catid') . "),
+					  UNIQUE KEY " . $database->nameQuote('name') . " (" . $database->nameQuote('name') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_groups`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_groups') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_groups` (
-					  `grpid` int(10) unsigned NOT NULL auto_increment,
-					  `name` varchar(50) NOT NULL default '',
-					  `image` varchar(255) default NULL,
-					  `userrites` varchar(4) NOT NULL default '----',
-					  PRIMARY KEY  (`grpid`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_groups') . " (
+					  " . $database->nameQuote('grpid') . " int(10) unsigned NOT NULL auto_increment,
+					  " . $database->nameQuote('name') . " varchar(50) NOT NULL default '',
+					  " . $database->nameQuote('image') . " varchar(255) default NULL,
+					  " . $database->nameQuote('userrites') . " varchar(4) NOT NULL default '----',
+					  PRIMARY KEY  (" . $database->nameQuote('grpid') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_highlight`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_highlight') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_highlight` (
-                      `watsid` int(11) NOT NULL default '0',
-                      `ticketid` int(11) NOT NULL default '0',
-                      `datetime` timestamp,
-                      PRIMARY KEY  (`watsid`,`ticketid`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_highlight') . " (
+                      " . $database->nameQuote('watsid') . " int(11) NOT NULL default '0',
+                      " . $database->nameQuote('ticketid') . " int(11) NOT NULL default '0',
+                      " . $database->nameQuote('datetime') . " timestamp,
+                      PRIMARY KEY  (" . $database->nameQuote('watsid') . "," . $database->nameQuote('ticketid') . ")
                     );");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_msg`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_msg') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE `#__wats_msg` (
-					  `msgid` int(11) NOT NULL auto_increment,
-					  `ticketid` int(11) NOT NULL default '0',
-					  `watsid` int(11) NOT NULL default '0',
-					  `msg` text NOT NULL,
-					  `datetime` timestamp,
-					  PRIMARY KEY  (`msgid`)
+			$database->setQuery( "CREATE TABLE " . $database->nameQuote('#__wats_msg') . " (
+					  " . $database->nameQuote('msgid') . " int(11) NOT NULL auto_increment,
+					  " . $database->nameQuote('ticketid') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('watsid') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('msg') . " text NOT NULL,
+					  " . $database->nameQuote('datetime') . " timestamp,
+					  PRIMARY KEY  (" . $database->nameQuote('msgid') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_permissions`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_permissions') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_permissions` (
-					  `grpid` int(11) NOT NULL default '0',
-					  `catid` int(11) default '0',
-					  `type` varchar(8) NOT NULL default '',
-					  KEY `grpid` (`grpid`,`catid`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_permissions') . " (
+					  " . $database->nameQuote('grpid') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('catid') . " int(11) default '0',
+					  " . $database->nameQuote('type') . " varchar(8) NOT NULL default '',
+					  KEY " . $database->nameQuote('grpid') . " (" . $database->nameQuote('grpid') . "," . $database->nameQuote('catid') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_settings`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_settings') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_settings` (
-					  `name` varchar(255) NOT NULL default '',
-					  `value` varchar(255) default NULL,
-					  PRIMARY KEY  (`name`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_settings') . " (
+					  " . $database->nameQuote('name') . " varchar(255) NOT NULL default '',
+					  " . $database->nameQuote('value') . " varchar(255) default NULL,
+					  PRIMARY KEY  (" . $database->nameQuote('name') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_ticket`;");
-			$database->setQuery( "CREATE TABLE  `#__wats_ticket` (
-					  `watsid` int(11) NOT NULL default '0',
-					  `ticketid` int(11) NOT NULL auto_increment,
-					  `ticketname` varchar(25) NOT NULL default '',
-					  `lifecycle` tinyint(1) NOT NULL default '0',
-					  `datetime` timestamp,
-					  `category` int(11) NOT NULL default '0',
-					  `assign` int(11) default NULL,
-					  PRIMARY KEY  (`ticketid`)
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_ticket') . ";");
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_ticket') . " (
+					  " . $database->nameQuote('watsid') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('ticketid') . " int(11) NOT NULL auto_increment,
+					  " . $database->nameQuote('ticketname') . " varchar(25) NOT NULL default '',
+					  " . $database->nameQuote('lifecycle') . " tinyint(1) NOT NULL default '0',
+					  " . $database->nameQuote('datetime') . " timestamp,
+					  " . $database->nameQuote('category') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('assign') . " int(11) default NULL,
+					  PRIMARY KEY  (" . $database->nameQuote('ticketid') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_users`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_users') . ";");
 			$database->query();
-			$database->setQuery( "CREATE TABLE  `#__wats_users` (
-					  `watsid` int(11) NOT NULL default '0',
-					  `organisation` varchar(25) NOT NULL default '',
-					  `agree` tinyint(1) NOT NULL default '0',
-					  `grpid` int(11) NOT NULL default '0',
-					  PRIMARY KEY  (`watsid`)
+			$database->setQuery( "CREATE TABLE  " . $database->nameQuote('#__wats_users') . " (
+					  " . $database->nameQuote('watsid') . " int(11) NOT NULL default '0',
+					  " . $database->nameQuote('organisation') . " varchar(25) NOT NULL default '',
+					  " . $database->nameQuote('agree') . " tinyint(1) NOT NULL default '0',
+					  " . $database->nameQuote('grpid') . " int(11) NOT NULL default '0',
+					  PRIMARY KEY  (" . $database->nameQuote('watsid') . ")
 					);");
 			$database->query();
-			$database->setQuery( "DROP TABLE IF EXISTS `#__wats_agree`;");
+			$database->setQuery( "DROP TABLE IF EXISTS " . $database->nameQuote('#__wats_agree') . ";");
 			$database->query();			
-			$database->setQuery( "INSERT INTO `#__wats_settings` (`name`,`value`) VALUES ('iconset','mdn_'),
-                                                                                         ('highlight','!'),
-                                                                                         ('enhighlight','1'),
-                                                                                         ('ticketsfront','5'),
-                                                                                         ('ticketssub','15'),
-                                                                                         ('sourceemail',''),
-                                                                                         ('msgbox','bbcode'),
-                                                                                         ('name','Webamoeba Ticket System'),
-                                                                                         ('users','0'),
-                                                                                         ('agree','0'),
-                                                                                         ('agreei',''),
-                                                                                         ('agreelw','You must agree to the following terms to use this system'),
-                                                                                         ('agreen','agreement'),
-                                                                                         ('agreela','If you have read the terms please continue'),
-                                                                                         ('agreeb','continue'),
-                                                                                         ('view','a'),
-                                                                                         ('msgboxh','10'),
-                                                                                         ('msgboxw','58'),
-                                                                                         ('msgboxt','1'),
-                                                                                         ('dorganisation','individual'),
-                                                                                         ('copyright','WebAmoeba Ticket System for Mambo and Joomla'),
-                                                                                         ('date','j-M-Y (h:i)'),
-                                                                                         ('defaultmsg','type here...'),
-                                                                                         ('dateshort','j-M-Y'),
-                                                                                         ('assignname','Assigned Tickets'),
-                                                                                         ('assigndescription','Tickets assigned to you to answer'),
-                                                                                         ('assignimage',''),
-                                                                                         ('versionmajor','2'),
-                                                                                         ('versionminor','0'),
-                                                                                         ('versionpatch','0'),
-                                                                                         ('css','disable'),
-                                                                                         ('versionname','stable'),
-                                                                                         ('upgrade','0'),
-                                                                                         ('userdefault','1'),
-                                                                                         ('usersimport','0'),
-                                                                                         ('debug','0'),
-                                                                                         ('debugmessage','Continue >>');");
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_settings') . " (" . $database->nameQuote('name') . "," . $database->nameQuote('value') . ") VALUES ('iconset','mdn_'),
+                                                                                               ('highlight','!'),
+                                                                                               ('enhighlight','1'),
+                                                                                               ('ticketsfront','5'),
+                                                                                               ('ticketssub','15'),
+                                                                                               ('sourceemail',''),
+                                                                                               ('msgbox','bbcode'),
+                                                                                               ('name','Webamoeba Ticket System'),
+                                                                                               ('users','0'),
+                                                                                               ('agree','0'),
+                                                                                               ('agreei',''),
+                                                                                               ('agreelw','You must agree to the following terms to use this system'),
+                                                                                               ('agreen','agreement'),
+                                                                                               ('agreela','If you have read the terms please continue'),
+                                                                                               ('agreeb','continue'),
+                                                                                               ('view','a'),
+                                                                                               ('msgboxh','10'),
+                                                                                               ('msgboxw','58'),
+                                                                                               ('msgboxt','1'),
+                                                                                               ('dorganisation','individual'),
+                                                                                               ('copyright','WebAmoeba Ticket System for Mambo and Joomla'),
+                                                                                               ('date','j-M-Y (h:i)'),
+                                                                                               ('defaultmsg','type here...'),
+                                                                                               ('dateshort','j-M-Y'),
+                                                                                               ('assignname','Assigned Tickets'),
+                                                                                               ('assigndescription','Tickets assigned to you to answer'),
+                                                                                               ('assignimage',''),
+                                                                                               ('versionmajor','2'),
+                                                                                               ('versionminor','0'),
+                                                                                               ('versionpatch','0'),
+                                                                                               ('css','disable'),
+                                                                                               ('versionname','stable'),
+                                                                                               ('upgrade','0'),
+                                                                                               ('userdefault','1'),
+                                                                                               ('usersimport','0'),
+                                                                                               ('debug','0'),
+                                                                                               ('debugmessage','Continue >>');");
 			$database->query();
-			$database->setQuery( "INSERT INTO `#__wats_groups` (`grpid`,`name`,`image`,`userrites`) VALUES (1,'user','components/com_waticketsystem/images/mdn_userSmall.jpg','----'),(2,'advisor','components/com_waticketsystem/images/mdn_userSmallGreen.jpg','V---'),(3,'administrator','components/com_waticketsystem/images/mdn_userSmallRed.jpg','VMED');");
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_groups') . " (" . $database->nameQuote('grpid') . "," . $database->nameQuote('name') . "," . $database->nameQuote('image') . "," . $database->nameQuote('userrites') . ") VALUES (1,'user','components/com_waticketsystem/images/mdn_userSmall.jpg','----'),(2,'advisor','components/com_waticketsystem/images/mdn_userSmallGreen.jpg','V---'),(3,'administrator','components/com_waticketsystem/images/mdn_userSmallRed.jpg','VMED');");
 			$database->query();
-			$database->setQuery( "INSERT INTO `#__wats_permissions` (`grpid`,`catid`,`type`) VALUES (1,1,'vmrcd---'),(2,1,'VmRCDPAO'),(3,1,'VmRCDPAO');");
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_permissions') . " (" . $database->nameQuote('grpid') . "," . $database->nameQuote('catid') . "," . $database->nameQuote('type') . ") VALUES (1,1,'vmrcd---'),(2,1,'VmRCDPAO'),(3,1,'VmRCDPAO');");
 			$database->query();
-			$database->setQuery( "INSERT INTO `#__wats_category` (`catid`,`name`,`description`,`image`) VALUES (1,'Default Category','If there are no other suitable categories submit your tickets here ;)',NULL);");			
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_category') . " (" . $database->nameQuote('catid') . "," . $database->nameQuote('name') . "," . $database->nameQuote('description') . "," . $database->nameQuote('image') . ") VALUES (1,'Default Category','If there are no other suitable categories submit your tickets here ;)',NULL);");			
 			$database->query();
 		/**
 		 * patch from 2.0.0 to 2.0.1
 		 */	
 		case '2.0.0':
-			$database->setQuery( "INSERT INTO `#__wats_settings` (`name`,`value`) VALUES ('debug','0'),('debugmessage','Continue >>');");
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_settings') . " (" . $database->nameQuote('name') . "," . $database->nameQuote('value') . ") VALUES ('debug','0'),('debugmessage','Continue >>');");
 			$database->query();
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='1' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='1' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.1 to 2.0.2
 		 */	
 		case '2.0.1':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='2' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='2' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.2 to 2.0.3
 		 */	
 		case '2.0.2':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.3 to 2.0.4
 		 */	
 		case '2.0.3':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='4' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='4' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.4 to 2.0.5
 		 */	
 		case '2.0.4':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='5' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='5' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.5 to 2.0.6
 		 */	
 		case '2.0.5':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='6' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='6' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.6 to 2.0.7
 		 */	
 		case '2.0.6':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='7' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='7' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.7 to 2.0.8
 		 */	
 		case '2.0.7':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='8' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='8' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
 		/**
 		 * patch from 2.0.8 to 3.0.0
 		 */	
 		case '2.0.8':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='0' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='0' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='0' WHERE `name`='versionminor';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='0' WHERE " . $database->nameQuote('name') . "='versionminor';" );
 			$database->query();
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionmajor';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionmajor';" );
 			$database->query();
-            $database->setQuery( "UPDATE `#__wats_settings` SET `value`='release candidate' WHERE `name`='versionnane';" );
+            $database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='release candidate' WHERE " . $database->nameQuote('name') . "='versionnane';" );
 			$database->query();
-            $database->setQuery( "UPDATE `#__wats_settings` SET `value`='WebAmoeba Ticket System for Joomla!' WHERE `name`='copyright';" );
+            $database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='WebAmoeba Ticket System for Joomla!' WHERE " . $database->nameQuote('name') . "='copyright';" );
 			$database->query();
             
-            $database->setQuery("DELETE FROM `#__wats_settings` WHERE `name` = 'newpostmsg' OR
-                                                                      `name` = 'newpostmsg1' OR 
-                                                                      `name` = 'newpostmsg2' OR 
-                                                                      `name` = 'newpostmsg3' OR 
-                                                                      `name` = 'notifyusers' OR
-                                                                      `name` = 'notifyemail'");
+            $database->setQuery("DELETE FROM " . $database->nameQuote('#__wats_settings') . " WHERE " . $database->nameQuote('name') . " = 'newpostmsg' OR
+                                                                      " . $database->nameQuote('name') . " = 'newpostmsg1' OR 
+                                                                      " . $database->nameQuote('name') . " = 'newpostmsg2' OR 
+                                                                      " . $database->nameQuote('name') . " = 'newpostmsg3' OR 
+                                                                      " . $database->nameQuote('name') . " = 'notifyusers' OR
+                                                                      " . $database->nameQuote('name') . " = 'notifyemail'");
             $database->query();	
             break;
         /**
 		 * patch from 3.0.0 to 3.0.1
 		 */	
 		case '3.0.0':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='1' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='1' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
         /**
 		 * patch from 3.0.1 to 3.0.2
 		 */	
 		case '3.0.1':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='2' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='2' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
         /**
 		 * patch from 3.0.2 to 3.0.3
 		 */	
 		case '3.0.2':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
         /**
 		 * patch from 3.0.3 to 3.0.4
 		 */
 		case '3.0.3':
-			$database->setQuery( "UPDATE `#__wats_settings` SET `value`='3' WHERE `name`='versionpatch';" );
+			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='4' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
 			$database->query();
-            $database->setQuery( "ALTER TABLE `#__wats_ticket` MODIFY COLUMN `ticketname` VARCHAR(255) NOT NULL;" );
+            $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_ticket') . " MODIFY COLUMN " . $database->nameQuote('ticketname') . " VARCHAR(255) NOT NULL;" );
 			$database->query();
+            
+            // convert timestamp fields to datetime fields
+            $database->setQuery('ALTER TABLE ' . $database->nameQuote('#__wats_highlight') . ' MODIFY COLUMN ' . $database->nameQuote('datetime') . ' DATETIME NOT NULL;');
+            $database->query();
+            $database->setQuery('ALTER TABLE ' . $database->nameQuote('#__wats_ticket') . ' MODIFY COLUMN ' . $database->nameQuote('datetime') . ' DATETIME NOT NULL;');
+            $database->query();
+            $database->setQuery('ALTER TABLE ' . $database->nameQuote('#__wats_msg') . ' MODIFY COLUMN ' . $database->nameQuote('datetime') . ' DATETIME NOT NULL;');
+            $database->query();
+            $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y (%H:%M)' WHERE " . $database->nameQuote('name') . " = 'date'");
+            $database->query();
+            $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y' WHERE " . $database->nameQuote('name') . " = 'date'");
+            $database->query();
 	}
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
