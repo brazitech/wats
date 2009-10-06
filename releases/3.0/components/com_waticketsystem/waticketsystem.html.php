@@ -40,7 +40,7 @@ class watsUserHTML extends watsUser
 		if ( $this->image != null )
 		{
 			echo "  <td>
-			        <img border=\"0\" src=\"".$this->image."\" />
+			        <img border=\"0\" src=\"".$this->image."\" alt=\"".JText::_('WATS_USER')."\"/>
 					</td>";
 		} // end add image
 		echo "		<td>".JText::_("WATS_USER_USERNAME").": ".$this->username."<br />"
@@ -66,7 +66,7 @@ class watsUserHTML extends watsUser
 		if ( $this->image != null )
 		{
 			echo "  <td>
-			        <img border=\"0\" src=\"".$this->image."\" />
+			        <img border=\"0\" src=\"".$this->image."\" alt=\"".JText::_('WATS_USER')."\"/>
 					</td>";
 		} // end add image
 		echo "		<td>".JText::_("WATS_USER_USERNAME").": ".$this->username."
@@ -75,11 +75,11 @@ class watsUserHTML extends watsUser
 				</table>
 				<div id=\"watsUserEdit\">
 				<form name=\"watsUserMake\" method=\"post\" action=\"index.php?Itemid=".$Itemid."&act=user&task=editComplete\">
-				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				<input name=\"act\" type=\"hidden\" value=\"user\">
-				<input name=\"task\" type=\"hidden\" value=\"editComplete\">
-				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\">
+				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+				<input name=\"act\" type=\"hidden\" value=\"user\" />
+				<input name=\"task\" type=\"hidden\" value=\"editComplete\" />
+				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\" />
 			      <p>
 				    <span class=\"watsHeading2\">".JText::_("WATS_USER_GROUP")."</span>
 					<select name=\"grpId\" size=\"10\">";
@@ -113,7 +113,7 @@ class watsUserHTML extends watsUser
 					<input name=\"organisation\" type=\"text\" maxlength=\"255\" value=\"".$this->organisation."\" />
 				  </p>
 				  <p>
-					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_EDIT")."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_EDIT")."\" class=\"watsFormSubmit\" />
 				  </p>
 				 </form>
 				</div>
@@ -130,11 +130,11 @@ class watsUserHTML extends watsUser
 		echo "<div id=\"watsUserView\">
 				<div id=\"watsUserDelete\">
 				<form name=\"watsUserDelete\" method=\"post\" action=\"index.php?Itemid=".$Itemid."&act=user&task=delete\">
-				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				<input name=\"act\" type=\"hidden\" value=\"user\">
-				<input name=\"task\" type=\"hidden\" value=\"delete\">
-				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\">
+				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+				<input name=\"act\" type=\"hidden\" value=\"user\" />
+				<input name=\"task\" type=\"hidden\" value=\"delete\" />
+				<input name=\"userid\" type=\"hidden\" value=\"".$this->id."\" />
 			      <p>
 				    ".JText::_("WATS_USER_DELETE_REC")."<br />
 					<input name=\"remove\" type=\"radio\" value=\"removetickets\" checked=\"checked\" />
@@ -144,7 +144,7 @@ class watsUserHTML extends watsUser
 					<input name=\"remove\" type=\"radio\" value=\"removeposts\" />
 				  </p>
 				  <p>
-					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_DELETE")."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_USER_DELETE")."\" class=\"watsFormSubmit\" />
 				  </p>
 				 </form>
 				</div>
@@ -166,11 +166,11 @@ class watsUserHTML extends watsUser
 	 function makeButton() {
 	 	global $Itemid;
 	 	echo "<form name=\"watsUserMake\" method=\"get\" action=\"index.php\">
-				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				<input name=\"act\" type=\"hidden\" value=\"user\">
-				<input name=\"task\" type=\"hidden\" value=\"make\">
-				<input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\">
+				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+				<input name=\"act\" type=\"hidden\" value=\"user\" />
+				<input name=\"task\" type=\"hidden\" value=\"make\" />
+				<input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\" />
 			  </form>";
 	 }
 	 
@@ -186,10 +186,10 @@ class watsUserHTML extends watsUser
 		
 	 	echo "<div id=\"watsReply\" class=\"watsReply\">
 		      <form name=\"watsUserMake\" method=\"get\" action=\"index.php\" onsubmit=\"return watsValidateNewUser( this, document.getElementById('user'), '".JText::_("WATS_ERROR_NODATA")."' );\">
-				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				<input name=\"act\" type=\"hidden\" value=\"user\">
-				<input name=\"task\" type=\"hidden\" value=\"makeComplete\">
+				<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+				<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+				<input name=\"act\" type=\"hidden\" value=\"user\" />
+				<input name=\"task\" type=\"hidden\" value=\"makeComplete\" />
 				<p>
 				  <span class=\"watsHeading2\">".JText::_("WATS_USER_SELECT")."</span>
 				  <select name=\"user[]\" size=\"10\" multiple=\"multiple\" id=\"user\">";
@@ -233,7 +233,7 @@ class watsUserHTML extends watsUser
 					<input name=\"organisation\" type=\"text\" maxlength=\"255\" value=\"".$wats->get( 'dorganisation' )."\" />
 				</p>
 				<p>
-		          <input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\">
+		          <input type=\"submit\" name=\"watsAddUser\" value=\"".JText::_("WATS_USER_ADD")."\" class=\"watsFormSubmit\" />
 				</p>
 			  </form>
 			  </div>";
@@ -303,10 +303,10 @@ class watsUserSetHTML extends watsUserSet
 		{
 			echo "<tr class=\"watsUserSetViewRow".($i % 2)."\">
 					<td>
-				      <img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."user1616.gif\" height=\"16\" width=\"16\" border=\"0\">
+				      <img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."user1616.gif\" height=\"16\" width=\"16\" border=\"0\" alt=\"".JText::_('WATS_USER')."\">
 			        </td>
 					<td>";
-			echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$i]->id."\">".$this->userSet[$i]->username."</a><br>(".$this->userSet[$i]->name.")
+			echo "<a href=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=user&task=edit&userid=".$this->userSet[$i]->id."\">".$this->userSet[$i]->username."</a><br />(".$this->userSet[$i]->name.")
 			        </td>
 					<td>".$this->userSet[$i]->organisation."</td>
 					<td>".$this->userSet[$i]->groupName."</td>
@@ -480,19 +480,19 @@ class watsTicketHTML extends watsTicket
 				{ // reply and close
 					echo "<tr> 
 						  <td>" . JText::_("WATS_TICKETS_CLOSE") . "</td>
-						  <td><input type=\"radio\" name=\"close\" value=\"0\" checked> " . JText::_("NO") . "<input type=\"radio\" name=\"close\" value=\"1\">" . JText::_("YES") . "
+						  <td><input type=\"radio\" name=\"close\" value=\"0\" checked /> " . JText::_("NO") . "<input type=\"radio\" name=\"close\" value=\"1\" />" . JText::_("YES") . "
                           </td>
                         </tr>";
 				} // end reply and close
                 echo "  <tr> 
 						  <td>&nbsp;</td>
 						  <td>
-							<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-							<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-							<input name=\"act\" type=\"hidden\" value=\"ticket\">
-							<input name=\"task\" type=\"hidden\" value=\"reply\">
-							<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
-							<input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY")."\" class=\"watsFormSubmit\">";
+							<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+							<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+							<input name=\"act\" type=\"hidden\" value=\"ticket\" />
+							<input name=\"task\" type=\"hidden\" value=\"reply\" />
+							<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\" />
+							<input type=\"submit\" name=\"submit\" value=\"".JText::_("WATS_TICKETS_REPLY")."\" class=\"watsFormSubmit\" />";
 				echo "        </td>
 							</tr>
 						  </table>
@@ -520,12 +520,12 @@ class watsTicketHTML extends watsTicket
 			if ( ( $this->watsId == $watsUser->id AND $rite > 0 ) OR ( $rite == 2 ) )
 			{ // reopen
 				echo "<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">";
-				echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-					    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-					    <input name=\"act\" type=\"hidden\" value=\"ticket\">
-					    <input name=\"task\" type=\"hidden\" value=\"reopen\">
-						<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
-					    <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\">
+				echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+					    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+					    <input name=\"act\" type=\"hidden\" value=\"ticket\" />
+					    <input name=\"task\" type=\"hidden\" value=\"reopen\" />
+						<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\" />
+					    <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\" />
 					  </form>";
 			} // end reopen
 		} // end reopenrites
@@ -548,11 +548,11 @@ class watsTicketHTML extends watsTicket
 		{
 			echo "<div id=\"watsViewAssignTo\" class=\"watsViewAssignTo\">
 					<form name=\"submitassign\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=assign&task=assignto\" onsubmit=\"return watsValidateTicketAssign( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">
-					<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-					<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-					<input name=\"act\" type=\"hidden\" value=\"assign\">
-					<input name=\"task\" type=\"hidden\" value=\"assignto\">
-					<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">
+					<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+					<input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+					<input name=\"act\" type=\"hidden\" value=\"assign\" />
+					<input name=\"task\" type=\"hidden\" value=\"assignto\" />
+					<input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\" />
 					<select name=\"assignee\">";
 			$assigneeCount = count( $assignees );
 			$i = 0;
@@ -566,7 +566,7 @@ class watsTicketHTML extends watsTicket
 				$i ++;
 			}
 			echo "  </select>
-					<input type=\"submit\" name=\"watsTicketAssignTo\" value=\"".JText::_("WATS_TICKETS_ASSIGN")."\" class=\"watsFormSubmit\">
+					<input type=\"submit\" name=\"watsTicketAssignTo\" value=\"".JText::_("WATS_TICKETS_ASSIGN")."\" class=\"watsFormSubmit\" />
 					</form>
 				  </div>";
 		} // end check for useres to assign to
@@ -586,7 +586,7 @@ class watsTicketHTML extends watsTicket
 			  <div class=\"watsTicketMake\" id=\"watsTicketMake\">
 			  <form name=\"submitticket\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=makeComplete\" onsubmit=\"return watsValidateTicketMake( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">"
 			  .JText::_("WATS_TICKETS_NAME").
-			  "<input name=\"ticketname\" type=\"text\" id=\"ticketname\" maxlength=\"255\">";
+			  "<input name=\"ticketname\" type=\"text\" id=\"ticketname\" maxlength=\"255\" />";
 		// itterate through categories
 		echo JText::_("WATS_CATEGORY")."<select name=\"catid\" class=\"watsCategorySetSelect\">";
 	    foreach( $categorySet->categorySet as $category )
@@ -637,11 +637,11 @@ class watsTicketHTML extends watsTicket
         // end message box
 
 		// submit button
-		echo "<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-			  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-			  <input name=\"act\" type=\"hidden\" value=\"ticket\">
-			  <input name=\"task\" type=\"hidden\" value=\"makeComplete\">
-			  <input type=\"submit\" name=\"Submit\" value=\"".JText::_("WATS_TICKETS_SUBMIT")."\" class=\"watsFormSubmit\">
+		echo "<input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+			  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+			  <input name=\"act\" type=\"hidden\" value=\"ticket\" />
+			  <input name=\"task\" type=\"hidden\" value=\"makeComplete\" />
+			  <input type=\"submit\" name=\"Submit\" value=\"".JText::_("WATS_TICKETS_SUBMIT")."\" class=\"watsFormSubmit\" />
 			  </form>
 			  </div>";
 		echo ( $wats->get( 'msgbox' ) == "bbcode" AND $wats->get( 'msgboxt' ) == "1" ) ? JText::_("WATS_BB_HELP") : "";
@@ -685,12 +685,12 @@ class watsTicketHTML extends watsTicket
         //$document->addScriptDeclaration($script);
         $document->addCustomTag('<script type="text/javascript" defer="defer">'.$script.'</script>');
         // end message box
-		echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-			    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-			    <input name=\"act\" type=\"hidden\" value=\"ticket\">
-			    <input name=\"task\" type=\"hidden\" value=\"completeReopen\">
-			    <input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\">";
-		echo "  <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\">
+		echo "  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+			    <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+			    <input name=\"act\" type=\"hidden\" value=\"ticket\" />
+			    <input name=\"task\" type=\"hidden\" value=\"completeReopen\" />
+			    <input name=\"ticketid\" type=\"hidden\" value=\"".$this->ticketId."\" />";
+		echo "  <input type=\"submit\" name=\"watsTicketReopen\" value=\"".JText::_("WATS_TICKETS_REOPEN")."\" class=\"watsFormSubmit\" />
 			  </form>
 		      </div>";
 	}
@@ -754,7 +754,7 @@ class watsTicketSetHTML extends watsTicketSet
 			// check if open
 			if ( $this->_ticketList[$i]->lifeCycle == 1 )
 			{
-				echo "<img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."ticket1616.gif\" height=\"16\" width=\"16\" border=\"0\">";
+				echo "<img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."ticket1616.gif\" height=\"16\" width=\"16\" border=\"0\" alt=\"".JText::_('WATS_TICKET')."\">";
 			}
 			else
 			{
@@ -784,7 +784,7 @@ class watsTicketSetHTML extends watsTicketSet
                 )
                 )
 			{
-				echo "<a href=\"" . JRoute::_("index.php?option=com_waticketsystem&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&returnUrl=".$returnUrl) . "\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\"></a>";
+				echo "<a href=\"" . JRoute::_("index.php?option=com_waticketsystem&act=ticket&task=delete&ticketid=".$this->_ticketList[$i]->ticketId."&returnUrl=".$returnUrl) . "\" onClick=\"return confirm( '".JText::_("WATS_MISC_DELETE_VERIFY")."' );\"><img src=\"components/com_waticketsystem/images/".$wats->get( 'iconset' )."delete1616.gif\" height=\"16\" width=\"16\" border=\"0\" alt=\"".JText::_('DELETE')."\"></a>";
             }
 			echo "</td>
 				  </tr>";
@@ -959,14 +959,14 @@ class watsCategoryHTML extends watsCategory {
 		global $Itemid;
 		echo "<p>
 				<form name=\"watsTicketMake\" method=\"get\" action=\"index.php\">
-				  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\">
-				  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\">
-				  <input name=\"act\" type=\"hidden\" value=\"category\">
-				  <input name=\"task\" type=\"hidden\" value=\"purge\">
-				  <input name=\"catid\" type=\"hidden\" value=\"".$this->catid."\">
-				  <input name=\"lifecycle\" type=\"hidden\" value=\"a\">
-				  <input name=\"page\" type=\"hidden\" value=\"1\">
-				  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_TICKETS_PURGE").$this->name."\" class=\"watsFormSubmit\">
+				  <input name=\"option\" type=\"hidden\" value=\"com_waticketsystem\" />
+				  <input name=\"Itemid\" type=\"hidden\" value=\"".$Itemid."\" />
+				  <input name=\"act\" type=\"hidden\" value=\"category\" />
+				  <input name=\"task\" type=\"hidden\" value=\"purge\" />
+				  <input name=\"catid\" type=\"hidden\" value=\"".$this->catid."\" />
+				  <input name=\"lifecycle\" type=\"hidden\" value=\"a\" />
+				  <input name=\"page\" type=\"hidden\" value=\"1\" />
+				  <input type=\"submit\" name=\"watsTicketMake\" value=\"".JText::_("WATS_TICKETS_PURGE").$this->name."\" class=\"watsFormSubmit\" />
 			    </form>
 			  </p>";
 	}

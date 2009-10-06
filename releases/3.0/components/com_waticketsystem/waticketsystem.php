@@ -22,7 +22,10 @@ require_once(JPATH_COMPONENT_SITE . DS . "waticketsystem.html.php");
 $wats =& WFactory::getConfig();
 
 // add css link if turned on
-echo ($wats->get( 'css' ) == 'enable') ? "<link rel=\"stylesheet\" href=\"components/com_waticketsystem/wats.css\" type=\"text/css\" />" : "";
+if ($wats->get( 'css' ) == 'enable') {
+    $doc =& JFactory::getDocument();
+    $doc->addStyleSheet('components/com_waticketsystem/wats.css');
+}
 
 // create watsUser
 // check id is set and watsUser exists
