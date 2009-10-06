@@ -586,7 +586,7 @@ class watsTicketHTML extends watsTicket
 			  <div class=\"watsTicketMake\" id=\"watsTicketMake\">
 			  <form name=\"submitticket\" method=\"post\" action=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=makeComplete\" onsubmit=\"return watsValidateTicketMake( this, '".JText::_("WATS_ERROR_NODATA")."', '".$wats->get( 'defaultmsg' )."' );\">"
 			  .JText::_("WATS_TICKETS_NAME").
-			  "<input name=\"ticketname\" type=\"text\" id=\"ticketname\" maxlength=\"25\">";
+			  "<input name=\"ticketname\" type=\"text\" id=\"ticketname\" maxlength=\"255\">";
 		// itterate through categories
 		echo JText::_("WATS_CATEGORY")."<select name=\"catid\" class=\"watsCategorySetSelect\">";
 	    foreach( $categorySet->categorySet as $category )

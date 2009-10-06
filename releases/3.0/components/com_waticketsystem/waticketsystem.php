@@ -184,25 +184,25 @@ function watsOption( $task, $act )
 				 */	
 				case 'makeComplete':
 					// check rites
-					$rite =  $watsUser->checkPermission( JRequest::getInt('catid'), "m" );
+					$rite =  $watsUser->checkPermission( JRequest::getInt('catid'), 'm' );
 					if ( $rite > 0 )
 					{
 						// allow user make ticket
 						$createDatetime = date('YmdHis');
-						$parsedMsg = parseMsg( JRequest::getString('msg', "", "REQUEST", JREQUEST_ALLOWRAW) );
+						$parsedMsg = parseMsg( JRequest::getString('msg', '', 'REQUEST', JREQUEST_ALLOWRAW) );
 						$ticket = new watsTicketHTML(null, null, JRequest::getString('ticketname'), $watsUser->id, null, $createDatetime, 1, null, null, 1, JRequest::getInt('catid') );
 						$ticket->_msgList[0] = new watsMsg( null, $parsedMsg, $watsUser->id, $createDatetime );
 						$ticket->msgNumberOf ++;
 						$ticket->save();
 						
                         // trigger onTicketNew event
-                        JPluginHelper::importPlugin("waticketsystem");
+                        JPluginHelper::importPlugin('waticketsystem');
                         $app =& JFactory::getApplication();
                         $args = array(&$ticket);
-                        $app->triggerEvent("onTicketNew", $args);
+                        $app->triggerEvent('onTicketNew', $args);
 						
 						// view new ticket
-						watsredirect( "index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=ticket&task=view&ticketid=".$ticket->ticketId );
+						watsredirect('index.php?option=com_waticketsystem&Itemid='.$Itemid.'&act=ticket&task=view&ticketid='.$ticket->ticketId );
 					}
 					else
 					{
