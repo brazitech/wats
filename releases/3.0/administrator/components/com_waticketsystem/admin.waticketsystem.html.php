@@ -344,7 +344,7 @@ class watsTicketHTML extends watsTicket
 				    <tr class=\"row0\">
 					  <td scope=\"col\">";
 			$msgUser->viewSimple();
-		 	echo "<br /><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_msgList[$i]->datetime )."</span></td>
+		 	echo "<br /><span class=\"watsDate\">".JHTML::_('date', $this->_msgList[$i]->datetime, $wats->get('date'))."</span></td>
 				    </tr>
 				    <tr class=\"row1\">
 					  <td>".$this->_msgList[$i]->msg."</td>
@@ -478,8 +478,8 @@ class watsTicketSetHTML extends watsTicketSet
 			            <a href=\"index.php?option=com_waticketsystem&act=ticket&task=view&ticketid=".$this->_ticketList[$limitstartThrow]->ticketId."\">".$this->_ticketList[$limitstartThrow]->name."</a></td>
 					<td>".$this->_ticketList[$limitstartThrow]->username."</td>
 					<td>".$this->_ticketList[$limitstartThrow]->msgNumberOf."</td>
-					<td>".date( $wats->get( 'date' ), $this->_ticketList[$limitstartThrow]->datetime )."</td>
-					<td><span class=\"watsDate\">".date( $wats->get( 'date' ), $this->_ticketList[$limitstartThrow]->lastMsg )."</span></td>
+					<td>".JHTML::_('date', $this->_ticketList[$limitstartThrow]->datetime, $wats->get('date'))."</td>
+					<td><span class=\"watsDate\">".JHTML::_('date', $this->_ticketList[$limitstartThrow]->lastMsg, $wats->get('date'))."</span></td>
 					<td>";
 			// status
 			if ( $this->_ticketList[$limitstartThrow]->lifeCycle == 1 )
@@ -1114,14 +1114,24 @@ class watsSettingsHTML extends WConfig
 					<p><strong>Libraries</strong><br />
 					BBCode - Leif K-Brooks</p>
 						<p><strong>Translations</strong><br />
-						english - James Kennard <a href=\"mailto:james@webamoeba.com\">james@webamoeba.com</a> (<a href=\"http://www.webamoeba.co.uk\" target=\"_blank\">www.webamoeba.co.uk</a>)<br />
-						french - Johan Aubry <a href=\"mailto:jaubry@a-itservices.com\">jaubry@a-itservices.com</a> (<a href=\"http://www.a-itservices.com\" target=\"_blank\">www.a-itservices.com</a>)<br />
-						germanf - Chr.G&auml;rtner<br />
-						portuguese - Jorge Rosado <a href=\"mailto:info@jrpi.pt\">info@jrpi.pt</a> (<a href=\"http://www.jrpi.pt\" target=\"_blank\">www.jrpi.pt</a>)<br />
-						slovak - Daniel K·Ëer <a href=\"mailto:kacer@aceslovakia.sk\">kacer@aceslovakia.sk</a> (<a href=\"http://www.aceslovakia.sk\" target=\"_blank\">www.aceslovakia.sk</a>)<br />
-						italian - Leonardo Lombardi (<a href=\"http://www.dimsat.unicas.it\" target=\"_blank\">www.dimsat.unicas.it</a>)<br />
-						spanish - Urano Gonzalez <a href=\"mailto:urano@uranogonzalez.com\">urano@uranogonzalez.com</a> (<a href=\"http://www.uranogonzalez.com\" target=\"_blank\">www.uranogonzalez.com</a>)<br />
-						swedish  - Thomas Westman <a href=\"mailto:Westman%20info@backupnow.se\">info@backupnow.se</a> (<a href=\"http://www.backupnow.se\" target=\"_blank\">www.backupnow.se</a>)</p>
+						en-GB - English - 	 James Kennard<br />
+                        pt-BR -	Brazillian -	Mauro Machado<br />
+                        cs-CZ -	Czech -	Luk·ö NÏmec<br />
+                        fa-IR -	Farsi -	AmirReza Tehrani<br />
+                        fr-FR -	French -	Johan Aubry<br />
+                        de-DE -	German -	Chr.G‰rtner<br />
+                        el-GR -	Greek -	George Yiftoyiannis<br />
+                        it-IT -	Italian -	Leonardo Lombardi<br />
+                        nb-NO -	Norwegian - Erol Haagenrud<br />
+                        nl-NL -	Netherlands 	 <br />
+                        pt-PT -	Portuguese -	Jorge Rosado<br />
+                        ru-RU -	Russian -	Vasily Korotkov<br />
+                        sr-RS -	Serbian -	Ivica Petrovic<br />
+                        sl-SI -	Slovenian -	Matjaz Krmelj<br />
+                        sk-SK -	Slovak -	Daniel K·Ëer<br />
+                        es-ES -	Spanish -	Urano Gonzalez & Ventura Ventolera<br />
+                        sv-SE -	Swedish -	Thomas Westman<br />
+                        tr-TR -	Turkish</p>
 					<p><strong>Beta Testers</strong><br />
 					72dpi<br />
 					ateul<br />
