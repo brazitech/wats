@@ -13,7 +13,7 @@ function changeIcon( $name, $icon ) {
 	$database = JFactory::getDBO();
 	$database->setQuery( "UPDATE #__components SET admin_menu_img=\"".$icon."\" WHERE " . $database->nameQuote('name') . "=\"".$name."\" AND " . $database->nameQuote('option') . "=\"com_waticketsystem\";");
 	$database->query();
-	}
+}
 
 function com_install()
 {
@@ -155,7 +155,7 @@ function com_install()
                                                                                                ('sourceemail',''),
                                                                                                ('msgbox','bbcode'),
                                                                                                ('name','Webamoeba Ticket System'),
-                                                                                               ('users','0'),
+                                                                                               ('users','1'),
                                                                                                ('agree','0'),
                                                                                                ('agreei',''),
                                                                                                ('agreelw','You must agree to the following terms to use this system'),
@@ -174,16 +174,16 @@ function com_install()
                                                                                                ('assignname','Assigned Tickets'),
                                                                                                ('assigndescription','Tickets assigned to you to answer'),
                                                                                                ('assignimage',''),
-                                                                                               ('versionmajor','2'),
-                                                                                               ('versionminor','0'),
-                                                                                               ('versionpatch','0'),
                                                                                                ('css','disable'),
                                                                                                ('versionname','stable'),
                                                                                                ('upgrade','0'),
                                                                                                ('userdefault','1'),
-                                                                                               ('usersimport','0'),
+                                                                                               ('usersimport','1'),
                                                                                                ('debug','0'),
-                                                                                               ('debugmessage','Continue >>');");
+                                                                                               ('debugmessage','Continue >>'),
+                                                                                               ('versionmajor','0'),
+                                                                                               ('versionminor','0'),
+                                                                                               ('versionpatch','0');");
 			$database->query();
 			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_groups') . " (" . $database->nameQuote('grpid') . "," . $database->nameQuote('name') . "," . $database->nameQuote('image') . "," . $database->nameQuote('userrites') . ") VALUES (1,'user','components/com_waticketsystem/images/mdn_userSmall.jpg','----'),(2,'advisor','components/com_waticketsystem/images/mdn_userSmallGreen.jpg','V---'),(3,'administrator','components/com_waticketsystem/images/mdn_userSmallRed.jpg','VMED');");
 			$database->query();
@@ -195,62 +195,12 @@ function com_install()
 		 * patch from 2.0.0 to 2.0.1
 		 */	
 		case '2.0.0':
-			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_settings') . " (" . $database->nameQuote('name') . "," . $database->nameQuote('value') . ") VALUES ('debug','0'),('debugmessage','Continue >>');");
-			$database->query();
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='1' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.1 to 2.0.2
-		 */	
-		case '2.0.1':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='2' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.2 to 2.0.3
-		 */	
-		case '2.0.2':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.3 to 2.0.4
-		 */	
-		case '2.0.3':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='4' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.4 to 2.0.5
-		 */	
-		case '2.0.4':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='5' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.5 to 2.0.6
-		 */	
-		case '2.0.5':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='6' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.6 to 2.0.7
-		 */	
-		case '2.0.6':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='7' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-		/**
-		 * patch from 2.0.7 to 2.0.8
-		 */	
-		case '2.0.7':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='8' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
+			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_settings') . " (" . $database->nameQuote('name') . "," . $database->nameQuote('value') . ") VALUES ('   ','0'),('debugmessage','Continue >>');");
 			$database->query();
 		/**
 		 * patch from 2.0.8 to 3.0.0
 		 */	
 		case '2.0.8':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='0' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='0' WHERE " . $database->nameQuote('name') . "='versionminor';" );
-			$database->query();
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionmajor';" );
-			$database->query();
             $database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='release candidate' WHERE " . $database->nameQuote('name') . "='versionnane';" );
 			$database->query();
             $database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='WebAmoeba Ticket System for Joomla!' WHERE " . $database->nameQuote('name') . "='copyright';" );
@@ -263,34 +213,13 @@ function com_install()
                                                                       " . $database->nameQuote('name') . " = 'notifyusers' OR
                                                                       " . $database->nameQuote('name') . " = 'notifyemail'");
             $database->query();	
-            break;
-        /**
-		 * patch from 3.0.0 to 3.0.1
-		 */	
-		case '3.0.0':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='1' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-        /**
-		 * patch from 3.0.1 to 3.0.2
-		 */	
-		case '3.0.1':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='2' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
-        /**
-		 * patch from 3.0.2 to 3.0.3
-		 */	
-		case '3.0.2':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='3' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
         /**
 		 * patch from 3.0.3 to 3.0.4
 		 */
 		case '3.0.3':
-			$database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='4' WHERE " . $database->nameQuote('name') . "='versionpatch';" );
-			$database->query();
+            // increase size of ticket name
             $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_ticket') . " MODIFY COLUMN " . $database->nameQuote('ticketname') . " VARCHAR(255) NOT NULL;" );
-			$database->query();
-            
+			$database->query();            
             // convert timestamp fields to datetime fields
             $database->setQuery('ALTER TABLE ' . $database->nameQuote('#__wats_highlight') . ' MODIFY COLUMN ' . $database->nameQuote('datetime') . ' DATETIME NOT NULL;');
             $database->query();
@@ -300,9 +229,27 @@ function com_install()
             $database->query();
             $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y (%H:%M)' WHERE " . $database->nameQuote('name') . " = 'date'");
             $database->query();
-            $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y' WHERE " . $database->nameQuote('name') . " = 'date'");
+            $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y' WHERE " . $database->nameQuote('name') . " = 'dateshort'");
             $database->query();
 	}
+    
+    // set the version
+    $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_MAJOR@) .
+                        ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionmajor'));
+    $database->query();
+    $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_MINOR@) .
+                        ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionminor'));
+    $database->query();
+    $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_PATCH@) .
+                        ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionpatch'));
+    $database->query();
+    $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
+                        ' SET ' . $database->nameQuote('value') . '=' . $database->Quote('@PHING:VERSION_NAME@') .
+                        ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionname'));
+    $database->query();
 
 	changeIcon("WATicketSystem", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
 	changeIcon("About", "../components/com_waticketsystem/images/mdn_ticket1616.gif");
@@ -319,7 +266,7 @@ function com_install()
 						<th>
 							<div style=\"text-align: center;\">
 								WebAmoeba Ticket System<br />
-								3.0.4
+								@PHING:VERSION_MAJOR@.@PHING:VERSION_MINOR@.@PHING:VERSION_PATCH@ @PHING:VERSION_NAME@
 							</div>
 						</th>
 					</tr>
