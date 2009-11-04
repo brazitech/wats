@@ -14,10 +14,10 @@ $wats =& WFactory::getConfig();
 ?>
 
 <?php echo JText::sprintf("TO %s", $this->recipient->name); ?> 
-<?php if ($this->assignee->id == $this->recipient->id) : ?>
+<?php if ($this->assignee->id == $this->recipient->watsid) : ?>
 <?php echo JText::_("TICKET ASSIGNED TO YOU"); ?> 
 <?php else: ?>
-<?php echo JText::sprintf("TICKET ASSIGNED TO %s", $this->asignee->username); ?> 
+<?php echo JText::sprintf("TICKET ASSIGNED TO %s", $this->assignee->username); ?>
 <?php endif; ?>
 ------------------------------------------------------------ 
 <?php echo JText::_("Ticket Name"); ?>: <?php echo $this->ticket->name; ?> 
