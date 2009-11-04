@@ -198,8 +198,15 @@ function com_install()
 			$database->setQuery( "INSERT INTO " . $database->nameQuote('#__wats_settings') . " (" . $database->nameQuote('name') . "," . $database->nameQuote('value') . ") VALUES ('   ','0'),('debugmessage','Continue >>');");
 			$database->query();
 		/**
-		 * patch from 2.0.8 to 3.0.0
+          * patch from 2.0.1 - 2.0.8 to 3.0.0
 		 */	
+        case '2.0.1':
+		case '2.0.2':
+		case '2.0.3':
+		case '2.0.4':
+		case '2.0.5':
+		case '2.0.6':
+		case '2.0.7':
 		case '2.0.8':
             $database->setQuery( "UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . "='release candidate' WHERE " . $database->nameQuote('name') . "='versionnane';" );
 			$database->query();
@@ -213,9 +220,13 @@ function com_install()
                                                                       " . $database->nameQuote('name') . " = 'notifyusers' OR
                                                                       " . $database->nameQuote('name') . " = 'notifyemail'");
             $database->query();	
-        /**
-		 * patch from 3.0.3 to 3.0.4
+        
+		/**
+         * patch from 3.0.0 - 3.0.3 to 3.0.4
 		 */
+        case '3.0.0':
+		case '3.0.1':
+		case '3.0.2':
 		case '3.0.3':
             // increase size of ticket name
             $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_ticket') . " MODIFY COLUMN " . $database->nameQuote('ticketname') . " VARCHAR(255) NOT NULL;" );
