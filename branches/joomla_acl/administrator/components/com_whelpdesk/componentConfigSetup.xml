@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : componentConfigSetup.xml
+    Created on : 30 October 2008, 13:32
+    Author     : Administrator
+    Description:
+        Purpose of the document follows.
+-->
+
+<config>
+	<params group="acl">
+        <param name="treeHandler"
+               label="Tree Handler"
+               description="Handler used to maintain the component tree"
+               default="standard"
+               type="folderlist"
+               directory="administrator/components/com_helpdesk/library/tree"
+               hide_default="true"
+               hide_none="true"/>
+
+        <param name="accessHandler"
+               label="Access Handler"
+               description="Handler used to maintain the component access control"
+               default="standard"
+               type="folderlist"
+               directory="administrator/components/com_helpdesk/library/access"
+               hide_default="true"
+               hide_none="true"/>
+
+        <param name="fast" 
+               type="information" 
+               label="Tree and Access Handlers"
+               description="TIPLINKS"
+               information="Selecting a different tree or access handler may alter the way in which access is controlled, and may result in different access rules being adhered to. The two pre-packaged handlers (standard and fast) both use the same rules database. It is recomended that you use the standard handler unless you encounter major speed issues in which case you can use the fast handler, but be warned there is less error checking in the fast handler."
+               wwarning="true"/>
+	</params>
+    
+    <params group="general">
+        <param name="name"
+               default="Help Desk"
+               label="NAME"
+               description="NAME" />
+
+        <param name="copyright"
+               default="(c) Webamoeba Help Desk"
+               label="COPYRIGHT"
+               description="COPYRIGHT" />
+
+         <!-- Previously called msgbox -->
+         <param name="editor"
+               type="radio"
+               default=""
+               label="EDITOR"
+               description="EDITOR">
+			<option value="">SYSTEM DEFAULT</option>
+            <option value="0">NONE</option>
+			<option value="1">USER DEFINED</option>
+		</param>
+    </params>
+
+</config>

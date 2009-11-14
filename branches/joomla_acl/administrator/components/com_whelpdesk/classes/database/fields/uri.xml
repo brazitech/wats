@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<field>
+	<params>
+		<param
+			name="required"
+			type="radio"
+			default="0"
+			label="WHD_CD:URI:REQUIRED LABEL"
+			description="WHD_CD:URI:REQUIRED DESCRIPTION"
+            size="10" >
+            <option value="1">YES</option>
+            <option value="0">NO</option>
+        </param>
+		<param
+			name="invalidMessage"
+			type="text"
+			default=""
+			label="WHD_CD:URI:INVALID MESSAGE LABEL"
+			description="WHD_CD:TEXT:INVALID MESSAGE DESCRIPTION"
+            size="40" />
+    </params>
+</field>
