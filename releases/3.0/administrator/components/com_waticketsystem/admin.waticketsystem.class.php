@@ -46,7 +46,8 @@ class watsUser extends JUser
 		$db->setQuery( "SELECT  u.*, g.name, g.userrites, g.image, g.name AS groupname FROM #__wats_users AS u LEFT  JOIN #__wats_groups AS g ON g.grpid = u.grpid WHERE u.watsid=".(int)$uid );
 		$vars = $db->loadObjectList();
 		// set attributes
-		if ( isset( $vars[0] ) ) {
+		if ( isset( $vars[0] ) )
+		{
 		    $this->groupName = $vars[0]->groupname ;
 		    $this->agree = $vars[0]->agree;
 		    $this->organisation = $vars[0]->organisation;
@@ -67,11 +68,11 @@ class watsUser extends JUser
 	function checkPermission( $catid, $rite )
 	{
 		$db =& JFactory::getDBO();
-		
+	
 		// prepare for no rite
 		$returnValue = 0;
 		// run SQL to find permission
-		$db->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".$catid ." AND grpid=".$this->group);
+		$db->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".(int)$catid ." AND grpid=".(int)$this->group);
 		$vars = $db->loadObjectList();
 		// check for result
 		if ( isset( $vars[0] ) ) {
@@ -118,16 +119,26 @@ class watsUser extends JUser
 	 *
 	 * @param watsId
 	 */
-	function makeUser( $watsId, $grpId, $organisation )
-	{
-	    $database =& JFactory::getDBO();
+	function makeUser( $watsId, $grpId, $organisation) {
+		$database =& JFactory::getDBO();
+	
 		// check doesn't already exist
-		$database->setQuery( "SELECT wu.watsid FROM #__wats_users AS wu WHERE watsid=".$watsId);
+		$database->setQuery( "SELECT " . WDBHelper::nameQuote("wu.watsid") .
+                             "FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
+							 "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . " /* watsUser::makeUser() */");
 		$database->query();
 		if ( $database->getNumRows() == 0 )
 		{
 			// create SQL
-			$database->setQuery( "INSERT INTO #__wats_users ( watsid , organisation , agree , grpid ) VALUES ( '".$watsId."', '".$organisation."', '0000-00-00', '".$grpId."' );" );
+			$database->setQuery( "INSERT INTO " . WDBHelper::nameQuote("#__wats_users") . " " .
+							     "          ( " . WDBHelper::nameQuote("watsid") . ", " .
+												  WDBHelper::nameQuote("organisation") . ", " .
+												  WDBHelper::nameQuote("agree") . ", " .
+												  WDBHelper::nameQuote("grpid") ." ) " . 
+								 "VALUES ( " . intval($watsId) . ", " .
+								               $database->Quote($organisation) . ", " .
+											   $database->Quote("0000-00-00") . ", " . 
+											   intval($grpId) . " ) /* watsUser::makeUser */" );
 			// execute
 			$database->query();
 			return true;
@@ -144,37 +155,40 @@ class watsUser extends JUser
 	function updateUser()
 	{
 		$db =& JFactory::getDBO();
-	
+		
 		// check already exists
-		$db->setQuery("SELECT " . WDBHelper::nameQuote("wu.watsid") . " " .
-		              "FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
-					  "WHERE watsid=".intval($this->id));
+		$db->setQuery("SELECT " . WDBHelper::nameQuote("wu.watsid") .
+					  "FROM " . WDBHelper::nameQuote("#__wats_users") . " AS " . WDBHelper::nameQuote("wu") . " " .
+					  "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::updateUser() */ ");
 		$db->query();
-		if ( $db->getNumRows() != 0 )
-		{
+		if ($db->getNumRows() == 1) {
 			// update SQL
 			$db->setQuery("UPDATE " . WDBHelper::nameQuote("#__wats_users") . " " .
-                          "SET " . WDBHelper::nameQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
-						  WDBHelper::nameQuote("agree") . " = " . intval($this->agree) . ", " .
-						  WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
-						  "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . ";" );
+			                     "SET " . WDBHelper::nameQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
+								          WDBHelper::nameQuote("agree") . " = " . intval($this->agree) . ", " .
+										  WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
+								 "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::updateUser() */" );
 			// execute
 			return $db->query();	
 		}
-		
-		return false;
+		else
+		{
+			return false;
+		} // end check doesn't already exist
 	}
 	
 	/**
 	 *
 	 * @param groupId
 	 */
-	function setGroup( $groupId )
-	{
-	    $db =& JFactory::getDBO();
-	
+	function setGroup( $groupId ) {
+		$db =& JFactory::getDBO();
+		
 		// check group exists and get name
-		$db->setQuery( "SELECT g.name, g.image FROM #__wats_groups AS g WHERE grpid=".intval($groupId));
+		$db->setQuery("SELECT " . WDBHelper::nameQuote("g.name") .", " .
+		                          WDBHelper::nameQuote("g.image") . " " .
+					  "FROM " . WDBHelper::nameQuote("#__wats_groups") . " AS " . WDBHelper::nameQuote("g") ." " .
+					  "WHERE " . WDBHelper::nameQuote("grpid") . " = " . intval($groupId) . " /* watsUser::setGroup() */");
 		$groupDetails = $db->loadObjectList();
 		if ( count( $groupDetails ) != 0 )
 		{
@@ -183,7 +197,11 @@ class watsUser extends JUser
 			$this->groupName = $groupDetails[0]->name;
 			$this->image = $groupDetails[0]->image;
 			// update SQL
-			$db->setQuery( "UPDATE #__wats_users SET grpid=".intval($this->group)." WHERE watsid=".intval($this->id).";" );
+			$db->setQuery("UPDATE " . WDBHelper::nameQuote("#__wats_users") . " " .
+			              "SET " . WDBHelper::nameQuote("organisation") . " = " . $db->Quote($this->organisation) . ", " .
+							       WDBHelper::nameQuote("agree") . " = " . intval($this->agree) . ", " .
+								   WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
+						  "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::setGroup() */" );
 			// execute
 			return $db->query();
 		}
@@ -197,34 +215,33 @@ class watsUser extends JUser
 	 *
 	 * @param groupId
 	 */
-	function delete( $remove )
-	{
+	function delete( $remove ) {
 		$db =& JFactory::getDBO();
 	
 		switch ( $remove )
 		{
 			case 'removeposts':
 				// remove all posts
-				$db->setQuery( "DELETE FROM #__wats_msg WHERE watsid=".$this->id);
+				$db->setQuery( "DELETE FROM #__wats_msg WHERE watsid=".intval($this->id));
 				$db->query();
 			case 'removetickets':
 				// find tickets
-				$db->setQuery( "SELECT ticketid FROM #__wats_ticket WHERE watsid=".$this->id);
+				$db->setQuery( "SELECT ticketid FROM #__wats_ticket WHERE watsid=".intval($this->id));
 				$tickets = $db->loadObjectList();
 				$noOfTickets = count( $tickets );
 				$i = 0;
 				while ( $i < $noOfTickets )
 				{
 					// remove ticket messages
-					$db->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$tickets[$i]->ticketid );
+					$db->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".intval($tickets[$i]->ticketid));
 					$db->query();
 					// remove highlights
-					$db->setQuery( "DELETE FROM #__wats_highlight WHERE ticketid=".$tickets[$i]->ticketid );
+					$db->setQuery( "DELETE FROM #__wats_highlight WHERE ticketid=".intval($tickets[$i]->ticketid));
 					$db->query();
 					$i ++;
 				}
 				// remove tickets
-				$db->setQuery( "DELETE FROM #__wats_ticket WHERE watsid=".$this->id);
+				$db->setQuery( "DELETE FROM #__wats_ticket WHERE watsid=".intval($this->id));
 				$db->query();				
 				break;
 		}
@@ -232,7 +249,7 @@ class watsUser extends JUser
 		// $database->setQuery( "DELETE FROM #__wats_highlight WHERE watsid=".$this->id);
 		// $database->query();
 		// delete user
-		$db->setQuery( "DELETE FROM #__wats_users WHERE watsid=".$this->id);
+		$db->setQuery( "DELETE FROM #__wats_users WHERE watsid=".intval($this->id));
 		$db->query();
 	}
 }
@@ -277,8 +294,6 @@ class watsUserSet
 				$this->userSet[$i]->id = $set[$i]->id;
                 $this->userSet[$i]->name = $set[$i]->name;
                 $this->userSet[$i]->username = $set[$i]->username;
-                $this->userSet[$i]->organisation = $set[$i]->organisation;
-                $this->userSet[$i]->groupName = $set[$i]->groupname;
                 $this->userSet[$i]->email = $set[$i]->email;
                 $this->userSet[$i]->usertype = $set[$i]->usertype;
                 $this->userSet[$i]->block = $set[$i]->block;
@@ -288,6 +303,8 @@ class watsUserSet
                 $this->userSet[$i]->lastvisitDate = $set[$i]->lastvisitDate;
                 $this->userSet[$i]->activation = $set[$i]->activation;
                 $this->userSet[$i]->params = $set[$i]->params;
+                $this->userSet[$i]->organisation = $set[$i]->organisation;
+                $this->userSet[$i]->groupName = $set[$i]->groupname;
                 $this->userSet[$i]->guest = 0;
 				$i ++;
 			} // end create users
@@ -306,10 +323,12 @@ class watsObjectBuilder
 	 * @param database
 	 * @param ticketId
 	 */
-	 function ticket( $ticketId ) {
-	    $database =& JFactory::getDBO();
+	 function ticket($ticketId ) {
+		$database =& JFactory::getDBO();
+		
 		// create query
-		$query = "SELECT * FROM #__wats_ticket WHERE ticketid=".intval($ticketId);
+		$query = "SELECT * FROM " . WDBHelper::nameQuote("#__wats_ticket") . " " .
+				 "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($ticketId) . " /* watsObjectBuilder::ticket() */ ";
 		// execute query
 		$database->setQuery( $query );
 		$set = &$database->loadObjectList();
@@ -317,7 +336,7 @@ class watsObjectBuilder
 		if ( $set != null )
 		{
 			// create ticket object
-			return new watsTicketHTML( null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, $set[0]->category, $set[0]->assign );
+			return new watsTicketHTML(null, null, $set[0]->ticketname, $set[0]->watsid, null, null, $set[0]->lifecycle, $set[0]->ticketid, null, null, $set[0]->category, $set[0]->assign);
 		} // end check there are results
 		return null;
 	 }
@@ -358,7 +377,8 @@ class watsTicket
 	 * @param lastView
 	 * @param create
 	 */
-	function watsTicket( $username, $lastWatsId, $name, $watsId, $lastMsg, $datetime, $lifeCycle, $ticketId, $msgNumberOf, $catId, $assignId = null ) {
+	function watsTicket($username, $lastWatsId, $name, $watsId, $lastMsg, $datetime, $lifeCycle, $ticketId, $lastView, $msgNumberOf, $catId, $assignId = null)
+	{
 		$this->username = $username;
 		$this->lastWatsId = $lastWatsId;
 		$this->name = $name;
@@ -383,14 +403,16 @@ class watsTicket
 		{
 		    $database =& JFactory::getDBO();
 			// find username
-			$database->setQuery( "SELECT u.username FROM #__users AS u WHERE u.id=".$this->assignId );
-			$user = $database->loadObjectList();
+			$db->setQuery("SELECT " . WDBHelper::nameQuote("u.username") . " " .
+			                     "FROM " .WDBHelper::nameQuote("#__users") . " AS " . WDBHelper::nameQuote("u") . " " .
+								 "WHERE " . WDBHelper::nameQuote("u.id") . " = " . intval($this->assignId) . " /* watsTicket::watsTicket() */ ");
+			$user = $db->loadObjectList();
 			$returnValue = $user[0]->username;
 		}
 		else
 		{
 			// return no assigned user
-			$returnValue = "not assigned XXX";
+			$returnValue = "not assigned";
 		}
 		
 		return $returnValue;
@@ -401,15 +423,24 @@ class watsTicket
 	 */
 	function save()
 	{
-		$db =& JFactory::getDBO();
-		
+		$db =&JFactory::getDBO();
+	
 		// ticket
-		$queryTicket = "INSERT INTO #__wats_ticket SET watsid=".$this->watsId.", ticketname='".$this->name."', lifecycle=".$this->lifeCycle.", datetime=".$this->datetime.", category=".$this->category;
+		$queryTicket = "INSERT INTO " . WDBHelper::nameQuote("#__wats_ticket") . " " .
+					   "SET " . WDBHelper::nameQuote("watsid") . " = " . intval($this->watsId) . ", " .
+					            WDBHelper::nameQuote("ticketname") . " = " . $db->Quote($this->name) . ", " .
+								WDBHelper::nameQuote("lifecycle") . " = " . intval($this->lifeCycle) . ", " .
+								WDBHelper::nameQuote("datetime") . " = " . $db->Quote($this->datetime) . ", " .
+								WDBHelper::nameQuote("category") . " = " . intval($this->category) . " /* watsTicket::save() */ ";
 		$db->setQuery( $queryTicket );
 		$db->query();
 		$this->ticketId = $db->insertid();
 		// message
-		$queryMsg = "INSERT INTO #__wats_msg SET watsid=".$this->watsId.", ticketid='".$this->ticketId."',msg='".$this->_msgList[0]->msg."', datetime=".$this->datetime;
+		$queryMsg = "INSERT INTO " . WDBHelper::nameQuote("#__wats_msg") . " " .
+		            "SET " . WDBHelper::nameQuote("watsid") . " = " . intval($this->watsId) . ", " .
+					         WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . ", " .
+							 WDBHelper::nameQuote("msg") . " = " . $db->Quote($this->_msgList[0]->msg) . ", " .
+							 WDBHelper::nameQuote("datetime") . " = " . $db->Quote($this->datetime) . " /* watsTicket::save() */";
 		$db->setQuery( $queryMsg );
 		$db->query();
 	}
@@ -419,29 +450,30 @@ class watsTicket
 	 */
 	function deactivate()
 	{
-	    $database =& JFactory::getDBO();
-		
+		$db =& JFactory::getDBO();
+	
 		// check is not dead
 		if ( $this->lifeCycle < 3 )
 		{
 			// update lifeCycle
 			$this->lifeCycle ++;
-			$queryDeactivateTicket = "UPDATE #__wats_ticket SET lifecycle=".$this->lifeCycle." WHERE ticketid=".$this->ticketId.";"; 
+			$queryDeactivateTicket = "UPDATE " . WDBHelper::nameQuote("#__wats_ticket") . " " . 
+			                         "SET " . WDBHelper::nameQuote("lifecycle") . " = " . intval($this->lifeCycle) . " " .
+									 "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " /* watsTicket::deactivate() */ "; 
 		}
 		else
 		{
 			// remove ticket
-			$queryDeactivateTicket = "DELETE FROM #__wats_ticket WHERE ticketid=".$this->ticketId.";";
+			$queryDeactivateTicket = "DELETE FROM " . WDBHelper::nameQuote("#__wats_ticket") . " " .
+			                         "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " /* watsTicket::deactivate()*/ ";
 			// remove all messages in ticket
-			foreach ( $this->_msgList as $message )
-			{
-				$queryDeactivateMsg = "DELETE FROM #__wats_msg WHERE msgid=".$message->msgId.";";
-				$database->setQuery( $queryDeactivateMsg );
-				$database->query();
-			} // end remove all messages in ticket
+			$queryDeactivateMsg = "DELETE FROM " . WDBHelper::nameQuote("#__wats_msg") . " " . 
+								  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intVal($message->ticketId) . " /* watsTicket::deactivate() */ ";
+			$db->setQuery( $queryDeactivateMsg );
+			$db->query();
 		}
-		$database->setQuery( $queryDeactivateTicket );
-		$database->query();
+		$db->setQuery( $queryDeactivateTicket );
+		$db->query();
 	}
 
 	/**
@@ -449,25 +481,36 @@ class watsTicket
 	 */
 	function _highlightUpdate( $watsId )
 	{
-	    $database =& JFactory::getDBO();
-		
+		$db =& JFactory::getDBO();
+        $datetime = JFactory::getDate();
+        $datetime = $datetime->toMySQL();
+	
 		// check for existing record
-		$queryHighlight = "SELECT datetime FROM #__wats_highlight WHERE ticketid=".$this->ticketId." AND watsid =".$watsId.";";
-		$database->setQuery( $queryHighlight );
-		$database->query();
-		if ( $database->getNumRows() > 0 )
+		$queryHighlight = "SELECT " . WDBHelper::nameQuote("datetime") . " " .
+		                  "FROM " . WDBHelper::nameQuote("#__wats_highlight") . " " .
+						  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " AND " .
+						             WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . " /* watsTicket::_highlightUpdate() */ ";
+		$db->setQuery( $queryHighlight );
+		$db->query();
+		if ( $db->getNumRows() > 0 )
 		{
 			// update record
-			$queryHighlight = "UPDATE #__wats_highlight SET datetime=".date('YmdHis')." WHERE ticketid=".$this->ticketId." AND watsid =".$watsId.";";
+			$queryHighlight = "UPDATE " . WDBHelper::nameQuote("#__wats_highlight") . " " .
+			                  "SET " . WDBHelper::nameQuote("datetime") . " = " . $db->Quote($datetime) . " " .
+							  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " AND " .
+							             WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . " /* watsTicket::_highlightUpdate*/";
 		}
 		else
 		{
 			// insert record
-			$queryHighlight = "INSERT INTO #__wats_highlight SET watsid=".$watsId.", ticketid=".$this->ticketId.", datetime=".date('YmdHis').";";
+			$queryHighlight = "INSERT INTO " . WDBHelper::nameQuote("#__wats_highlight") . " " .
+			                  "SET " . WDBHelper::nameQuote("watsid") . " = " . intval($watsId) . ", " . 
+							           WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . ", " .
+									   WDBHelper::nameQuote("datetime") . " = " . $db->Quote($datetime) . " /* watsTicket::_highlightUpdate() */";
 		}
 		// perform query
-		$database->setQuery( $queryHighlight );
-		$database->query();
+		$db->setQuery( $queryHighlight );
+		$db->query();
 
 	}
 	
@@ -476,12 +519,13 @@ class watsTicket
 	 */
 	function reactivate()
 	{
-	    $database =& JFactory::getDBO();
-		
+		$db =& JFactory::getDBO();
 		$this->lifeCycle = 1;
-		$queryDeactivateMsg = "UPDATE #__wats_ticket SET lifecycle=1 WHERE ticketid=".$this->ticketId.";";
-		$database->setQuery( $queryDeactivateMsg );
-		$database->query();
+		$queryDeactivateMsg = "UPDATE " . WDBHelper::nameQuote("#__wats_ticket") . " " .
+		                      "SET " . WDBHelper::nameQuote("lifecycle") . " = 1 " .
+							  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " /* watsTicket::reactivate() */ ";
+		$db->setQuery( $queryDeactivateMsg );
+		$db->query();
 	}
 
 	/**
@@ -489,18 +533,22 @@ class watsTicket
 	 */
 	function loadMsgList()
 	{
-	    $database =& JFactory::getDBO();
+		$db =& JFactory::getDBO();
+		
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$database->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
-		$messages = $database->loadObjectList();
+		$db->setQuery("SELECT * " .
+		              "FROM " . WDBHelper::nameQuote("#__wats_msg") . " AS " . WDBHelper::nameQuote("m") . " " .
+					  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " " .
+					  "ORDER BY " . WDBHelper::nameQuote("datetime") . " /* watsTicket::loadMsgList() */ " );
+		$messages = $db->loadObjectList();
 		// create message objects
 		$i = 0;
 		foreach( $messages as $message )
 		{
 			// create object
-		    $this->_msgList[$i] = new watsMsg( $message->msgid, $message->msg, $message->watsid, $message->unixDatetime );
+		    $this->_msgList[$i] = new watsMsg( $message->msgid, $message->msg, $message->watsid, $message->datetime );
 			// increment counter
 			$i ++;
 			$this->msgNumberOf ++;
@@ -512,10 +560,21 @@ class watsTicket
 	 */
 	function addMsg( $msg, $watsId, $datetime )
 	{
-	    $database =& JFactory::getDBO();
+		$db =& JFactory::getDBO();
+	
 		// create SQL and execute
-		$database->setQuery( "INSERT INTO #__wats_msg ( ticketid, watsid, msg, datetime ) VALUES ( '".$this->ticketId."', '".$watsId."', '".$msg."', ".$datetime.");" );
-		$database->query();
+		$db->setQuery( "INSERT INTO " . WDBHelper::nameQuote("#__wats_msg") . 
+		 			   "    ( " . WDBHelper::nameQuote("ticketid") . ", " .
+						          WDBHelper::nameQuote("watsid") . ", " .
+						 		  WDBHelper::nameQuote("msg") . ", " .
+								  WDBHelper::nameQuote("datetime") . 
+					   "    ) " .
+					   "VALUES ( " . intval($this->ticketId) . ", " . 
+					                 intval($watsId) . ", " . 
+									 $db->Quote($msg) . ", " . 
+									 $db->Quote($datetime) . 
+					   "       ) /* watsTicket::addMsg */ " );
+		$db->query();
 		$this->_msgList[ count( $this->_msgList ) ] = new watsMsg( $this->ticketId, $msg, $watsId, $datetime );
 		$this->msgNumberOf ++;
 	}
@@ -525,12 +584,19 @@ class watsTicket
 	 */
 	function setAssignId( $assignId )
 	{
-	    $database =& JFactory::getDBO();
-		
+		$db =& JFactory::getDBO();
 		$this->assignId = $assignId;
 		// create SQL and execute
-		$database->setQuery( "UPDATE #__wats_ticket SET assign=".$this->assignId." WHERE ticketid=".$this->ticketId );
-		$database->query();
+		$db->setQuery("UPDATE " . WDBHelper::nameQuote("#__wats_ticket") . " " .
+		              "SET " . WDBHelper::nameQuote("assign") . " = " . intval($this->assignId) . " " .
+					  "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($this->ticketId) . " /* watsTicket::setAssignId() */ " );
+		$db->query();
+
+        // trigger onTicketAssign event
+        JPluginHelper::importPlugin("waticketsystem");
+        $app =& JFactory::getApplication();
+        $args = array(&$this);
+        $app->triggerEvent("onTicketAssign", $args);
 	}
 }
 
@@ -563,7 +629,7 @@ class watsUserGroupCategoryPermissionSet
 		
 		$database->setQuery( "SELECT p.type, g.name as groupname, c.name as categoryname " . 
 		                     "FROM #__wats_permissions AS p LEFT JOIN #__wats_groups AS g ON p.grpid = g.grpid LEFT JOIN #__wats_category AS c ON p.catid = c.catid " . 
-							 "WHERE p.grpid = " . $this->grpid . " AND p.catid = " . $this->catid );
+							 "WHERE p.grpid = " . intval($this->grpid) . " AND p.catid = " . intval($this->catid) );
 		$group = $database->loadObjectList();
 		// check group exists
 		if ( count($group) == 1 )
@@ -654,7 +720,7 @@ class watsUserGroupCategoryPermissionSet
 	{
 	    $database =& JFactory::getDBO();
 		
-		$database->setQuery( "UPDATE #__wats_permissions SET type=\"".$this->rites."\" WHERE catid=".$this->catid." AND grpid=".$this->grpid.";" );
+		$database->setQuery( "UPDATE #__wats_permissions SET type=".$database->Quote($this->rites)." WHERE catid=".intval($this->catid)." AND grpid=".intval($this->grpid));
 		$database->query();
 	}
 	
@@ -665,12 +731,12 @@ class watsUserGroupCategoryPermissionSet
 	{
 	    $database =& JFactory::getDBO();
 		// check doesn't already exist
-		$database->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".$catId." AND grpid=".$grpId);
+		$database->setQuery( "SELECT type FROM #__wats_permissions WHERE catid=".intval($catId)." AND grpid=".intval($grpId));
 		$database->query();
 		if ( $database->getNumRows() == 0 )
 		{
 			// create SQL
-			$database->setQuery( "INSERT INTO #__wats_permissions ( catid, grpid, type ) VALUES ( '".$catId."', '".$grpId."', '--------' );" );
+			$database->setQuery( "INSERT INTO #__wats_permissions ( catid, grpid, type ) VALUES ( '".intval($catId)."', '".intval($grpId)."', '--------' );" );
 			// execute
 			$database->query();
 			return true;
@@ -781,7 +847,7 @@ class watsUserGroup
 		// reset number of messages
 		$this->msgNumberOf = 0;
 		// load categories
-		$database->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".$this->ticketId." ORDER BY datetime" );
+		$database->setQuery( "SELECT *, UNIX_TIMESTAMP(m.datetime) AS unixDatetime FROM #__wats_msg AS m WHERE ticketid=".intval($this->ticketId)." ORDER BY datetime" );
 		$messages = $database->loadObjectList();
 		// create message objects
 		$i = 0;
@@ -896,7 +962,7 @@ class watsUserGroup
 	{
 	    $database =& JFactory::getDBO();
 		
-		$database->setQuery( "UPDATE #__wats_groups SET name=\"".$this->name."\", image=\"".$this->image."\", userrites=\"".$this->userRites."\" WHERE grpid=".$this->grpid.";" );
+		$database->setQuery( "UPDATE #__wats_groups SET name=".$database->Quote($this->name).", image=".$database->Quote($this->image).", userrites=".$database->Quote($this->userRites)." WHERE grpid=".intval($this->grpid).";" );
 		$database->query();
 	}
 	
@@ -908,7 +974,7 @@ class watsUserGroup
 		
 		$this->_users = null;
 		$this->_users = array();
-		$database->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".$this->grpid.";" );
+		$database->setQuery( "SELECT watsid FROM #__wats_users WHERE grpid=".intval($this->grpid));
 		$users = $database->loadObjectList();
 		foreach ( $users as $user )
 		{
@@ -935,10 +1001,10 @@ class watsUserGroup
 			$editUser->delete( $option );
 		}
 		// remove permission sets
-		$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$this->grpid.";" );
+		$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".intval($this->grpid));
 		$database->query();
 		// remove group
-		$database->setQuery( "DELETE FROM #__wats_groups WHERE grpid=".$this->grpid.";" );
+		$database->setQuery( "DELETE FROM #__wats_groups WHERE grpid=".intval($this->grpid));
 		$database->query();
 	}
 	
@@ -949,7 +1015,7 @@ class watsUserGroup
 	{
 	    $database =& JFactory::getDBO();
 		// create new category
-		$database->setQuery( "INSERT INTO #__wats_groups ( name, image, userrites ) VALUES ( '".$name."', '".$image."', '----' );" );
+		$database->setQuery( "INSERT INTO #__wats_groups ( name, image, userrites ) VALUES (".$database->Quote($name).", ".$database->Quote($image).", '----' );" );
 		$database->query();
 		// create object
 		$newGroup = new watsUserGroup( $database->insertid() );
@@ -1066,7 +1132,7 @@ class watsTicketSet
 		if ( $category != null AND $category != -1 )
 		{
 			// set category
-			$query .= " AND category=".$category;
+			$query .= " AND category=".intval($category);
 		}
 		// end create query
 		$query .= " GROUP BY t.ticketid, t.watsid, t.ticketname, t.datetime ORDER BY lastdate desc;";
@@ -1183,7 +1249,7 @@ class watsCategory extends JTable
 								LEFT  JOIN #__wats_users AS wu ON wu.grpid = p.grpid
 								LEFT  JOIN #__users AS u ON wu.watsid = u.id
 								WHERE
-								p.catid=".$catid." AND (
+								p.catid=".intval($catid)." AND (
 								p.type LIKE  \"%a%\" OR
 								p.type LIKE  \"%A%\" )" );
 		$assignees = &$database->loadObjectList( );
@@ -1204,12 +1270,15 @@ class watsCategory extends JTable
 	function newCategory( $name, $description, $image ) {
 	    $database =& JFactory::getDBO();
 		// check doesn't already exist
-		$database->setQuery( "SELECT name FROM #__wats_category WHERE name='".$name."';");
+		$database->setQuery( "SELECT name FROM #__wats_category WHERE name=".$database->Quote($name).";");
 		$database->query();
 		if ( $database->getNumRows() == 0 )
 		{
 			// create SQL
-			$database->setQuery( "INSERT INTO #__wats_category ( name, description, image ) VALUES ( '".$name."', '".$description."', '".$image."' );" );
+			$database->setQuery(
+                "INSERT INTO #__wats_category ( name, description, image ) ".
+                "VALUES (".$database->Quote($name).", ".$database->Quote($description).", ".$database->Quote($image).")" 
+            );
 			// execute
 			$database->query();
 			$newCategoryId = &$database->insertid();
@@ -1237,12 +1306,16 @@ class watsCategory extends JTable
 	    $database =& JFactory::getDBO();
 		
 		// check already exists
-		$database->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".$this->catid);
+		$database->setQuery( "SELECT catid FROM #__wats_category WHERE catid=".intval($this->catid));
 		$database->query();
 		if ( $database->getNumRows() != 0 )
 		{
 			// update SQL
-			$database->setQuery( "UPDATE #__wats_category SET name='".$this->name."', description='".$this->description."', image='".$this->image."' WHERE catid='".$this->catid."';" );
+			$database->setQuery(
+                "UPDATE #__wats_category ".
+                "SET name=".$database->Quote($this->name).", description=".$database->Quote($this->description).", image=".$database->Quote($this->image)."'".
+                "WHERE catid='".intval($this->catid)
+            );
 			// execute
 			$database->query();
 			return true;
@@ -1261,13 +1334,13 @@ class watsCategory extends JTable
 	    $database =& JFactory::getDBO();
 		
 		// remove tickets
-		$database->setQuery( "DELETE FROM #__wats_ticket WHERE category=".$this->catid.";" );
+		$database->setQuery( "DELETE FROM #__wats_ticket WHERE category=".intval($this->catid).";" );
 		$database->query();
 		// remove rites matrixes
-		$database->setQuery( "DELETE FROM #__wats_permissions WHERE catid=".$this->catid.";" );
+		$database->setQuery( "DELETE FROM #__wats_permissions WHERE catid=".intval($this->catid).";" );
 		$database->query();
 		// remove category
-		$database->setQuery( "DELETE FROM #__wats_category WHERE catid=".$this->catid.";" );
+		$database->setQuery( "DELETE FROM #__wats_category WHERE catid=".intval($this->catid).";" );
 		$database->query();
 	}
 }
@@ -1699,7 +1772,7 @@ class watsDatabaseMaintenance
 				}
 			}
 			// apply new rites string
-			$database->setQuery( "UPDATE #__wats_permissions SET p.type=\"".$newRites."\" WHERE p.grpid=".$error->grpid." AND p.catid=".$error->catid.";" );
+			$database->setQuery( "UPDATE #__wats_permissions SET p.type=".$database->Quote($newRites)." WHERE p.grpid=".intval($error->grpid)." AND p.catid=".$error->catid.";" );
 			$database->query();
 		}
 		// end resolve errors
@@ -1760,7 +1833,7 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// apply new rites string
-			$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".$error->grpid." AND catid=".$error->catid.";" );
+			$database->setQuery( "DELETE FROM #__wats_permissions WHERE grpid=".intval($error->grpid)." AND catid=".intval($error->catid).";" );
 			$database->query();
 		}
 		// end resolve errors*/
@@ -1808,10 +1881,10 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// remove messages
-			$database->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".$error->ticketid.";" );
+			$database->setQuery( "DELETE FROM #__wats_msg WHERE ticketid=".intval($error->ticketid).";" );
 			$database->query();
 			// remove ticket
-			$database->setQuery( "DELETE FROM #__wats_ticket WHERE ticketid=".$error->ticketid.";" );
+			$database->setQuery( "DELETE FROM #__wats_ticket WHERE ticketid=".intval($error->ticketid).";" );
 			$database->query();
 		}
 		// end resolve errors
@@ -1859,7 +1932,7 @@ class watsDatabaseMaintenance
 		foreach( $errors as $error )
 		{
 			// remove messages
-			$database->setQuery( "DELETE FROM #__wats_msg WHERE msgid=".$error->msgid.";" );
+			$database->setQuery( "DELETE FROM #__wats_msg WHERE msgid=".intval($error->msgid).";" );
 			$database->query();
 		}
 		// end resolve errors
@@ -1910,7 +1983,7 @@ class watsDatabaseMaintenance
 				foreach ( $categories as $category )
 				{
 					// check set exists
-					$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions WHERE catid=".$category->catid." AND grpid=".$group->grpid.";" );
+					$database->setQuery( "SELECT COUNT(*) AS size FROM #__wats_permissions WHERE catid=".intval($category->catid)." AND grpid=".$group->grpid.";" );
 					$result = $database->loadObjectList();
 					// check exists
 					if ( $result[0]->size != 1 )

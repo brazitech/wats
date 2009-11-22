@@ -212,8 +212,7 @@ class watsUser extends JUser
 										  WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
 								 "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::updateUser() */" );
 			// execute
-			$db->query();
-			return true;
+			return $db->query();	
 		}
 		else
 		{
@@ -247,8 +246,7 @@ class watsUser extends JUser
 								   WDBHelper::nameQuote("grpid") . " = " . intval($this->group) . " " .
 						  "WHERE " . WDBHelper::nameQuote("watsid") . " = " . intval($this->id) . " /* watsUser::setGroup() */" );
 			// execute
-			$db->query();
-			return true;
+			return $db->query();
 		}
 		else
 		{
@@ -375,7 +373,7 @@ class watsObjectBuilder
 				 "WHERE " . WDBHelper::nameQuote("ticketid") . " = " . intval($ticketId) . " /* watsObjectBuilder::ticket() */ ";
 		// execute query
 		$database->setQuery( $query );
-		$set = $database->loadObjectList();
+		$set = &$database->loadObjectList();
 		// check there are results
 		if ( $set != null )
 		{
@@ -457,7 +455,7 @@ class watsTicket
 		else
 		{
 			// return no assigned user
-			$returnValue = "not assigned XXX";
+			$returnValue = "not assigned";
 		}
 		
 		return $returnValue;
