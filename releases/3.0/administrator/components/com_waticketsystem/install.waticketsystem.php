@@ -242,6 +242,13 @@ function com_install()
             $database->query();
             $database->setQuery("UPDATE " . $database->nameQuote('#__wats_settings') . " SET " . $database->nameQuote('value') . " = '%d-%m-%Y' WHERE " . $database->nameQuote('name') . " = 'dateshort'");
             $database->query();
+        /**
+         * patch from 3.0.4 to 3.0.5
+		 */
+		case '3.0.4':
+            // add email field to categories
+            $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_ticket') . " ADD COLUMN " . $database->nameQuote('emails') . " VARCHAR(255) NOT NULL;" );
+			$database->query();            
 	}
     
     // set the version

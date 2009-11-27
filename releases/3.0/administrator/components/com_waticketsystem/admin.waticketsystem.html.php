@@ -557,6 +557,12 @@ class watsCategoryHTML extends watsCategory
 				  </td>
 				  <td><input name=\"image\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"\" /></td>
 			    </tr>
+                <tr>
+				  <td width=\"100\">
+				  	Email notification
+				  </td>
+				  <td><input name=\"emails\" type=\"emails\" maxlength=\"255\" size=\"50\" value=\"\" /></td>
+			    </tr>
 			  </table>";
 	}
 
@@ -567,31 +573,37 @@ class watsCategoryHTML extends watsCategory
 	{
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"adminform\">
 			    <tr>
-				  <th colspan=\"2\" scope=\"col\">".$this->name."</th>
+				  <th colspan=\"2\" scope=\"col\">".htmlspecialchars($this->name)."</th>
 			    </tr>
 			    <tr>
 				  <td width=\"100\">
 				  	Name
 				  </td>
-				  <td><input name=\"name\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->name."\" /></td>
+				  <td><input name=\"name\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".htmlspecialchars($this->name)."\" /></td>
 			    </tr>
 			    <tr>
 				  <td width=\"100\">
 				  	Description
 				  </td>
-				  <td><input name=\"description\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->description."\" /></td>
+				  <td><input name=\"description\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".htmlspecialchars($this->description)."\" /></td>
 			    </tr>
 			    <tr>
 				  <td width=\"100\">
 				  	Image
 				  </td>
-				  <td><input name=\"image\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".$this->image."\" /></td>
+				  <td><input name=\"image\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"".htmlspecialchars($this->image)."\" /></td>
 			    </tr>
 			    <tr>
 				  <td width=\"100\">
 				  	Preview
 				  </td>
-				  <td><img src=\"".$this->image."\" /></td>
+				  <td><img src=\"".htmlspecialchars($this->image)."\" /></td>
+			    </tr>
+                <tr>
+				  <td width=\"100\">
+				  	Email notification
+				  </td>
+				  <td><input name=\"emails\" type=\"emails\" maxlength=\"255\" size=\"50\" value=\"".$this->emails."\" /></td>
 			    </tr>
 			  </table>
 			  <input type=\"hidden\" name=\"catid\" value=\"".$this->catid."\" />";
@@ -809,8 +821,8 @@ class watsCategorySetHTML extends watsCategorySet
         while (($limitstartThrow < count($this->categorySet) ) && ($limitstartThrow < $limitMax))
 		{
             echo "<tr class=\"row".($limitstartThrow % 2)."\">";
-			echo "<td><a href=\"index.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".$this->categorySet[$limitstartThrow]->name."</a></td>";
-			echo "<td>".$this->categorySet[$limitstartThrow]->description."</td>";
+			echo "<td><a href=\"index.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".htmlspecialchars($this->categorySet[$limitstartThrow]->name)."</a></td>";
+			echo "<td>".htmlspecialchars($this->categorySet[$limitstartThrow]->description)."</td>";
 			echo "</tr>";
 			$limitstartThrow ++;
 		} // end itterate through users

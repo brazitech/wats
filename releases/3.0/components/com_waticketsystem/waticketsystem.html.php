@@ -807,16 +807,16 @@ class watsCategoryHTML extends watsCategory {
 		global $Itemid;
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"watsCategoryView\">
 			    <tr>
-				  <th colspan=\"2\" scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=a\">$this->name</a></th>
+				  <th colspan=\"2\" scope=\"col\"><a href=\"index.php?option=com_waticketsystem&Itemid=$Itemid&act=category&catid=$this->catid&page=1&lifecycle=a\">".htmlspecialchars($this->name)."</a></th>
 			    </tr>
 			    <tr>
 				  <td>";
-		if ($this->image !== null)
+		/*if ($this->image !== null)
 		{
 			echo "";
-		}
+		}*/
 		echo "</td>
-				  <td>".$this->description."</td>
+				  <td>".htmlspecialchars($this->description)."</td>
 			    </tr>
 			  </table>";
 	}
@@ -1113,7 +1113,7 @@ class watsCategorySetHTML extends watsCategorySet
 		{
 		    echo "<option";
 			echo ( $category->catid == $current ) ? " selected=\"selected\" " : "" ;
-			echo " value=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=category&catid=".$category->catid."&page=1&lifecycle=a\">".$category->name."</option>\n";
+			echo " value=\"index.php?option=com_waticketsystem&Itemid=".$Itemid."&act=category&catid=".$category->catid."&page=1&lifecycle=a\">".htmlspecialchars($category->name)."</option>\n";
 		}
 		echo "</select>";
 	}

@@ -130,11 +130,13 @@ function watsOption( &$task, &$act )
 								else
 								{
 									// update name
-									$editCategory->name = htmlspecialchars( addslashes( JRequest::getString('name') ) );
+									$editCategory->name = JRequest::getString('name');
 									// update description
-									$editCategory->description = htmlspecialchars( addslashes( JRequest::getString('description') ) );
+									$editCategory->description = JRequest::getString('description');
 									// update image
-									$editCategory->image = htmlspecialchars( addslashes( JRequest::getString('image') ) );
+									$editCategory->image = JRequest::getString('image');
+                                    // update emails
+									$editCategory->emails = JRequest::getString('emails');
 									// save changes
 									$editCategory->updateCategory();
 									// success
@@ -167,7 +169,8 @@ function watsOption( &$task, &$act )
 							$name = htmlspecialchars( JRequest::getString('name') );
 							$description = htmlspecialchars( JRequest::getString('description') );
 							$image = htmlspecialchars( JRequest::getString('image') );
-							if ( watsCategory::newCategory($name, $description, $image) )
+                            $emails = JRequest::getString('emails');
+							if ( watsCategory::newCategory($name, $description, $image, $emails) )
 							{
 								// success
 								watsredirect( "index.php?option=com_waticketsystem&act=category", "Category Added" );

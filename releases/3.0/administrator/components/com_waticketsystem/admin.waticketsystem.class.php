@@ -1191,6 +1191,7 @@ class watsCategory extends JTable
 	var $ticketSet;
 	var $description;
 	var $image;
+    var $emails;
 
 	/**
 	 * 
@@ -1267,7 +1268,7 @@ class watsCategory extends JTable
 	/**
 	 * static
 	 */
-	function newCategory( $name, $description, $image ) {
+	function newCategory( $name, $description, $image, $emails ) {
 	    $database =& JFactory::getDBO();
 		// check doesn't already exist
 		$database->setQuery( "SELECT name FROM #__wats_category WHERE name=".$database->Quote($name).";");
@@ -1276,8 +1277,8 @@ class watsCategory extends JTable
 		{
 			// create SQL
 			$database->setQuery(
-                "INSERT INTO #__wats_category ( name, description, image ) ".
-                "VALUES (".$database->Quote($name).", ".$database->Quote($description).", ".$database->Quote($image).")" 
+                "INSERT INTO #__wats_category ( name, description, image, emails ) ".
+                "VALUES (".$database->Quote($name).", ".$database->Quote($description).", ".$database->Quote($image).", ".$database->Quote($emails).")" 
             );
 			// execute
 			$database->query();
@@ -1313,8 +1314,8 @@ class watsCategory extends JTable
 			// update SQL
 			$database->setQuery(
                 "UPDATE #__wats_category ".
-                "SET name=".$database->Quote($this->name).", description=".$database->Quote($this->description).", image=".$database->Quote($this->image)."'".
-                "WHERE catid='".intval($this->catid)
+                "SET name=".$database->Quote($this->name).", description=".$database->Quote($this->description).", image=".$database->Quote($this->image).", emails=".$database->Quote($this->emails)." ".
+                "WHERE catid=".intval($this->catid)
             );
 			// execute
 			$database->query();
