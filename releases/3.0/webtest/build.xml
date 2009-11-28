@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="Webamoeba Help Desk - Webtests" default="test" basedir=".">
+    <property file="./webtest.properties" />
+    <php expression="'results-'.date('Ymd-His')" returnProperty="run"/>
+
+    <target name="prepare">
+        <echo msg="Making Results directory" />
+        <mkdir dir="./${run}" />
+    </target>
+
+    <target name="build" depends="prepare">
+        <echo msg="Copying tests to results directory..." />
+        
+        <!-- build tests -->
+        <copy todir="./${run}">
+            <fileset dir="./tests">
+                <include name="**/**.xml" />
+                <exclude name="**/.svn/**" />
+            </fileset>
+            <filterchain>
+                <replacetokenswithfile begintoken="@INCLUDE:" endtoken="@" dir="./" translatehtml="false" />
+                <expandproperties />
+            </filterchain>
+        </copy>
+              
+    </target>
+
+    <target name="test" depends="build">
+        <echo msg="Running tests..." />
+        <exec command="webtest -buildfile tests.xml" dir="./${run}" />
+        <echo msg="Complete!" />
+    </target>
+</project>
