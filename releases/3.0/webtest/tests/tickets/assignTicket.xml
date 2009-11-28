@@ -1,21 +1,24 @@
 <project name="newTicket" basedir="." default="test">
     
     <target name="test">
-        <webtest name="Close Ticket">
+        <webtest name="Assign Ticket">
             <steps>
                 @INCLUDE:login.xml@
                 
                 <!-- Open ticjet from "Create New Ticket" -->
                 <clickLink label="Webtest's New Ticket (${run})"/>
                 
-                <!-- Close Ticket -->
-                <verifyText description="Verify that text is contained in the page" text="Reply"/>
-                <verifyText description="Verify that text is contained in the page" text="Close Ticket"/>
-                <setInputField name="msg" value="Closing Ticket !&quot;&#163;$%^&amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
-                <setRadioButton description="Check radio button close: 1" name="close" value="1"/>
-                <clickButton label="Reply"/>
-                <verifyText description="Verify that text is contained in the page" text="Closing Ticket !&amp;quot;&#163;$%^&amp;amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
-                <verifyText description="Verify that text is not contained in the page" text="(Reply){0}" regex="true"/>
+                <!-- Assign Ticket Ticket -->
+                <enableJavaScript enable="false" />
+                <setSelectField name="assignee" text="webtest"/>
+                <clickButton label="Assign ticket"/>
+                <verifyText description="Verify that text is contained in the page" text="(Assigned to webtest)"/>
+                <enableJavaScript enable="true" />
+                
+                <!-- Check Assigned ticket appears in assigned ticket list -->
+                <clickLink label="Help Desk"/>
+                <clickLink label="Assigned Tickets"/>
+                <verifyText description="Verify that text is contained in the page" text="Webtest's New Ticket (${run})"/>
                 
                 <!-- Check email has been recieved -->
                 <emailSetConfig description="Connection to mail server" 
@@ -25,7 +28,7 @@
                                 password="${email.password}"
                                 delay="5" />
                 <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
-                                        subject="A reply to &quot;Webtest's New Ticket (${run})&quot; has been received"
+                                        subject="Ticket Webtest's New Ticket (${run}) has been assigned to a user"
                                         property="email.count"
                                         propertyType="dynamic" />
                 <verifyProperty name="email.count" text="1"/>

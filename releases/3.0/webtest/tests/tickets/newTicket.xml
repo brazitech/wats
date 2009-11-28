@@ -20,6 +20,19 @@
                 <clickLink label="webtest"/>
                 <clickLink label="Webtest's New Ticket"/>
                 <verifyText description="Verify that text is contained in the page" text="Webtest's New Ticket (${run})"/>
+                
+                <!-- Check email has been recieved -->
+                <emailSetConfig description="Connection to mail server" 
+                                server="${email.server}"
+                                type="${email.type}"
+                                username="${email.username}"
+                                password="${email.password}"
+                                delay="5" />
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic" />
+                <verifyProperty name="email.count" text="1"/>
 
             </steps>
         </webtest>

@@ -1,7 +1,7 @@
 <project name="newTicket" basedir="." default="test">
     
     <target name="test">
-        <webtest name="Close Ticket">
+        <webtest name="Close, Delete, and Purge Ticket">
             <steps>
                 @INCLUDE:login.xml@
                 
@@ -29,6 +29,10 @@
                                         property="email.count"
                                         propertyType="dynamic" />
                 <verifyProperty name="email.count" text="1"/>
+                
+                <!-- @todo Delete Ticket -->
+                
+                <!-- @todo Purge Ticket -->
 
             </steps>
         </webtest>
