@@ -1,9 +1,11 @@
+<!DOCTYPE project SYSTEM "../dtd/Project.dtd">
+
 <project name="newTicket" basedir="." default="test">
     
     <target name="test">
         <webtest name="Close, Delete, and Purge Ticket">
             <steps>
-                @INCLUDE:login.xml@
+                &login;
                 
                 <!-- Open ticjet from "Create New Ticket" -->
                 <clickLink label="Webtest's New Ticket (${run})"/>

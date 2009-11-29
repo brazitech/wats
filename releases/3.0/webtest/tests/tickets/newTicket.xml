@@ -1,9 +1,11 @@
+<!DOCTYPE project SYSTEM "../dtd/Project.dtd">
+
 <project name="newTicket" basedir="." default="test">
     
     <target name="test">
         <webtest name="Create New Ticket">
             <steps>
-                @INCLUDE:login.xml@
+                &login;
                 
                 <!-- Create the new ticket -->
                 <clickButton label="Submit a new ticket"/>

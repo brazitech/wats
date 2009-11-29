@@ -9,16 +9,28 @@
     </target>
 
     <target name="build" depends="prepare">
-        <echo msg="Copying tests to results directory..." />
         
         <!-- build tests -->
+        <echo msg="Copying tests to results directory..." />
         <copy todir="./${run}">
             <fileset dir="./tests">
                 <include name="**/**.xml" />
                 <exclude name="**/.svn/**" />
             </fileset>
             <filterchain>
-                <replacetokenswithfile begintoken="@INCLUDE:" endtoken="@" dir="./" translatehtml="false" />
+                <!--<replacetokenswithfile begintoken="@INCLUDE:" endtoken="@" dir="./" translatehtml="false" />-->
+                <expandproperties />
+            </filterchain>
+        </copy>
+        
+        <!-- build includes -->
+        <echo msg="Copying includes..." />
+        <copy todir="./${run}/includes">
+            <fileset dir="./includes">
+                <include name="**/**.xml" />
+                <exclude name="**/.svn/**" />
+            </fileset>
+            <filterchain>
                 <expandproperties />
             </filterchain>
         </copy>
