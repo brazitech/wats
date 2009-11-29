@@ -152,7 +152,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $database =& JFactory::getDBO();
         
         // build and execute query to get users who are related to the ticket
-        $query = "SELECT DISTINCT m.watsid, u.email, u.username, u.name FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid = " . intval($ticket->ticketId) . " AND u.block = 0";
+        $query = "SELECT DISTINCT u.id, m.watsid, u.email, u.username, u.name FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid = " . intval($ticket->ticketId) . " AND u.block = 0";
         $database->setQuery($query);
         $users = $database->loadObjectList();
         
