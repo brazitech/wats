@@ -33,7 +33,20 @@
                 <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
                                         subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
                                         property="email.count"
-                                        propertyType="dynamic" />
+                                        propertyType="dynamic"
+                                        to="${email.user}" />
+                <verifyProperty name="email.count" text="1"/>
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.category-notification}" />
+                <verifyProperty name="email.count" text="1"/>
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.component-notification}" />
                 <verifyProperty name="email.count" text="1"/>
 
             </steps>

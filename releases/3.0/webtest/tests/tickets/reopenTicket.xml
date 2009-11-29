@@ -28,7 +28,8 @@
                 <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
                                         subject="Ticket Webtest's New Ticket (${run}) has been reopened"
                                         property="email.count"
-                                        propertyType="dynamic" />
+                                        propertyType="dynamic"
+                                        to="${email.username}" />
                 <verifyProperty name="email.count" text="1"/>
 
             </steps>

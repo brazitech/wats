@@ -166,9 +166,9 @@ function watsOption( &$task, &$act )
 						if ( strlen( JRequest::getString('name') ) > 0 && strlen( JRequest::getString('description') ) > 0 )
 						{
 							// parse input
-							$name = htmlspecialchars( JRequest::getString('name') );
-							$description = htmlspecialchars( JRequest::getString('description') );
-							$image = htmlspecialchars( JRequest::getString('image') );
+							$name = JRequest::getString('name');
+							$description = JRequest::getString('description');
+							$image = JRequest::getString('image');
                             $emails = JRequest::getString('emails');
 							if ( watsCategory::newCategory($name, $description, $image, $emails) )
 							{

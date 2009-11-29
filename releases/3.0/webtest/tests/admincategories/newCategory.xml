@@ -1,0 +1,27 @@
+<!DOCTYPE project SYSTEM "../dtd/Project.dtd">
+
+<project name="newTicket" basedir="." default="test">
+    
+    <target name="test">
+        <webtest name="New Category">
+            <steps>
+                &adminlogin;
+                
+                <invoke url="${test.environment.adminurl}/index.php?act=category&amp;option=com_waticketsystem&amp;task=add"/>
+                
+                <!-- fill in form and save -->
+                <setInputField name="name" value="Webtest's New Category (${run})"/>
+                <setInputField name="description" value="!&quot;&#163;$%^&amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+                <setInputField name="image" value="image"/>
+                <setInputField name="emails" value="${email.category-notification}"/>
+                <clickLink label="Save"/>
+                
+                <!-- Display all categories and check new category has been added -->
+                <setSelectField name="limit" text="all"/>
+                <verifyText description="Verify that text is contained in the page" text="Webtest's New Category (${run})"/>
+                <verifyText description="Verify that text is contained in the page" text="!&amp;quot;&#163;$%^&amp;amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+            </steps>
+        </webtest>
+    </target>
+    
+</project>

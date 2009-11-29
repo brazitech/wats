@@ -561,7 +561,7 @@ class watsCategoryHTML extends watsCategory
 				  <td width=\"100\">
 				  	Email notification
 				  </td>
-				  <td><input name=\"emails\" type=\"emails\" maxlength=\"255\" size=\"50\" value=\"\" /></td>
+				  <td><input name=\"emails\" type=\"text\" maxlength=\"255\" size=\"50\" value=\"\" /></td>
 			    </tr>
 			  </table>";
 	}
@@ -812,6 +812,7 @@ class watsCategorySetHTML extends watsCategorySet
 				    <tr>
 					  <th scope=\"col\" class=\"title\">Name</th>
 					  <th scope=\"col\" class=\"title\">Description</th>
+                      <th scope=\"col\" class=\"title\">Notification Emails</th>
 				    </tr>
 				</thead>
 				<tbody>";
@@ -823,6 +824,7 @@ class watsCategorySetHTML extends watsCategorySet
             echo "<tr class=\"row".($limitstartThrow % 2)."\">";
 			echo "<td><a href=\"index.php?option=com_waticketsystem&act=category&task=view&catid=".$this->categorySet[$limitstartThrow]->catid."\">".htmlspecialchars($this->categorySet[$limitstartThrow]->name)."</a></td>";
 			echo "<td>".htmlspecialchars($this->categorySet[$limitstartThrow]->description)."</td>";
+            echo "<td>".htmlspecialchars($this->categorySet[$limitstartThrow]->emails)."</td>";
 			echo "</tr>";
 			$limitstartThrow ++;
 		} // end itterate through users

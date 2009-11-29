@@ -5,11 +5,15 @@
 
     <target name="wt.testInWork">
         <!-- TICKETS -->
-        <ant dir="tickets" antfile="newTicket.xml" />
+        <!--<ant dir="tickets" antfile="newTicket.xml" />
         <ant dir="tickets" antfile="closeTicket.xml" />
         <ant dir="tickets" antfile="reopenTicket.xml" />
+        
+        <ant dir="tickets" antfile="assignTicket.xml" />-->
         <!-- @todo <ant dir="tickets" antfile="closeAndDeleteAndPurgeTicket.xml" />-->
-        <ant dir="tickets" antfile="assignTicket.xml" />
+        
+        <!-- ADMIN CATEGORIES -->
+        <ant dir="admincategories" antfile="newCategory.xml" />
     </target>
     
 </project>
