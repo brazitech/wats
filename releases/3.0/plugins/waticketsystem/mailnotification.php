@@ -202,6 +202,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
             if (!$isKnown) {
                 $unknownUser = new stdClass();
                 $unknownUser->id       = 0;
+                $unknownUser->watsid   = 0;
                 $unknownUser->email    = $notifyEmails[$i];
                 $unknownUser->name     = JText::_("UNKNOWN USER");
                 $unknownUser->username = JText::_("UNKNOWN USER");
