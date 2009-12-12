@@ -1128,23 +1128,25 @@ class watsSettingsHTML extends WConfig
 					<p><strong>Libraries</strong><br />
 					BBCode - Leif K-Brooks</p>
 						<p><strong>Translations</strong><br />
-						en-GB - English - 	 James Kennard<br />
-                        pt-BR -	Brazillian -	Mauro Machado<br />
+						en-GB - English - James Kennard<br />
+                        pt-BR -	Brazillian - Mauro Machado<br />
                         cs-CZ -	Czech -	Luk·ö NÏmec<br />
                         fa-IR -	Farsi -	AmirReza Tehrani<br />
-                        fr-FR -	French -	Johan Aubry<br />
-                        de-DE -	German -	Chr.G‰rtner<br />
+                        fr-FR -	French - Johan Aubry<br />
+                        da-DK -	Dansih - Soren Oxholm<br />            
+                        de-DE -	German - Chr.G‰rtner<br />
                         el-GR -	Greek -	George Yiftoyiannis<br />
-                        it-IT -	Italian -	Leonardo Lombardi<br />
+                        it-IT -	Italian - Leonardo Lombardi<br />
                         nb-NO -	Norwegian - Erol Haagenrud<br />
-                        nl-NL -	Netherlands 	 <br />
-                        pt-PT -	Portuguese -	Jorge Rosado<br />
-                        ru-RU -	Russian -	Vasily Korotkov<br />
-                        sr-RS -	Serbian -	Ivica Petrovic<br />
+                        nl-NL -	Netherlands <br />
+                        pt-PT -	Portuguese - Jorge Rosado<br />
+                        ro-RO -	Romainian - Tudor Jitianu<br />
+                        ru-RU -	Russian - Vasily Korotkov<br />
+                        sr-RS -	Serbian - Ivica Petrovic<br />
                         sl-SI -	Slovenian -	Matjaz Krmelj<br />
-                        sk-SK -	Slovak -	Daniel K·Ëer<br />
-                        es-ES -	Spanish -	Urano Gonzalez & Ventura Ventolera<br />
-                        sv-SE -	Swedish -	Thomas Westman<br />
+                        sk-SK -	Slovak - Daniel K·Ëer<br />
+                        es-ES -	Spanish - Urano Gonzalez & Ventura Ventolera<br />
+                        sv-SE -	Swedish - Thomas Westman<br />
                         tr-TR -	Turkish</p>
 					<p><strong>Beta Testers</strong><br />
 					72dpi<br />

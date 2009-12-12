@@ -305,12 +305,14 @@ function com_install()
                                 cs-CZ -	Czech -	Lukáš Nìmec<br />
                                 fa-IR -	Farsi -	AmirReza Tehrani<br />
                                 fr-FR -	French -	Johan Aubry<br />
+                                da-DK -	Dansih - Soren Oxholm<br />
                                 de-DE -	German -	Chr.Gärtner<br />
                                 el-GR -	Greek -	George Yiftoyiannis<br />
                                 it-IT -	Italian -	Leonardo Lombardi<br />
                                 nb-NO -	Norwegian - Erol Haagenrud<br />
                                 nl-NL -	Netherlands 	 <br />
                                 pt-PT -	Portuguese -	Jorge Rosado<br />
+                                ro-RO -	Romainian - Tudor Jitianu<br />
                                 ru-RU -	Russian -	Vasily Korotkov<br />
                                 sr-RS -	Serbian -	Ivica Petrovic<br />
                                 sl-SI -	Slovenian -	Matjaz Krmelj<br />
