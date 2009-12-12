@@ -1,0 +1,5 @@
+<invoke url="${test.environment.url}"/>
+<setInputField name="username" value="webtest"/>
+<setInputField description="Set password field passwd: webtest" name="passwd" value="webtest"/>
+<clickButton label="Login"/>
+<verifyText description="Verify that text is contained in the page" text="Username: webtest"/>

@@ -1,0 +1,19 @@
+<project default="wt.full">
+
+    <property name="webtest.home" value="C:\Program Files\webtest"/>
+    <import file="${webtest.home}/webtest.xml"/>
+
+    <target name="wt.testInWork">
+        <!-- TICKETS -->
+        <!--<ant dir="tickets" antfile="newTicket.xml" />
+        <ant dir="tickets" antfile="closeTicket.xml" />
+        <ant dir="tickets" antfile="reopenTicket.xml" />
+        
+        <ant dir="tickets" antfile="assignTicket.xml" />-->
+        <!-- @todo <ant dir="tickets" antfile="closeAndDeleteAndPurgeTicket.xml" />-->
+        
+        <!-- ADMIN CATEGORIES -->
+        <ant dir="admincategories" antfile="newCategory.xml" />
+    </target>
+    
+</project>

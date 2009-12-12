@@ -1,0 +1,56 @@
+<!DOCTYPE project SYSTEM "../dtd/Project.dtd">
+
+<project name="newTicket" basedir="." default="test">
+    
+    <target name="test">
+        <webtest name="Create New Ticket">
+            <steps>
+                &login;
+                
+                <!-- Create the new ticket -->
+                <clickButton label="Submit a new ticket"/>
+                <verifyText description="Verify that text is contained in the page" text="Submit a new ticket"/>
+                <setInputField name="ticketname" value="Webtest's New Ticket (${run})"/>
+                <setSelectField name="catid" text="webtest"/>
+                <setInputField name="msg" value="!&quot;&#163;$%^&amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+                <clickButton label="Submit a new ticket"/>
+                <verifyText description="Verify that text is contained in the page" text="Webtest's New Ticket (${run})"/>
+                <verifyText description="Verify that text is contained in the page" text="!&amp;quot;&#163;$%^&amp;amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+                
+                <!-- Verify ticket is shown in list of tickets on category page -->
+                <clickLink label="Help Desk"/>
+                <clickLink label="webtest"/>
+                <clickLink label="Webtest's New Ticket"/>
+                <verifyText description="Verify that text is contained in the page" text="Webtest's New Ticket (${run})"/>
+                
+                <!-- Check email has been recieved -->
+                <emailSetConfig description="Connection to mail server" 
+                                server="${email.server}"
+                                type="${email.type}"
+                                username="${email.username}"
+                                password="${email.password}"
+                                delay="5" />
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.user}" />
+                <verifyProperty name="email.count" text="1"/>
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.category-notification}" />
+                <verifyProperty name="email.count" text="1"/>
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.component-notification}" />
+                <verifyProperty name="email.count" text="1"/>
+
+            </steps>
+        </webtest>
+    </target>
+    
+</project>
