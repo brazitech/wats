@@ -79,9 +79,9 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $view->assignRef("ticketOwner", $ticketOwner);
         $lastMessageOwner =& JFactory::getUser();
         $view->assignRef("lastMessageOwner", $lastMessageOwner);
-        if (@$ticket->assign) {
-            $ticketAsignee =& JFactory::getUser($ticket->assign);
-            $view->assignRef("ticketAsignee", $ticketAsignee);
+        if (@$ticket->assignId) {
+            $ticketAsignee =& JFactory::getUser($ticket->assignId);
+            $view->assignRef("assignee", $ticketAsignee);
         }
         
         // determine the templates to use
@@ -91,9 +91,13 @@ class plgWaticketsystemMailnotification extends JPlugin {
         // get the mailer object and email addresses of those users who we want to notify
         $mailer = JFactory::getMailer();
         $users =& $this->_getRelatedUsers($ticket);
-        $users = array_merge($users, $this->_getNotificationUsers());
+        $users = array_merge($users, $this->_getNotificationUsers($ticket));
+        if (@$ticketAsignee) {
+            $ticketAsignee->watsid = $ticketAsignee->id;
+            $users[] =& $ticketAsignee;
+        }
         
-        // we onyl want unique users, ignore duplicates!
+        // we only want unique users, ignore duplicates!
         $uniqueUsers = array();
         for ($i = 0; $i < count($users); $i++) {
             $isUnique = true;
@@ -148,7 +152,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
         $database =& JFactory::getDBO();
         
         // build and execute query to get users who are related to the ticket
-        $query = "SELECT DISTINCT m.watsid, u.email, u.username, u.name FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid = " . intval($ticket->ticketId) . " AND u.block = 0";
+        $query = "SELECT DISTINCT u.id, m.watsid, u.email, u.username, u.name FROM #__wats_msg AS m LEFT  JOIN #__users AS u ON m.watsid=u.id WHERE m.ticketid = " . intval($ticket->ticketId) . " AND u.block = 0";
         $database->setQuery($query);
         $users = $database->loadObjectList();
         
@@ -156,11 +160,15 @@ class plgWaticketsystemMailnotification extends JPlugin {
         return $users;
     }
     
-    function &_getNotificationUsers() {
+    function &_getNotificationUsers(&$ticket) {
         // get the notification email addresses
+        $rawNotifyEmails = $this->params->get("email-others", "");
+        $rawNotifyEmails .= ', '.$this->_getCategoryNotificationEmails($ticket->category);
         $notifyEmails = array();
-        if (!preg_match_all("~([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})~i", $this->params->get("email-others", ""), $notifyEmails)) {
-            return array();
+        var_dump($rawNotifyEmails);
+        if (!preg_match_all("~([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})~i", $rawNotifyEmails, $notifyEmails)) {
+            $array = array();
+            return $array;
         }
         $notifyEmails = $notifyEmails[0];
         
@@ -174,7 +182,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
             $safeNotifyEmails[] = $database->Quote($notifyEmails[$i]);
         }
         
-        // build and execute query to get users who are related to the ticket
+        // Find matching users
         $query = "SELECT DISTINCT u.id, u.email, u.username, u.name FROM #__users AS u WHERE u.email = ";
         $query .= implode(" OR u.email = ", $safeNotifyEmails);
         $database->setQuery($query);
@@ -197,6 +205,7 @@ class plgWaticketsystemMailnotification extends JPlugin {
             if (!$isKnown) {
                 $unknownUser = new stdClass();
                 $unknownUser->id       = 0;
+                $unknownUser->watsid   = 0;
                 $unknownUser->email    = $notifyEmails[$i];
                 $unknownUser->name     = JText::_("UNKNOWN USER");
                 $unknownUser->username = JText::_("UNKNOWN USER");
@@ -206,5 +215,24 @@ class plgWaticketsystemMailnotification extends JPlugin {
         
         // return the users
         return $users;
+    }
+    
+    function _getCategoryNotificationEmails($catId) {
+        // prep cache
+        static $emails;
+        if (!$emails) {
+            $emails = array();
+        }
+        $catId = (int)$catId;
+        
+        // check if we need to load the emails from the category
+        if (!array_key_exists($catId, $emails)) {
+            // get the DBO
+            $database =& JFactory::getDBO();
+            $database->setQuery("SELECT c.emails FROM #__wats_category AS c WHERE c.catid = $catId");
+            $emails[$catId] = $database->loadResult();
+        }
+        
+        return $emails[$catId];
     }
 }

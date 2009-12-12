@@ -1,0 +1,39 @@
+<!DOCTYPE project SYSTEM "../dtd/Project.dtd">
+
+<project name="newTicket" basedir="." default="test">
+    
+    <target name="test">
+        <webtest name="Reopen Ticket">
+            <steps>
+                &login;
+                
+                <!-- Open ticket from "Create New Ticket" -->
+                <clickLink label="Webtest's New Ticket (${run})"/>
+                
+                <!-- Reopen Ticket -->
+                <clickButton label="Reopen"/>
+                <verifyText description="Verify that text is contained in the page" text="Please give a reason why you want to reopen this ticket"/>
+                <setInputField name="msg" value="Reopening Ticket !&quot;&#163;$%^&amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+                <clickButton label="Reopen"/>
+                <verifyText description="Verify that text is contained in the page" text="Reopening Ticket !&amp;quot;&#163;$%^&amp;amp;*()_+1234567890-=`&#172;?:@~{}[];'#,./qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"/>
+                <verifyText description="Verify that text is contained in the page" text="Reply"/>
+                
+                <!-- Check email has been recieved -->
+                <emailSetConfig description="Connection to mail server" 
+                                server="${email.server}"
+                                type="${email.type}"
+                                username="${email.username}"
+                                password="${email.password}"
+                                delay="5" />
+                <emailStoreMessageCount description="Store messageID for subject: A new ticket &quot;Webtest's New Ticket (${run})&quot; has arrived"
+                                        subject="Ticket Webtest's New Ticket (${run}) has been reopened"
+                                        property="email.count"
+                                        propertyType="dynamic"
+                                        to="${email.username}" />
+                <verifyProperty name="email.count" text="1"/>
+
+            </steps>
+        </webtest>
+    </target>
+    
+</project>

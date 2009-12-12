@@ -17,7 +17,7 @@ $wats =& WFactory::getConfig();
 <?php if ($this->assignee->id == $this->recipient->id) : ?>
 <?php echo JText::_("TICKET ASSIGNED TO YOU"); ?> 
 <?php else: ?>
-<?php echo JText::sprintf("TICKET ASSIGNED TO %s", $this->asignee->username); ?> 
+<?php echo JText::sprintf("TICKET ASSIGNED TO %s", $this->assignee->username); ?>
 <?php endif; ?>
 ------------------------------------------------------------ 
 <?php echo JText::_("Ticket Name"); ?>: <?php echo $this->ticket->name; ?> 
