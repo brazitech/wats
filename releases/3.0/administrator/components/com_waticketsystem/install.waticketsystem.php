@@ -247,7 +247,7 @@ function com_install()
 		 */
 		case '3.0.4':
             // add email field to categories
-            $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_ticket') . " ADD COLUMN " . $database->nameQuote('emails') . " VARCHAR(255) NOT NULL;" );
+            $database->setQuery( "ALTER TABLE " . $database->nameQuote('#__wats_category') . " ADD COLUMN " . $database->nameQuote('emails') . " VARCHAR(255) NOT NULL;" );
 			$database->query();            
 	}
     
