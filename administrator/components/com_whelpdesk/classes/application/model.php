@@ -9,9 +9,10 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
+jimport('joomla.application.component.model');
 wimport('getinstance');
 
-abstract class WModel {
+abstract class WModel extends JModel {
 
     /**
      * Instances of WModel
@@ -21,34 +22,50 @@ abstract class WModel {
     private static $instances = array();
 
     /**
-     * Name of the model
-     *
-     * @var String
-     */
-    private $name;
-
-    /**
-     * Maximum number of items to display on a single page.
-     *
-     * @var int
-     */
-    private $limit = null;
-
-    /**
-     * Number of item with which to start the pagination.
-     *
-     * @var int
-     */
-    private $limitstart = null;
-
-    /**
      * Default column by which to order lists
      *
      * @var string
      * @see WModel::getDefaultFilterOrder()
      * @see WModel::setDefaultFilterOrder()
      */
-    private $defaultFilterOrder = '';
+    private $_defaultFilterOrder = '';
+    
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct();
+    
+        // get the application object and define the state context
+        $app =& JFactory::getApplication();
+        $context = 'com_whelpdesk.model.'.$this->getName();
+        
+        // get the limit and limitstart and total
+        $limit = $app->getUserStateFromRequest($context.'limit', 'limit', 0, 'int');
+        if ($application->isSite()) {
+            // request based
+            $limitstart = JRequest::getInt('limitstart', 0);
+        } else {
+            // state based
+            $limitstart = $app->getUserStateFromRequest($context.'limitstart', 'limitstart', 0, 'int');
+        }
+        $limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+        $total = $this->getTotal();
+            
+        
+        // get the filters
+        $search           = $app->getUserStateFromRequest($context.'search', 'search', '', 'string');
+        $filter_order     = $app->getUserStateFromRequest($context.'filter_order', 'filter_order', 'a.created', 'cmd');
+		$filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir',	'filter_order_Dir',	'desc', 'word');
+        
+        // set model state data
+        $this->setState('limit', $limit);
+		$this->setState('limitstart', $limitstart);
+        $this->setState('total', $total);
+        $this->setState('search', $search);
+        $this->setState('filter_order', $filter_order);
+		$this->setState('filter_order_Dir', $filter_order_Dir);
+    }
 
     /**
      * Sets the name of the model
@@ -76,16 +93,7 @@ abstract class WModel {
      * @return int
      */
     public function getLimit() {
-         // determine limitstart if we don't already know what it is
-        if ($this->limit === null) {
-            $application =& JFactory::getApplication();
-
-            // state based
-            $this->limit = $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.limit',
-                                                                 'limit');
-        }
-
-        return $this->limit;
+        return $this->getState('limit');
     }
 
     /**
@@ -202,7 +210,8 @@ abstract class WModel {
      * @return int
      */
     public function getTotal() {
-        throw new WException("METHOD NOT IMPLEMENTED");
+        JError::raiseWarning(JText::sprintf('WAHD.FRAMEWORK.APPLICATION.MODEL:Model %s Method %s Not Implemented', $this->getName(), 'getTotal'));
+        return 0;
     }
 
     /**
