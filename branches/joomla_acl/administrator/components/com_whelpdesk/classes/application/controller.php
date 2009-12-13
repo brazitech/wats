@@ -150,25 +150,7 @@ abstract class WController {
      */
     protected function hasAccess($targetIdentifier = null, $targetType = null,
                                  $control = null, $controlType = null) {
-        // get the objects we need
-        $user          = JFactory::getUser();
-        $accessSession = WFactory::getAccessSession();
-
-        // get the values we need
-        $requestType       = 'user';
-        $requestIdentifier = $user->get('id');
-        $targetType        = ($targetType)       ? $targetType       : $this->getType();
-        $targetIdentifier  = ($targetIdentifier) ? $targetIdentifier : $this->getAccessTargetIdentifier();
-        $controlType       = ($controlType)      ? $controlType      : $this->getType();
-        $control           = ($control)          ? $control          : $this->getUsecase();
-
-        try {
-            return ($accessSession->hasAccess($requestType, $requestIdentifier,
-                                      $targetType, $targetIdentifier,
-                                      $controlType, $control));
-        } catch (Exception $e) {
-            return false;
-        }
+        return true;
     }
 
     /**
