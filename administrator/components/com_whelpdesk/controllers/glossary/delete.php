@@ -33,7 +33,7 @@ class GlossaryDeleteWController extends GlossaryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
 
         // get the IDs of the terms we want to delete
         $cid = WModel::getAllIds();

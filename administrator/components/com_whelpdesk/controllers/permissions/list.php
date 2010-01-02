@@ -31,7 +31,7 @@ class PermissionsListWController extends WController {
         $targetIdentifier = JRequest::getString('targetIdentifier');
 
         // get the model
-        $model = WModel::getInstance('permissions');
+        $model = WModel::getInstanceByName('permissions');
         $model->setTargetIdentifier($targetIdentifier);
         $model->setTargetType($targetType);
 

@@ -41,7 +41,7 @@ class KnowledgedomainsCreateWController extends KnowledgedomainsWController {
         }
 
         // get the model and the data
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
         $table = $model->getKnowledgeDomain(0);
 
         // check where in the usecase we are

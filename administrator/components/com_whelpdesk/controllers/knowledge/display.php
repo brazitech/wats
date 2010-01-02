@@ -34,7 +34,7 @@ class KnowledgeDisplayWController extends KnowledgeWController {
 
         // get the knowledge
         $knowledge = null;
-        $model = WModel::getInstance('knowledge');
+        $model = WModel::getInstanceByName('knowledge');
         $id = WModel::getId();
         if (!$id) {
             // try the alias and domain instead
@@ -73,11 +73,11 @@ class KnowledgeDisplayWController extends KnowledgeWController {
         }
 
         // get the domain
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
         $knowledgeDomain = $model->getKnowledgeDomain($knowledge->domain);
 
         // get the knowledge revision
-        $model = WModel::getInstance('knowledgerevision');
+        $model = WModel::getInstanceByName('knowledgerevision');
         $knowledgeRevision = $model->getKnowledgeRevision($knowledge->id);
 
         // check if we should show the knowledge domain edit button

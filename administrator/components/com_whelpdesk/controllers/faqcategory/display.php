@@ -41,7 +41,7 @@ class FaqcategoryDisplayWController extends FaqcategoryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
         $category = $model->getCategory($id);
 
         // get the view

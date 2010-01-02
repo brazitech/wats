@@ -25,7 +25,7 @@ abstract class KnowledgedomainWController extends WController {
      */
     public function commit($id, $data) {
         // get the model
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
 
         try {
             // attempt to save the data

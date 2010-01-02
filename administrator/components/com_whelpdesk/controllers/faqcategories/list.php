@@ -36,7 +36,7 @@ class FaqcategoriesListWController extends FaqcategoriesWController {
         }
 
         // get the model
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
 
         // get the list data
         $categories = $model->getList();

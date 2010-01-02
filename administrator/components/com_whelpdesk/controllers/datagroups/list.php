@@ -41,7 +41,7 @@ class DatagroupsListWController extends WController {
         $returnURI = base64_decode(JRequest::getVar('returnURI', '', 'REQUEST', 'BASE64'));
 
         // get the model
-        $fieldModel = WModel::getInstance('datagroup');
+        $fieldModel = WModel::getInstanceByName('datagroup');
 
         // get the list data
         $fields = $fieldModel->getList();

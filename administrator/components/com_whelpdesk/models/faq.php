@@ -9,10 +9,10 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-class FaqWModel extends WModel {
+class ModelFaq extends WModel {
 
     public function  __construct() {
-        $this->setName('faq');
+        parent::__construct();
         $this->setDefaultFilterOrder('f.question');
     }
 

@@ -36,7 +36,7 @@ class KnowledgeListWController extends KnowledgeWController {
         }*/
 
         // get the model
-        $model = WModel::getInstance('knowledge');
+        $model = WModel::getInstanceByName('knowledge');
 
         // get the list data
         $list = $model->getList();
@@ -50,7 +50,7 @@ class KnowledgeListWController extends KnowledgeWController {
 
         // add the default model to the view
         $view->addModel('knowledge', $list, true);
-        $view->addModel('knowledgeDomain', WModel::getInstance('knowledgedomain')->getKnowledgeDomain(JRequest::getInt('filterDomain')));
+        $view->addModel('knowledgeDomain', WModel::getInstanceByName('knowledgedomain')->getKnowledgeDomain(JRequest::getInt('filterDomain')));
 
         // add the total number of terms to the view
         $view->addModel('total', $model->getTotal());

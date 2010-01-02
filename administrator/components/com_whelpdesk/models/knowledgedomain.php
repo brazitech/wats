@@ -12,10 +12,10 @@ defined('JPATH_BASE') or die();
 wimport('exceptions.composite');
 jimport('joomla.utilities.date');
 
-class KnowledgedomainWModel extends WModel {
+class ModelKnowledgedomain extends WModel {
 
     public function  __construct() {
-        $this->setName('knowledgedomain');
+        parent::__construct();
         $this->setDefaultFilterOrder('k.name');
     }
 

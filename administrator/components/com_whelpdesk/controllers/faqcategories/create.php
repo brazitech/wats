@@ -41,7 +41,7 @@ class FaqcategoriesCreateWController extends FaqcategoriesWController {
         }
 
         // get the model and a new category
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
         $category = $model->getCategory(0);
 
         // check where in the usecase we are

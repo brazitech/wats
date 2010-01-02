@@ -40,7 +40,7 @@ class GlossaryCopyWController extends GlossaryWController {
 
         // get the model and the term
         $id = WModel::getId();
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
         $term = $model->getTerm($id);
 
         // make sure the source data exists

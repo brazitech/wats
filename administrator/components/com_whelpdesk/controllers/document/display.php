@@ -40,7 +40,7 @@ class DocumentDisplayWController extends DocumentWController {
         $table->load($this->getAccessTargetIdentifier());
 
         // get the model
-        $model = WModel::getInstance('document');
+        $model = WModel::getInstanceByName('document');
 
         // check if we can download the document
         $user          = JFactory::getUser();

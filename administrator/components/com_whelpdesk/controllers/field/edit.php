@@ -31,7 +31,7 @@ class FieldEditWController extends FieldWController {
         $name  = preg_replace('(^a-z\_)', '', substr($record, $idSeparatorPosition + 1));
 
         // get the data
-        $model = WModel::getInstance('field');
+        $model = WModel::getInstanceByName('field');
         $field = $model->getField($group, $name);
 
         // make sure the data loaded

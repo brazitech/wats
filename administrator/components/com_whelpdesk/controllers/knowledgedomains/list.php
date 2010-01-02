@@ -36,7 +36,7 @@ class KnowledgedomainsListWController extends KnowledgedomainsWController {
         }
 
         // get the model
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
 
         // get the list data
         $knowledgeDomains = $model->getList();

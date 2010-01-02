@@ -42,7 +42,7 @@ class FaqListWController extends FaqWController {
         }
 
         // get the model
-        $model = WModel::getInstance('faq');
+        $model = WModel::getInstanceByName('faq');
 
         // get the list data
         $list = $model->getList();

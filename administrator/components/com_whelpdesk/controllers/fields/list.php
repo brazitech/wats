@@ -41,7 +41,7 @@ class FieldsListWController extends WController {
         $returnURI = base64_decode(JRequest::getVar('returnURI', '', 'REQUEST', 'BASE64'));
 
         // get the model
-        $fieldModel = WModel::getInstance('field');
+        $fieldModel = WModel::getInstanceByName('field');
 
         // get the list data
         $fields = $fieldModel->getList();

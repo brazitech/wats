@@ -93,7 +93,7 @@ class DocumentUploadWController extends DocumentWController {
         }
 
         // get the model
-        $model = WModel::getInstance('document');
+        $model = WModel::getInstanceByName('document');
 
         // get the parents
         $parents = $model->getParents($table->parent);

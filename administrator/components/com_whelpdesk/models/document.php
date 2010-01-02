@@ -9,10 +9,10 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-class DocumentWModel extends WModel {
+class ModelDocument extends WModel {
 
     public function  __construct() {
-        $this->setName('documentcontainer');
+        parent::__construct();
         $this->setDefaultFilterOrder('term');
     }
 

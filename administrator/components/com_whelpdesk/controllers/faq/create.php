@@ -90,7 +90,7 @@ class FaqCreateWController extends FaqWController {
         $view->addModel('faq', $table, true);
 
         // add categories in which we are allowed to create faqs
-        $view->addModel('categories', WModel::getInstance('faq')->getCreateCategories());
+        $view->addModel('categories', WModel::getInstanceByName('faq')->getCreateCategories());
 
         // add the fieldset to the model
         $view->addModel('fieldset', $table->getFieldset());

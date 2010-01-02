@@ -38,7 +38,7 @@ class GlossaryListWController extends GlossaryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
 
         // get the list data and current filters
         $terms = $model->getList();

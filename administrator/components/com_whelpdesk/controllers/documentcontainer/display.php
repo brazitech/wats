@@ -92,7 +92,7 @@ class DocumentcontainerDisplayWController extends DocumentcontainerWController {
         }
 
         // get the model
-        $model = WModel::getInstance('documentcontainer');
+        $model = WModel::getInstanceByName('documentcontainer');
 
         // get the sub documentcontainers and documents
         $documentcontainers = $model->getDocumentcontainers($table->id);

@@ -35,7 +35,7 @@ class FaqcategoryDeleteWController extends FaqcategoryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
 
         // itterate over FAQ categories
         foreach ($cid AS $id) {

@@ -51,7 +51,7 @@ class GlossaryResethitsWController extends GlossaryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
         $term = $model->getTerm($id);
 
         // make sure term is valid

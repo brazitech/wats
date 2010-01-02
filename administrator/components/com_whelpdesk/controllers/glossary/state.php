@@ -56,7 +56,7 @@ class GlossaryStateWController extends GlossaryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
 
         // itterate over glossary terms
         $unknownTerms = 0;

@@ -26,7 +26,7 @@ abstract class FieldWController extends WController {
      */
     public function commit($group, $name, $data, $isNew=false) {
         // get the model
-        $model = WModel::getInstance('field');
+        $model = WModel::getInstanceByName('field');
 
         try {
             // attempt to save the data
