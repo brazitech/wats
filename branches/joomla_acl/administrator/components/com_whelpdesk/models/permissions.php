@@ -9,13 +9,13 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-class PermissionsWModel extends WModel {
+class ModelPermissions extends WModel {
 
     private $targetIdentifier = null;
     private $targetType       = null;
 
     public function  __construct() {
-        $this->setName('permissions');
+        parent::__construct();
         $this->setDefaultFilterOrder('');
     }
 

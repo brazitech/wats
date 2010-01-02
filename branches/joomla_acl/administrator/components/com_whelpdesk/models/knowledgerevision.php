@@ -9,10 +9,10 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-class KnowledgeRevisionWModel extends WModel {
+class ModelKnowledgerevision extends WModel {
 
     public function  __construct() {
-        $this->setName('knowledgerevision');
+        parent::__construct();
         $this->setDefaultFilterOrder('k.name');
     }
 

@@ -41,7 +41,7 @@ class FaqcategoryEditWController extends FaqcategoryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
         $category = $model->getCategory($id);
 
         // check where in the usecase we are

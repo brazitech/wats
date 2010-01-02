@@ -13,10 +13,10 @@ jimport('joomla.utilities.date');
 wimport('exceptions.composite');
 wimport('database.field');
 
-class FieldWModel extends WModel {
+class ModelField extends WModel {
 
     public function  __construct() {
-        $this->setName('field');
+        parent::__construct();
         $this->setDefaultFilterOrder('f.name');
     }
 

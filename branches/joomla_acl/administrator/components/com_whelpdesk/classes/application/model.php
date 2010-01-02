@@ -10,7 +10,6 @@
 defined('JPATH_BASE') or die();
 
 jimport('joomla.application.component.model');
-wimport('getinstance');
 
 abstract class WModel extends JModel {
 
@@ -35,14 +34,26 @@ abstract class WModel extends JModel {
      */
     public function __construct() {
         parent::__construct();
-    
+    }
+
+    /**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 */
+	protected function _populateState()
+	{
         // get the application object and define the state context
         $app =& JFactory::getApplication();
-        $context = 'com_whelpdesk.model.'.$this->getName();
-        
+        $context = 'com_whelpdesk.model.'.$this->getName().'.';
+
         // get the limit and limitstart and total
         $limit = $app->getUserStateFromRequest($context.'limit', 'limit', 0, 'int');
-        if ($application->isSite()) {
+        if ($app->isSite()) {
             // request based
             $limitstart = JRequest::getInt('limitstart', 0);
         } else {
@@ -51,13 +62,14 @@ abstract class WModel extends JModel {
         }
         $limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
         $total = $this->getTotal();
-            
-        
+
+
         // get the filters
         $search           = $app->getUserStateFromRequest($context.'search', 'search', '', 'string');
-        $filter_order     = $app->getUserStateFromRequest($context.'filter_order', 'filter_order', 'a.created', 'cmd');
-		$filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir',	'filter_order_Dir',	'desc', 'word');
-        
+        $filter_order     = $app->getUserStateFromRequest($context.'filter_order', 'filter_order', $this->getDefaultFilterOrder(), 'cmd');
+		$filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir',	'filter_order_Dir',	'DESC', 'word');
+        $filter_order_Dir = (strtoupper($filter_order_Dir) == 'DESC') ? 'DESC' : 'ASC';
+
         // set model state data
         $this->setState('limit', $limit);
 		$this->setState('limitstart', $limitstart);
@@ -65,25 +77,7 @@ abstract class WModel extends JModel {
         $this->setState('search', $search);
         $this->setState('filter_order', $filter_order);
 		$this->setState('filter_order_Dir', $filter_order_Dir);
-    }
-
-    /**
-     * Sets the name of the model
-     *
-     * @param String $name
-     */
-    protected function setName($name) {
-        $this->name = (string)$name;
-    }
-
-    /**
-     * Gets the name of the model
-     * 
-     * @return String
-     */
-    public function getName() {
-        return $this->name;
-    }
+	}
 
     /**
      * Get the limit for the pagination. Maximum number of items to display on a
@@ -103,30 +97,7 @@ abstract class WModel extends JModel {
      * @return int
      */
     public function getLimitStart() {
-        // determine limitstart if we don't already know what it is
-        if ($this->limitstart === null) {
-            $application =& JFactory::getApplication();
-
-            if ($application->isSite()) {
-                // request based
-                $this->limitstart = JRequest::getInt('limitstart', 0);
-            } else {
-                // state based
-                $this->limitstart = $application->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.limitstart',
-                                                                          'limitstart',
-                                                                          0);
-            }
-            
-            // correct value as necessary
-            $limit = $this->getLimit();
-            $total = $this->getTotal();
-            if ($this->limitstart > $total) {
-                $this->limitstart = $total;
-            }
-            $this->limitstart = ($limit != 0 ? (floor($this->limitstart / $limit) * $limit) : 0);
-        }
-
-        return $this->limitstart;
+        return $this->getState('limitstart');
     }
 
     /**
@@ -161,18 +132,15 @@ abstract class WModel extends JModel {
      * @return string
      */
     public function getFilterOrder() {
-        return JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.order',
-                                                                   'filter_order',
-                                                                   $this->getDefaultFilterOrder(),
-                                                                   'cmd');
+        return $this->getState('filter_order');
     }
 
     public function getDefaultFilterOrder() {
-        return $this->defaultFilterOrder;
+        return $this->_defaultFilterOrder;
     }
 
     protected function setDefaultFilterOrder($default) {
-        $this->defaultFilterOrder = $default;
+        $this->_defaultFilterOrder = $default;
     }
 
     /**
@@ -182,11 +150,7 @@ abstract class WModel extends JModel {
      * @return string
      */
     public function getFilterOrderDirection($default='ASC') {
-        $direction = JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.direction',
-                                                                        'filter_order_Dir',
-                                                                         $default,
-                                                                         'cmd');
-        return (strtoupper($direction) == 'DESC') ? 'DESC' : 'ASC';
+        return $this->getState('filter_order_Dir');
     }
 
     /**
@@ -221,15 +185,15 @@ abstract class WModel extends JModel {
      * @param String $name
      * @return WModel
      * @todo add security
-     */
-    public static function getInstance($name) {
+    */ 
+    public static function getInstanceByName($name) {
         // prepare the model name
         $name = strtolower($name);
         
         if (empty(self::$instances[$name])) {
             // determine path and class name
-            $modelPath  = JPATH_COMPONENT . DS . 'models' . DS . $name . '.php';
-            $modelClass = ucfirst($name) . 'WModel';
+            $modelPath  = JPATH_COMPONENT_ADMINISTRATOR . DS . 'models' . DS . $name . '.php';
+            $modelClass = 'Model'.ucfirst($name);
 
             // get the class and make an instance
             require_once $modelPath;

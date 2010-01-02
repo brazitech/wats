@@ -41,7 +41,7 @@ class KnowledgedomainEditWController extends KnowledgedomainWController {
         }
 
         // get the data
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
         $knowledgeDomain = $model->getKnowledgeDomain($id);
 
         // make sure the data loaded

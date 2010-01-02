@@ -12,11 +12,15 @@ defined('JPATH_BASE') or die();
 wimport('exceptions.composite');
 jimport('joomla.utilities.date');
 
-class GlossaryWModel extends WModel {
+class ModelGlossary extends WModel {
 
     public function  __construct() {
-        $this->setName('glossary');
-        $this->setDefaultFilterOrder('term');
+        parent::__construct();
+        $this->setDefaultFilterOrder('name');
+    }
+
+    protected function _populateState() {
+        parent::_populateState();
     }
 
     public function getTerm($id, $reload = false) {
@@ -108,10 +112,9 @@ class GlossaryWModel extends WModel {
         // get the total number of terms in the glossary
         $sql = 'SELECT COUNT(*) FROM ' . dbTable('glossary')
             . $this->buildQueryWhere();
-        $database = JFactory::getDBO();
-        $database->setQuery($sql);
+        $this->_db->setQuery($sql);
         
-        return (int)($database->loadResult());
+        return (int)($this->_db->loadResult());
     }
 
     private function buildQuery() {
@@ -227,7 +230,6 @@ class GlossaryWModel extends WModel {
         $check = $table->check();
         if (is_array($check)) {
             // failed
-            var_dump($table->id);
             WFactory::getOut()->log('Table data failed to check', true);
             throw new WCompositeException($check);
         }

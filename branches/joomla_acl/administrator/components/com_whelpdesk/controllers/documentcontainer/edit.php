@@ -81,7 +81,7 @@ class DocumentcontainerEditWController extends DocumentcontainerWController {
         }
 
         // get the model
-        $model = WModel::getInstance('documentcontainer');
+        $model = WModel::getInstanceByName('documentcontainer');
 
         // get the parents
         $parents = $model->getParents($table->id);

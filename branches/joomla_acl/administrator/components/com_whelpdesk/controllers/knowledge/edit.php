@@ -26,7 +26,7 @@ class KnowledgeEditWController extends KnowledgeWController {
     public function execute($stage) {
         // get the knowledge
         $knowledge = null;
-        $model = WModel::getInstance('knowledge');
+        $model = WModel::getInstanceByName('knowledge');
         $id = WModel::getId();
         if (!$id) {
             // try the alias and domain instead
@@ -102,11 +102,11 @@ class KnowledgeEditWController extends KnowledgeWController {
         }
 
         // get the domain
-        $modelDomain = WModel::getInstance('knowledgedomain');
+        $modelDomain = WModel::getInstanceByName('knowledgedomain');
         $knowledgeDomain = $modelDomain->getKnowledgeDomain($knowledge->domain);
 
         // get the latest knowledge revision
-        $modelRevision = WModel::getInstance('knowledgerevision');
+        $modelRevision = WModel::getInstanceByName('knowledgerevision');
         $knowledgeRevision = $modelRevision->getKnowledgeRevision($knowledge->id);
 
         // get the view
@@ -128,7 +128,7 @@ class KnowledgeEditWController extends KnowledgeWController {
     }
 
     public function commit($id) {
-        $model = WModel::getInstance('knowledge');
+        $model = WModel::getInstanceByName('knowledge');
 
         // get the data and make safe
         $post = JRequest::get('POST');

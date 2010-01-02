@@ -26,7 +26,7 @@ abstract class GlossaryWController extends WController {
      */
     public function commit($id, $data) {
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
 
         try {
             // attempt to save the data

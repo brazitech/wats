@@ -24,7 +24,7 @@ class KnowledgedomainDisplayWController extends KnowledgedomainWController {
      * Displays the knowledge domain default page.
      */
     public function execute($stage) {
-        $model = WModel::getInstance('knowledgedomain');
+        $model = WModel::getInstanceByName('knowledgedomain');
         
         // get the KD
         $id = WModel::getId();

@@ -40,7 +40,7 @@ class GlossaryCreateWController extends GlossaryWController {
         }
 
         // get the model
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
         $term = $model->getTerm(0);
 
         // check where in the usecase we are

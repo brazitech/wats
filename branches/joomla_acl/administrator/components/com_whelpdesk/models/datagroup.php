@@ -12,10 +12,10 @@ defined('JPATH_BASE') or die();
 jimport('joomla.utilities.date');
 wimport('exceptions.composite');
 
-class DatagroupWModel extends WModel {
+class ModelDatagroup extends WModel {
 
     public function  __construct() {
-        $this->setName('datagroup');
+        parent::__construct();
         $this->setDefaultFilterOrder('g.ordering');
     }
 

@@ -12,10 +12,10 @@ defined('JPATH_BASE') or die();
 wimport('exceptions.composite');
 jimport('joomla.utilities.date');
 
-class FaqcategoryWModel extends WModel {
+class ModelFaqcategory extends WModel {
 
     public function  __construct() {
-        $this->setName('faqcategory');
+        parent::__construct();
         $this->setDefaultFilterOrder('f.name');
     }
 

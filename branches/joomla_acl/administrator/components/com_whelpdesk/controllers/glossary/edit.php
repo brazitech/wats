@@ -24,13 +24,6 @@ class GlossaryEditWController extends GlossaryWController {
      * @todo check token
      */
     public function execute($stage) {
-        try {
-            parent::execute($stage);
-        } catch (Exception $e) {
-            // uh oh, access denied... let's give the next controller a whirl!
-            JError::raiseWarning('401', 'WHD_GLOSSARY:EDIT ACCESS DENIED');
-            return;
-        }
 
         // get the ID of the term we want to edit
         $id = WModel::getId();
@@ -42,7 +35,7 @@ class GlossaryEditWController extends GlossaryWController {
         }
 
         // get the data
-        $model = WModel::getInstance('glossary');
+        $model = WModel::getInstanceByName('glossary');
         $term = $model->getTerm($id);
 
         // make sure the data loaded

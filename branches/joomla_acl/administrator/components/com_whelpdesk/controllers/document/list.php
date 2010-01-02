@@ -36,7 +36,7 @@ class DocumentsListWController extends DocumentsWController {
         }
 
         // get the model
-        $model = WModel::getInstance('documents');
+        $model = WModel::getInstanceByName('documents');
 
         // get the list data
         $documents = $model->getList();

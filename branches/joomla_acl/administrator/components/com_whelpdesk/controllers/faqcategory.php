@@ -25,7 +25,7 @@ abstract class FaqcategoryWController extends WController {
      */
     public function commit($id, $array) {
         // get the model
-        $model = WModel::getInstance('faqcategory');
+        $model = WModel::getInstanceByName('faqcategory');
 
         try {
             // attempt to save the data
