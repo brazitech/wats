@@ -258,7 +258,7 @@ abstract class WTable extends JTable {
         $result = $this->_db->query();
 
         if ($result && $oid == $this->$k) {
-            $this->revision++;
+            $this->revised++;
         }
 
         return $result;
