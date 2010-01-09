@@ -24,8 +24,13 @@ abstract class WDocumentHelper implements WDocumentHelperInterface {
 		JToolbarHelper::title('&nbsp;<!--'.$title.'-->', $icon);
 	}
 
-    public function subtitle($subtitle) {
-        self::$subtitle = (string)$subtitle;
+    public function subtitle($subtitle=null) {
+        if ($subtitle != null)
+        {
+            self::$subtitle = (string)$subtitle;
+        }
+
+        return self::$subtitle;
     }
 
     public function description($description) {

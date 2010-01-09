@@ -12,7 +12,7 @@
  */
 interface WDocumentHelperInterface {
     public static function title($title, $icon = 'whelpdesk');
-    public function subtitle($subtitle);
+    public function subtitle($subtitle=null);
     public function description($description);
 }
 

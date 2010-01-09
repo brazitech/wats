@@ -28,6 +28,13 @@ abstract class WModel extends JModel {
      * @see WModel::setDefaultFilterOrder()
      */
     private $_defaultFilterOrder = '';
+
+    /**
+     * Cached JForm object
+     * 
+     * @var JForm
+     */
+    protected $_form = null;
     
     /**
      * Constructor
@@ -176,6 +183,85 @@ abstract class WModel extends JModel {
     public function getTotal() {
         JError::raiseWarning(JText::sprintf('WAHD.FRAMEWORK.APPLICATION.MODEL:Model %s Method %s Not Implemented', $this->getName(), 'getTotal'));
         return 0;
+    }
+
+    /**
+     * Method to get a form object.
+     *
+     * @param   object      $data
+     * @param   boolean     $reset      Optional argument to force load a new form.
+     * @return  mixed       WForm object on success, False on error.
+     */
+    function getForm($data=null, $reset=false)
+    {
+        // Check if we can use cached form
+        if ($reset || !$this->_form)
+        {
+            // Get the form
+            wimport('form.form');
+            JForm::addFormPath(JPATH_COMPONENT.DS.'models'.DS.'forms');
+            JForm::addFieldPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'form'.DS.'fields');
+            $this->_form = &WForm::getInstance($this->getName(), $this->getName(), true, array());
+
+            // Check for an error
+            if (JError::isError($this->_form))
+            {
+                $this->setError($$this->_form->getMessage());
+                return false;
+            }
+        }
+
+        // Load data
+        if ($data)
+        {
+            if (!$this->_form->bind($data))
+            {
+                throw new WException(JText::_('WAHD:MODEL:COULD NOT BIND DATA WITH FORM OBJECT'), $data);
+            }
+        }
+
+        return $this->_form;
+    }
+
+    /**
+     * Method to validate the form data.
+     *
+     * @param   object  $data   The data to validate.
+     * @return  boolean Array of filtered data if valid, false otherwise.
+     * @since    1.1
+     */
+    function validate($data, $bindFilteredData=false)
+    {
+        // Get the form
+        $form = $this->getForm($data, true);
+
+        // Filter and validate the form data
+        $data  = $form->filter($data);
+        $valid = $form->validate($data);
+
+        // Check for an error.
+        if (JError::isError($valid)) {
+            $this->setError($valid->getMessage());
+            return false;
+        }
+
+        // Check the validation results
+        if ($valid === false)
+        {
+            // Get the validation messages from the form.
+            foreach ($form->getErrors() as $message) {
+                $this->setError($message);
+            }
+
+            return false;
+        }
+
+        if ($bindFilteredData)
+        {
+            //@todo
+        }
+
+        return $data;
     }
 
     /**
