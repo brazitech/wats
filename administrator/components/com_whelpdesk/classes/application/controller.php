@@ -162,6 +162,34 @@ abstract class WController {
         return $this->getType();
     }
 
+    /**
+     * Commits the data to the database
+     *
+     * @param int|string $id Primary key, usually an integer
+     * @param object|array $data Values to commit
+     * @param WModel $model Model to use to commit the changes described in $data
+     * @return bool|int On fail returns boolean false, on success returns the PK value
+     * @throws WCompositeException This exception is thrown when errors exist in the data
+     */
+    protected function commit($id, $data, WModel $model) {
+
+        try {
+            // attempt to save the data
+            $id = $model->save($id, $data);
+        } catch (WCompositeException $e) {
+            // data is not valid - output errors
+            $id = false;
+            JError::raiseWarning('500', JText::_('WHD_FORM:INVALID'));;
+            foreach($e->getMessages() AS $message) {
+                JError::raiseWarning('500', $message);
+            }
+
+            return false;
+        }
+
+        return $id;
+    }
+
 }
 
 ?>
