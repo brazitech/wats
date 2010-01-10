@@ -17,7 +17,7 @@ class RequestcategoryHTMLWView extends WView {
 	 */
 	public function __construct() {
         // set the layout
-        $this->setLayout('form');
+        $this->setLayout('list');
 
         // let the parent do what it does...
         parent::__construct();
@@ -30,12 +30,6 @@ class RequestcategoryHTMLWView extends WView {
         // add metadata to the document
         $this->document();
 
-        // add the editor
-        $this->addModel('editor', JFactory::getEditor());
-
-        // disable the menu
-        JRequest::setVar('hidemainmenu', 1);
-
         // continue!
         parent::render();
     }
@@ -45,23 +39,17 @@ class RequestcategoryHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        JToolBarHelper::save('requestcategory.'.$command->getUsecase().'.save');
-        JToolBarHelper::apply('requestcategory.'.$command->getUsecase().'.apply');
-        JToolBarHelper::cancel('requestcategory.list.start');
-        JToolbarHelper::divider();
-        JToolbarHelper::help('requestcategory.form', true);
+        WToolbarHelper::addNew('requestcategory.new.start');
+        WToolBarHelper::edit('requestcategory.edit.start');
+        WToolbarHelper::divider();
+        WToolbarHelper::publish('requestcategory.publish.start');
+        WToolbarHelper::unpublish('requestcategory.unpublish.start');
+        WToolbarHelper::divider();
+        WToolbarHelper::help('requestcategory.list', true);
     }
 
     private function document() {
-        $requestCategory = $this->getModel();
-        if ($requestCategory->getValue('id'))
-        {
-            WDocumentHelper::subtitle(JText::sprintf('WHD_RC:EDITING REQUEST CATEGORY %s', $requestCategory->getValue('name')));
-        }
-        else
-        {
-            WDocumentHelper::subtitle(JText::_('WHD_RC:NEW REQUEST CATEGORY'));
-        }
+        WDocumentHelper::subtitle(JText::_('WHD_RC:REQUEST CATEGORIES'));
 
         // add glossary to the pathway
         /*WDocumentHelper::addPathwayItem(JText::_('WHD_KD:DOMAIN'), null, 'index.php?option=com_whelpdesk&task=knowledgedomains.list');
