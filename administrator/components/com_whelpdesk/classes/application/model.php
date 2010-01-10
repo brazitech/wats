@@ -15,7 +15,7 @@ abstract class WModel extends JModel {
 
     /**
      * Instances of WModel
-     * 
+     *
      * @var WModel
      */
     private static $instances = array();
@@ -31,11 +31,16 @@ abstract class WModel extends JModel {
 
     /**
      * Cached JForm object
-     * 
+     *
      * @var JForm
      */
     protected $_form = null;
-    
+
+    /**
+     * @var WList
+     */
+    protected $_list = null;
+
     /**
      * Constructor
      */
@@ -171,13 +176,13 @@ abstract class WModel extends JModel {
         $filters['search']          = $this->getFilterSearch();
         $filters['order']           = $this->getFilterOrder();
         $filters['orderDirection']  = $this->getFilterOrderDirection();
-        
+
         return $filters;
     }
 
     /**
      * Gets the total number of items related to the model
-     * 
+     *
      * @return int
      */
     public function getTotal() {
@@ -224,6 +229,26 @@ abstract class WModel extends JModel {
     }
 
     /**
+     * Method to get a list object.
+     *
+     * @param   boolean     $reset      Optional argument to force load a new form.
+     * @return  mixed       WList       object on success, False on error.
+     */
+    function getList($reset=false)
+    {
+        // Check if we can use cached list.
+        if ($reset || !$this->_list)
+        {
+            // Get the list
+            wimport('list.list');
+            $xml = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'lists'.DS.strtolower($this->getName()).'.xml';
+            $this->_list = &WList::getInstance($xml);
+        }
+
+        return $this->_list;
+    }
+
+    /**
      * Method to validate the form data.
      *
      * @param   object  $data   The data to validate.
@@ -265,17 +290,17 @@ abstract class WModel extends JModel {
     }
 
     /**
-     * Gets a model of the specified type. Note that models a are cached and 
+     * Gets a model of the specified type. Note that models a are cached and
      * therefore state data in maintained.
      *
      * @param String $name
      * @return WModel
      * @todo add security
-    */ 
+    */
     public static function getInstanceByName($name) {
         // prepare the model name
         $name = strtolower($name);
-        
+
         if (empty(self::$instances[$name])) {
             // determine path and class name
             $modelPath  = JPATH_COMPONENT_ADMINISTRATOR . DS . 'models' . DS . $name . '.php';
