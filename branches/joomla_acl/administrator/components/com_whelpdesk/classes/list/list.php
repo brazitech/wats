@@ -12,6 +12,7 @@ defined('JPATH_BASE') or die();
 wimport('list.column');
 wimport('list.filter');
 wimport('utilities.paginationstate');
+wimport('database.query');
 
 class WList
 {
@@ -23,7 +24,7 @@ class WList
 
     /**
      *
-     * @var JQuery
+     * @var WQuery
      */
     protected $_query = null;
 
@@ -49,7 +50,7 @@ class WList
      *
      * @var string
      */
-    protected $_state = null;
+    protected $_namespace = null;
 
     /**
      *
@@ -92,7 +93,7 @@ class WList
         // Attempt to load the XML file.
         if ($parser->loadFile($xml)) {
             // Get the basic attributes
-            $this->_state = $parser->document->attributes('state');
+            $this->_namespace = $parser->document->attributes('state');
 
             // Check if any columns exist.
             if (isset($parser->document->column))
@@ -108,59 +109,17 @@ class WList
                 throw new WException('WList XML file must define at least one column.');
             }
 
-            // Get the list query
+            // Get the list query.
             if (isset($parser->document->query))
             {
                 $db = JFactory::getDBO();
-                $query = $parser->document->query;
-                $this->_query = new JQuery();
-
-                // add SELECT.
-                $columns = array();
                 $query = $parser->document->query[0];
-                foreach ($query->select as $select)
-                {
-                    $columns[] = dbName($select->data());
-                }
-                $this->_query->select($columns);
+                $this->_query = new WQuery();
 
-                // add FROM.
-                $tables = array();
-                foreach ($query->from as $table)
+                if (!$this->_query->fromXML($query))
                 {
-                    $tables[] = $db->NameQuote($table->data());
+                    throw new WException('Error parsing WList XML query.');
                 }
-                $this->_query->from($tables);
-
-                // add WHERE.
-                if (isset($query->where))
-                {
-                    $conditions = array();
-                    foreach ($query->where as $condition)
-                    {
-                        $conditions[] = $condition->data();
-                    }
-                    $this->_query->where($conditions);
-                }
-
-                // add GROUP BY.
-                if (isset($query->group))
-                {
-                    $grouping = array();
-                    foreach ($query->group as $group)
-                    {
-                        $grouping[] = $group->data();
-                    }
-                    $this->_query->where($grouping);
-                }
-
-                // add ORDER BY.
-                $ordering = array();
-                foreach ($query->order as $order)
-                {
-                    $ordering[] = $order->data();
-                }
-                $this->_query->order($ordering);
             }
             else
             {
@@ -176,9 +135,19 @@ class WList
                 }
             }
 
-            // Get pagination state
+            // Apply the filters to the query.
+            foreach($this->getFilters() AS $filter)
+            {
+                $condition = $filter->getCondition();
+                if ($condition !== false)
+                {
+                    $this->_query->where($condition);
+                }
+            }
+
+            // Get pagination state.
             $this->_paginationState = WPaginationState::getInstance(
-                $this->_state,
+                $this->_namespace,
                 $this->getTotal()
             );
         }
@@ -186,6 +155,11 @@ class WList
         {
             throw new WException('Could not open WList XML file %s.', $xml);
         }
+    }
+
+    public function getNamespace()
+    {
+        return $this->_namespace;
     }
 
     public function getColumns()
@@ -208,7 +182,11 @@ class WList
 
         // run query to get rows.
         $db = JFactory::getDBO();
-        $db->setQuery((string)$this->_query);
+        $db->setQuery(
+            (string)$this->_query,
+            $this->_paginationState->getLimitStart(),
+            $this->_paginationState->getLimit()
+        );
         $this->_rows = $db->loadObjectList();
 
 		// Check for an error.
@@ -232,9 +210,10 @@ class WList
             return $this->_total;
         }
 
-        // prepare teh query.
-        $query = (string)$this->_query;
-        $query = preg_replace('~\s*SELECT.+~', 'SELECT COUNT(*)', $query);
+        // prepare the query.
+        $query = clone $this->_query;
+        $query->resetSelect();
+        $query->select('COUNT(*)');
 
         // run query to get rows.
         $db = JFactory::getDBO();

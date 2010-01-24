@@ -9,6 +9,8 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
+wimport('xml.link');
+
 abstract class WListColumn
 {
     /**
@@ -21,6 +23,11 @@ abstract class WListColumn
     protected $_name;
     protected $_width;
     protected $_attributes;
+
+    /**
+     * @var WXML_Link
+     */
+    protected $_link;
 
     /**
      *
@@ -44,6 +51,11 @@ abstract class WListColumn
                 $this->_attributes .= ' '.$attribute->attributes('name').'='.$attribute->data().' ';
             }
         }
+
+        if (isset($node->link))
+        {
+            $this->_link = new WXML_Link($node->link[0]);
+        }
     }
 
     public static function getInstance($node, WList $list)
@@ -65,8 +77,8 @@ abstract class WListColumn
             {
                 // file not found, use simple type instead
                 JError::raiseWarning(
-                    '500', 
-                    JText::sprintf('WHD_LIST:UNKNOWN COLUMN TYPE %s', $type)
+                        '500',
+                        JText::sprintf('WHD_LIST:UNKNOWN COLUMN TYPE %s', $type)
                 );
                 $node->addAttribute('type', 'simple');
                 return self::getInstance($node);
@@ -81,8 +93,8 @@ abstract class WListColumn
         if (!class_exists($class))
         {
             JError::raiseWarning(
-                '500',
-                JText::sprintf('WHD_LIST:UNKNOWN COLUMN TYPE %s CLASS', $type)
+                    '500',
+                    JText::sprintf('WHD_LIST:UNKNOWN COLUMN TYPE %s CLASS', $type)
             );
             $node->addAttribute('type', 'simple');
             return self::getInstance($node);
@@ -116,11 +128,25 @@ abstract class WListColumn
      */
     public function render($row)
     {
-        return '<td '.$this->_attributes.'>'.htmlentities($row->{$this->_name}, ENT_QUOTES, 'UTF-8').'</td>';
+        $text = '';
+        if ($this->_link)
+        {
+            $text .= '<a href="'.$this->_link->buildLink($row).'">';
+        }
+        $text .= htmlentities($row->{$this->_name}, ENT_QUOTES, 'UTF-8');
+        if ($this->_link)
+        {
+            $text .= '</a>';
+        }
+
+        return '<td '.$this->_attributes.'>'.$text.'</td>';
     }
 }
 
 /**
  * Default WListColumn class
  */
-class WListColumnSimple extends WListColumn { }
+class WListColumnSimple extends WListColumn
+{
+
+}
