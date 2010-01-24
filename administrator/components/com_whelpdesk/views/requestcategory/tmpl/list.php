@@ -50,7 +50,7 @@ $pagination = $list->getPagination();
         <div class="fltlft">
         <?php
         foreach ($list->getFilters() as $filter) :
-            echo ($filter instanceof WListFilterSearch) ? $filter->render() : '';
+            echo ($filter->getPosition() == 'left') ? $filter->render() : '';
         endforeach;
         ?>
         </div>
@@ -58,7 +58,7 @@ $pagination = $list->getPagination();
         <div class="fltrt">
         <?php
         foreach ($list->getFilters() as $filter) :
-            echo ($filter instanceof WListFilterSearch) ? '' : $filter->render();
+            echo ($filter->getPosition() == 'right') ? $filter->render() : '';
         endforeach;
         ?>
         </div>
@@ -68,11 +68,11 @@ $pagination = $list->getPagination();
 
     <!-- request options -->
     <input type="hidden" name="option"       value="com_whelpdesk" />
-    <input type="hidden" name="task"         value="glossary.list" />
-    <input type="hidden" name="targetType"   value="glossary" />
-    <input type="hidden" name="targetIdentifier" value="glossary" />
-    <input type="hidden" name="targetIdentifierAlias" value="<?php echo base64_encode('glossary'); ?>" />
-    <input type="hidden" name="returnURI" value="<?php echo base64_encode(JRoute::_('index.php?option=com_whelpdesk&task=glossary.list.start')); ?>" />
+    <input type="hidden" name="task"         value="<?php echo WFactory::getCommand(); ?>" />
+    <!--<input type="hidden" name="targetType"   value="glossary" />-->
+    <!--<input type="hidden" name="targetIdentifier" value="glossary" />-->
+    <!--<input type="hidden" name="targetIdentifierAlias" value="<?php echo base64_encode('glossary'); ?>" />-->
+    <!--<input type="hidden" name="returnURI" value="<?php echo base64_encode(JRoute::_('index.php?option=com_whelpdesk&task=glossary.list.start')); ?>" />-->
     <input type="hidden" name="boxchecked"   value="0" />
     <input type="hidden" name="limit"        value="0" />
     <input type="hidden" name="filter_order" value="<?php echo $filters1['order']; ?>" />

@@ -22,28 +22,28 @@ final class WCommand {
      * Global instance of WCommand. We should never need more than one instance
      * of this class!
      */
-    private static $instance = null;
+    private static $_instance = null;
 
     /**
      * Last type to be invoked
      *
      * @var String
      */
-    private $type = 'helpdesk';
+    private $_type = 'helpdesk';
 
     /**
      * Last usecase to be invoked
      *
      * @var String
      */
-    private $usecase = 'display';
+    private $_usecase = 'display';
 
     /**
      * Stage in the usecase
      *
      * @var string
      */
-    private $stage = 'start';
+    private $_stage = 'start';
 
     /**
      * Executes the current command. The command is identified by the request
@@ -57,14 +57,14 @@ final class WCommand {
         JRequest::setVar('task', null);
 
         // get and execute the controller
-        $controller = WController::getInstance($this->type, $this->usecase);
-        WFactory::getOut()->log('Executing ' . $this->type . ', ' .
-                                               $this->usecase . ', ' .
-                                               $this->stage . ' usecase stage');
-        $controller->execute($this->stage);
-        WFactory::getOut()->log('Executed ' . $this->type . ', ' .
-                                              $this->usecase . ', ' .
-                                              $this->stage . ' usecase stage');
+        $controller = WController::getInstance($this->_type, $this->_usecase);
+        WFactory::getOut()->log('Executing ' . $this->_type . ', ' .
+                                               $this->_usecase . ', ' .
+                                               $this->_stage . ' usecase stage');
+        $controller->execute($this->_stage);
+        WFactory::getOut()->log('Executed ' . $this->_type . ', ' .
+                                              $this->_usecase . ', ' .
+                                              $this->_stage . ' usecase stage');
 
         // check for new command and keep going!
         if (JRequest::getCmd('task', false)) {
@@ -79,10 +79,10 @@ final class WCommand {
 
         // check that we have a complete command
         if ($numberOfCommands >= 2) {
-            $this->type  = $command[0];
-            $this->usecase = $command[1];
+            $this->_type  = $command[0];
+            $this->_usecase = $command[1];
             if ($numberOfCommands >= 3) {
-                $this->stage   = $command[2];
+                $this->_stage   = $command[2];
             }
         } else {
             // command was nopt present or incomplete
@@ -98,12 +98,12 @@ final class WCommand {
      */
     public static function getInstance() {
         // create instance if it does not exist
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (self::$_instance === null) {
+            self::$_instance = new self();
         }
 
         // all done, send it home!
-        return self::$instance;
+        return self::$_instance;
     }
 
     /**
@@ -112,7 +112,7 @@ final class WCommand {
      * @return String
      */
     public function getType() {
-        return $this->type;
+        return $this->_type;
     }
 
     /**
@@ -121,7 +121,7 @@ final class WCommand {
      * @return String
      */
     public function getUsecase() {
-        return $this->usecase;
+        return $this->_usecase;
     }
 
     /**
@@ -130,7 +130,12 @@ final class WCommand {
      * @return String
      */
     public function getStage() {
-        return $this->stage;
+        return $this->_stage;
+    }
+
+    public function  __toString()
+    {
+        return $this->_type.'.'.$this->_usecase.'.'.$this->_stage;
     }
 }
 ?>

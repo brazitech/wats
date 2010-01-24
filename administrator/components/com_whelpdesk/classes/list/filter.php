@@ -14,18 +14,24 @@ abstract class WListFilter
     protected $_label;
     protected $_id;
     protected $_name;
+    protected $_position = 'right';
     protected $_columns = array();
     protected $_attributes;
 
+    /**
+     *
+     * @var WList
+     */
     protected $_list;
 
     public function  __construct($node, WList $list)
     {
         $this->_list = $list;
 
-        $this->_label  = JText::_($node->label[0]->data());
-        $this->_id     = $node->attributes('id');
-        $this->_name   = $node->attributes('name');
+        $this->_label    = JText::_($node->label[0]->data());
+        $this->_id       = $node->attributes('id');
+        $this->_name     = $node->attributes('name');
+        $this->_position = $node->attributes('position');
 
         foreach ($node->column as $column)
         {
@@ -92,13 +98,64 @@ abstract class WListFilter
      */
     public function getCondition()
     {
-        $value = JRequest::getVar($this->_id);
-        if ($value == null || $value == '')
+        $value = $this->getConditionValue();
+
+        if ($value === false)
         {
             return false;
         }
 
-        return ' ' . dbName($this->_column) . '=' .
-               JFactory::getDBO()->Quote($value) . ' ';
+        $conditions = array();
+        $value = JFactory::getDBO()->Quote($value);
+        foreach ($this->_columns AS $column)
+        {
+            $conditions[] = dbName($column) . ' = ' . $value;
+        }
+
+        return '(' . implode(' OR ', $conditions) . ')';
+    }
+
+    protected function getConditionValue()
+    {
+        // get the application object and define the state context
+        $app =& JFactory::getApplication();
+        $context = $this->_list->getNamespace().'.';
+
+        // get the filter value.
+        if ($app->isSite())
+        {
+            $value = JRequest::getVar($this->_id);
+        }
+        else
+        {
+            $value = $app->getUserStateFromRequest($context.$this->_id, $this->_id, '');
+        }
+
+        if ($value == '')
+        {
+            return false;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the position in which to display the filter.
+     *
+     * This should always be left or right
+     */
+    public function getPosition()
+    {
+        return $this->_position;
+    }
+
+    /**
+     * Render JavaScript to reset the filter
+     * 
+     * @return string
+     */
+    public function renderReset()
+    {
+        return "document.getElementById('$this->_id').value='';";
     }
 }

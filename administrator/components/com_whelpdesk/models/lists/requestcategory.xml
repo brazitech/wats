@@ -17,19 +17,21 @@
     <!-- Filters -->
     <filter
             id="search"
-            nane="search"
-            type="search">
+            name="search"
+            type="search"
+            position="left">
         <label>WHD_LIST:FILTER</label>
         <column>name</column>
         <attribute name="class=">text_area</attribute>
         <attribute name="size">60</attribute>
     </filter>
     <filter
-            id="state"
-            nane="state"
-            type="state">
+            id="published"
+            nane="published"
+            type="published"
+            position="right">
         <label>WHD_LIST:STATE</label>
-        <column>state</column>
+        <column>published</column>
     </filter>
 
     <!-- Columns -->
@@ -45,6 +47,9 @@
             cansort="true">
         <label>WHD_RC:NAME</label>
         <name>name</name>
+        <link link="index.php?option=com_whelpdesk&amp;task=requestcategory.edit&amp;id=%1$d">
+            <param>id</param>
+        </link>
     </column>
     <column type="published" cansort="true" width="70">
         <label>WHD_DATA:PUBLISHED</label>

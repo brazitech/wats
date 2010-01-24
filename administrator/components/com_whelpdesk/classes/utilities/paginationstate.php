@@ -92,7 +92,7 @@ class WPaginationState {
      * @return int
      */
     public function getLimit() {
-        return $this->getState('limit');
+        return $this->_limit;
     }
 
     /**
@@ -102,7 +102,7 @@ class WPaginationState {
      * @return int
      */
     public function getLimitStart() {
-        return $this->getState('limitstart');
+        return $this->_limitstart;
     }
 
     /**
