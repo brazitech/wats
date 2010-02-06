@@ -1,30 +1,56 @@
-<?xml version="1.0"?>
-<!--<project name="Webamoeba Help Desk" default="dist" basedir="H:\WebDesign\WATS\tmp\svn_branch_joomla_acl">-->
-<project name="Webamoeba Help Desk" default="dist" basedir=".">
-    <property name="version_major"  value="4" override="true" />
-    <property name="version_minor"  value="0" override="true" />
-    <property name="version_patch"  value="0" override="true" />
-    <property name="version_name"   value="stable" override="true" />
-    <php expression="date(F)" returnProperty="month"/>
-    <php expression="date(Y)" returnProperty="year"/>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project PUBLIC
+  "-//Apache//DTD Ant 1.6//EN"
+  "project.dtd">
+<project name="Webamoeba Help Desk" default="dist">
 
-    <target name="prepare">
-        <echo msg="Removing old build directory" />
-        <delete dir="./build" 
-                includeemptydirs="true" 
-                verbose="true" 
-                failonerror="true" />
-        
-        <echo msg="Making build directory" />
-        <mkdir dir="./build" />
+    <!-- Versioning Properties -->
+    <property name="version_major"  value="4" />
+    <property name="version_minor"  value="0" />
+    <property name="version_patch"  value="0" />
+    <property name="version_name"   value="stable" />
+    <buildnumber file="antbuild.number"/>
+    <tstamp>
+        <format property="version_month" pattern="MMM" offset="0" unit="hour"/>
+        <format property="version_year"  pattern="yyyy" offset="0" unit="hour"/>
+    </tstamp>
+    <echo>Webamoeba Help Desk</echo>
+    <echo>${version_major}.${version_minor}.${version_patch} (${version_month}, ${version_year})</echo>
+    <echo>Build ${build.number}</echo>
+    
+    
+    <!-- Load build properties file -->
+    <property file="build.properties"/>
+    
+    
+    <!-- Build Ant DTD file -->
+    <target name="build-dtd">
+        <antstructure output="project.dtd" />
     </target>
 
-    <target name="build" depends="prepare">
-        <echo msg="Copying files and folders to build directory..." />
+
+    <!-- Init -->
+    <target name="init">
+        <echo>Removing old build directory</echo>
+        <delete dir="${buildpath.component.exploded}" 
+                includeemptydirs="true" 
+                verbose="false" 
+                failonerror="true" />
+        
+        <echo>Making build directory</echo>
+        <mkdir dir="${buildpath.component.exploded}" />
+        <mkdir dir="${buildpath.component.installer}" />
+    </target>
+    
+    
+    <!-- Build Everything -->
+    <target name="build" depends="init">
+        
+        <echo>Copying files and folders to build directory...</echo>
         
         <!-- build front end -->
-        <copy todir="./build/site">
-            <fileset dir="./components/com_whelpdesk">
+        <copy todir="${buildpath.component.exploded}/site">
+            <fileset dir="components/com_whelpdesk">
                 <include name="**" />
                 <exclude name="**/Thumbs.db" />
                 <exclude name="**/.svn/**" />
@@ -32,8 +58,8 @@
         </copy>
         
         <!-- build back end -->
-        <copy todir="./build/administration">
-            <fileset dir="./administrator/components/com_whelpdesk">
+        <copy todir="${buildpath.component.exploded}/administration">
+            <fileset dir="administrator/components/com_whelpdesk">
                 <include name="**" />
                 <exclude name="**/.svn/**" />
                 <exclude name="**/Thumbs.db" />
@@ -44,8 +70,8 @@
         </copy>
         
         <!-- build front end languages -->
-        <copy todir="./build/siteLanguages">
-            <fileset dir="./language">
+        <copy todir="${buildpath.component.exploded}/siteLanguages">
+            <fileset dir="language">
                 <include name="**/*.com_whelpdesk.ini" />
                 <include name="**/*.plg_waticketsystem_mailnotification.ini" />
             </fileset>
@@ -53,7 +79,7 @@
         </copy>
         
         <!-- build back end languages -->
-        <copy todir="./build/administrationLanguages">
+        <copy todir="${buildpath.component.exploded}/administrationLanguages">
             <fileset dir="./administrator/language">
                 <include name="**/*.com_whelpdesk.ini" />
             </fileset>
@@ -61,8 +87,8 @@
         </copy>
         
         <!-- build install -->
-        <copy todir="./build">
-            <fileset dir="./administrator/components/com_whelpdesk">
+        <copy todir="${buildpath.component.exploded}">
+            <fileset dir="administrator/components/com_whelpdesk">
                 <include name="install.waticketsystem.php" />
                 <include name="uninstall.waticketsystem.php" />
                 <include name="manifest.xml" />
@@ -73,24 +99,23 @@
                     <token key="VERSION_MINOR" value="${version_minor}" />
                     <token key="VERSION_PATCH" value="${version_patch}" />
                     <token key="VERSION_NAME" value="${version_name}" />
-                    <token key="MONTH" value="${month}" />
-                    <token key="YEAR" value="${year}" />
+                    <token key="MONTH" value="${version_month}" />
+                    <token key="YEAR" value="${version_year}" />
                 </replacetokens>
             </filterchain>
         </copy>
-              
+        
     </target>
-
+    
+    
+    <!-- Create the installer -->
     <target name="dist" depends="build">
-        <echo msg="Creating archive..." />
-
-        <tar destfile="./build/com_whelpdesk-${version_major}.${version_minor}.${version_patch}.tar.gz" 
+        <echo>Creating archive...</echo>
+        <tar destfile="${buildpath.component.installer}/com_whelpdesk-${version_major}.${version_minor}.${version_patch}_build-${build.number}.tar.gz" 
              compression="gzip">
-            <fileset dir="./build">
+            <fileset dir="${buildpath.component.exploded}">
                 <include name="*" />
             </fileset>
         </tar>
-
-        <echo msg="Files copied and compressed in build directory OK!" />
     </target>
 </project>

@@ -246,19 +246,19 @@ function com_install()
     
     // set the version
     $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
-                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_MAJOR@) .
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@VERSION_MAJOR@) .
                         ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionmajor'));
     $database->query();
     $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
-                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_MINOR@) .
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@VERSION_MINOR@) .
                         ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionminor'));
     $database->query();
     $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
-                        ' SET ' . $database->nameQuote('value') . '=' . intval(@PHING:VERSION_PATCH@) .
+                        ' SET ' . $database->nameQuote('value') . '=' . intval(@VERSION_PATCH@) .
                         ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionpatch'));
     $database->query();
     $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
-                        ' SET ' . $database->nameQuote('value') . '=' . $database->Quote('@PHING:VERSION_NAME@') .
+                        ' SET ' . $database->nameQuote('value') . '=' . $database->Quote('@VERSION_NAME@') .
                         ' WHERE ' . $database->nameQuote('name') . '=' . $database->Quote('versionname'));
     $database->query();
 
@@ -277,7 +277,7 @@ function com_install()
 						<th>
 							<div style=\"text-align: center;\">
 								WebAmoeba Ticket System<br />
-								@PHING:VERSION_MAJOR@.@PHING:VERSION_MINOR@.@PHING:VERSION_PATCH@ @PHING:VERSION_NAME@
+								@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@ @VERSION_NAME@
 							</div>
 						</th>
 					</tr>
