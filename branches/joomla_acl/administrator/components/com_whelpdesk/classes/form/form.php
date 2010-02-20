@@ -64,18 +64,19 @@ class WForm extends JForm
         if ($success) {
 
             // Get the group name.
-            $group = ($xml->attributes('group')) ? $xml->attributes('group') : '_default';
+            $group = ($xml->attributes()->group) ? (string)$xml->attributes()->group : '_default';
 
             // Get the fieldset position
-            if ($value = $xml->attributes('position')) {
-                $this->_fieldsets[$group]['position'] = $value;
+            if ($value = $xml->attributes()->position) {
+                $this->_fieldsets[$group]['position'] = (string)$value;
+                echo $value;
             } else {
                 $this->_fieldsets[$group]['position'] = 'normal';
             }
 
             // Get the name of the field from which the label can be sought
-            if ($value = $xml->attributes('labelfield')) {
-                $this->_fieldsets[$group]['labelfield'] = $value;
+            if ($value = $xml->attributes()->labelfield) {
+                $this->_fieldsets[$group]['labelfield'] = (string)$value;
             }
             
         }
