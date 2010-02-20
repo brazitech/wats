@@ -114,7 +114,7 @@ class WList
             {
                 $db = JFactory::getDBO();
                 $query = $parser->document->query[0];
-                $this->_query = new WQuery();
+                $this->_query = new WDatabaseQuery();
 
                 if (!$this->_query->fromXML($query))
                 {
