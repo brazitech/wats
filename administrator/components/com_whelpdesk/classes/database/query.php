@@ -10,9 +10,9 @@
 defined('JPATH_BASE') or die();
 
 // import the base class
-jimport('joomla.database.query');
+jimport('joomla.database.databasequery');
 
-class WQuery extends JQuery
+class WDatabaseQuery extends JDatabaseQuery
 {
 	/**
      * @return WQuery

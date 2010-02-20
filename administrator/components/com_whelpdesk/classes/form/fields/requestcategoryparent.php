@@ -7,6 +7,7 @@
 defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
+wimport('database.query');
 require_once JPATH_LIBRARIES.DS.'joomla'.DS.'form'.DS.'fields'.DS.'list.php';
 
 /**
@@ -30,7 +31,7 @@ class JFormFieldRequestCategoryParent extends JFormFieldList
 	protected function _getOptions()
 	{
 		$db		= &JFactory::getDbo();
-		$query	= new JQuery;
+		$query	= new WDatabaseQuery();
 
 		$query->select('a.id AS value, a.name AS text, a.level');
 		$query->from(dbTable('request_categories').' AS a');
