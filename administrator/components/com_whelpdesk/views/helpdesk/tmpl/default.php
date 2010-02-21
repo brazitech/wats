@@ -55,6 +55,16 @@
                 <div id="cpanel">
                     <div style="float: left;">
                         <div class="icon">
+                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestcategory.list'); ?>">
+                                <img alt="<?php echo JText::_('HELP REQUEST CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
+                                <span><?php echo JText::_('HELP REQUEST CATEGORIES'); ?></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="cpanel">
+                    <div style="float: left;">
+                        <div class="icon">
                             <a href="">
                                 <img alt="<?php echo JText::_('HELP REQUESTS'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
                                 <span><?php echo JText::_('HELP REQUESTS'); ?></span>
@@ -95,14 +105,14 @@
                     <div style="background-color: #FFFFFF; text-align: center; height: 260px;">
                         <?php
 
-                        wimport('ofc.open-flash-chart-object');
+                        /*wimport('ofc.open-flash-chart-object');
                         open_flash_chart_object(
                             500,
                             250,
                             'http://localhost/WATS/svn_4.0/administrator/components/com_whelpdesk/classes/ofc/lib/bar-chart.php',
                             true,
                             'components/com_whelpdesk/classes/ofc/'
-                        );
+                        );*/
 
                         ?>
                     </div>
