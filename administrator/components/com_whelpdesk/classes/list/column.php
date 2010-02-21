@@ -39,7 +39,7 @@ abstract class WListColumn
     {
         $this->_list    = $list;
 
-        $this->_label   = JText::_($node->label[0]->data());
+        $this->_label   = $node->label[0]->data();
         $this->_name    = $node->name[0]->data();
         $this->_width   = $node->attributes('width');
         $this->_canSort = ($node->attributes('cansort') == 'true');
