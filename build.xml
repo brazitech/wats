@@ -43,8 +43,36 @@
     </target>
     
     
+    <!-- Pull the database struture out -->
+    <target name="database">
+        <echo>Extracting Table Creation Information</echo>
+        <sql driver="com.mysql.jdbc.Driver"
+             url="jdbc:mysql://localhost:3306/${database.name}?useUnicode=true&amp;characterEncoding=UTF-8"
+             userid="${database.username}"
+             password="${database.password}"
+             expandProperties="true"
+             print="yes"
+             output="administrator/components/com_whelpdesk/tables.sql" >
+            <classpath>
+                <pathelement path="C:\Program Files\mysql-connectorj\mysql-connector-java-3.1.14/mysql-connector-java-3.1.14-bin.jar"/>      
+            </classpath>
+            <transaction>
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_access_controls;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_access_map;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_data_fields;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_data_groups;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_data_tables;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_document_containers;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_request_categories;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_tree;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_tree_groups;
+            </transaction>
+        </sql>
+    </target>
+    
+    
     <!-- Build Everything -->
-    <target name="build" depends="init">
+    <target name="build" depends="init, database">
         
         <echo>Copying files and folders to build directory...</echo>
         
