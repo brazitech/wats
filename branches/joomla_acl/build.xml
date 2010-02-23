@@ -64,6 +64,8 @@
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_data_tables;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_document_containers;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_request_categories;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_request_priorities;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_requests;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_tree;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_tree_groups;
             </transaction>

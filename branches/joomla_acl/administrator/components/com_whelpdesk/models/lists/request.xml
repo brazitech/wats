@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Created on : 10 January 2010, 10:12
+    Description: WList definition for Request Categories.
+-->
+
+<list state="whelpdesk.models.requestcategory.list">
+    <!-- Query -->
+    <query>
+        <select>#__whelpdesk_requests.*</select>
+        <select>#__users.name AS name_of_user</select>
+        <select>#__whelpdesk_request_priorities.name AS name_of_priority</select>
+        <select>#__whelpdesk_request_priorities.ordering AS priority_ordering</select>
+        <from>#__whelpdesk_requests</from>
+        <join type="LEFT">#__users ON #__users.id = #__whelpdesk_requests.created_by</join>
+        <join type="LEFT">#__whelpdesk_request_priorities ON #__whelpdesk_requests.priority = #__whelpdesk_request_priorities.id</join>
+        <order>#__whelpdesk_requests.name</order>
+    </query>
+
+    <!-- Filters -->
+    <filter
+            id="search"
+            name="search"
+            type="search"
+            position="left">
+        <label>WHD_LIST:FILTER</label>
+        <column>name</column>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">60</attribute>
+    </filter>
+    <filter
+            id="status"
+            name="status"
+            type="sqlselect"
+            position="right"
+            key="key"
+            text="name">
+        <label>WHD_LIST:FILTER</label>
+        <column>status</column>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">30</attribute>
+        <option key="" translate="true">WHD_R:STATUS:SELECT STATUS</option>
+        <option key="1" translate="true">WHD_R:STATUS:OPEN</option>
+        <option key="2" translate="true">WHD_R:STATUS:CLOSED</option>
+        <option key="3" translate="true">WHD_R:STATUS:REOPENED</option>
+        <option key="4" translate="true">WHD_R:STATUS:ARCHIVED</option>
+    </filter>
+    <filter
+            id="priority"
+            name="priority"
+            type="sqlselect"
+            position="right"
+            key="id"
+            text="name">
+        <label>WHD_LIST:FILTER</label>
+        <column>#__whelpdesk_requests.priority</column>
+        <query>
+            <select>DISTINCT #__whelpdesk_request_priorities.name</select>
+            <select>#__whelpdesk_request_priorities.id</select>
+            <from>#__whelpdesk_request_priorities</from>
+            <order>#__whelpdesk_request_priorities.ordering</order>
+        </query>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">30</attribute>
+        <option key="" translate="true">SELECT PRIORITY</option>
+    </filter>
+    <filter
+            id="created_by"
+            name="created_by"
+            type="sqlselect"
+            position="right"
+            key="created_by"
+            text="name_of_user">
+        <label>WHD_LIST:FILTER</label>
+        <column>priority</column>
+        <query>
+            <select>DISTINCT #__whelpdesk_requests.created_by</select>
+            <select>#__users.name AS name_of_user</select>
+            <from>#__whelpdesk_requests</from>
+            <join type="LEFT">#__users ON #__users.id = #__whelpdesk_requests.created_by</join>
+            <order>#__whelpdesk_requests.name</order>
+        </query>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">30</attribute>
+        <option key="" translate="true">SELECT USER</option>
+    </filter>
+
+    <!-- Columns -->
+    <column
+            type="select"
+            cansort="true"
+            width="2%">
+        <label>WHD_RC:SELECT</label>
+        <name>id</name>
+    </column>
+    <column type="simple" cansort="true">
+        <label>WHD_R:REQUEST</label>
+        <name>name</name>
+        <link link="index.php?option=com_whelpdesk&amp;task=requests.edit&amp;id=%1$d">
+            <param>id</param>
+        </link>
+    </column>
+    <column
+            type="simple"
+            cansort="true"
+            width="120">
+        <label>WHD_DATA:CREATED BY</label>
+        <name>name_of_user</name>
+        <attribute name="style">text-align: center;</attribute>
+        <link link="index.php?option=com_users&amp;task=user.edit&amp;id=%1$d">
+            <param>created_by</param>
+        </link>
+    </column>
+    <column
+            type="datetime"
+            cansort="true"
+            width="120">
+        <label>WHD_DATA:CREATED</label>
+        <name>created</name>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="text"
+            cansort="true"
+            width="120">
+        <label>WHD_R:REPLIES</label>
+        <name />
+        <text>num. of replies</text>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="text"
+            cansort="true"
+            width="120">
+        <label>WHD_R:DATETIME OF LAST REPLY</label>
+        <name />
+        <text>...</text>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="text"
+            cansort="true"
+            width="120">
+        <label>WHD_R:STATUS</label>
+        <name />
+        <text>open/closed etc.</text>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="simple"
+            cansort="true"
+            width="80">
+        <label>WHD_R:PRIORITY</label>
+        <name>name_of_priority</name>
+        <attribute name="style">text-align: center;</attribute>
+        <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
+            <param>priority</param>
+        </link>
+    </column>
+    <column
+            type="enum"
+            cansort="true"
+            width="120"
+            class="helper.RequestStatus">
+        <label>WHD_R:STATUS</label>
+        <name>status</name>
+    </column>
+    <column
+            type="simple"
+            cansort="true"
+            width="70">
+        <label>WHD_DATA:REVISION</label>
+        <name>revised</name>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+</list>
+
+

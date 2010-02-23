@@ -48,7 +48,7 @@ abstract class WListColumn
         {
             foreach ($node->attribute as $attribute)
             {
-                $this->_attributes .= ' '.$attribute->attributes('name').'='.$attribute->data().' ';
+                $this->_attributes .= ' '.$attribute->attributes('name').'="'.htmlentities($attribute->data(), ENT_QUOTES, 'UTF-8').'" ';
             }
         }
 
@@ -104,6 +104,11 @@ abstract class WListColumn
         return new $class($node, $list);
     }
 
+    public function getText($row)
+    {
+        return $row->{$this->_name};
+    }
+
     /**
      * @return string HTML Table Header cell
      */
@@ -133,7 +138,7 @@ abstract class WListColumn
         {
             $text .= '<a href="'.$this->_link->buildLink($row).'">';
         }
-        $text .= htmlentities($row->{$this->_name}, ENT_QUOTES, 'UTF-8');
+        $text .= htmlentities($this->getText($row), ENT_QUOTES, 'UTF-8');
         if ($this->_link)
         {
             $text .= '</a>';
