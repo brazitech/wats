@@ -109,7 +109,7 @@ class WDatabaseQuery extends JDatabaseQuery
         $columns = array();
         foreach ($query->select as $select)
         {
-            $columns[] = dbName($select->data());
+            $columns[] = $select->data();
         }
         $this->select($columns);
 
@@ -120,6 +120,32 @@ class WDatabaseQuery extends JDatabaseQuery
             $tables[] = $db->NameQuote($table->data());
         }
         $this->from($tables);
+
+        // add JOINs.
+        if (isset($query->join))
+        {
+            foreach ($query->join as $join)
+            {
+                switch ($join->attributes('type'))
+                {
+                    case 'LEFT':
+                        $this->leftJoin($join->data());
+                        break;
+                    case 'RIGHT':
+                        $this->rightJoin($join->data());
+                        break;
+                    case 'INNER':
+                        $this->innerJoin($join->data());
+                        break;
+                    case 'OUTTER':
+                        $this->outterJoin($join->data());
+                        break;
+                    default:
+                        $this->join($join->data());
+                        break;
+                }
+            }
+        }
 
         // add WHERE.
         if (isset($query->where))
@@ -140,7 +166,7 @@ class WDatabaseQuery extends JDatabaseQuery
             {
                 $grouping[] = $group->data();
             }
-            $this->where($grouping);
+            $this->group($grouping);
         }
 
         // add ORDER BY.

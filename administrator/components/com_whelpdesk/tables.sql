@@ -116,6 +116,47 @@ jos_whelpdesk_request_categories,CREATE TABLE `jos_whelpdesk_request_categories`
 
 0 rows affected
 Table,Create Table
+jos_whelpdesk_request_priorities,CREATE TABLE `jos_whelpdesk_request_priorities` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(500) NOT NULL,
+  `description` text NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL,
+  `checked_out` int(10) unsigned NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `revised` int(10) unsigned NOT NULL default '0',
+  `alias` varchar(500) NOT NULL,
+  `ordering` int(10) unsigned NOT NULL,
+  `access` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+
+0 rows affected
+Table,Create Table
+jos_whelpdesk_requests,CREATE TABLE `jos_whelpdesk_requests` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(500) NOT NULL,
+  `description` text NOT NULL,
+  `checked_out` int(10) unsigned NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `revised` int(10) unsigned NOT NULL default '0',
+  `alias` varchar(500) NOT NULL,
+  `state` tinyint(1) unsigned NOT NULL default '0',
+  `metakey` text,
+  `metadesc` text,
+  `category_id` int(10) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `priority` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+
+0 rows affected
+Table,Create Table
 jos_whelpdesk_tree,CREATE TABLE `jos_whelpdesk_tree` (
   `grp` varchar(100) NOT NULL default '',
   `type` varchar(100) NOT NULL default '',
