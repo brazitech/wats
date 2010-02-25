@@ -39,11 +39,11 @@ class DocumentHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        JToolBarHelper::save('document.'.WFactory::getCommand()->getUsecase().'.save');
-        JToolBarHelper::apply('document.'.WFactory::getCommand()->getUsecase().'.apply');
-        JToolBarHelper::cancel('documentcontainer.display');
-        JToolbarHelper::divider();
-        JToolbarHelper::help('documentcontainer.form', true);
+        WToolBarHelper::save('document.'.WFactory::getCommand()->getUsecase().'.save');
+        WToolBarHelper::apply('document.'.WFactory::getCommand()->getUsecase().'.apply');
+        WToolBarHelper::cancel('documentcontainer.display');
+        WToolbarHelper::divider();
+        WToolbarHelper::help('documentcontainer-form', true);
     }
 
     private function document() {

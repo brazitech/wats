@@ -45,11 +45,11 @@ class KnowledgedomainHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        JToolBarHelper::save('knowledgedomain.'.$command->getUsecase().'.save');
-        JToolBarHelper::apply('knowledgedomain.'.$command->getUsecase().'.apply');
-        JToolBarHelper::cancel('knowledgedomains.list');
-        JToolbarHelper::divider();
-        JToolbarHelper::help('knowledgedomain.form', true);
+        WToolBarHelper::save('knowledgedomain.'.$command->getUsecase().'.save');
+        WToolBarHelper::apply('knowledgedomain.'.$command->getUsecase().'.apply');
+        WToolBarHelper::cancel('knowledgedomains.list');
+        WToolbarHelper::divider();
+        WToolbarHelper::help('knowledgedomain-form');
     }
 
     private function document() {

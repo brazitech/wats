@@ -60,7 +60,7 @@ class GlossaryHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolbarHelper::permissions();
         WToolbarHelper::divider();
-        WToolbarHelper::help('glossary.list', true);
+        WToolbarHelper::help('glossary-list');
     }
 
     private function document() {

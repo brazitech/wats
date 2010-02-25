@@ -41,7 +41,7 @@ class RequestHTMLWView extends WView {
         $command = WFactory::getCommand();
         WToolbarHelper::addNew('request.new.start');
         WToolbarHelper::divider();
-        WToolbarHelper::help('request.list', true);
+        WToolbarHelper::help('request-list');
     }
 
     private function document() {

@@ -56,7 +56,7 @@ class DatagroupsHTMLWView extends WView {
             false
         );
         WToolbarHelper::divider();
-        WToolbarHelper::help('fields.list', true);
+        WToolbarHelper::help('fields-list');
 
         JFactory::getDocument()->addStyleDeclaration(
             '.icon-32-fields {background-image:url(components/com_whelpdesk/assets/icons/xclipboard-32.png);}'

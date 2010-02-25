@@ -48,7 +48,7 @@ class PermissionsHTMLWView extends WView {
         WToolbarHelper::apply('permissions.edit.savePermissions');
         WToolbarHelper::link($this->getModel('returnURI'), 'Cancel', 'cancel');
         WToolbarHelper::divider();
-        WToolbarHelper::help('permissions.setpermissions', true);
+        WToolbarHelper::help('permissions-setpermissions');
     }
 
     private function document() {

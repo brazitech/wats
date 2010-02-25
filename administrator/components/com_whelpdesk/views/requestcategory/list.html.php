@@ -45,7 +45,7 @@ class RequestcategoryHTMLWView extends WView {
         WToolbarHelper::publish('requestcategory.publish.start');
         WToolbarHelper::unpublish('requestcategory.unpublish.start');
         WToolbarHelper::divider();
-        WToolbarHelper::help('requestcategory.list', true);
+        WToolbarHelper::help('requestcategory-list');
     }
 
     private function document() {

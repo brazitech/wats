@@ -38,10 +38,10 @@ class KnowledgeHTMLWView extends WView {
      */
     private function toolbar() {
         if ($this->getModel('canEditKnowledge')) {
-            JToolBarHelper::editList('knowledge.edit.start');
+            WToolBarHelper::editList('knowledge.edit.start');
         }
-        JToolbarHelper::divider();
-        JToolbarHelper::help('knowledge', true);
+        WToolbarHelper::divider();
+        WToolbarHelper::help('knowledge', true);
     }
 
     private function document() {

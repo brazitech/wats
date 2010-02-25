@@ -16,7 +16,7 @@ class HelpdeskHTMLWView extends WView {
     private function toolbar() {
         WToolBarHelper::permissions();
         WToolbarHelper::divider();
-        WToolbarHelper::help('knowledgedomain.list', true);
+        WToolbarHelper::help('knowledgedomain-list');
     }
 }
 

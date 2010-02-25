@@ -55,7 +55,7 @@ class GlossaryHTMLWView extends WView {
             WToolBarHelper::cancel('glossary.list');
         }
         WToolbarHelper::divider();
-        WToolbarHelper::help('glossary.form', true);
+        WToolbarHelper::help('glossary-form');
     }
 
     private function document() {
