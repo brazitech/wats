@@ -23,7 +23,7 @@ class ModelRequestPriority extends WModel {
         parent::_populateState();
     }
 
-    public function getRequest($id, $reload = false) {
+    public function getRequestPriority($id, $reload = false) {
         $table = WFactory::getTable('requestpriority');
         if ($id) {
             if ($reload || $table->id != $id) {
@@ -37,6 +37,17 @@ class ModelRequestPriority extends WModel {
         }
 
         return $table;
+    }
+
+    public function checkIn($id) {
+        $this->getRequestPriority($id)->checkIn();
+    }
+
+    public function checkOut($id, $uid=0) {
+        if (!$uid) {
+            $uid = JFactory::getUser()->id;
+        }
+        $this->getRequestPriority($id)->checkOut($uid);
     }
 
     public function getTotal() {

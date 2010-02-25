@@ -66,6 +66,26 @@
         <option key="" translate="true">SELECT PRIORITY</option>
     </filter>
     <filter
+            id="category_id"
+            name="category_id"
+            type="sqlselect"
+            position="right"
+            key="category_id"
+            text="name">
+        <label>WHD_LIST:FILTER</label>
+        <column>category_id</column>
+        <query>
+            <select>CONCAT(#__whelpdesk_request_categories.name, " (", #__whelpdesk_request_categories.id, ")") AS name</select>
+            <select>#__whelpdesk_request_categories.id AS category_id</select>
+            <from>#__whelpdesk_request_categories</from>
+            <order>#__whelpdesk_request_categories.lft</order>
+            <where>#__whelpdesk_request_categories.parent_id != 0</where>
+        </query>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">30</attribute>
+        <option category_id="" translate="true">SELECT REQUEST CATEGORY</option>
+    </filter>
+    <filter
             id="created_by"
             name="created_by"
             type="sqlselect"

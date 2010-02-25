@@ -41,7 +41,7 @@ class RequestPriorityHTMLWView extends WView {
         $command = WFactory::getCommand();
         WToolbarHelper::addNew('requestpriority.new.start');
         WToolbarHelper::divider();
-        WToolbarHelper::help('requestpriority.list', true);
+        WToolbarHelper::help('requestpriority-list');
     }
 
     private function document() {

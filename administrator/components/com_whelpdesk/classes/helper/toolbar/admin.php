@@ -6,6 +6,9 @@
  * @license		GNU/GPL
  */
 
+$bar = &JToolBar::getInstance('toolbar');
+$bar->addButtonPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'helper'.DS.'toolbar'.DS.'button');
+
 /**
  * Admin toolbar helper, this class delegates most of the work to JToolbarHelper
  *
@@ -60,8 +63,17 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
 		$bar->appendButton( 'Standard', $icon, $alt, $task, $listSelect, true );
 	}
 
-	public static function help($ref, $com = false) {
-		JToolBarHelper::help($ref, $com);
+	public static function help($ref) {
+
+        $bar = &JToolBar::getInstance('toolbar');
+		// Add a help button.
+		$bar->appendButton('Whelp', $ref);
+
+        return;
+
+        // @todo get the language
+        $url = sprintf("http://groups.google.com/group/webamoeba-helpdesk/web/%s?hl=%s", $ref, "en-GB");
+		self::link($url, "HELP", "help");
 	}
 
 	public static function addNew($task = 'add', $alt = 'New') {

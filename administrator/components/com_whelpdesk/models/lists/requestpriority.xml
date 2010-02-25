@@ -26,7 +26,7 @@
     <column type="simple" cansort="true">
         <label>WHD_R:PRIORITY</label>
         <name>name</name>
-        <link link="index.php?option=com_whelpdesk&amp;task=requests.edit&amp;id=%1$d">
+        <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
             <param>id</param>
         </link>
     </column>
