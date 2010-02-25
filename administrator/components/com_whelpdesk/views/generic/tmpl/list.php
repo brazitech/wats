@@ -22,6 +22,7 @@ $pagination = $list->getPagination();
 
     <?php $filters1 = $this->getModel('filters'); ?>
 
+    <?php if (count($list->getFilters())) : ?>
     <fieldset id="filter-bar">
         <div class="fltlft">
         <?php
@@ -39,6 +40,7 @@ $pagination = $list->getPagination();
         ?>
         </div>
     </fieldset>
+    <?php endif; ?>
 
     <div class="clr"></div>
 
