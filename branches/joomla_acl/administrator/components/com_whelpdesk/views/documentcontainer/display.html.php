@@ -64,7 +64,7 @@ class DocumentcontainerHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolbarHelper::permissions();
         WToolbarHelper::divider();
-        WToolbarHelper::help('documents.display', true);
+        WToolbarHelper::help('documents-display');
     }
 
     private function document() {

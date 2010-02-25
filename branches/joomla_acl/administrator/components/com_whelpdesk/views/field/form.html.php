@@ -53,7 +53,7 @@ class FieldHTMLWView extends WView {
             WToolBarHelper::cancel('fields.list');
         }
         WToolbarHelper::divider();
-        WToolbarHelper::help('field.form', true);
+        WToolbarHelper::help('field-form');
     }
 
     private function document() {

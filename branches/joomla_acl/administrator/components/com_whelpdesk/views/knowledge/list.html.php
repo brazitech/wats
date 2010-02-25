@@ -52,7 +52,7 @@ class KnowledgeHTMLWView extends WView {
             WToolBarHelper::unpublishList('faq.state.unpublish');
         }
         WToolbarHelper::divider();
-        WToolbarHelper::help('faq.list', true);
+        WToolbarHelper::help('faq-list');
     }
 
     private function document() {

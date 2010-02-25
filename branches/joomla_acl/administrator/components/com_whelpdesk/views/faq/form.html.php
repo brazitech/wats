@@ -53,7 +53,7 @@ class FaqHTMLWView extends WView {
             WToolBarHelper::cancel('faq.list');
         }
         WToolbarHelper::divider();
-        WToolbarHelper::help('faq.form', true);
+        WToolbarHelper::help('faq-form');
     }
 
     private function document() {

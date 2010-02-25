@@ -41,7 +41,7 @@ class FieldHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolBarHelper::cancel('fields.list');
         WToolbarHelper::divider();
-        WToolbarHelper::help('field.type', true);
+        WToolbarHelper::help('field-type');
     }
 
     private function document() {

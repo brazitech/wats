@@ -42,7 +42,7 @@ class PermissionsHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolbarHelper::link($this->getModel('returnURI'), 'Cancel', 'cancel');
         WToolbarHelper::divider();
-        WToolbarHelper::help('permissions.type', true);
+        WToolbarHelper::help('permissions-type');
     }
 
     private function document() {

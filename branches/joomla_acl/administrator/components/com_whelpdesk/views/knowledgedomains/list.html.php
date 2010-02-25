@@ -50,7 +50,7 @@ class KnowledgedomainsHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolbarHelper::permissions();
         WToolbarHelper::divider();
-        WToolbarHelper::help('knowledgedomain.list', true);
+        WToolbarHelper::help('knowledgedomain-list');
     }
 
     private function document() {

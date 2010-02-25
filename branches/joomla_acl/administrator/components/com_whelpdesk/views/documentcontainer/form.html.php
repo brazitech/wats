@@ -49,7 +49,7 @@ class DocumentcontainerHTMLWView extends WView {
         WToolBarHelper::apply('documentcontainer.'.WFactory::getCommand()->getUsecase().'.apply');
         WToolBarHelper::cancel('documentcontainer.'.WFactory::getCommand()->getUsecase().'.cancel');
         WToolbarHelper::divider();
-        WToolbarHelper::help('documentcontainer.form', true);
+        WToolbarHelper::help('documentcontainer-form');
     }
 
     private function document() {

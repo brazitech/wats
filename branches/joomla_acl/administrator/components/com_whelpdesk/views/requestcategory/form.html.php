@@ -45,11 +45,11 @@ class RequestcategoryHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        JToolBarHelper::save('requestcategory.'.$command->getUsecase().'.save');
-        JToolBarHelper::apply('requestcategory.'.$command->getUsecase().'.apply');
-        JToolBarHelper::cancel('requestcategory.list.start');
-        JToolbarHelper::divider();
-        JToolbarHelper::help('requestcategory.form', true);
+        WToolBarHelper::save('requestcategory.'.$command->getUsecase().'.save');
+        WToolBarHelper::apply('requestcategory.'.$command->getUsecase().'.apply');
+        WToolBarHelper::cancel('requestcategory.list.start');
+        WToolbarHelper::divider();
+        WToolbarHelper::help('requestcategory-form');
     }
 
     private function document() {

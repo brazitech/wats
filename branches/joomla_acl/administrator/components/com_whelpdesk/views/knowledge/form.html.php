@@ -51,7 +51,7 @@ class KnowledgeHTMLWView extends WView {
         WToolBarHelper::apply($command->getType().'.'.$command->getUsecase().'.apply');
         WToolBarHelper::cancel($command->getType().'.'.$command->getUsecase().'.cancel');
         WToolbarHelper::divider();
-        WToolbarHelper::help('knowledge.form', true);
+        WToolbarHelper::help('knowledge-form');
     }
 
     private function document() {

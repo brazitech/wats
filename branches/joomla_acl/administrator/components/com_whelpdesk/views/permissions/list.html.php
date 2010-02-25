@@ -45,7 +45,7 @@ class PermissionsHTMLWView extends WView {
         WToolbarHelper::divider();
         WToolbarHelper::link($this->getModel('returnURI'), 'Cancel', 'cancel');
         WToolbarHelper::divider();
-        JToolbarHelper::help('permissions.list', true);
+        WToolbarHelper::help('permissions-list');
     }
 
     private function document() {
