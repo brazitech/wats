@@ -264,6 +264,31 @@ abstract class WTable extends JTable {
         return $result;
     }
 
+    function changeState($oid=null, $published) {
+        // check this table suports state before continuing
+        if (!in_array('published', array_keys($this->getProperties()))) {
+			return true;
+		}
+
+        // get the table PK and value of the PK we are working with
+        $k = $this->_tbl_key;
+		if ($oid == null) {
+			$oid = $this->$k;
+		}
+
+        $query = 'UPDATE '. dbTable($this->_tbl)
+               . ' SET '.   dbName('published')       . ' = ' . (int)$published
+               . ' WHERE '. dbName($this->_tbl_key) . ' = ' . $this->_db->Quote($oid);
+		$this->_db->setQuery($query);
+        $result = $this->_db->query();
+
+        if ($result && $oid == $this->$k) {
+            $this->published = $published;
+        }
+
+        return $result;
+    }
+
     public function getFieldset() {
         return $this->fieldset;
     }

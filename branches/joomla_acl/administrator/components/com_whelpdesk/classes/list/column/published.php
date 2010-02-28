@@ -17,7 +17,7 @@ class WListColumnPublished extends WListColumn {
             0,
             'tick.png',
             'publish_x.png',
-            'some.state.'
+            WCommand::getInstance()->getType().'.state.'.($row->published == 1 ? 'unpublish' : 'publish')
         );
         return '<td align="center" '.$this->_attributes.'>'.$cellData.'</td>';
     }

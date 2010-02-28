@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: edit.php 105 2009-05-04 12:46:26Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk
@@ -27,10 +27,6 @@ class RequestCategoryListWController extends WController {
         // get the model
         $model = WModel::getInstanceByName('requestcategory');
 
-        // get the list data and current filters
-        $list = $model->getList();
-        //$filters = $model->getFilters();
-
         // get the view
         $view = WView::getInstance(
             'requestcategory',
@@ -38,17 +34,11 @@ class RequestCategoryListWController extends WController {
             strtolower(JFactory::getDocument()->getType())
         );
 
-        // add the default model and the filters to the view
+        // get the list data add to the view
+        $list = $model->getList();
         $view->addModel('requestcategories', $list, true);
-
-        // add the pagination data to the view
-        /*$view->addModel('paginationTotal',      $model->getTotal());
-        $view->addModel('paginationLimit',      $model->getLimit());
-        $view->addModel('paginationLimitStart', $model->getLimitStart());*/
 
         // display the view!
         $this->display();
     }
 }
-
-?>

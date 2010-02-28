@@ -70,6 +70,10 @@ $form = $this->getModel();
         <?php
         endforeach;
         ?>
+
+        <?php if (isset($onAfterNormalFieldSets)) : ?>
+        <?php echo $onAfterNormalFieldSets; ?>
+        <?php endif; ?>
     </div>
 
     <!-- detail fieldsets -->

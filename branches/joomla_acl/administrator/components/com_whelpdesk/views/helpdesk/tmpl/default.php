@@ -56,8 +56,8 @@
                     <div style="float: left;">
                         <div class="icon">
                             <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestcategory.list'); ?>">
-                                <img alt="<?php echo JText::_('HELP REQUEST CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
-                                <span><?php echo JText::_('HELP REQUEST CATEGORIES'); ?></span>
+                                <img alt="<?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
+                                <span><?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?></span>
                             </a>
                         </div>
                     </div>
@@ -65,9 +65,19 @@
                 <div id="cpanel">
                     <div style="float: left;">
                         <div class="icon">
-                            <a href="">
-                                <img alt="<?php echo JText::_('HELP REQUESTS'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
-                                <span><?php echo JText::_('HELP REQUESTS'); ?></span>
+                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=request.list'); ?>">
+                                <img alt="<?php echo JText::_('WHD_R:REQUESTS'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
+                                <span><?php echo JText::_('WHD_R:REQUESTS'); ?></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="cpanel">
+                    <div style="float: left;">
+                        <div class="icon">
+                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestpriority.list'); ?>">
+                                <img alt="<?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
+                                <span><?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?></span>
                             </a>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Created on : 06 January 2010, 17:12
+    SVN        : $Id$
     Author     : James Kennard
     Description: JForm Descriptor
     Package    : Helpdesk
@@ -28,15 +28,6 @@
                 size="30"
                 required="true" />
         <field
-                id="alias"
-                name="alias"
-                type="text"
-                label="ALIAS"
-                description="JField_Alias_Desc"
-                class="inputbox"
-                size="45"
-                default="" />
-        <field
                 id="state"
                 name="state"
                 type="list"
@@ -50,17 +41,20 @@
             <option value="0"> JOption_UnPublished</option>
         </field>
         <field
-                name="parent_id"
-                type="requestcategoryparent"
-                label="WHD_DATA:PARENT"
-                description="WHD_DATA:PARENT DESCRIPTION"
-                class="inputbox"/>
-        <field
                 id="ordering"
                 name="ordering"
                 type="text"
                 label="JField_Ordering_Label"
                 description="JField_Ordering_Desc"
+                class="inputbox"
+                size="6"
+                default="0" />
+        <field
+                id="colour"
+                name="colour"
+                type="colourpalette"
+                label="WHD_DATA:COLOUR"
+                description="WHD_DATA:COLOUR DESCRIPTION"
                 class="inputbox"
                 size="6"
                 default="0" />
@@ -89,7 +83,7 @@
                 size="25"
                 readonly="true"
                 filter="unset" />
-         <field
+        <field
                 id="created_by"
                 name="created_by"
                 type="wuser"
@@ -118,46 +112,5 @@
                 description="WHD_DATA:REVISION DESCRIPTION"
                 size="6"
                 default="0" />
-    </fields>
-    <fields
-            group="metadata"
-            label="WHD_DATA:METADATA"
-            position="detail">
-        <field
-                id="metakey"
-                name="metakey"
-                type="textarea"
-                label="JField_Meta_Keywords_Label"
-                description="JField_Meta_Keywords_Desc"
-                class="inputbox"
-                rows="3"
-                cols="30"
-                default="" />
-		<field
-                id="metadesc"
-                name="metadesc"
-                type="textarea"
-                label="JField_Meta_Description_Label"
-                description="JField_Meta_Description_Desc"
-                class="inputbox"
-                rows="3"
-                cols="30"
-                default="" />
-    </fields>
-    <fields
-            group="access"
-            label="WHD_ACCESS:RULES"
-            position="detail">
-        <field
-                id="rules"
-                name="rules"
-                type="rules"
-                label="Content_Rules_Label"
-                description="Content_Rules_Desc"
-                class="inputbox"
-                filter="rules"
-                component="com_whelpdesk"
-                section="requestcategory"
-                default="" />
     </fields>
 </form>

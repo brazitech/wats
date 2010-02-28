@@ -167,6 +167,18 @@ class WList
         return $this->_columns;
     }
 
+    public function getColumn($name)
+    {
+        foreach ($this->_columns as $column)
+        {
+            if ($column->getName() == $name)
+            {
+                return $column;
+            }
+        }
+        return null;
+    }
+
     public function getFilters()
     {
         return $this->_filters;

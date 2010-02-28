@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Created on : 06 January 2010, 17:12
+    SVN        : $Id$
     Author     : James Kennard
     Description: JForm Descriptor
     Package    : Helpdesk
@@ -25,45 +25,8 @@
                 label="NAME"
                 description="JField_Name_Desc"
                 class="inputbox"
-                size="30"
+                size="60"
                 required="true" />
-        <field
-                id="alias"
-                name="alias"
-                type="text"
-                label="ALIAS"
-                description="JField_Alias_Desc"
-                class="inputbox"
-                size="45"
-                default="" />
-        <field
-                id="state"
-                name="state"
-                type="list"
-                label="JField_Published_Label"
-                description="JField_Published_Desc"
-                class="inputbox"
-                filter="intval"
-                size="1"
-                default="1">
-            <option value="1">JOption_Published</option>
-            <option value="0"> JOption_UnPublished</option>
-        </field>
-        <field
-                name="parent_id"
-                type="requestcategoryparent"
-                label="WHD_DATA:PARENT"
-                description="WHD_DATA:PARENT DESCRIPTION"
-                class="inputbox"/>
-        <field
-                id="ordering"
-                name="ordering"
-                type="text"
-                label="JField_Ordering_Label"
-                description="JField_Ordering_Desc"
-                class="inputbox"
-                size="6"
-                default="0" />
         <field
                 id="description"
                 name="description"
@@ -74,6 +37,41 @@
                 filter="safehtml"
                 buttons="false"
                 default="" />
+    </fields>
+    <fields
+            group="state"
+            label="WHD_R:STATE"
+            position="detail">
+        <field
+                id="priority"
+                name="priority"
+                type="sql"
+                query="SELECT * FROM #__whelpdesk_request_priorities"
+                key_field="id"
+                value_field="name"
+                class="inputbox"
+                label="WHD_RP:PRIORITY"
+                description="WHD_RP:PRIORITY DESCRIPTION"
+                filter="intval" />
+        <field
+                name="parent_id"
+                type="requestcategory"
+                label="WHD_RC:CATEGORY"
+                description="WHD_RC:CATEGORY DESCRIPTION"
+                class="inputbox"/>
+        <field
+                id="status"
+                name="status"
+                type="list"
+                class="inputbox"
+                label="WHD_R:STATUS"
+                description="WHD_R:STATUS DESCRIPTION"
+                filter="intval">
+            <option value="1">WHD_R:STATUS:OPEN</option>
+            <option value="2">WHD_R:STATUS:REOPENED</option>
+            <option value="2">WHD_R:STATUS:CLOSED</option>
+            <option value="2">WHD_R:STATUS:ARCHIVED</option>
+        </field>
     </fields>
     <fields
             group="publishing"
@@ -89,7 +87,7 @@
                 size="25"
                 readonly="true"
                 filter="unset" />
-         <field
+        <field
                 id="created_by"
                 name="created_by"
                 type="wuser"
@@ -120,44 +118,18 @@
                 default="0" />
     </fields>
     <fields
-            group="metadata"
-            label="WHD_DATA:METADATA"
+            group="history"
+            label="WHD_RH:HISTORY"
             position="detail">
         <field
-                id="metakey"
-                name="metakey"
-                type="textarea"
-                label="JField_Meta_Keywords_Label"
-                description="JField_Meta_Keywords_Desc"
-                class="inputbox"
-                rows="3"
-                cols="30"
-                default="" />
-		<field
-                id="metadesc"
-                name="metadesc"
-                type="textarea"
-                label="JField_Meta_Description_Label"
-                description="JField_Meta_Description_Desc"
-                class="inputbox"
-                rows="3"
-                cols="30"
-                default="" />
-    </fields>
-    <fields
-            group="access"
-            label="WHD_ACCESS:RULES"
-            position="detail">
-        <field
-                id="rules"
-                name="rules"
-                type="rules"
-                label="Content_Rules_Label"
-                description="Content_Rules_Desc"
-                class="inputbox"
-                filter="rules"
-                component="com_whelpdesk"
-                section="requestcategory"
-                default="" />
+                id="history"
+                name="id"
+                type="requesthistory"
+                class="readonly"
+                label="WHD_RH:HISTORY"
+                description="WHD_RH:HISTORY DESCRIPTION"
+                size="18"
+                readonly="true"
+                filter="unset" />
     </fields>
 </form>

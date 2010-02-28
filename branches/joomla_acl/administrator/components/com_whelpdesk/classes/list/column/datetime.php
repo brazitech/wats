@@ -11,6 +11,14 @@ class WListColumnDatetime extends WListColumn {
     
     public function getText($row)
     {
-        return JHTML::_('date', $row->{$this->_name}); ;
+        $datetime = $row->{$this->_name};
+
+        if (!$datetime || $datetime == '0000-00-00 00:00:00')
+        {
+            // no value
+            return;
+        }
+        
+        return JHTML::_('date', $datetime); ;
     }
 }
