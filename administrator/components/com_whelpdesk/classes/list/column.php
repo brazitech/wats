@@ -58,6 +58,16 @@ abstract class WListColumn
         }
     }
 
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    public function getLabel()
+    {
+        return $this->_label;
+    }
+
     public static function getInstance($node, WList $list)
     {
         // determine column type
@@ -133,6 +143,14 @@ abstract class WListColumn
      */
     public function render($row)
     {
+        return '<td '.$this->_attributes.'>'.$this->renderPlain($row).'</td>';
+    }
+
+    /**
+     * @return string
+     */
+    public function renderPlain($row)
+    {
         $text = '';
         if ($this->_link)
         {
@@ -144,7 +162,7 @@ abstract class WListColumn
             $text .= '</a>';
         }
 
-        return '<td '.$this->_attributes.'>'.$text.'</td>';
+        return $text;
     }
 }
 

@@ -10,12 +10,18 @@
     <query>
         <select>#__whelpdesk_requests.*</select>
         <select>#__users.name AS name_of_user</select>
+        <select>assignee.name AS name_of_assignee</select>
         <select>#__whelpdesk_request_priorities.name AS name_of_priority</select>
         <select>#__whelpdesk_request_priorities.ordering AS priority_ordering</select>
+        <select>COUNT(#__whelpdesk_request_replies.id) AS number_of_replies</select>
+        <select>MAX(#__whelpdesk_request_replies.created) AS last_reply_created</select>
         <from>#__whelpdesk_requests</from>
         <join type="LEFT">#__users ON #__users.id = #__whelpdesk_requests.created_by</join>
+        <join type="LEFT">#__users AS assignee ON #__users.id = #__whelpdesk_requests.assignee</join>
         <join type="LEFT">#__whelpdesk_request_priorities ON #__whelpdesk_requests.priority = #__whelpdesk_request_priorities.id</join>
+        <join type="LEFT">#__whelpdesk_request_replies ON #__whelpdesk_requests.id = #__whelpdesk_request_replies.request_id</join>
         <order>#__whelpdesk_requests.name</order>
+        <group>#__whelpdesk_requests.id</group>
     </query>
 
     <!-- Filters -->
@@ -103,7 +109,27 @@
         </query>
         <attribute name="class=">text_area</attribute>
         <attribute name="size">30</attribute>
-        <option key="" translate="true">SELECT USER</option>
+        <option key="" translate="true">SELECT SUBMITTED BY</option>
+    </filter>
+    <filter
+            id="assignee"
+            name="assignee"
+            type="sqlselect"
+            position="right"
+            key="assignee"
+            text="name_of_user">
+        <label>WHD_LIST:FILTER</label>
+        <column>priority</column>
+        <query>
+            <select>DISTINCT #__whelpdesk_requests.assignee</select>
+            <select>#__users.name AS name_of_user</select>
+            <from>#__whelpdesk_requests</from>
+            <join type="LEFT">#__users ON #__users.id = #__whelpdesk_requests.assignee</join>
+            <order>#__whelpdesk_requests.name</order>
+        </query>
+        <attribute name="class=">text_area</attribute>
+        <attribute name="size">30</attribute>
+        <option key="" translate="true">SELECT ASSIGNEE</option>
     </filter>
 
     <!-- Columns -->
@@ -117,7 +143,7 @@
     <column type="simple" cansort="true">
         <label>WHD_R:REQUEST</label>
         <name>name</name>
-        <link link="index.php?option=com_whelpdesk&amp;task=requests.edit&amp;id=%1$d">
+        <link link="index.php?option=com_whelpdesk&amp;task=request.edit&amp;id=%1$d">
             <param>id</param>
         </link>
     </column>
@@ -141,37 +167,26 @@
         <attribute name="style">text-align: center;</attribute>
     </column>
     <column
-            type="text"
+            type="simple"
             cansort="true"
             width="120">
-        <label>WHD_R:REPLIES</label>
-        <name />
-        <text>num. of replies</text>
+        <label>WHD_R:NUMBER OF REPLIES</label>
+        <name>number_of_replies</name>
         <attribute name="style">text-align: center;</attribute>
     </column>
     <column
-            type="text"
+            type="datetime"
             cansort="true"
             width="120">
         <label>WHD_R:DATETIME OF LAST REPLY</label>
-        <name />
-        <text>...</text>
-        <attribute name="style">text-align: center;</attribute>
-    </column>
-    <column
-            type="text"
-            cansort="true"
-            width="120">
-        <label>WHD_R:STATUS</label>
-        <name />
-        <text>open/closed etc.</text>
+        <name>last_reply_created</name>
         <attribute name="style">text-align: center;</attribute>
     </column>
     <column
             type="simple"
             cansort="true"
             width="80">
-        <label>WHD_R:PRIORITY</label>
+        <label>WHD_RP:PRIORITY</label>
         <name>name_of_priority</name>
         <attribute name="style">text-align: center;</attribute>
         <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
@@ -185,6 +200,17 @@
             class="helper.RequestStatus">
         <label>WHD_R:STATUS</label>
         <name>status</name>
+    </column>
+    <column
+            type="simple"
+            cansort="true"
+            width="120">
+        <label>WHD_R:ASSIGNEE</label>
+        <name>name_of_assignee</name>
+        <attribute name="style">text-align: center;</attribute>
+        <link link="index.php?option=com_users&amp;task=user.edit&amp;id=%1$d">
+            <param>created_by</param>
+        </link>
     </column>
     <column
             type="simple"

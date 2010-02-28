@@ -42,152 +42,17 @@ abstract class WModel extends JModel {
     protected $_list = null;
 
     /**
+     * Name of the WTable that relates to this model
+     *
+     * @var String
+     */
+    protected $_tableName;
+
+    /**
      * Constructor
      */
     public function __construct() {
         parent::__construct();
-    }
-
-    /**
-	 * Method to auto-populate the model state.
-	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
-	 *
-	 * @return	void
-	 */
-	protected function _populateState()
-	{
-        // get the application object and define the state context
-        $app =& JFactory::getApplication();
-        $context = 'com_whelpdesk.model.'.$this->getName().'.';
-
-        // get the limit and limitstart and total
-        $limit = $app->getUserStateFromRequest($context.'limit', 'limit', 0, 'int');
-        if ($app->isSite()) {
-            // request based
-            $limitstart = JRequest::getInt('limitstart', 0);
-        } else {
-            // state based
-            $limitstart = $app->getUserStateFromRequest($context.'limitstart', 'limitstart', 0, 'int');
-        }
-        $limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
-        $total = $this->getTotal();
-
-
-        // get the filters
-        $search           = $app->getUserStateFromRequest($context.'search', 'search', '', 'string');
-        $filter_order     = $app->getUserStateFromRequest($context.'filter_order', 'filter_order', $this->getDefaultFilterOrder(), 'cmd');
-		$filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir',	'filter_order_Dir',	'DESC', 'word');
-        $filter_order_Dir = (strtoupper($filter_order_Dir) == 'DESC') ? 'DESC' : 'ASC';
-
-        // set model state data
-        $this->setState('limit', $limit);
-		$this->setState('limitstart', $limitstart);
-        $this->setState('total', $total);
-        $this->setState('search', $search);
-        $this->setState('filter_order', $filter_order);
-		$this->setState('filter_order_Dir', $filter_order_Dir);
-	}
-
-    /**
-     * Get the limit for the pagination. Maximum number of items to display on a
-     * single page.
-     *
-     * @param int $default Default number of items to display on a page
-     * @return int
-     */
-    public function getLimit() {
-        return $this->getState('limit');
-    }
-
-    /**
-     * Gets the limitstart for pagination. Number of item with which to start
-     * the pagination.
-     *
-     * @return int
-     */
-    public function getLimitStart() {
-        return $this->getState('limitstart');
-    }
-
-    /**
-     * Get the current state filter for this model.
-     *
-     * @param string $default
-     * @return string
-     */
-    public function getFilterState($default='') {
-        return JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.state',
-                                                                   'filter_state',
-                                                                   $default,
-                                                                   'word');
-    }
-
-    /**
-     * Get the current search filter for this model.
-     *
-     * @param string $default
-     * @return string
-     */
-    public function getFilterSearch($default='') {
-        return JFactory::getApplication()->getUserStateFromRequest('com_whelpdesk.model.' . $this->getName() . '.filter.search',
-                                                                   'search',
-                                                                   $default,
-                                                                   'string');
-    }
-
-    /**
-     * Get the current order by column filter for this model.
-     *
-     * @return string
-     */
-    public function getFilterOrder() {
-        return $this->getState('filter_order');
-    }
-
-    public function getDefaultFilterOrder() {
-        return $this->_defaultFilterOrder;
-    }
-
-    protected function setDefaultFilterOrder($default) {
-        $this->_defaultFilterOrder = $default;
-    }
-
-    /**
-     * Get the order direction (ASC or DESC) filter for this model.
-     *
-     * @param string $default
-     * @return string
-     */
-    public function getFilterOrderDirection($default='ASC') {
-        return $this->getState('filter_order_Dir');
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getFilters() {
-        $filters = array();
-
-        $filters['state']           = $this->getFilterState();
-        $filters['search']          = $this->getFilterSearch();
-        $filters['order']           = $this->getFilterOrder();
-        $filters['orderDirection']  = $this->getFilterOrderDirection();
-
-        return $filters;
-    }
-
-    /**
-     * Gets the total number of items related to the model
-     *
-     * @return int
-     */
-    public function getTotal() {
-        JError::raiseWarning(JText::sprintf('WAHD.FRAMEWORK.APPLICATION.MODEL:Model %s Method %s Not Implemented', $this->getName(), 'getTotal'));
-        return 0;
     }
 
     /**
@@ -255,7 +120,7 @@ abstract class WModel extends JModel {
      * @return  boolean Array of filtered data if valid, false otherwise.
      * @since    1.1
      */
-    function validate($data, $bindFilteredData=false)
+    function validate($data, $bindFilteredData = false)
     {
         // Get the form
         $form = $this->getForm($data, true);
@@ -283,7 +148,8 @@ abstract class WModel extends JModel {
 
         if ($bindFilteredData)
         {
-            //@todo
+            //@todo ?? isn't this enough?
+            $form->bind($data);
         }
 
         return $data;
@@ -364,6 +230,56 @@ abstract class WModel extends JModel {
 
         return $cid;
     }
-}
 
-?>
+    /**
+     * Gets a JTable object that can be used to modify data related to this model.
+     *
+     * @param int $id PK value of teh recorde to load. Use null to get a clean table.
+     * @param boolean $reload Force reload the table even if it is already loaded with the chosen record.
+     * @return JTable
+     */
+    public function getTable($id = null, $reload = false)
+    {
+        if (!isset($this->_tableName))
+        {
+            throw new WException("WHD_E:NO TABLES ARE RELATED TO THIS MODEL");
+        }
+
+        $table = WFactory::getTable($this->_tableName);
+        $pk = $table->getKeyName();
+        if ($id) {
+            if ($reload || $table->$pk != $id) {
+                if (!$table->load($id)) {
+                    throw new WException("WHD_E:COULD NOT LOAD DATA");
+                }
+            }
+        } else {
+            $table->reset();
+            $table->$pk = 0;
+        }
+
+        return $table;
+    }
+
+    public function checkIn($id) {
+        $this->getTable($id)->checkIn();
+    }
+
+    public function checkOut($id, $uid=0) {
+        if (!$uid) {
+            $uid = JFactory::getUser()->id;
+        }
+        $this->getTable($id)->checkOut($uid);
+    }
+
+    public function changeState($cid, $published) {
+        // get the table and publish the identified terms
+        $table = $this->getTable();
+        $table->changeState($cid, ($published ? 1 : 0), JFactory::getUser()->id);
+    }
+
+    public function resetHits($id) {
+        $table = $this->getTable();
+        $table->resetHits($id);
+    }
+}

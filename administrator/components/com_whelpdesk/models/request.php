@@ -14,9 +14,11 @@ jimport('joomla.utilities.date');
 
 class ModelRequest extends WModel {
 
+    private $_repliesList;
+
     public function  __construct() {
         parent::__construct();
-        $this->setDefaultFilterOrder('name');
+        $this->_tableName = 'request';
     }
 
     protected function _populateState() {
@@ -24,70 +26,26 @@ class ModelRequest extends WModel {
     }
 
     public function getRequest($id, $reload = false) {
-        $table = WFactory::getTable('request');
-        if ($id) {
-            if ($reload || $table->id != $id) {
-                if (!$table->load($id)) {
-                    return false;
-                }
-            }
-        } else {
-            $table->reset();
-            $table->id = 0;
-        }
-
-        return $table;
-    }
-
-    public function getTotal() {
-        // get the total number of categories in the glossary
-        $sql = 'SELECT COUNT(*) FROM ' . dbTable('request')
-             . $this->buildQueryWhere();
-        $this->_db->setQuery($sql);
-        
-        return (int)($this->_db->loadResult());
+        return parent::getTable($id, $reload);
     }
 
     /**
-     * Builds the WHERE clause
+     * Method to get a list object of replies.
      *
-     * @return string
+     * @param   boolean     $reset      Optional argument to force load a new form.
+     * @return  mixed       WList       object on success, False on error.
      */
-    private function buildQueryWhere() {
-        // get the application
-        $application =& JFactory::getApplication();
-
-        // get the state filter (publishing)
-        $state = $this->getFilterState();
-
-        // get the free text search filter
-        $search = $this->getFilterSearch();
-        $search = JString::strtolower($search);
-
-        // prepare to build WHERE clause as an array
-        $where = array();
-        $db    =& JFactory::getDBO();
-
-        // check if we are performing a free text search
-        if ($search) {
-            // make string safe for searching
-            $search = '%' . $db->getEscaped($search, true). '%';
-            $search = $db->Quote($search, false);
-            // add search to $where array
-            $where[] = 'LOWER(name) LIKE ' . $search;
+    function getRepliesList($reset=false)
+    {
+        // Check if we can use cached list.
+        if ($reset || !$this->_repliesList)
+        {
+            // Get the list
+            wimport('list.list');
+            $xml = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'lists'.DS.'requestreplies.xml';
+            $this->_repliesList = &WList::getInstance($xml);
         }
 
-        // build the WHERE clause
-        if (count($where)) {
-            // building from array
-            $where = ' WHERE ' . implode(' AND ', $where);
-        } else {
-            // array is empty... nothing to do!
-            $where = "";
-        }
-
-        // all done, send the result back
-        return $where;
+        return $this->_repliesList;
     }
-
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    SVN        : $Id$
+    Description: WList definition for Request Replies.
+-->
+
+<list state="whelpdesk.models.requestreplies.list">
+    <!-- Query -->
+    <query>
+        <select>#__whelpdesk_request_replies.*</select>
+        <select>#__users.name AS name_of_user</select>
+        <from>#__whelpdesk_request_replies</from>
+        <join type="LEFT">#__users ON #__users.id = #__whelpdesk_request_replies.created_by</join>
+        <order>#__whelpdesk_request_replies.created</order>
+    </query>
+
+    <!-- Columns -->
+    <column type="simple" cansort="false">
+        <label>WHD_R:REPLY</label>
+        <name>description</name>
+    </column>
+    <column
+            type="simple"
+            cansort="false"
+            width="120">
+        <label>WHD_DATA:CREATED BY</label>
+        <name>name_of_user</name>
+        <attribute name="style">text-align: center;</attribute>
+        <link link="index.php?option=com_users&amp;task=user.edit&amp;id=%1$d">
+            <param>created_by</param>
+        </link>
+    </column>
+    <column
+            type="datetime"
+            cansort="false"
+            width="120">
+        <label>WHD_DATA:CREATED</label>
+        <name>created</name>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+</list>
+
+

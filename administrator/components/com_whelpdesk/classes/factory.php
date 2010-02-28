@@ -60,6 +60,11 @@ class WFactory {
         if (empty(self::$tables[$table])) {
             self::$tables[$table] = JTable::getInstance($table);
         }
+
+        if (self::$tables[$table] == false)
+        {
+            throw new WException("UNKNOWN TABLE");
+        }
         
         return self::$tables[$table];
     }

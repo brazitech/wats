@@ -17,7 +17,7 @@ class RequestPriorityHTMLWView extends WView {
 	 */
 	public function __construct() {
         // set the layout
-        $this->setLayout('list');
+        $this->setLayout('form');
 
         // let the parent do what it does...
         parent::__construct();
@@ -30,6 +30,12 @@ class RequestPriorityHTMLWView extends WView {
         // add metadata to the document
         $this->document();
 
+        // add the editor
+        $this->addModel('editor', JFactory::getEditor());
+
+        // disable the menu
+        JRequest::setVar('hidemainmenu', 1);
+
         // continue!
         parent::render();
     }
@@ -39,17 +45,23 @@ class RequestPriorityHTMLWView extends WView {
      */
     private function toolbar() {
         $command = WFactory::getCommand();
-        WToolbarHelper::addNew('requestpriority.new.start');
-        WToolbarHelper::edit('requestpriority.edit.start');
+        WToolBarHelper::save('requestpriority.'.$command->getUsecase().'.save');
+        WToolBarHelper::apply('requestpriority.'.$command->getUsecase().'.apply');
+        WToolBarHelper::cancel('requestpriority.list.start');
         WToolbarHelper::divider();
-        WToolbarHelper::publishList('requestpriority.state.publish');
-        WToolbarHelper::unpublishList('requestpriority.state.unpublish');
-        WToolbarHelper::divider();
-        WToolbarHelper::help('requestpriority-list');
+        WToolbarHelper::help('requestpriority-form');
     }
 
     private function document() {
-        WDocumentHelper::subtitle(JText::_('WHD_RP:REQUEST PRIORITIES'));
+        $requestCategory = $this->getModel();
+        if ($requestCategory->getValue('id'))
+        {
+            WDocumentHelper::subtitle(JText::sprintf('WHD_R:EDITING REQUEST PRIORITY %s', $requestCategory->getValue('name')));
+        }
+        else
+        {
+            WDocumentHelper::subtitle(JText::_('WHD_R:NEW REQUEST PRIORITY'));
+        }
 
         // add glossary to the pathway
         /*WDocumentHelper::addPathwayItem(JText::_('WHD_KD:DOMAIN'), null, 'index.php?option=com_whelpdesk&task=knowledgedomains.list');

@@ -16,7 +16,7 @@ class ModelRequestPriority extends WModel {
 
     public function  __construct() {
         parent::__construct();
-        $this->setDefaultFilterOrder('ordering');
+        $this->_tableName = 'requestpriority';
     }
 
     protected function _populateState() {
@@ -39,66 +39,82 @@ class ModelRequestPriority extends WModel {
         return $table;
     }
 
-    public function checkIn($id) {
-        $this->getRequestPriority($id)->checkIn();
-    }
-
-    public function checkOut($id, $uid=0) {
-        if (!$uid) {
-            $uid = JFactory::getUser()->id;
-        }
-        $this->getRequestPriority($id)->checkOut($uid);
-    }
-
-    public function getTotal() {
-        // get the total number of categories in the glossary
-        $sql = 'SELECT COUNT(*) FROM ' . dbTable('request_priority')
-             . $this->buildQueryWhere();
-        $this->_db->setQuery($sql);
-        
-        return (int)($this->_db->loadResult());
-    }
-
     /**
-     * Builds the WHERE clause
      *
-     * @return string
+     * @param int $id
+     * @param array $data
+     * @throws WCompositeException This exception is thrown when errors exist in the data
      */
-    private function buildQueryWhere() {
-        // get the application
-        $application =& JFactory::getApplication();
+    function save($id, $data) {
+        // get the table and reset the data
+        $table = $this->getTable();
+        $table->id = $id;
 
-        // get the state filter (publishing)
-        $state = $this->getFilterState();
+        // make sure we do not override the supplied ID
+        unset($data['id']);
 
-        // get the free text search filter
-        $search = $this->getFilterSearch();
-        $search = JString::strtolower($search);
-
-        // prepare to build WHERE clause as an array
-        $where = array();
-        $db    =& JFactory::getDBO();
-
-        // check if we are performing a free text search
-        if ($search) {
-            // make string safe for searching
-            $search = '%' . $db->getEscaped($search, true). '%';
-            $search = $db->Quote($search, false);
-            // add search to $where array
-            $where[] = 'LOWER(name) LIKE ' . $search;
+        // load the base values
+        if ($id) {
+            if (!$table->load($id)) {
+                WFactory::getOut()->log('Failed to load base data from table', true);
+                return false;
+            }
         }
 
-        // build the WHERE clause
-        if (count($where)) {
-            // building from array
-            $where = ' WHERE ' . implode(' AND ', $where);
-        } else {
-            // array is empty... nothing to do!
-            $where = "";
+        // bind data with the table
+        if (!$table->bind($data, array(), true)) {
+            // failed
+            WFactory::getOut()->log('Failed to bind with table', true);
+            return false;
         }
 
-        // all done, send the result back
-        return $where;
+        // deal with created and modified dates
+        $date  = new JDate();
+        $table->modified = $date->toMySQL();
+        if (!$id) {
+            $table->created = $date->toMySQL();
+        }
+
+        // run advanced validation using JForm object
+        $form = $this->_form;
+        $form->bind($table);
+        $check = $form->validate($table);
+        if (!$check)
+        {
+            $check = array();
+            $totalErrors = count($form->getErrors());
+            for ($i = 0; $i < $totalErrors; $i++)
+            {
+                $check[] = $form->getError($i, true);
+            }
+            WFactory::getOut()->log('Form data failed to check', true);
+            throw new WCompositeException($check);
+        }
+
+        // run simple validation (very loose rules)
+        $check = $table->check();
+        if (is_array($check)) {
+            // failed
+            WFactory::getOut()->log('Table data failed to check', true);
+            throw new WCompositeException($check);
+        }
+
+        // store the data in the database table and update nulls
+        if (!$table->store(true)) {
+            // failed
+            WFactory::getOut()->log('Failed to save changes', true);
+            return false;
+        }
+
+        // store the data in the database table and update nulls
+        if (!$table->revise()) {
+            // failed
+            WFactory::getOut()->log('Failed to increment revision counter', true);
+            return false;
+        }
+
+        WFactory::getOut()->log('Commited request priority to the database');
+        return $table->id;
     }
 
 }

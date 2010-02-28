@@ -10,9 +10,12 @@
     <query>
         <select>#__whelpdesk_request_priorities.*</select>
         <select>#__users.name AS name_of_user</select>
+        <select>COUNT(#__whelpdesk_requests.id) AS number_of_requests</select>
         <from>#__whelpdesk_request_priorities</from>
         <join type="LEFT">#__users ON #__users.id = #__whelpdesk_request_priorities.created_by</join>
+        <join type="LEFT">#__whelpdesk_requests ON #__whelpdesk_request_priorities.id = #__whelpdesk_requests.priority</join>
         <order>#__whelpdesk_request_priorities.ordering</order>
+        <group>#__whelpdesk_request_priorities.id</group>
     </query>
 
     <!-- Columns -->
@@ -24,7 +27,7 @@
         <name>id</name>
     </column>
     <column type="simple" cansort="true">
-        <label>WHD_R:PRIORITY</label>
+        <label>WHD_RP:PRIORITY</label>
         <name>name</name>
         <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
             <param>id</param>
@@ -37,6 +40,10 @@
         <label>WHD_DATA:ORDER</label>
         <name>ordering</name>
         <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column type="published" cansort="true" width="70">
+        <label>WHD_DATA:PUBLISHED</label>
+        <name>published</name>
     </column>
     <column
             type="simple"
@@ -56,6 +63,25 @@
         <label>WHD_DATA:CREATED</label>
         <name>created</name>
         <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="datetime"
+            cansort="true"
+            width="120">
+        <label>WHD_DATA:MODIFIED</label>
+        <name>modified</name>
+        <attribute name="style">text-align: center;</attribute>
+    </column>
+    <column
+            type="simple"
+            cansort="true"
+            width="70">
+        <label>WHD_R:REQUESTS</label>
+        <name>number_of_requests</name>
+        <attribute name="style">text-align: center;</attribute>
+        <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;priority=%1$d">
+            <param>id</param>
+        </link>
     </column>
     <column
             type="simple"

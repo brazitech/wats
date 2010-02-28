@@ -23,7 +23,7 @@ $pagination = $list->getPagination();
     <?php $filters1 = $this->getModel('filters'); ?>
 
     <?php if (count($list->getFilters())) : ?>
-    <fieldset id="filter-bar">
+    <fieldset id="filter-bar" style="clear: both;">
         <div class="fltlft">
         <?php
         foreach ($list->getFilters() as $filter) :
