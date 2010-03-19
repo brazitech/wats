@@ -113,4 +113,45 @@
                 size="6"
                 default="0" />
     </fields>
+    <fields
+            group="statistics"
+            label="WHD_DATA:STATISTICS"
+            position="detail">
+        <field
+                id="status_open"
+                name="status_open"
+                type="text"
+                class="readonly"
+                label="WHD_R:STATUS:OPEN"
+                description="WHD_R:STATUS:OPEN DESCRIPTION"
+                size="6"
+                default="@todo" />
+        <field
+                id="status_reopened"
+                name="status_reopened"
+                type="text"
+                class="readonly"
+                label="WHD_R:STATUS:REOPENED"
+                description="WHD_R:STATUS:REOPENED DESCRIPTION"
+                size="6"
+                default="@todo" />
+        <field
+                id="status_closed"
+                name="status_closed"
+                type="text"
+                class="readonly"
+                label="WHD_R:STATUS:CLOSED"
+                description="WHD_R:STATUS:CLOSED DESCRIPTION"
+                size="6"
+                default="@todo" />
+        <field
+                id="status_archived"
+                name="status_archived"
+                type="text"
+                class="readonly"
+                label="WHD_R:STATUS:ARCHIVED"
+                description="WHD_R:STATUS:ARCHIVED DESCRIPTION"
+                size="6"
+                default="@todo" />
+    </fields>
 </form>

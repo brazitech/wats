@@ -9,11 +9,18 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
+wimport('xml.attributes');
+
 class WXML_Link
 {
     private $_link;
 
     private $_params = array();
+
+    /**
+     * @var XML_Attributes
+     */
+    private $_attributes;
 
     public function  __construct($node)
     {
@@ -42,6 +49,12 @@ class WXML_Link
         {
             $this->_params[] = $param->data();
         }
+
+        // Add attributes is there are any
+        if (isset($node->attribute))
+        {
+            $this->_attributes = new WXML_Attributes($node);
+        }
     }
 
     /**
@@ -69,5 +82,39 @@ class WXML_Link
         // substitue bits and pieces and we're all done!
         return call_user_func_array('sprintf', $values);
     }
+
+    /**
+     *
+     *
+     * @param array|object $data
+     * @param string
+     * @return string
+     */
+    public function buildHTML_Link($data, $linkName)
+    {
+        $link = $this->buildLink($data);
+        $attributes = $this->buildLinkAttributes($data);
+
+        return '<a href="'.$link.'" '.$attributes.'>'.$linkName.'</a>';
+    }
+
+    /**
+     *
+     *
+     * @param array|object $data
+     * @param string
+     * @return string
+     */
+    public function buildLinkAttributes($data)
+    {
+        // Only build if there are attributes to build
+        if ($this->_attributes)
+        {
+            return $this->_attributes->buildAttributes($data);
+        }
+
+        return '';
+    }
+
     
 }

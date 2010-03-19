@@ -67,10 +67,10 @@
     <column type="simple" cansort="false" width="100">
         <label>WHD_R:REQUESTS</label>
         <name>requests</name>
-        <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;requestcategory=%1$d">
+        <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;category_id=%1$d">
             <param>id</param>
         </link>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
     </column>
     <column type="published" cansort="true" width="70">
         <label>WHD_DATA:PUBLISHED</label>
@@ -82,7 +82,7 @@
             width="50">
         <label>WHD_DATA:ORDER</label>
         <name>ordering</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
     </column>
     <column
             type="simple"
@@ -90,6 +90,6 @@
             width="70">
         <label>WHD_DATA:REVISION</label>
         <name>revised</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
     </column>
 </list>

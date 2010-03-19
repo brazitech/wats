@@ -19,30 +19,38 @@ abstract class WTable extends JTable {
      *
      * @var <type>
      */
-    private $fieldset;
+    private $_fieldset;
 
     /**
      *
      * @var boolean
      */
-    private $init = false;
+    private $_init = false;
+
+    /**
+     * Fields that can never be altered on edit.
+     * 
+     * @var array
+     */
+    protected $_immutableFields = array('created', 'created_by');
+
 
     public function __construct($table, $key, &$db) {
         // we need to deal with the custom fields for whelpdesk tables
         // each custom field required an instance variable
         if (preg_match('~^\#\_\_whelpdesk\_(.+)~', $table, $matches)) {
             // get the names of the groups associated with this table
-            $this->fieldset = WFieldset::getInstance($matches[1]);
-            $groupNames = $this->fieldset->getGroupNames();
+            $this->_fieldset = WFieldset::getInstance($matches[1]);
+            $groupNames = $this->_fieldset->getGroupNames();
 
             // itterate over the fields
-            $this->init = true;
-            $fields = $this->fieldset->getFields();
+            $this->_init = true;
+            $fields = $this->_fieldset->getFields();
             for ($z = 0, $t = count($fields); $z < $t; $z++) {
                 $field = $fields[$z];
                 $this->set($field->getFullName(), $field->getDefault());
             }
-            $this->init = false;
+            $this->_init = false;
             
         }
         
@@ -58,7 +66,7 @@ abstract class WTable extends JTable {
      * @return mixed
      */
     public function __set($var, $val) {
-        if ($this->init && !array_key_exists($var, get_object_vars($this))) {
+        if ($this->_init && !array_key_exists($var, get_object_vars($this))) {
             // we are in initialisation mode
             // this is a new property - lets create it
             return $this->{$var} = $val;
@@ -128,6 +136,23 @@ abstract class WTable extends JTable {
 	 * @todo add security to ignore fields we cannot edit
 	 */
 	public function bind($src, $ignore = array()) {
+        // check for immutable fields
+        $k = $this->_tbl_key;
+        if ($this->$k != null)
+        {
+            if (!is_array($ignore))
+            {
+                $ignore = $this->_immutableFields;
+            }
+            else
+            {
+                $ignore = array_merge($ignore, $this->_immutableFields);
+            }
+        }
+
+        var_dump($ignore);
+        var_dump($src);
+
         return parent::bind($src, $ignore);
     }
 
@@ -142,20 +167,20 @@ abstract class WTable extends JTable {
      * @return int|array
      */
     public function check() {
-        if (!$this->fieldset) {
+        if (!$this->_fieldset) {
             // there is no dataset so we can continue
             return true;
         }
 
         // do some prep work
         $messages = array();
-        $groupNames = $this->fieldset->getGroupNames();
+        $groupNames = $this->_fieldset->getGroupNames();
 
         // itterate over groups
         if (count($groupNames)) {
             foreach ($groupNames as $groupName) {
                 // get the groups fields
-                $fields = $this->fieldset->getFields($groupName);
+                $fields = $this->_fieldset->getFields($groupName);
                 // itterate over fields if there are any
                 if (count($fields)) {
                     foreach ($fields as $field) {
@@ -290,7 +315,7 @@ abstract class WTable extends JTable {
     }
 
     public function getFieldset() {
-        return $this->fieldset;
+        return $this->_fieldset;
     }
 
     /**
@@ -301,5 +326,3 @@ abstract class WTable extends JTable {
     }
 
 }
-
-?>
