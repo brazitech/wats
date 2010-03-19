@@ -99,8 +99,8 @@ class ModelRequestPriority extends WModel {
             throw new WCompositeException($check);
         }
 
-        // store the data in the database table and update nulls
-        if (!$table->store(true)) {
+        // store the data in the database table
+        if (!$table->store()) {
             // failed
             WFactory::getOut()->log('Failed to save changes', true);
             return false;

@@ -10,6 +10,7 @@
 defined('JPATH_BASE') or die();
 
 wimport('xml.link');
+wimport('xml.attributes');
 
 abstract class WListColumn
 {
@@ -22,6 +23,7 @@ abstract class WListColumn
     protected $_label;
     protected $_name;
     protected $_width;
+    //protected $_attributes = array();
     protected $_attributes;
 
     /**
@@ -46,10 +48,7 @@ abstract class WListColumn
 
         if (isset($node->attribute))
         {
-            foreach ($node->attribute as $attribute)
-            {
-                $this->_attributes .= ' '.$attribute->attributes('name').'="'.htmlentities($attribute->data(), ENT_QUOTES, 'UTF-8').'" ';
-            }
+            $this->_attributes = new WXML_Attributes($node);
         }
 
         if (isset($node->link))
@@ -143,7 +142,30 @@ abstract class WListColumn
      */
     public function render($row)
     {
-        return '<td '.$this->_attributes.'>'.$this->renderPlain($row).'</td>';
+        /*$attributes = '';
+        foreach ($this->_attributes as $attribute)
+        {
+            $values = array($attribute->attributes('value'));
+            if (isset($attribute->param))
+            {
+                foreach($attribute->param AS $param)
+                {
+                    $paramName = $param->data();
+                    $values[]  = $row->$paramName;
+                }
+            }
+
+            $attributeValue = ' '.call_user_func_array('sprintf', $values);
+            $attributes .= ' '.$attribute->attributes('name').'="'.htmlentities($attributeValue, ENT_QUOTES, 'UTF-8').'" ';
+        }*/
+
+        $attributes = '';
+        if ($this->_attributes != null)
+        {
+            $attributes = $this->_attributes->buildAttributes($row);
+        }
+
+        return '<td '.$attributes.'>'.$this->renderPlain($row).'</td>';
     }
 
     /**
@@ -151,15 +173,13 @@ abstract class WListColumn
      */
     public function renderPlain($row)
     {
-        $text = '';
+        // Prepare Link Name.
+        $text = htmlentities($this->getText($row), ENT_QUOTES, 'UTF-8');
+
+        // Build Link if required.
         if ($this->_link)
         {
-            $text .= '<a href="'.$this->_link->buildLink($row).'">';
-        }
-        $text .= htmlentities($this->getText($row), ENT_QUOTES, 'UTF-8');
-        if ($this->_link)
-        {
-            $text .= '</a>';
+            $text = $this->_link->buildHTML_Link($row, $text);
         }
 
         return $text;

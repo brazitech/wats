@@ -27,6 +27,13 @@ abstract class WTableNested extends JTableNested {
      */
     private $init = false;
 
+    /**
+     * Fields that can never be altered on edit.
+     *
+     * @var array
+     */
+    protected $_immutableFields = array('created', 'created_by');
+
     public function __construct($table, $key, &$db) {
         // we need to deal with the custom fields for whelpdesk tables
         // each custom field required an instance variable
@@ -129,9 +136,23 @@ abstract class WTableNested extends JTableNested {
 
 
     /**
-     * @todo add security to ignore fields we cannot edit
-     */
-    public function bind($src, $ignore = array()) {
+	 * @todo add security to ignore fields we cannot edit
+	 */
+	public function bind($src, $ignore = array()) {
+        // check for immutable fields
+        $k = $this->_tbl_key;
+        if ($this->$k != null)
+        {
+            if (!is_array($ignore))
+            {
+                $ignore = $this->_immutableFields;
+            }
+            else
+            {
+                $igonre = array_merge($ignore, $this->_immutableFields);
+            }
+        }
+
         return parent::bind($src, $ignore);
     }
 

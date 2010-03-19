@@ -31,6 +31,9 @@
         <name>name</name>
         <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
             <param>id</param>
+            <attribute name="style" value="text-align: center; color: %1$s;">
+                <param>colour</param>
+            </attribute>
         </link>
     </column>
     <column
@@ -39,7 +42,7 @@
             width="50">
         <label>WHD_DATA:ORDER</label>
         <name>ordering</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
     </column>
     <column type="published" cansort="true" width="70">
         <label>WHD_DATA:PUBLISHED</label>
@@ -51,7 +54,7 @@
             width="120">
         <label>WHD_DATA:CREATED BY</label>
         <name>name_of_user</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
         <link link="index.php?option=com_users&amp;task=user.edit&amp;id=%1$d">
             <param>created_by</param>
         </link>
@@ -62,7 +65,7 @@
             width="120">
         <label>WHD_DATA:CREATED</label>
         <name>created</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;" />
     </column>
     <column
             type="datetime"
@@ -70,7 +73,7 @@
             width="120">
         <label>WHD_DATA:MODIFIED</label>
         <name>modified</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;"/>
     </column>
     <column
             type="simple"
@@ -78,7 +81,7 @@
             width="70">
         <label>WHD_R:REQUESTS</label>
         <name>number_of_requests</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;"/>
         <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;priority=%1$d">
             <param>id</param>
         </link>
@@ -89,6 +92,6 @@
             width="70">
         <label>WHD_DATA:REVISION</label>
         <name>revised</name>
-        <attribute name="style">text-align: center;</attribute>
+        <attribute name="style" value="text-align: center;"/>
     </column>
 </list>
