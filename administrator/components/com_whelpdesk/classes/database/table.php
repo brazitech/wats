@@ -71,10 +71,6 @@ abstract class WTable extends JTable {
             // this is a new property - lets create it
             return $this->{$var} = $val;
         }
-        
-        // carry on as normal way
-        //debug_print_backtrace();
-        //return parent::__set($var, $val);
 	}
 
     /**
@@ -149,9 +145,6 @@ abstract class WTable extends JTable {
                 $ignore = array_merge($ignore, $this->_immutableFields);
             }
         }
-
-        var_dump($ignore);
-        var_dump($src);
 
         return parent::bind($src, $ignore);
     }

@@ -68,11 +68,12 @@ class ModelRequestPriority extends WModel {
             return false;
         }
 
-        // deal with created and modified dates
+        // deal with created and modified dates and created_by
         $date  = new JDate();
         $table->modified = $date->toMySQL();
         if (!$id) {
             $table->created = $date->toMySQL();
+            $table->created_by = JFactory::getUser()->id;
         }
 
         // run advanced validation using JForm object
