@@ -1,139 +1,162 @@
-<table class="adminform">
-    <tbody>
-        <tr>
-            <td width="50%" valign="top" style="padding: 15px;">
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=glossary.list'); ?>">
-                                <img alt="<?php echo JText::_('WHD_GLOSSARY'); ?>" src="components/com_whelpdesk/assets/icons/48-man.png"/>
-                                <span><?php echo JText::_('WHD_GLOSSARY'); ?></span>
-                            </a>
-                        </div>
+<div class="adminform">
+    <div class="cpanel-left">
+        <div id="cpanel">
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="">
+                            <img alt="<?php echo JText::_('WHD_ANNOUNCEMENTS'); ?>" src="components/com_whelpdesk/assets/icons/announcement.png"/>
+                            <span><?php echo JText::_('WHD_ANNOUNCEMENTS'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=knowledgedomains.list'); ?>">
-                                <img alt="<?php echo JText::_('WHD_KD:DOMAINS'); ?>" src="components/com_whelpdesk/assets/icons/48-karbon.png"/>
-                                <span><?php echo JText::_('WHD_KD:DOMAINS'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=glossary.list'); ?>">
+                            <img alt="<?php echo JText::_('WHD_GLOSSARY'); ?>" src="components/com_whelpdesk/assets/icons/glossary.png"/>
+                            <span><?php echo JText::_('WHD_GLOSSARY'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faqcategories.list'); ?>">
-                                <img alt="<?php echo JText::_('FAQ CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/kmenu_a-48.png"/>
-                                <span><?php echo JText::_('FAQ CATEGORIES'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <!--
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=knowledgedomains.list'); ?>">
+                            <img alt="<?php echo JText::_('WHD_KD:DOMAINS'); ?>" src="components/com_whelpdesk/assets/icons/48-karbon.png"/>
+                            <span><?php echo JText::_('WHD_KD:DOMAINS'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faq.list'); ?>">
-                                <img alt="<?php echo JText::_('FAQS'); ?>" src="components/com_whelpdesk/assets/icons/48-knotes.png"/>
-                                <span><?php echo JText::_('FAQS'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            -->
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faqcategories.list'); ?>">
+                            <img alt="<?php echo JText::_('FAQ CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/faqcategory.png"/>
+                            <span><?php echo JText::_('FAQ CATEGORIES'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display'); ?>">
-                                <img alt="<?php echo JText::_('DOCUMENTS'); ?>" src="components/com_whelpdesk/assets/icons/48-folder_documents.png"/>
-                                <span><?php echo JText::_('DOCUMENTS'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faq.list'); ?>">
+                            <img alt="<?php echo JText::_('FAQS'); ?>" src="components/com_whelpdesk/assets/icons/faq.png"/>
+                            <span><?php echo JText::_('FAQS'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestcategory.list'); ?>">
-                                <img alt="<?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
-                                <span><?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <!--
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display'); ?>">
+                            <img alt="<?php echo JText::_('DOCUMENTS'); ?>" src="components/com_whelpdesk/assets/icons/48-folder_documents.png"/>
+                            <span><?php echo JText::_('DOCUMENTS'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=request.list'); ?>">
-                                <img alt="<?php echo JText::_('WHD_R:REQUESTS'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
-                                <span><?php echo JText::_('WHD_R:REQUESTS'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            -->
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestcategory.list'); ?>">
+                            <img alt="<?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/requestcategory.png"/>
+                            <span><?php echo JText::_('WHD_RC:REQUEST CATEGORIES'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestpriority.list'); ?>">
-                                <img alt="<?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?>" src="components/com_whelpdesk/assets/icons/48-khelpcenter.png"/>
-                                <span><?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=request.list'); ?>">
+                            <img alt="<?php echo JText::_('WHD_R:REQUESTS'); ?>" src="components/com_whelpdesk/assets/icons/request.png"/>
+                            <span><?php echo JText::_('WHD_R:REQUESTS'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=fields.list'); ?>">
-                                <img alt="<?php echo JText::_('CUSTOM FIELDS'); ?>" src="components/com_whelpdesk/assets/icons/xclipboard.png"/>
-                                <span><?php echo JText::_('CUSTOM FIELDS'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=requestpriority.list'); ?>">
+                            <img alt="<?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?>" src="components/com_whelpdesk/assets/icons/requestpriority.png"/>
+                            <span><?php echo JText::_('WHD_RP:REQUEST PRIORITIES'); ?></span>
+                        </a>
                     </div>
                 </div>
-                <div id="cpanel">
-                    <div style="float: left;">
-                        <div class="icon">
-                            <a href="">
-                                <img alt="<?php echo JText::_('WCONFIGURATION'); ?>" src="components/com_whelpdesk/assets/icons/48-Wrench.png"/>
-                                <span><?php echo JText::_('WCONFIGURATION'); ?></span>
-                            </a>
-                        </div>
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="">
+                            <img alt="<?php echo JText::_('WHD_STATISTICS'); ?>" src="components/com_whelpdesk/assets/icons/statistics.png"/>
+                            <span><?php echo JText::_('WHD_STATISTICS'); ?></span>
+                        </a>
                     </div>
                 </div>
-            </td>
-            <td valign="top" style="padding: 15px;">
-                <div class="pane-sliders" id="content-pane">
-                    <?php
-                    // get the sliders
-                    jimport('joomla.html.pane');
-                    $pane =& JPane::getInstance('sliders');
-                    ?>
-                    <?php echo $pane->startPane("fieldset-pane"); ?>
-                    <?php echo $pane->startPanel(JText:: _('STATISTICS'), 'statistics-panel'); ?>
-                    <div style="background-color: #FFFFFF; text-align: center; height: 260px;">
-                        <?php
+            </div>
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_plugins&view=plugins&filter_folder=waticketsystem'); ?>">
+                            <img alt="<?php echo JText::_('WHD_PLUGINS'); ?>" src="components/com_whelpdesk/assets/icons/plugins.png"/>
+                            <span><?php echo JText::_('WHD_PLUGINS'); ?></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div id="cpanel">
+                <div style="float: left;">
+                    <div class="icon">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=fields.list'); ?>">
+                            <img alt="<?php echo JText::_('CUSTOM FIELDS'); ?>" src="components/com_whelpdesk/assets/icons/xclipboard.png"/>
+                            <span><?php echo JText::_('CUSTOM FIELDS'); ?></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<div class="cpanel-right">
+    <div class="pane-sliders" id="content-pane">
+        <?php
+        // get the sliders
+        jimport('joomla.html.pane');
+        $pane =& JPane::getInstance('sliders');
+        ?>
+        <?php echo $pane->startPane("fieldset-pane"); ?>
+        <?php echo $pane->startPanel(JText:: _('STATISTICS'), 'statistics-panel'); ?>
+        <div style="background-color: #FFFFFF; text-align: center; height: 260px;">
+            <?php
 
-                        /*wimport('ofc.open-flash-chart-object');
-                        open_flash_chart_object(
-                            500,
-                            250,
-                            'http://localhost/WATS/svn_4.0/administrator/components/com_whelpdesk/classes/ofc/lib/bar-chart.php',
-                            true,
-                            'components/com_whelpdesk/classes/ofc/'
-                        );*/
+            /*wimport('ofc.open-flash-chart-object');
+            open_flash_chart_object(
+                500,
+                250,
+                'http://localhost/WATS/svn_4.0/administrator/components/com_whelpdesk/classes/ofc/lib/bar-chart.php',
+                true,
+                'components/com_whelpdesk/classes/ofc/'
+            );*/
 
-                        ?>
-                    </div>
-                    <?php echo $pane->endPanel(); ?>
-                    <?php echo $pane->endPane(); ?>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
+            ?>
+        </div>
+        <?php echo $pane->endPanel(); ?>
+        <?php echo $pane->endPane(); ?>
+    </div>
+</div>
 <form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="adminForm">
     <!-- request options -->
     <input type="hidden" name="option"       value="com_whelpdesk" />

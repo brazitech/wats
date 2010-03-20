@@ -56,28 +56,12 @@ class RequestPriorityHTMLWView extends WView {
         $requestCategory = $this->getModel();
         if ($requestCategory->getValue('id'))
         {
-            WDocumentHelper::subtitle(JText::sprintf('WHD_R:EDITING REQUEST PRIORITY %s', $requestCategory->getValue('name')));
+            WDocumentHelper::subtitle(JText::sprintf('WHD_RP:EDITING REQUEST PRIORITY %s', $requestCategory->getValue('name')));
         }
         else
         {
-            WDocumentHelper::subtitle(JText::_('WHD_R:NEW REQUEST PRIORITY'));
+            WDocumentHelper::subtitle(JText::_('WHD_RP:NEW REQUEST PRIORITY'));
         }
-
-        // add glossary to the pathway
-        /*WDocumentHelper::addPathwayItem(JText::_('WHD_KD:DOMAIN'), null, 'index.php?option=com_whelpdesk&task=knowledgedomains.list');
-
-        // work with the current term...
-        $knowledgedomain = $this->getModel();
-        if ($knowledgedomain->id) {
-            WDocumentHelper::addPathwayItem($knowledgedomain->name);
-            // set the subtitle
-            WDocumentHelper::subtitle(JText::sprintf('WHD_KD:EDITING KNOWLEDGE DOMAIN %s', $knowledgedomain->name));
-        } else {
-            WDocumentHelper::addPathwayItem(JText::_('WHD_KD:NEW KNOWLEDGE DOMAIN'));
-            WDocumentHelper::subtitle(JText::_('WHD_KD:NEW KNOWLEDGE DOMAIN'));
-        }*/
     }
 
 }
-
-?>

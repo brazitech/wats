@@ -158,6 +158,21 @@ abstract class WToolbarHelper implements WToolbarHelperInterface {
         }
 	}
 
+    /**
+	 * Writes a configuration button and invokes a cancel operation (eg a checkin).
+	 *
+	 * @param	string	$component	The name of the component, eg, com_content.
+	 * @param	int		$height		The height of the popup.
+	 * @param	int		$width		The width of the popup.
+	 * @param	string	$alt		The name of the button.
+	 * @param	string	$path		An alternative path for the configuation xml relative to JPATH_SITE.
+	 * @since	1.0
+	 */
+	public static function preferences($component = 'com_whelpdesk', $height = '450', $width = '800', $alt = 'JToolbar_Options', $path = '')
+	{
+        JToolbarHelper::preferences($component, $height, $width, $alt, $path);
+	}
+
     private static $move = false;
 
     public static function move($task = 'move', $alt = 'Move') {

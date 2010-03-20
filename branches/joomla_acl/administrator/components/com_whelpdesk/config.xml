@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<fields addfieldpath="/administrator/components/com_whelpdesk/classes/form/fields">
+
+        <field
+                name="history"
+                type="radio"
+                default="0"
+                label="WHD_HISTORY:RECORD"
+                description="WHD_HISTORY:RECORD DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+	</fields>
+
+    <fields
+            addfieldpath="/administrator/components/com_whelpdesk/classes/form/fields"
+            group="helprequest"
+            label="WHD_R:REQUESTS">
+	</fields>
+
+    <fields
+            addfieldpath="/administrator/components/com_whelpdesk/classes/form/fields"
+            group="faq"
+            label="WHD_FAQ:FAQS">
+	</fields>
+
+    <fields
+            addfieldpath="/administrator/components/com_whelpdesk/classes/form/fields"
+            group="announcement"
+            label="WHD_ANNOUNCEMENT:ANNOUNCEMENTS">
+	</fields>
+
+</config>
+
