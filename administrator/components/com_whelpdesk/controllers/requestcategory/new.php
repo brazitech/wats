@@ -27,7 +27,7 @@ class RequestCategoryNewWController extends RequestCategoryWController {
         $model = WModel::getInstanceByName('requestcategory');
 
         // get the JForm
-        $form = $model->getForm(null, true);
+        $form = $model->getForm(null, true, 'new');
 
         // check where in the usecase we are
         if ($stage == 'save' || $stage == 'apply')

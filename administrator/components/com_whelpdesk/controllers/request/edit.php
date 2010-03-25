@@ -51,7 +51,7 @@ class RequestEditWController extends RequestCategoryWController {
         }
 
         // get the JForm and the replies list
-        $form    = $model->getForm($request, true);
+        $form    = $model->getForm($request, true, 'edit');
         $replies = $model->getRepliesList();
 
         // check where in the usecase we are

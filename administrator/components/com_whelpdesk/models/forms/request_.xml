@@ -36,6 +36,8 @@
                 description="JField_Description_Desc"
                 filter="safehtml"
                 buttons="false"
+                readonly="true"
+                readonlymode="textarea"
                 default="" />
     </fields>
     <fields

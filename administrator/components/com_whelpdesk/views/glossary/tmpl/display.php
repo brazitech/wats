@@ -11,6 +11,12 @@ defined('JPATH_BASE') or die();
 
 JFactory::getDocument()->addStyleSheet('components/com_whelpdesk/assets/css/horizontal-list.css');
 
+$list = $this->getModel();
+$glossaryItems = $list->getRows();
+$filters = $list->getFilters();
+$pagination = $list->getPagination();
+$char = null;
+
 ?>
 
 <?php WDocumentHelper::render(); ?>
@@ -24,48 +30,43 @@ JFactory::getDocument()->addStyleSheet('components/com_whelpdesk/assets/css/hori
     <div id="glossary-navigation">
         <ul class="horizontal-list">
             <?php
-            $glossaryItems = $this->getModel();
-            $current = '';
-            for ($i = 0, $n = count($glossaryItems); $i < $n; $i++) :
-            $glossaryItem = $glossaryItems[$i];
-            $startChar = JString::str_split($glossaryItem->term);
-            $startChar = $startChar[0];
-            if ($current != $startChar) :
-            $current = $startChar;
+            foreach ($glossaryItems AS $glossaryItem):
+            $currentChar = JString::substr($glossaryItem->term, 0, 1);
+            if ($currentChar != $char) :
+            $char = $currentChar;
             ?>
             <li>
-                <a href="#glossary-<?php echo $current; ?>"><?php echo $current; ?></a> |
+                <a href="#glossary-<?php echo $char; ?>">
+                    <?php echo $char; ?>
+                </a>
             </li>
             <?php endif; ?>
-            <?php endfor; ?> 
+            <?php endforeach; ?>
         </ul>
     </div>
-
-    <div>
-        
-    </div>
-
+    
     <?php
-    $glossaryItems = $this->getModel();
-    $current = '';
-    for ($i = 0, $n = count($glossaryItems); $i < $n; $i++) :
-    $glossaryItem = $glossaryItems[$i];
+    $char = null;
+    foreach ($glossaryItems AS $glossaryItem):
+    $currentChar = JString::substr($glossaryItem->term, 0, 1);
+    if ($currentChar != $char) :
+    echo $char != null ? '</dl>' : '';
+    $char = $currentChar;
     ?>
-    <?php
-    $startChar = JString::str_split($glossaryItem->term);
-    $startChar = $startChar[0];
-    if ($current != $startChar) :
-    $current = $startChar;
-    ?>
-    <h2>
-        <a name="glossary-<?php echo $current; ?>">
-            <?php echo $current; ?>
+    <h3>
+        <a name="glossary-<?php echo $char; ?>">
+            <?php echo $char; ?>
         </a>
-    </h2>
-    <?php endif; ?>
-    <div>
-        <h4>
+    </h3>
+    <dl>
+        <?php
+        endif;
+        ?>
+        <dt>
             <?php echo $glossaryItem->term; ?>
+        </dt>
+        <dd>
+            <?php echo $glossaryItem->description; ?>
             <?php $showSlash = false;
             if (strlen($glossaryItem->field_related_acronyms)) :
             echo '<br/>(';
@@ -77,11 +78,8 @@ JFactory::getDocument()->addStyleSheet('components/com_whelpdesk/assets/css/hori
             echo ')';
             endif;
             ?>
-        </h4>
-        <p>
-            <?php echo $glossaryItem->description; ?>
-        </p>
-    </div>
-    <?php endfor; ?>
+        </dd>
+        <?php endforeach; ?>
+    </dl>
 
 </form>
