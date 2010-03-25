@@ -16,7 +16,6 @@ class ModelGlossary extends WModel {
 
     public function  __construct() {
         parent::__construct();
-        $this->setDefaultFilterOrder('name');
     }
 
     protected function _populateState() {
@@ -37,28 +36,6 @@ class ModelGlossary extends WModel {
         }
 
         return $table;
-    }
-
-    public function checkIn($id) {
-        $this->getTerm($id)->checkIn();
-    }
-
-    public function checkOut($id, $uid=0) {
-        if (!$uid) {
-            $uid = JFactory::getUser()->id;
-        }
-        $this->getTerm($id)->checkOut($uid);
-    }
-
-    public function changeState($cid, $published) {
-        // get the table and publish the identified terms
-        $table = WFactory::getTable('glossary');
-        $table->publish($cid, ($published ? 1 : 0), JFactory::getUser()->id);
-    }
-
-    public function resetHits($id) {
-        $table = WFactory::getTable('glossary');
-        $table->resetHits($id);
     }
 
     public function delete($id) {
@@ -87,34 +64,6 @@ class ModelGlossary extends WModel {
              . 'ORDER BY ' . dbName('term');
         $db->setQuery($sql);
         return $db->loadObjectList();
-    }
-
-    public function getList($limitstart = null, $limit = null) {
-        // get the limitstart value
-        if ($limitstart === null) {
-            $limitstart = $this->getLimitstart();
-        }
-
-        // get the limit value
-        if ($limit === null) {
-            $limit = $this->getLimit();
-        }
-
-        // get the terms in the glossary
-        $sql = $this->buildQuery();
-        $database = JFactory::getDBO();
-        $database->setQuery($sql, $limitstart, $limit);
-
-        return $database->loadObjectList();
-    }
-
-    public function getTotal() {
-        // get the total number of terms in the glossary
-        $sql = 'SELECT COUNT(*) FROM ' . dbTable('glossary')
-            . $this->buildQueryWhere();
-        $this->_db->setQuery($sql);
-        
-        return (int)($this->_db->loadResult());
     }
 
     private function buildQuery() {

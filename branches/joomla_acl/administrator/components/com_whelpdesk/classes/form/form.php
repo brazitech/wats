@@ -19,9 +19,10 @@ class WForm extends JForm
 	 * @param	string		$data		The name of an XML file or an XML string.
 	 * @param	string		$file		Flag to toggle whether the $data is a file path or a string.
 	 * @param	array		$options	An array of options to pass to the form.
+     * @param   string      $type       The type of form, EDIT or NEW
 	 * @return	WForm		A WForm instance.
 	 */
-	public static function getInstance($data, $name = 'form', $file = true, $options = array())
+	public static function getInstance($data, $name = 'form', $file = true, $options = array(), $type = null)
 	{
 		static $instances;
 
@@ -29,24 +30,42 @@ class WForm extends JForm
 			$instances = array();
 		}
 
+        // Deal with type if specified.
+        if ($file && ($type != null))
+        {
+            $specificData = $data . '_' . strtolower($type);
+
+            if (JPath::find(JForm::addFormPath(), $specificData.'.xml') !== false)
+            {
+                // There is a specialised XML file for this type
+                $data = $specificData;
+            }
+        }
+
+        // Default type.
+        if ($type == null)
+        {
+            $type = '_default';
+        }
+        
 		// Only load the form once.
-		if (!isset($instances[$name])) {
+		if (!isset($instances[$name][$type])) {
 			// Instantiate the form.
-			$instances[$name] = new WForm($options);
+			$instances[$name][$type] = new WForm($options);
 
 			// Set the form name.
-			$instances[$name]->setName($name);
+			$instances[$name][$type]->setName($name);
 
 			// Load the data.
 			if ($file) {
-				$instances[$name]->load($data, true, true);
+				$instances[$name][$type]->load($data, true, true);
 			} else {
-				$instances[$name]->load($data, false, true);
+				$instances[$name][$type]->load($data, false, true);
 			}
 
 		}
 
-		return $instances[$name];
+		return $instances[$name][$type];
 	}
 
 	/**

@@ -34,7 +34,7 @@ abstract class WModel extends JModel {
      *
      * @var JForm
      */
-    protected $_form = null;
+    protected $_form = array();
 
     /**
      * @var WList
@@ -59,24 +59,27 @@ abstract class WModel extends JModel {
      * Method to get a form object.
      *
      * @param   object      $data
-     * @param   boolean     $reset      Optional argument to force load a new form.
+     * @param   boolean     $reset Optional argument to force load a new form.
+     * @param   string      $type  Type of form (specialised XML)
      * @return  mixed       WForm object on success, False on error.
      */
-    function getForm($data=null, $reset=false)
+    public function getForm($data=null, $reset=false, $type=null)
     {
+        $cacheIndex = $term == null ? '_default' : $term;
+        
         // Check if we can use cached form
-        if ($reset || !$this->_form)
+        if ($reset || !$this->_form[$cacheIndex])
         {
             // Get the form
             wimport('form.form');
             JForm::addFormPath(JPATH_COMPONENT.DS.'models'.DS.'forms');
             JForm::addFieldPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'form'.DS.'fields');
-            $this->_form = &WForm::getInstance($this->getName(), $this->getName(), true, array());
+            $this->_form[$cacheIndex] = WForm::getInstance($this->getName(), $this->getName(), true, array(), $type);
 
             // Check for an error
-            if (JError::isError($this->_form))
+            if (JError::isError($this->_form[$cacheIndex]))
             {
-                $this->setError($$this->_form->getMessage());
+                $this->setError($this->_form[$cacheIndex]->getMessage());
                 return false;
             }
         }
@@ -84,13 +87,13 @@ abstract class WModel extends JModel {
         // Load data
         if ($data)
         {
-            if (!$this->_form->bind($data))
+            if (!$this->_form[$cacheIndex]->bind($data))
             {
                 throw new WException(JText::_('WAHD:MODEL:COULD NOT BIND DATA WITH FORM OBJECT'), $data);
             }
         }
 
-        return $this->_form;
+        return $this->_form[$cacheIndex];
     }
 
     /**

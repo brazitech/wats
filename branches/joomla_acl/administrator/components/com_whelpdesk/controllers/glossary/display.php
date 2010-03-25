@@ -22,38 +22,16 @@ class GlossaryDisplayWController extends GlossaryWController {
 
     public function __construct() {
         parent::__construct();
-        $this->setUsecase('list');
+        $this->setUsecase('display');
+        $this->setType('glossary');
     }
 
     /**
      * Displays the control panel
      */
     public function execute($stage) {
-        try {
-            parent::execute($stage);
-        } catch (Exception $e) {
-            // uh oh, access denied... let's give the next controller a whirl!
-            JError::raiseWarning('401', JText::_('WHD_GLOSSARY:DISPLAY ACCESS DENIED'));
-            return;
-        }
-
         // get the model
         $model = WModel::getInstanceByName('glossary');
-
-        // get the list data and current filters
-        $terms = $model->getDisplayList();
-        
-        // check if we should show the list button
-        $user          = JFactory::getUser();
-        $accessSession = WFactory::getAccessSession();
-        $canList = false;
-        try {
-            $canList = $accessSession->hasAccess('user', $user->get('id'),
-                                                        'glossary', 'glossary',
-                                                        'glossary', 'list');
-        } catch (Exception $e) {
-            $canList = false;
-        }
 
         // get the view
         $view = WView::getInstance(
@@ -62,16 +40,9 @@ class GlossaryDisplayWController extends GlossaryWController {
             strtolower(JFactory::getDocument()->getType())
         );
 
-        // add the default model to the view
-        $view->addModel('terms', $terms, true);
-        
-        // add the boolean values describing permissions
-        $view->addModel('canList', $canList);
-
-        // add the pagination data to the view
-        $view->addModel('paginationTotal',      $model->getTotal());
-        $view->addModel('paginationLimit',      $model->getLimit());
-        $view->addModel('paginationLimitStart', $model->getLimitStart());
+        // get the list data add to the view
+        $list = $model->getList();
+        $view->addModel('glossary', $list, true);
 
         // display the view!
         $this->display();
