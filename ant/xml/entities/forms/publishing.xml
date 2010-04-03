@@ -1,0 +1,44 @@
+<fields
+        group="publishing"
+        label="WHD_DATA:PUBLISHING DETAILS"
+        position="detail">
+    <field
+            id="created"
+            name="created"
+            type="formatteddate"
+            class="readonly"
+            label="WHD_DATA:CREATED"
+            description="WHD_DATA:CREATED DESCRIPTION"
+            size="25"
+            readonly="true"
+            filter="unset" />
+    <field
+            id="created_by"
+            name="created_by"
+            type="wuser"
+            class="readonly"
+            label="WHD_DATA:CREATED BY"
+            description="WHD_DATA:CREATED BY DESCRIPTION"
+            size="25"
+            readonly="true"
+            filter="unset" />
+    <field
+            id="modified"
+            name="modified"
+            type="formatteddate"
+            class="readonly"
+            label="WHD_DATA:MODIFIED"
+            description="WHD_DATA:MODIFIED DESCRIPTION"
+            size="25"
+            readonly="true"
+            filter="unset" />
+    <field
+            id="revised"
+            name="revised"
+            type="text"
+            class="readonly"
+            label="WHD_DATA:REVISION"
+            description="WHD_DATA:REVISION DESCRIPTION"
+            size="6"
+            default="0" />
+</fields>
