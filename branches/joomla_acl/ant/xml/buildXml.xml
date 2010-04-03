@@ -48,5 +48,13 @@
                 <include name="*.xml" />
             </fileset>
         </xmltask>
+
+        <!-- Move generated XML files to their new location -->
+        <move todir="${buildXml.path.forms.result}">
+            <fileset dir="${buildXml.path.temp}">
+                <include name="*.xml" />
+            </fileset>
+        </move>
+        
     </target>
 </project>
