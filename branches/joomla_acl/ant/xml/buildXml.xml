@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project PUBLIC
+  "-//Apache//DTD Ant 1.6//EN"
+  "../../project.dtd">
+<project name="Webamoeba Help Desk - XML Build" default="default">
+
+    <!-- Import xmltask -->
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
+    <!-- Load XML properties file -->
+    <property file="xml.properties" />
+    <tstamp>
+        <format property="XML_BUILD_DATE_TIME" pattern="yyyy-dd-MM hh:mm aa" offset="0" unit="hour"/>
+    </tstamp>
+
+    <!-- Flatten XML files -->
+    <target name="default" depends="forms">
+    </target>
+
+    <!-- Flatten XML Form files -->
+    <target name="forms">
+
+        <!-- Clear out any old XML files -->
+        <delete>
+            <fileset dir="${buildXml.path.temp}" includes="*.xml"/>
+        </delete>
+
+        <!-- Copy files and set full paths to external entities -->
+        <copy todir="${buildXml.path.temp}">
+            <fileset dir="${buildXml.path.forms}">
+                <include name="*.xml" />
+            </fileset>
+            <filterchain>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="EXTERNAL_ENTITY_ROOT" value="${basedir}/${buildXml.path.entities}/" />
+                    <token key="XML_BUILD_DATE_TIME"  value="${XML_BUILD_DATE_TIME}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <!-- Rewite XML files without XML entities (flatten the XML files) -->
+        <xmltask
+                todir="${buildXml.path.temp}"
+                expandEntityReferences="true"
+                encoding="UTF-8"
+                indent="true" >
+            <fileset dir="${buildXml.path.temp}">
+                <include name="*.xml" />
+            </fileset>
+        </xmltask>
+    </target>
+</project>
