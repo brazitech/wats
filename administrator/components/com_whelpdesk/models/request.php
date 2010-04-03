@@ -16,6 +16,8 @@ class ModelRequest extends WModel {
 
     private $_repliesList;
 
+    private $_isEditForm = false;
+
     public function  __construct() {
         parent::__construct();
         $this->_tableName = 'request';
@@ -47,5 +49,19 @@ class ModelRequest extends WModel {
         }
 
         return $this->_repliesList;
+    }
+
+    public function setIsEditForm($isEditForm)
+    {
+        $this->_isEditForm = $isEditForm;
+    }
+
+    /**
+     *
+     * @return WForm
+     */
+    protected function _getFormInstance()
+    {
+        return WForm::getInstance($this->getName(), $this->getName(), true, array());
     }
 }
