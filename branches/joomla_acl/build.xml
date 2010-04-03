@@ -4,6 +4,9 @@
   "project.dtd">
 <project name="Webamoeba Help Desk" default="dist">
 
+    <!-- Import xmltask -->
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
     <!-- Versioning Properties -->
     <property name="version_major"  value="4" />
     <property name="version_minor"  value="0" />
@@ -21,6 +24,14 @@
     
     <!-- Load build properties file -->
     <property file="build.properties"/>
+
+
+    <!-- Flatten XML files -->
+    <target name="flatten-xml">
+    
+        <ant antfile="ant/buildforms.xml" useNativeBasedir="true" />
+        
+    </target>
     
     
     <!-- Build Ant DTD file -->

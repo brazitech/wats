@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: list.php 146 2009-07-22 18:26:06Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk

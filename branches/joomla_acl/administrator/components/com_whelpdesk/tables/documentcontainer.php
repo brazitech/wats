@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: glossary.php 121 2009-05-29 12:57:24Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk
