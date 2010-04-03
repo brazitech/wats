@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: edit.php 149 2009-07-24 15:17:48Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk

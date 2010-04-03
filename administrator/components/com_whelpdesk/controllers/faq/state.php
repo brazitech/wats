@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: state.php 100 2009-05-03 18:05:10Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk

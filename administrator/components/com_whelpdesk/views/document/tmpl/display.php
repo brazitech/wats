@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: form.php 122 2009-05-29 14:49:37Z webamoeba $
+ * @version $Id$
  * @copyright Copyright (C) James Kennard
  * @license GNU/GPL
  * @package helpdesk

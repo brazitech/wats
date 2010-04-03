@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: help.php 14577 2010-02-04 07:12:36Z eddieajau $
+ * @version		$Id$
  * @package		Joomla.Framework
  * @subpackage	HTML
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
