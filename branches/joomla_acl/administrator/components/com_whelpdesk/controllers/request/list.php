@@ -16,7 +16,7 @@ class RequestListWController extends WController {
 
     public function  __construct() {
         //parent::__construct();
-        $this->setUsecase('list');
+        $this->setDefaultView('list');
         $this->setType('request');
     }
 

@@ -9,6 +9,8 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
+if ($this->getModel('replies')) :
+
 ob_start();
 
 $replies = $this->getModel('replies');
@@ -53,5 +55,7 @@ $pagination = $replies->getPagination();
 <?php
 
 $onAfterNormalFieldSets = ob_get_clean();
+
+endif;
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'views'.DS.'generic'.DS.'tmpl'.DS.'form.php');

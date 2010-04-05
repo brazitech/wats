@@ -15,7 +15,7 @@ class HelpdeskDisplayWController extends HelpdeskWController {
 
     public function __construct() {
         parent::__construct();
-        $this->setUsecase('display');
+        $this->setDefaultView('display');
     }
 
     /**

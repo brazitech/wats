@@ -8,56 +8,40 @@ defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
 wimport('database.query');
-require_once JPATH_LIBRARIES.DS.'joomla'.DS.'form'.DS.'fields'.DS.'list.php';
 
 /**
  *
  *
  */
-class JFormFieldRequestCategory extends JFormFieldList
+class JFormFieldRequestCategory extends JFormField
 {
-	/**
-	 * The field type.
-	 *
-	 * @var		string
-	 */
-	public $type = 'RequestCategory';
 
-	/**
-	 * Method to get a list of options for a list input.
+    /**
+	 * Method to get the field input.
 	 *
-	 * @return	array		An array of JHtml options.
+	 * @return	string		The field input.
 	 */
-	protected function _getOptions()
+	protected function _getInput()
 	{
-		$db		= &JFactory::getDbo();
+        if (!$this->value)
+        {
+            return JText::_('WHD_RC:UNKNOWN');
+        }
+
+        $db		= &JFactory::getDbo();
 		$query	= new WDatabaseQuery();
 
-		$query->select('c.id AS value, c.name AS text, c.level');
+		$query->select('c.name');
 		$query->from(dbTable('request_categories').' AS c');
-        $query->where('c.parent_id > 0');
-		$query->order('c.lft ASC');
+        $query->where('c.id = '.(int)$this->value);
 
 		// Get the options.
 		$db->setQuery($query);
+		$requestCategory = $db->loadObject();
 
-		$options = $db->loadObjectList();
+		$size =((string)$this->_element->attributes()->size) ? ' size="'.$this->_element->attributes()->size.'"' : '';
+		$class =((string)$this->_element->attributes()->class) ? ' class="'.$this->_element->attributes()->class.'"' : ' class="text_area"';
 
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			JError::raiseWarning(500, $db->getErrorMsg());
-		}
-
-		// Pad the option text with spaces using depth level as a multiplier.
-		for ($i = 1, $n = count($options); $i < $n; $i++) {
-			$options[$i]->text = str_repeat('- ',$options[$i]->level).$options[$i]->text;
-		}
-
-		$options	= array_merge(
-						parent::_getOptions(),
-						$options
-					);
-
-		return $options;
+		return '<input type="text" '.$class.$size.' value="'.htmlspecialchars($requestCategory->name, ENT_COMPAT, 'UTF-8').'" readonly="readonly" disabled="disabled"/><input type="hidden" name="'.$this->inputName.'" id="'.$this->inputId.'" value="'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'" /></span>';
 	}
 }

@@ -15,7 +15,7 @@ class RequestCategoryNewWController extends RequestCategoryWController {
 
     public function  __construct() {
         //parent::__construct();
-        $this->setUsecase('new');
+        $this->setDefaultView('new');
         $this->setType('requestcategory');
     }
 

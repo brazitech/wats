@@ -27,6 +27,58 @@ class ModelRequestCategory extends WModel {
         return parent::getTable($id, $reload);
     }
 
+    public function getRootRequestCategory()
+    {
+        wimport('database.query');
+
+        // Prepare the query
+        $query = new WDatabaseQuery();
+        $query->select('*');
+        $query->from(dbTable('request_categories'));
+        $query->order(dbName('lft'));
+
+        // Execute the query.
+        $db = &JFactory::getDbo();
+        $db->setQuery($query);
+        $results = $db->loadObjectList('id');
+
+        // Set children categories.
+        $root;
+        foreach($results AS $category)
+        {
+            if ($category->parent_id > 0)
+            {
+                $results[$category->parent_id]->children[] = $category;
+            }
+            else
+            {
+                $root = $category;
+            }
+        }
+
+        // Sort the categories by name.
+        $this->_sortChildrenByName($root);
+
+        // return the root category.
+        return $root;
+    }
+
+    private function _sortChildrenByName($category)
+    {
+        if (is_array($category->children))
+        {
+            JArrayHelper::sortObjects(
+                $category->children,
+                'name'
+            );
+
+            foreach($category->children AS $child)
+            {
+                $this->_sortChildrenByName($child);
+            }
+        }
+    }
+
     public function delete($id) {
         // @todo
         

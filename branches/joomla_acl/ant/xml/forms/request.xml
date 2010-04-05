@@ -8,7 +8,6 @@
 -->
 
 <!DOCTYPE root [
-  <!ENTITY publishing SYSTEM "@EXTERNAL_ENTITY_ROOT@forms/publishing.xml">
   <!ENTITY requestState SYSTEM "@EXTERNAL_ENTITY_ROOT@forms/request_state.xml">
 ]>
 
@@ -35,29 +34,12 @@
         <field
                 id="description"
                 name="description"
-                type="textarea"
+                type="editor"
                 class="inputbox"
-                label="YOOHOO"
+                label="DESCRIPTION"
                 description="JField_Description_Desc"
                 filter="safehtml"
-                buttons="false"
-                readonly="true" />
+                buttons="false" />
     </fields>
     &requestState;
-    &publishing;
-    <fields
-            group="history"
-            label="WHD_RH:HISTORY"
-            position="detail">
-        <field
-                id="history"
-                name="id"
-                type="requesthistory"
-                class="readonly"
-                label="WHD_RH:HISTORY"
-                description="WHD_RH:HISTORY DESCRIPTION"
-                size="18"
-                readonly="true"
-                filter="unset" />
-    </fields>
 </form>
