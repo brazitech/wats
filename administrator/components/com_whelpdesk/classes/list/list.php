@@ -213,6 +213,11 @@ class WList
     {
         return $this->_paginationState->getPagination();
     }
+    
+    public function setPaginationState(WPaginationState $paginationState)
+    {
+        $this->_paginationState = $paginationState;
+    }
 
     public function getTotal()
     {

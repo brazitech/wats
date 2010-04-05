@@ -33,7 +33,7 @@ abstract class WController {
      * @var String
      * @see WController::setUsecase()
      */
-    private $usecase;
+    private $defaultView;
 
     /**
      * Does the business when executed. Sub classes must override this method!
@@ -78,8 +78,8 @@ abstract class WController {
      *
      * @param String $name
      */
-    protected function setUsecase($name) {
-        $this->usecase = (string)$name;
+    protected function setDefaultView($name) {
+        $this->defaultView = (string)$name;
     }
 
     /**
@@ -87,8 +87,8 @@ abstract class WController {
      *
      * @return String
      */
-    public function getUsecase() {
-        return $this->usecase;
+    public function getDefaultView() {
+        return $this->defaultView;
     }
 
 	/**
@@ -101,7 +101,7 @@ abstract class WController {
         $command  = WCommand::getInstance();
         $document =& JFactory::getDocument();
 		$format   =  strtolower($document->getType());
-		$viewName =  JRequest::getCmd('view', $command->getUsecase());
+		$viewName =  JRequest::getCmd('view', $this->getDefaultView());
 
         // get the view
         $view = WView::getInstance($this->getType(), $viewName, $format);

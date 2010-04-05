@@ -1,0 +1,35 @@
+<fields
+        group="state"
+        label="WHD_R:STATE"
+        position="detail">
+    <field
+            name="category_id"
+            type="requestcategory"
+            label="WHD_RC:CATEGORY"
+            description="WHD_RC:CATEGORY DESCRIPTION"
+            class="inputbox"/>
+    <field
+            id="priority"
+            name="priority"
+            type="sql"
+            query="SELECT * FROM #__whelpdesk_request_priorities"
+            key_field="id"
+            value_field="name"
+            class="inputbox"
+            label="WHD_RP:PRIORITY"
+            description="WHD_RP:PRIORITY DESCRIPTION"
+            filter="intval" />
+    <field
+            id="status"
+            name="status"
+            type="list"
+            class="inputbox"
+            label="WHD_R:STATUS"
+            description="WHD_R:STATUS DESCRIPTION"
+            filter="intval">
+        <option value="1">WHD_R:STATUS:OPEN</option>
+        <option value="2">WHD_R:STATUS:REOPENED</option>
+        <option value="2">WHD_R:STATUS:CLOSED</option>
+        <option value="2">WHD_R:STATUS:ARCHIVED</option>
+    </field>
+</fields>

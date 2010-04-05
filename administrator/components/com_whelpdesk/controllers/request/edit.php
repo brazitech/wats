@@ -15,7 +15,7 @@ class RequestEditWController extends RequestCategoryWController {
 
     public function  __construct() {
         //parent::__construct();
-        $this->setUsecase('edit');
+        $this->setDefaultView('edit');
         $this->setType('request');
     }
 
