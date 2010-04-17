@@ -9,12 +9,19 @@
 // Don't allow direct linking
 defined('_JEXEC') or die('Restricted Access');
 
-if (JRequest::getBool('modal')) {
+if (JRequest::getBool('modal'))
+{
     JRequest::setVar('tmpl', 'component');
 }
 
+// add CSS
+$document = &JFactory::getDocument();
+$document->addStyleSheet('components/com_whelpdesk/assets/css/whd.css');
+
+
 // wrap everything to catch any unexepcted errors
-try {
+try
+{
 
     // get the loader
     require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'loader.php');

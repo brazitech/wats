@@ -22,7 +22,7 @@ class GlossaryDisplayWController extends GlossaryWController {
 
     public function __construct() {
         parent::__construct();
-        $this->setUsecase('display');
+        $this->setDefaultView('display');
         $this->setType('glossary');
     }
 

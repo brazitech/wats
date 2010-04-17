@@ -62,6 +62,19 @@
                 class="inputbox"
                 size="6"
                 default="0" />
+        
+        <field
+                name="default"
+                type="radio"
+                label="WHD_RP:DEFAULT"
+                description="WHD_RP:DEFAULT DESCRIPTION"
+                default="0"
+                class="inputbox"
+                filter="integer">
+			<option value="0">JNo</option>
+			<option value="1">JYes</option>
+		</field>
+        
         <field
                 id="description"
                 name="description"

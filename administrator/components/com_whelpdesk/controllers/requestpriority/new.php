@@ -15,7 +15,7 @@ class RequestPriorityNewWController extends WController {
 
     public function  __construct() {
         //parent::__construct();
-        $this->setUsecase('new');
+        $this->setDefaultView('new');
         $this->setType('requestpriority');
     }
 

@@ -22,7 +22,7 @@ class GlossaryListWController extends GlossaryWController {
 
     public function __construct() {
         parent::__construct();
-        $this->setUsecase('list');
+        $this->setDefaultView('list');
         $this->setType('glossary');
     }
 
@@ -48,5 +48,3 @@ class GlossaryListWController extends GlossaryWController {
         $this->display();
     }
 }
-
-?>

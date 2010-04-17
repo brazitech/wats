@@ -142,23 +142,6 @@ abstract class WListColumn
      */
     public function render($row)
     {
-        /*$attributes = '';
-        foreach ($this->_attributes as $attribute)
-        {
-            $values = array($attribute->attributes('value'));
-            if (isset($attribute->param))
-            {
-                foreach($attribute->param AS $param)
-                {
-                    $paramName = $param->data();
-                    $values[]  = $row->$paramName;
-                }
-            }
-
-            $attributeValue = ' '.call_user_func_array('sprintf', $values);
-            $attributes .= ' '.$attribute->attributes('name').'="'.htmlentities($attributeValue, ENT_QUOTES, 'UTF-8').'" ';
-        }*/
-
         $attributes = '';
         if ($this->_attributes != null)
         {

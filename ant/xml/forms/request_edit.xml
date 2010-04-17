@@ -35,13 +35,11 @@
         <field
                 id="description"
                 name="description"
-                type="textarea"
-                class="inputbox"
-                label="YOOHOO"
+                type="textonly"
+                class="inputbox whdTextarea"
+                label="DESCRIPTION"
                 description="JField_Description_Desc"
-                filter="safehtml"
-                buttons="false"
-                readonly="true" />
+                html="true" />
     </fields>
     &requestState;
     &publishing;

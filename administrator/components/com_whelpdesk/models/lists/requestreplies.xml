@@ -14,6 +14,16 @@
         <join type="LEFT">#__users ON #__users.id = #__whelpdesk_request_replies.created_by</join>
         <order>#__whelpdesk_request_replies.created</order>
     </query>
+    
+    <!-- Filters -->
+    <filter
+            id="request_id"
+            name="request_id"
+            type="hidden"
+            position="none">
+        <label>WHD_LIST:STATE</label>
+        <column>request_id</column>
+    </filter>
 
     <!-- Columns -->
     <column type="simple" cansort="false">

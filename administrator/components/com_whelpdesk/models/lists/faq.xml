@@ -5,17 +5,16 @@
     Description: WList definition for Request Categories.
 -->
 
-<list state="whelpdesk.models.requestcategory.list">
+<list state="whelpdesk.models.faq.list">
     <!-- Query -->
     <query>
-        <select>#__whelpdesk_request_priorities.*</select>
+        <select>#__whelpdesk_faqs.*</select>
+        <select>#__whelpdesk_faq_categories.name AS category_name</select>
         <select>#__users.name AS name_of_user</select>
-        <select>COUNT(#__whelpdesk_requests.id) AS number_of_requests</select>
-        <from>#__whelpdesk_request_priorities</from>
-        <join type="LEFT">#__users ON #__users.id = #__whelpdesk_request_priorities.created_by</join>
-        <join type="LEFT">#__whelpdesk_requests ON #__whelpdesk_request_priorities.id = #__whelpdesk_requests.priority</join>
-        <order>#__whelpdesk_request_priorities.ordering</order>
-        <group>#__whelpdesk_request_priorities.id</group>
+        <from>#__whelpdesk_faqs</from>
+        <join type="LEFT">#__users ON #__users.id = #__whelpdesk_faqs.created_by</join>
+        <join type="LEFT">#__whelpdesk_faq_categories ON #__whelpdesk_faq_categories.id = #__whelpdesk_faqs.category_id</join>
+        <order>#__whelpdesk_faqs.question</order>
     </query>
 
     <!-- Columns -->
@@ -27,22 +26,11 @@
         <name>id</name>
     </column>
     <column type="name" cansort="true" showdefault="true">
-        <label>WHD_RP:PRIORITY</label>
-        <name>name</name>
-        <link link="index.php?option=com_whelpdesk&amp;task=requestpriority.edit&amp;id=%1$d">
+        <label>WHD_FAQ:QUESTION</label>
+        <name>question</name>
+        <link link="index.php?option=com_whelpdesk&amp;task=faq.edit&amp;id=%1$d">
             <param>id</param>
-            <attribute name="style" value="text-align: center; color: %1$s;">
-                <param>colour</param>
-            </attribute>
         </link>
-    </column>
-    <column
-            type="order"
-            cansort="true"
-            width="50">
-        <label>WHD_DATA:ORDER</label>
-        <name>ordering</name>
-        <attribute name="style" value="text-align: center;" />
     </column>
     <column type="published" cansort="true" width="70">
         <label>WHD_DATA:PUBLISHED</label>
@@ -74,17 +62,6 @@
         <label>WHD_DATA:MODIFIED</label>
         <name>modified</name>
         <attribute name="style" value="text-align: center;"/>
-    </column>
-    <column
-            type="simple"
-            cansort="true"
-            width="70">
-        <label>WHD_R:REQUESTS</label>
-        <name>number_of_requests</name>
-        <attribute name="style" value="text-align: center;"/>
-        <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;priority=%1$d">
-            <param>id</param>
-        </link>
     </column>
     <column
             type="simple"

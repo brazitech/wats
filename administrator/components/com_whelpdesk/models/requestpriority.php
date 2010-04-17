@@ -45,7 +45,7 @@ class ModelRequestPriority extends WModel {
      * @param array $data
      * @throws WCompositeException This exception is thrown when errors exist in the data
      */
-    function save($id, $data) {
+    function save($id, $data, $formType=null) {
         // get the table and reset the data
         $table = $this->getTable();
         $table->id = $id;
@@ -77,8 +77,7 @@ class ModelRequestPriority extends WModel {
         }
 
         // run advanced validation using JForm object
-        $form = $this->_form;
-        $form->bind($table);
+        $form = $this->getForm($table, false, $formType);
         $check = $form->validate($table);
         if (!$check)
         {

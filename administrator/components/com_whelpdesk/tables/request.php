@@ -9,13 +9,13 @@
 // No direct access
 defined('JPATH_BASE') or die();
 
-wimport('database.tablenested');
+wimport('database.table');
 wimport('helper.alias');
 
 /**
  * Representation of the #__whelpdesk_requests table
  */
-class JTableRequest extends WTableNested {
+class JTableRequest extends WTable {
 
     /**
      * PK

@@ -285,4 +285,9 @@ abstract class WModel extends JModel {
         $table = $this->getTable();
         $table->resetHits($id);
     }
+
+    public function save()
+    {
+        throw new WException('WHD_E:METHOD NOT IMPLEMENTED %s', get_class($this).'::save()');
+    }
 }

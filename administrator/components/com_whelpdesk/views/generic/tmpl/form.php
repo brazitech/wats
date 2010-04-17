@@ -58,8 +58,8 @@ $form = $this->getModel();
                     <dt>
                         <?php echo $field->label; ?>
                     </dt>
-                    <dd<?php echo ($field->getType() == 'Editor') ? ' style="clear: both; margin: 0;"' : ''?>>
-                        <?php echo $field->input; ?>
+                    <dd<?php echo ($field->getType() == 'Editor' || $field->getType() == 'Textarea' || $field->getType() == 'TextOnly' || $field->getType() == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
+                        <?php echo $field->input ?>
                     </dd>
                 <?php
                 endif;
@@ -99,7 +99,7 @@ $form = $this->getModel();
                         <dt>
                             <?php echo $field->label; ?>
                         </dt>
-                        <dd>
+                        <dd<?php echo ($field->getType() == 'Editor' || $field->getType() == 'Textarea' || $field->getType() == 'TextOnly' || $field->getType() == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
                             <?php echo $field->input; ?>
                         </dd>
                     <?php

@@ -22,7 +22,7 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary
 class GlossaryStateWController extends GlossaryWController {
 
     public function  __construct() {
-        $this->setUsecase('state');
+        $this->setDefaultView('state');
     }
 
     /**

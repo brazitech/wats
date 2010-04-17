@@ -85,7 +85,7 @@ class WList
         return self::$_instances[$key];
     }
 
-    public function load($xml)
+    public function load($xml, $params = array())
     {
         // Get the XML parser and load the data.
         $parser	= JFactory::getXMLParser('Simple');

@@ -11,10 +11,12 @@
     <field
             id="priority"
             name="priority"
-            type="sql"
+            type="sqlextended"
             query="SELECT * FROM #__whelpdesk_request_priorities"
+            default_query="SELECT * FROM #__whelpdesk_request_priorities WHERE `default` = 1"
             key_field="id"
             value_field="name"
+            has_default="true"
             class="inputbox"
             label="WHD_RP:PRIORITY"
             description="WHD_RP:PRIORITY DESCRIPTION"
