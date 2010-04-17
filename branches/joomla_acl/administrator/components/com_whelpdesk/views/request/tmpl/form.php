@@ -43,7 +43,7 @@ $pagination = $replies->getPagination();
 <div class="requestReply">
     <fieldset class="adminform">
         <legend>
-            <?php echo JText::_('WHD_R:REPLY'); ?>
+            <?php echo JText::_('WHD_R:REPLY'); ?>sadf
         </legend>
         <?php
         $editor = JFactory::getEditor();

@@ -103,6 +103,13 @@ class JTableRequestPriority extends WTable {
      */
     public $colour = '#276dd6';
 
+    /**
+     * Determines if this is the default priority.
+     *
+     * @var int
+     */
+    public $default = 0;
+
 
     /**
      *

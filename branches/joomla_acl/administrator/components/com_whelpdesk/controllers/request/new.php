@@ -98,6 +98,9 @@ class RequestNewWController extends WController {
         // values to use to create new record
         $post = JRequest::get('POST');
 
+        // set the user by whom the request was created
+        $post['created_by'] = JFactory::getUser()->get('id');
+
         // commit the changes
         return parent::commit(0, $post, $model);
     }

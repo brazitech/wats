@@ -15,7 +15,7 @@ class RequestPriorityEditWController extends WController {
 
     public function  __construct() {
         //parent::__construct();
-        $this->setUsecase('edit');
+        $this->setDefaultView('edit');
         $this->setType('requestpriority');
     }
 
