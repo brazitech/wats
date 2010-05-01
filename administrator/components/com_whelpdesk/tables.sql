@@ -129,8 +129,10 @@ jos_whelpdesk_request_priorities,CREATE TABLE `jos_whelpdesk_request_priorities`
   `revised` int(10) unsigned NOT NULL default '0',
   `ordering` int(10) unsigned NOT NULL,
   `access` int(10) unsigned NOT NULL,
+  `colour` char(7) NOT NULL,
+  `default` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
 
 0 rows affected
 Table,Create Table
@@ -141,7 +143,7 @@ jos_whelpdesk_request_replies,CREATE TABLE `jos_whelpdesk_request_replies` (
   `created` datetime NOT NULL,
   `request_id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
 
 0 rows affected
 Table,Create Table
@@ -161,7 +163,7 @@ jos_whelpdesk_requests,CREATE TABLE `jos_whelpdesk_requests` (
   `priority` int(10) unsigned NOT NULL,
   `assignee` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
 
 0 rows affected
 Table,Create Table

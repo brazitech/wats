@@ -12,34 +12,39 @@
 ]>
 
 <form>
-    <fields labelfield="name">
-        <field
-                id="id"
-                name="id"
-                type="hidden"
-                label="Content_Id_Label"
-                size="10"
-                default="0"
-                required="true"
-                readonly="true" />
-        <field
-                id="name"
-                name="name"
-                type="text"
-                label="NAME"
-                description="JField_Name_Desc"
-                class="inputbox"
-                size="60"
-                required="true" />
-        <field
-                id="description"
-                name="description"
-                type="editor"
-                class="inputbox"
-                label="DESCRIPTION"
-                description="JField_Description_Desc"
-                filter="safehtml"
-                buttons="false" />
+    <fields name="normal">
+        <fieldset name="request">
+            <field
+                    id="id"
+                    name="id"
+                    type="hidden"
+                    label="Content_Id_Label"
+                    size="10"
+                    default="0"
+                    required="true"
+                    readonly="true" />
+            <field
+                    id="name"
+                    name="name"
+                    type="text"
+                    label="NAME"
+                    description="JField_Name_Desc"
+                    class="inputbox"
+                    size="60"
+                    required="true" />
+            <field
+                    id="description"
+                    name="description"
+                    type="editor"
+                    class="inputbox"
+                    label="DESCRIPTION"
+                    description="JField_Description_Desc"
+                    filter="safehtml"
+                    buttons="false" />
+        </fieldset>
     </fields>
-    &requestState;
+    
+    <fields name="detail">
+        &requestState;
+    </fields>
 </form>

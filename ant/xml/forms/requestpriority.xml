@@ -12,120 +12,124 @@
 ]>
 
 <form>
-    <fields labelfield="name">
-        <field
-                id="id"
-                name="id"
-                type="hidden"
-                label="Content_Id_Label"
-                size="10"
-                default="0"
-                required="true"
-                readonly="true" />
-        <field
-                id="name"
-                name="name"
-                type="text"
-                label="NAME"
-                description="JField_Name_Desc"
-                class="inputbox"
-                size="30"
-                required="true" />
-        <field
-                id="state"
-                name="state"
-                type="list"
-                label="JField_Published_Label"
-                description="JField_Published_Desc"
-                class="inputbox"
-                filter="intval"
-                size="1"
-                default="1">
-            <option value="1">JOption_Published</option>
-            <option value="0"> JOption_UnPublished</option>
-        </field>
-        <field
-                id="ordering"
-                name="ordering"
-                type="text"
-                label="JField_Ordering_Label"
-                description="JField_Ordering_Desc"
-                class="inputbox"
-                size="6"
-                default="0" />
-        <field
-                id="colour"
-                name="colour"
-                type="colourpalette"
-                label="WHD_DATA:COLOUR"
-                description="WHD_DATA:COLOUR DESCRIPTION"
-                class="inputbox"
-                size="6"
-                default="0" />
-        
-        <field
-                name="default"
-                type="radio"
-                label="WHD_RP:DEFAULT"
-                description="WHD_RP:DEFAULT DESCRIPTION"
-                default="0"
-                class="inputbox"
-                filter="integer">
-			<option value="0">JNo</option>
-			<option value="1">JYes</option>
-		</field>
-        
-        <field
-                id="description"
-                name="description"
-                type="editor"
-                class="inputbox"
-                label="DESCRIPTION"
-                description="JField_Description_Desc"
-                filter="safehtml"
-                buttons="false"
-                default="" />
+    <fields name="normal">
+        <fieldset
+                name="requestpriority"
+                labelfield="name">
+            <field
+                    id="id"
+                    name="id"
+                    type="hidden"
+                    label="Content_Id_Label"
+                    size="10"
+                    default="0"
+                    required="true"
+                    readonly="true" />
+            <field
+                    id="name"
+                    name="name"
+                    type="text"
+                    label="NAME"
+                    description="JField_Name_Desc"
+                    class="inputbox"
+                    size="30"
+                    required="true" />
+            <field
+                    id="state"
+                    name="state"
+                    type="list"
+                    label="JField_Published_Label"
+                    description="JField_Published_Desc"
+                    class="inputbox"
+                    filter="intval"
+                    size="1"
+                    default="1">
+                <option value="1">JOption_Published</option>
+                <option value="0"> JOption_UnPublished</option>
+            </field>
+            <field
+                    id="ordering"
+                    name="ordering"
+                    type="text"
+                    label="JField_Ordering_Label"
+                    description="JField_Ordering_Desc"
+                    class="inputbox"
+                    size="6"
+                    default="0" />
+            <field
+                    id="colour"
+                    name="colour"
+                    type="colourpalette"
+                    label="WHD_DATA:COLOUR"
+                    description="WHD_DATA:COLOUR DESCRIPTION"
+                    class="inputbox"
+                    size="6"
+                    default="0" />
+            
+            <field
+                    name="default"
+                    type="radio"
+                    label="WHD_RP:DEFAULT"
+                    description="WHD_RP:DEFAULT DESCRIPTION"
+                    default="0"
+                    class="inputbox"
+                    filter="integer">
+                <option value="0">JNo</option>
+                <option value="1">JYes</option>
+            </field>
+            
+            <field
+                    id="description"
+                    name="description"
+                    type="editor"
+                    class="inputbox"
+                    label="DESCRIPTION"
+                    description="JField_Description_Desc"
+                    filter="safehtml"
+                    buttons="false"
+                    default="" />
+        </fieldset>
     </fields>
     &publishing;
     <fields
-            group="statistics"
-            label="WHD_DATA:STATISTICS"
-            position="detail">
-        <field
-                id="status_open"
-                name="status_open"
-                type="text"
-                class="readonly"
-                label="WHD_R:STATUS:OPEN"
-                description="WHD_R:STATUS:OPEN DESCRIPTION"
-                size="6"
-                default="@todo" />
-        <field
-                id="status_reopened"
-                name="status_reopened"
-                type="text"
-                class="readonly"
-                label="WHD_R:STATUS:REOPENED"
-                description="WHD_R:STATUS:REOPENED DESCRIPTION"
-                size="6"
-                default="@todo" />
-        <field
-                id="status_closed"
-                name="status_closed"
-                type="text"
-                class="readonly"
-                label="WHD_R:STATUS:CLOSED"
-                description="WHD_R:STATUS:CLOSED DESCRIPTION"
-                size="6"
-                default="@todo" />
-        <field
-                id="status_archived"
-                name="status_archived"
-                type="text"
-                class="readonly"
-                label="WHD_R:STATUS:ARCHIVED"
-                description="WHD_R:STATUS:ARCHIVED DESCRIPTION"
-                size="6"
-                default="@todo" />
+            name="detail">
+        <fieldset name="statistics">
+            <field
+                    id="status_open"
+                    name="status_open"
+                    type="text"
+                    class="readonly"
+                    label="WHD_R:STATUS:OPEN"
+                    description="WHD_R:STATUS:OPEN DESCRIPTION"
+                    size="6"
+                    default="@todo" />
+            <field
+                    id="status_reopened"
+                    name="status_reopened"
+                    type="text"
+                    class="readonly"
+                    label="WHD_R:STATUS:REOPENED"
+                    description="WHD_R:STATUS:REOPENED DESCRIPTION"
+                    size="6"
+                    default="@todo" />
+            <field
+                    id="status_closed"
+                    name="status_closed"
+                    type="text"
+                    class="readonly"
+                    label="WHD_R:STATUS:CLOSED"
+                    description="WHD_R:STATUS:CLOSED DESCRIPTION"
+                    size="6"
+                    default="@todo" />
+            <field
+                    id="status_archived"
+                    name="status_archived"
+                    type="text"
+                    class="readonly"
+                    label="WHD_R:STATUS:ARCHIVED"
+                    description="WHD_R:STATUS:ARCHIVED DESCRIPTION"
+                    size="6"
+                    default="@todo" />
+        </fieldset>
     </fields>
 </form>

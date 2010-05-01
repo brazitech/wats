@@ -51,16 +51,19 @@ class WForm extends JForm
 		// Only load the form once.
 		if (!isset($instances[$name][$type])) {
 			// Instantiate the form.
-			$instances[$name][$type] = new WForm($options);
+			$instances[$name][$type] = new WForm($name, $options);
 
 			// Set the form name.
-			$instances[$name][$type]->setName($name);
+			// $instances[$name][$type]->setName($name);
 
 			// Load the data.
-			if ($file) {
-				$instances[$name][$type]->load($data, true, true);
-			} else {
-				$instances[$name][$type]->load($data, false, true);
+			if ($file)
+            {
+				$instances[$name][$type]->loadFile($data, true);
+			}
+            else
+            {
+				$instances[$name][$type]->load($data, true);
 			}
 
 		}
@@ -107,7 +110,7 @@ class WForm extends JForm
      *
      * @param string $position
      * @return <type> 
-     */
+     
     public function getFieldsets($position=null)
 	{
         if ($position == null)
@@ -126,6 +129,6 @@ class WForm extends JForm
         }
 
         return $fieldsets;
-	}
+	}*/
 
 }

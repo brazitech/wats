@@ -1,7 +1,4 @@
-<fields
-        group="state"
-        label="WHD_R:STATE"
-        position="detail">
+<fieldset name="WHD_R:STATE">
     <field
             name="category_id"
             type="requestcategory"
@@ -34,4 +31,4 @@
         <option value="2">WHD_R:STATUS:CLOSED</option>
         <option value="2">WHD_R:STATUS:ARCHIVED</option>
     </field>
-</fields>
+</fieldset>
