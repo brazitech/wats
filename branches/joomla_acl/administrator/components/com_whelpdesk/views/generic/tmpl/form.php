@@ -34,22 +34,23 @@ $form = $this->getModel();
     <div class="width-60 fltlft">
         <?php
         // Iterate through the normal form fieldsets and display each one.
-        foreach ($form->getFieldsets('normal') as $group => $fieldset):
+        foreach ($form->getFieldsets('normal') as $fieldsets => $fieldset):
+                var_dump($fieldset);
         ?>
         <fieldset class="adminform">
             <legend>
-                <?php if (isset($fieldset['label'])): ?>
-                <?php echo JText::_($fieldset['label']); ?>
-                <?php elseif (isset($fieldset['labelfield'])): ?>
-                <?php echo $form->getValue($fieldset['labelfield'], WDocumentHelper::subtitle(), $group); ?>
+                <?php if ($fieldset->label != ""): ?>
+                <?php echo JText::_($fieldset->label).'label'; ?>
+                <?php elseif (isset($fieldset->labelfield)): ?>
+                <?php echo $form->getValue($fieldset->labelfield, null, WDocumentHelper::subtitle()).'labelfield'; ?>
                 <?php else: ?>
-                <?php echo WDocumentHelper::subtitle(); ?>
+                <?php echo WDocumentHelper::subtitle().'subtitle'; ?>
                 <?php endif; ?>
             </legend>
             <dl>
             <?php
             // Iterate through the fields in the set and display them.
-            foreach($form->getFields($group) as $field):
+            foreach($form->getFieldset($fieldset->name) as $field):
                 // If the field is hidden, just display the input.
                 if ($field->hidden):
                     echo $field->input;
@@ -58,7 +59,7 @@ $form = $this->getModel();
                     <dt>
                         <?php echo $field->label; ?>
                     </dt>
-                    <dd<?php echo ($field->getType() == 'Editor' || $field->getType() == 'Textarea' || $field->getType() == 'TextOnly' || $field->getType() == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
+                    <dd<?php echo ($field->type == 'Editor' || $field->type == 'Textarea' || $field->type == 'TextOnly' || $field->type == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
                         <?php echo $field->input ?>
                     </dd>
                 <?php
@@ -82,15 +83,15 @@ $form = $this->getModel();
 
             <?php
             // Iterate through the detail form fieldsets and display each one.
-            foreach ($form->getFieldsets("detail") as $group => $fieldset):
+            foreach ($form->getFieldsets("detail") as $fieldsets => $fieldset):
             ?>
-            <?php echo $pane->startPanel(JText::_($fieldset['label']), $group); ?>
+            <?php echo $pane->startPanel(JText::_($fieldset->name), $fieldsets); ?>
             <fieldset class="panelform">
                 <dl>
                 <?php
 
                 // Iterate through the fields in the set and display them.
-                foreach($form->getFields($group) as $field):
+                foreach($form->getFieldset($fieldset->name) as $field):
                     // If the field is hidden, just display the input.
                     if ($field->hidden):
                         echo $field->input;
@@ -99,7 +100,7 @@ $form = $this->getModel();
                         <dt>
                             <?php echo $field->label; ?>
                         </dt>
-                        <dd<?php echo ($field->getType() == 'Editor' || $field->getType() == 'Textarea' || $field->getType() == 'TextOnly' || $field->getType() == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
+                        <dd<?php echo ($field->type == 'Editor' || $field->type == 'Textarea' || $field->type == 'TextOnly' || $field->type == 'RequestHistory') ? ' style="clear: both; margin: 0;"' : ''?>>
                             <?php echo $field->input; ?>
                         </dd>
                     <?php

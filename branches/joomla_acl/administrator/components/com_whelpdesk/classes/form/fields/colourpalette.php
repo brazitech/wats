@@ -27,7 +27,7 @@ class JFormFieldColourPalette extends JFormField
 	 */
 	public $type = 'ColourPalette';
 
-	protected function _getInput()
+	public function getInput()
 	{
         $red   = @(int)hexdec(substr($this->value, 1, 2));
         $green = @(int)hexdec(substr($this->value, 3, 2));

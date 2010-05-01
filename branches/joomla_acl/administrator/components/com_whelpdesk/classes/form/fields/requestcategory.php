@@ -21,7 +21,7 @@ class JFormFieldRequestCategory extends JFormField
 	 *
 	 * @return	string		The field input.
 	 */
-	protected function _getInput()
+	public function getInput()
 	{
         if (!$this->value)
         {
