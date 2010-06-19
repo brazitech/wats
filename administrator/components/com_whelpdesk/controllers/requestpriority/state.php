@@ -22,7 +22,7 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'glossary
 class RequestPriorityStateWController extends WController {
 
     public function  __construct() {
-        $this->setUsecase('state');
+        $this->setType('state');
     }
 
     public function execute($stage) {

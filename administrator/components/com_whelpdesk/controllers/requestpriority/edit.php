@@ -42,7 +42,7 @@ class RequestPriorityEditWController extends WController {
             return;
         }
 
-        // make sure the RC isn't already checked out
+        // make sure the RP isn't already checked out
         if ($requestPriority->isCheckedOut(JFactory::getUser()->get('id'))) {
             WFactory::getOut()->log('WHD_R:REQUEST PRIORITY ALREADY CHECKEDOUT');
             JError::raiseWarning('500', 'WHD_R:REQUEST PRIORITY ALREADY CHECKEDOUT');
@@ -51,7 +51,7 @@ class RequestPriorityEditWController extends WController {
         }
 
         // get the JForm
-        $form = $model->getForm($requestPriority, true);
+        $form = $model->getForm($requestPriority, true, 'edit');
 
         // check where in the usecase we are
         switch ($stage) {
