@@ -13,7 +13,6 @@ JHTML::_('behavior.tooltip');
 
 $document = JFactory::getDocument();
 
-$document->addScript('components/com_whelpdesk/assets/javascript/php.js/urlencode.js');
 $document->addScriptDeclaration("function populateAlias(force) {
     if (document.getElementById('alias').value == '' || force == true) {
         var req = new Request({
@@ -42,7 +41,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
 
 <?php WDocumentHelper::render(); ?>
 
-<?php $container = $this->getModel(); ?>
+<?php $knowledgeDomain = $this->getModel(); ?>
 <form action="<?php echo JRoute::_('index.php'); ?>"
       method="post"
       name="adminForm"
@@ -50,10 +49,9 @@ $document->addScriptDeclaration("function populateAlias(force) {
 
     <!-- request options -->
     <input type="hidden" name="option" value="com_whelpdesk" />
-    <input type="hidden" name="task"   value="glossary.create" />
+    <input type="hidden" name="task"   value="" />
     <input type="hidden" name="stage"  value="commit" />
-    <input type="hidden" name="id"     value="<?php echo $container->id; ?>" />
-    <input type="hidden" name="parent" value="<?php echo $container->parent; ?>" />
+    <input type="hidden" name="id"     value="<?php echo $knowledgeDomain->id; ?>" />
     <!--<input type="hidden" name="redirect" value="<?php echo $this->redirect;?>" />-->
     <?php echo JHTML::_('form.token'); ?>
 
@@ -63,7 +61,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
                 <tr>
                     <td class="key">
                         <label for="name">
-                            <?php echo JText::_('WHD_DOC:DOCUMENT CONTAINER NAME'); ?>
+                            <?php echo JText::_('NAME'); ?>
                         </label>
                     </td>
                     <td>
@@ -73,18 +71,24 @@ $document->addScriptDeclaration("function populateAlias(force) {
                                id="name"
                                size="40"
                                maxlength="500"
-                               value="<?php echo $container->name; ?>"
-                               onchange="populateAlias(false);" />
+                               value="<?php echo $knowledgeDomain->name; ?>"
+                               onchange="populateAlias();" />
                     </td>
                 </tr>
                 <tr>
                     <td class="key">
                         <label for="alias">
-                            <?php echo JText::_('WHD_DOC:DOCUMENT CONTAINER ALIAS'); ?>
+                            <?php echo JText::_('ALIAS'); ?>
                         </label>
                     </td>
                     <td>
-                        <input class="inputbox" type="text" name="alias" id="alias" size="34" maxlength="255" value="<?php echo $container->alias; ?>" />
+                        <input class="inputbox"
+                               type="text"
+                               name="alias"
+                               id="alias"
+                               size="34"
+                               maxlength="255"
+                               value="<?php echo $knowledgeDomain->alias; ?>" />
                         <img id="rebuildAlias"
                              src="components/com_whelpdesk/assets/javascript/wall-disable.png"
                              alt="<?php echo JText::_('Rebuild Alias'); ?>"
@@ -101,7 +105,7 @@ $document->addScriptDeclaration("function populateAlias(force) {
             <table class="admintable" width="100%">
                 <tr>
                     <td>
-                        <?php echo $this->getModel('editor')->display('description',  $container->description, '100%', '200', '75', '20', false) ; ?>
+                        <?php echo $this->getModel('editor')->display('description',  $knowledgeDomain->description, '100%', '200', '75', '20', false) ; ?>
                     </td>
                 </tr>
             </table>
@@ -109,15 +113,23 @@ $document->addScriptDeclaration("function populateAlias(force) {
     </div>
 
     <div class="col width-30">
-        <?php if ($container->id) : ?>
+        <?php if ($knowledgeDomain->id) : ?>
         <fieldset class="adminform" style="border: 1px dashed silver; margin: 0px 0px 10px 0px;">
-            <table class="admintable" style="padding: 0px; margin-bottom: 0px; width: 100%;">
+            <table class="admintable" style="padding: 0px; margin-bottom: 0px;">
+                <tr>
+                    <td>
+                        <strong><?php echo JText::_('WHD_DATA:REVISED'); ?></strong>
+                    </td>
+                    <td>
+                        <?php echo $knowledgeDomain->revised; ?>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <strong><?php echo JText::_('WHD_DATA:CREATED BY'); ?></strong>
                     </td>
                     <td>
-                        <?php echo $this->getModel('creator')->get('username'); ?>
+                        <?php echo JFactory::getUser($knowledgeDomain->created_by)->get('name'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -125,31 +137,19 @@ $document->addScriptDeclaration("function populateAlias(force) {
                         <strong><?php echo JText::_('WHD_DATA:CREATED'); ?></strong>
                     </td>
                     <td>
-                        <?php echo JHTML::_('date',  $container->created,  JText::_('DATE_FORMAT_LC2')); ?>
+                        <?php echo JHtml::_('date',  $knowledgeDomain->created,  JText::_('DATE_FORMAT_LC2')); ?>
                     </td>
                 </tr>
-                <?php if ($container->modified != JFactory::getDBO()->getNullDate()) : ?>
+                <?php if ($knowledgeDomain->modified != JFactory::getDBO()->getNullDate()) : ?>
                 <tr>
                     <td>
-                        <strong><?php echo JText::_('WHD_DATA:MODIFIED'); ?></strong>
+                        <strong><?php echo JText::_('MODIFIED'); ?></strong>
                     </td>
                     <td>
-                        <?php echo JHTML::_('date',  $container->modified, JText::_('DATE_FORMAT_LC2')); ?>
+                        <?php echo JHtml::_('date',  $knowledgeDomain->modified, JText::_('DATE_FORMAT_LC2')); ?>
                     </td>
                 </tr>
                 <?php endif; ?>
-                <tr>
-                    <td>
-                        <strong><?php echo JText::_('WHD:WWWADDRESS'); ?></strong>
-                    </td>
-                    <td>
-                        <input onclick="this.select();"
-                               value="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display&id='.$container->id); ?>"
-                               readonly="readonly"
-                               id="webAddress"
-                               style="width: 100%;"/>
-                    </td>
-                </tr>
             </table>
         </fieldset>
         <?php endif; ?>

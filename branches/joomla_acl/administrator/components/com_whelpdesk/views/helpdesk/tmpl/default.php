@@ -4,7 +4,7 @@
             <div id="cpanel">
                 <div style="float: left;">
                     <div class="icon">
-                        <a href="">
+                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=announcement.list'); ?>">
                             <img alt="<?php echo JText::_('WHD_ANNOUNCEMENTS'); ?>" src="components/com_whelpdesk/assets/icons/announcement.png"/>
                             <span><?php echo JText::_('WHD_ANNOUNCEMENTS'); ?></span>
                         </a>
@@ -37,8 +37,8 @@
                 <div style="float: left;">
                     <div class="icon">
                         <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=faqcategories.list'); ?>">
-                            <img alt="<?php echo JText::_('FAQ CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/faqcategory.png"/>
-                            <span><?php echo JText::_('FAQ CATEGORIES'); ?></span>
+                            <img alt="<?php echo JText::_('WHD_FC:FAQ CATEGORIES'); ?>" src="components/com_whelpdesk/assets/icons/faqcategory.png"/>
+                            <span><?php echo JText::_('WHD_FC:FAQ CATEGORIES'); ?></span>
                         </a>
                     </div>
                 </div>

@@ -35,7 +35,6 @@ $form = $this->getModel();
         <?php
         // Iterate through the normal form fieldsets and display each one.
         foreach ($form->getFieldsets('normal') as $fieldsets => $fieldset):
-                var_dump($fieldset);
         ?>
         <fieldset class="adminform">
             <legend>
