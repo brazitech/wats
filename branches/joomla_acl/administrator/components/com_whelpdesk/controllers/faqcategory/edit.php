@@ -17,32 +17,44 @@ class FaqcategoryEditWController extends FaqcategoryWController {
 
     public function  __construct() {
         parent::__construct();
-        $this->setUsecase('edit');
+        $this->setDefaultView('edit');
+        $this->setType('faqcategory');
     }
 
     /**
      * @todo
      */
-    public function execute($stage) {
-        try {
-            parent::execute($stage);
-        } catch (Exception $e) {
-            // uh oh, access denied... let's give the next controller a whirl!
-            JError::raiseWarning('401', 'WHD FAQ CATEGORY EDIT ACCESS DENIED');
-            return;
-        }
-
-        // get the ID
+    public function execute($stage)
+    {
+        // get the dientifier
         $id = WModel::getId();
         if (!$id) {
-            JRequest::setVar('task', 'faqcategories.list.start');
-            JError::raiseNotice('INPUT', JText::_('WHD FAQ CATEGORY UNKNOWN'));
+            JRequest::setVar('task', 'request.list.start');
+            JError::raiseNotice('INPUT', JText::_('WHD_FC:UNKNOWN FAQ CATEGORY'));
             return;
         }
 
-        // get the model
+        // get the data
         $model = WModel::getInstanceByName('faqcategory');
-        $category = $model->getCategory($id);
+        $faqcategory = $model->getCategory($id);
+
+        // make sure the data loaded
+        if(!$faqcategory) {
+            JRequest::setVar('task', 'request.list.start');
+            JError::raiseWarning('INPUT', JText::_('WHD_FC:UNKNOWN FAQ CATEGORY'));
+            return;
+        }
+
+        // make sure the FAQ category isn't already checked out
+        if ($faqcategory->isCheckedOut(JFactory::getUser()->get('id'))) {
+            WFactory::getOut()->log('WHD_FC:FAQ CATEGORY ALREADY CHECKEDOUT');
+            JError::raiseWarning('500', 'WHD_FC:FAQ CATEGORY ALREADY CHECKEDOUT');
+            JRequest::setVar('task', 'faqcategory.list.start');
+            return;
+        }
+
+        // get the JForm
+        $form = $model->getForm($faqcategory, true, 'edit');
 
         // check where in the usecase we are
         switch ($stage) {
@@ -61,7 +73,7 @@ class FaqcategoryEditWController extends FaqcategoryWController {
                 $id = $this->commit($id);
                 if ($id !== false) {
                    // successfully saved changes
-                   WMessageHelper::message(JText::sprintf('WHD_FAQCATEGORY:UPDATED CATEGORY %s', JRequest::getString('name')));
+                   WMessageHelper::message(JText::sprintf('WHD_FC:UPDATED FAQ CATEGORY %s', JRequest::getString('name')));
                    if ($stage == 'save') {
                        JRequest::setVar('task', 'faqcategories.list.start');
                        $model->checkIn($id);
@@ -74,19 +86,14 @@ class FaqcategoryEditWController extends FaqcategoryWController {
         }
 
         // get the view
-        $document =& JFactory::getDocument();
-		$format   =  strtolower($document->getType());
-        $view     = WView::getInstance('faqcategory', 'form', $format);
+        $view = WView::getInstance('faqcategory', 'form',
+                                strtolower(JFactory::getDocument()->getType()));
 
         // add the default model to the view
-        $view->addModel('faqcategory', $category, true);
+        $view->addModel('form', $form, true);
 
-        // add the fieldset to the model
-        $view->addModel('fieldset', $category->getFieldset());
-        $view->addModel('fieldset-data', $category);
-
-        // check out the table record
-        $category->checkOut(JFactory::getUser()->id);
+        // check out the record
+        $model->checkOut($id);
 
         // display the view!
         JRequest::setVar('view', 'form');
