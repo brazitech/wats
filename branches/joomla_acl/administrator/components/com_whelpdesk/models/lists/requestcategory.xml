@@ -12,7 +12,7 @@
         <select>COUNT(#__whelpdesk_requests.id) AS requests</select>
         <from>#__whelpdesk_request_categories</from>
         <join type="LEFT">#__whelpdesk_requests ON #__whelpdesk_requests.category_id = #__whelpdesk_request_categories.id</join>
-        <order>#__whelpdesk_request_categories.name</order>
+        <order>#__whelpdesk_request_categories.lft</order>
         <where>#__whelpdesk_request_categories.parent_id != 0</where>
         <group>#__whelpdesk_request_categories.id</group>
     </query>
@@ -40,7 +40,7 @@
     <!-- Columns -->
     <column
             type="select"
-            cansort="true"
+            cansort="false"
             width="2%">
         <label>WHD_RC:SELECT</label>
         <name>id</name>
@@ -54,17 +54,10 @@
             <param>id</param>
         </link>
     </column>
-    <!--
-    <column type="text" cansort="false" width="150">
-        <label>WHD_R:REQUESTS</label>
-        <text translate="true">WHD_R:REQUESTS</text>
-        <name/>
-        <link link="index.php?option=com_whelpdesk&amp;task=requests.list&amp;requestcategory=%1$d">
-            <param>id</param>
-        </link>
-    </column>
-    -->
-    <column type="simple" cansort="false" width="100">
+    <column
+            type="simple"
+            cansort="false"
+            width="100">
         <label>WHD_R:REQUESTS</label>
         <name>requests</name>
         <link link="index.php?option=com_whelpdesk&amp;task=request.list&amp;category_id=%1$d">
@@ -72,7 +65,10 @@
         </link>
         <attribute name="style" value="text-align: center;" />
     </column>
-    <column type="published" cansort="true" width="70">
+    <column
+            type="published"
+            cansort="false" 
+            width="70">
         <label>WHD_DATA:PUBLISHED</label>
         <name>published</name>
     </column>
@@ -86,7 +82,7 @@
     </column>
     <column
             type="simple"
-            cansort="true"
+            cansort="false"
             width="70">
         <label>WHD_DATA:REVISION</label>
         <name>revised</name>
