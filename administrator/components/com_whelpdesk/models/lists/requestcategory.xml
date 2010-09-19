@@ -47,7 +47,7 @@
     </column>
     <column
             type="nested"
-            cansort="true">
+            cansort="false">
         <label>WHD_RC:NAME</label>
         <name>name</name>
         <link link="index.php?option=com_whelpdesk&amp;task=requestcategory.edit&amp;id=%1$d">

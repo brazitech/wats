@@ -7,10 +7,16 @@
 /**
  * 
  */
-class WListColumnPublished extends WListColumn {
-    
-    public function render($row)
+class WListColumnPublished extends WListColumn
+{
+
+    /**
+     * @param WList $list
+     */
+    public function render(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         $cellData = JHTML::_(
             'grid.published',
             $row->published,

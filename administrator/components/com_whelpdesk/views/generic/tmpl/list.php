@@ -26,16 +26,16 @@ $pagination = $list->getPagination();
     <fieldset id="filter-bar" style="clear: both; height: auto !important;">
         <div class="fltlft">
         <?php
-        foreach ($list->getFilters() as $filter) :
-            echo ($filter->getPosition() == 'left') ? $filter->render() : '';
+        foreach ($list->getFilters() as $column) :
+            echo ($column->getPosition() == 'left') ? $column->render() : '';
         endforeach;
         ?>
         </div>
 
         <div class="fltrt">
         <?php
-        foreach ($list->getFilters() as $filter) :
-            echo ($filter->getPosition() == 'right') ? $filter->render() : '';
+        foreach ($list->getFilters() as $column) :
+            echo ($column->getPosition() == 'right') ? $column->render() : '';
         endforeach;
         ?>
         </div>
@@ -71,18 +71,15 @@ $pagination = $list->getPagination();
             </tr>
         </tfoot>
         <tbody>
-        <?php
-        for ($i = 0, $n = count($rows); $i < $n; $i++) :
-        $row = $rows[$i];
-        ?>
-            <tr class="row<?php echo $pagination->getRowOffset($i-1) % 2; ?>">
+        <?php while (!is_null($list->nextRow())) : ?>
+            <tr class="row<?php echo $pagination->getRowOffset($list->getRowPointer() - 1) % 2; ?>">
             <?php
-            foreach ($list->getColumns() as $filter) :
-                echo $filter->render($row);
+            foreach ($list->getColumns() as $column) :
+                echo $column->render($list);
             endforeach;
             ?>
             </tr>
-        <?php endfor; ?>
+        <?php endwhile; ?>
         </tbody>
     </table>
 
