@@ -28,7 +28,7 @@ class JFormFieldRequestCategoryParent extends JFormFieldList
 	 *
 	 * @return	array		An array of JHtml options.
 	 */
-	protected function _getOptions()
+	protected function getOptions()
 	{
 		$db		= &JFactory::getDbo();
 		$query	= new WDatabaseQuery();

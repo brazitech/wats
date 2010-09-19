@@ -125,7 +125,7 @@ abstract class WController {
                                     . DS . $entity
                                     . DS . $usecase . '.php';
             if (!JFile::exists($path)) {
-                throw new WException('UNKNOWN CONTROLLER (%s, %s)', $entity, $usecase);
+                throw new WException('WHD_E:UNKNOWN CONTROLLER (%s, %s)', $entity, $usecase);
             }
             require_once($path);
 

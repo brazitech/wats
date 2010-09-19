@@ -23,6 +23,7 @@ class JFormFieldRequestCategory extends JFormField
 	 */
 	public function getInput()
 	{
+		
         if (!$this->value)
         {
             return JText::_('WHD_RC:UNKNOWN');

@@ -17,7 +17,8 @@ class GlossaryEditWController extends GlossaryWController {
 
     public function  __construct() {
         parent::__construct();
-        $this->setUsecase('edit');
+        $this->setDefaultView('edit');
+        $this->setType('edit');
     }
 
     /**

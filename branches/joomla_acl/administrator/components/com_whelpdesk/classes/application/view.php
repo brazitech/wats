@@ -154,7 +154,7 @@ abstract class WView {
 
         // check that there is a layout to load
         if ($layoutPath === false) {
-            throw new WException('UNKNOWN LAYOUT %s', $file);
+            throw new WException('WHD_E:UNKNOWN LAYOUT %s', $file);
         }
 
         // capture the layout output

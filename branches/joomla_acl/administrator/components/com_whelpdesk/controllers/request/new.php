@@ -37,12 +37,13 @@ class RequestNewWController extends WController {
 
         // get the JForm
         $form = $model->getForm(null, true, 'new');
-        $form->setValue('category_id', $categoryId, 'state');
+        $form->setValue('category_id', 'state', $categoryId);
+        var_dump($categoryId);
 
         // check where in the usecase we are
         if ($stage == 'save' || $stage == 'apply')
         {
-            // before saving or applying the KD, make sure the token is valid
+            // before saving or applying the request, make sure the token is valid
             shouldHaveToken();
 
             // attempt to save
@@ -73,10 +74,19 @@ class RequestNewWController extends WController {
         $this->display();
     }
 
+    /**
+     *
+     * @var WModel
+     */
+    private $foo;
+
     private function selectRequestCategory()
     {
         // get the category model
+        /* @var $model ModelRequestCategory */
         $model = WModel::getInstanceByName('requestcategory');
+
+        //$this->foo->get
 
         // get the view
         $this->setDefaultView('selectrequestcategory');

@@ -13,7 +13,7 @@
 
 <form>
     <fields name="normal">
-        <fieldset name="request">
+        <fieldset name="faqcatgeory">
             <field
                     id="id"
                     name="id"
@@ -36,7 +36,7 @@
                     id="alias"
                     name="alias"
                     type="text"
-                    label="ALIAS"
+                    label="WHD_DATA:ALIAS"
                     description="JField_Alias_Desc"
                     class="inputbox"
                     size="45"
@@ -54,12 +54,6 @@
                 <option value="1">JOption_Published</option>
                 <option value="0"> JOption_UnPublished</option>
             </field>
-            <field
-                    name="parent_id"
-                    type="requestcategoryparent"
-                    label="WHD_DATA:PARENT"
-                    description="WHD_DATA:PARENT DESCRIPTION"
-                    class="inputbox"/>
             <field
                     id="ordering"
                     name="ordering"
@@ -81,8 +75,9 @@
                     default="" />
         </fieldset>
     </fields>
-    &publishing;
+    
     <fields name="detail">
+        &publishing;
         <fieldset name="WHD_DATA:METADATA">
             <field
                     id="metakey"
