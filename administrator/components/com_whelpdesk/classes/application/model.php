@@ -87,10 +87,7 @@ abstract class WModel extends JModel {
         // Load data
         if ($data)
         {
-            if (!$this->_form[$cacheIndex]->bind($data))
-            {
-                throw new WException(JText::_('WAHD:MODEL:COULD NOT BIND DATA WITH FORM OBJECT'), $data);
-            }
+            $this->_form[$cacheIndex]->bind($data);
         }
 
         return $this->_form[$cacheIndex];
@@ -163,7 +160,7 @@ abstract class WModel extends JModel {
      * therefore state data in maintained.
      *
      * @param String $name
-     * @return WModel
+     * @rreturn WModel
      * @todo add security
     */
     public static function getInstanceByName($name) {

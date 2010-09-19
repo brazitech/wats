@@ -106,29 +106,12 @@ class WForm extends JForm
         return $success;
 	}
 
-    /**
-     *
-     * @param string $position
-     * @return <type> 
-     
-    public function getFieldsets($position=null)
-	{
-        if ($position == null)
+    public function bind($data)
+    {
+        if (!parent::bind($data))
         {
-            return $this->_fieldsets;
+            throw new WException('WHD_E:COULD NOT BIND DATA WITH FORM');
         }
-
-        // iterate over fieldsets and retrieve fieldsets in selected position.
-        $fieldsets = array();
-        foreach ($this->_fieldsets as $group => $fieldset)
-        {
-            if ($fieldset['position'] == $position)
-            {
-                $fieldsets[$group] = $fieldset;
-            }
-        }
-
-        return $fieldsets;
-	}*/
+    }
 
 }

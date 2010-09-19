@@ -244,6 +244,8 @@ function com_install()
             $database->query();
 	}
     
+	
+	
     // set the version
     $database->setQuery('UPDATE ' . $database->nameQuote('#__wats_settings') . 
                         ' SET ' . $database->nameQuote('value') . '=' . intval(@VERSION_MAJOR@) .

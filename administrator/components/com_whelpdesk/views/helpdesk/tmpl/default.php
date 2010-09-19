@@ -21,18 +21,6 @@
                     </div>
                 </div>
             </div>
-            <!--
-            <div id="cpanel">
-                <div style="float: left;">
-                    <div class="icon">
-                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=knowledgedomains.list'); ?>">
-                            <img alt="<?php echo JText::_('WHD_KD:DOMAINS'); ?>" src="components/com_whelpdesk/assets/icons/48-karbon.png"/>
-                            <span><?php echo JText::_('WHD_KD:DOMAINS'); ?></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            -->
             <div id="cpanel">
                 <div style="float: left;">
                     <div class="icon">
@@ -53,18 +41,6 @@
                     </div>
                 </div>
             </div>
-            <!--
-            <div id="cpanel">
-                <div style="float: left;">
-                    <div class="icon">
-                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=documentcontainer.display'); ?>">
-                            <img alt="<?php echo JText::_('DOCUMENTS'); ?>" src="components/com_whelpdesk/assets/icons/48-folder_documents.png"/>
-                            <span><?php echo JText::_('DOCUMENTS'); ?></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            -->
             <div id="cpanel">
                 <div style="float: left;">
                     <div class="icon">
@@ -115,18 +91,6 @@
                     </div>
                 </div>
             </div>
-            <!--
-            <div id="cpanel">
-                <div style="float: left;">
-                    <div class="icon">
-                        <a href="<?php echo JRoute::_('index.php?option=com_whelpdesk&task=fields.list'); ?>">
-                            <img alt="<?php echo JText::_('CUSTOM FIELDS'); ?>" src="components/com_whelpdesk/assets/icons/xclipboard.png"/>
-                            <span><?php echo JText::_('CUSTOM FIELDS'); ?></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            -->
         </div>
     </div>
 </div>

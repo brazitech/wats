@@ -63,7 +63,7 @@ class WFactory {
 
         if (self::$tables[$table] == false)
         {
-            throw new WException("UNKNOWN TABLE");
+            throw new WException("WHD_E:UNKNOWN TABLE (%s)", $table);
         }
         
         return self::$tables[$table];

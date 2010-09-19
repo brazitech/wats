@@ -1,11 +1,7 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * 
+ * Column that when rendered reflects the depth of the item in the nested set.  
  */
 class WListColumnNested extends WListColumn {
     
@@ -31,7 +27,7 @@ class WListColumnNested extends WListColumn {
         $html = '<td '.$this->_attributes.$class.'>'.$text;
         if (array_key_exists('alias', get_object_vars($row)))
         {
-            $html .= '<br/>('.JText::_('ALIAS').': '.$row->alias.')';
+            $html .= '<br/>('.JText::_('WHD_LIST:ALIAS').': '.$row->alias.')';
         }
         $html .= '</td>';
 

@@ -16,7 +16,7 @@ class ModelFaqcategory extends WModel {
 
     public function  __construct() {
         parent::__construct();
-        $this->setDefaultFilterOrder('f.name');
+        $this->_tableName = 'faqcategory';
     }
 
     public function getCategory($id, $reload = false) {
@@ -33,53 +33,6 @@ class ModelFaqcategory extends WModel {
         }
 
         return $table;
-    }
-
-    public function checkIn($id) {
-        $this->getCategory($id)->checkIn();
-    }
-
-    public function checkOut($id, $uid=0) {
-        if (!$uid) {
-            $uid = JFactory::getUser()->id;
-        }
-        $this->getCategory($id)->checkOut($uid);
-    }
-
-    /**
-     * Gets an array of the faq categpries
-     *
-     * @param int $limit
-     * @param int $limitstart
-     * @return stdClass[]
-     */
-    public function getList($limitstart = null, $limit = null) {
-        // get the limitstart value
-        if ($limitstart === null) {
-            $limitstart = $this->getLimitstart();
-        }
-
-        // get the limit value
-        if ($limit === null) {
-            $limit = $this->getLimit();
-        }
-
-        // get the terms in the glossary
-        $sql = $this->buildQuery();
-        $database = JFactory::getDBO();
-        $database->setQuery($sql, $limitstart, $limit);
-        
-        return $database->loadObjectList();
-    }
-
-    public function getTotal() {
-        // get the total number of terms in the glossary
-        $sql = 'SELECT COUNT(*) FROM ' . dbTable('faq_categories') . ' AS ' . dbName('f')
-             . ' ' . $this->buildQueryWhere();
-        $database = JFactory::getDBO();
-        $database->setQuery($sql);
-        
-        return (int)($database->loadResult());
     }
 
     private function buildQuery() {
