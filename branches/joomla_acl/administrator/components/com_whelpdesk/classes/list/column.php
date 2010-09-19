@@ -138,24 +138,32 @@ abstract class WListColumn
     }
 
     /**
+     * Renders a cell in the column.
+     *
+     * @param WList $list
      * @return string
      */
-    public function render($row)
+    public function render(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         $attributes = '';
         if ($this->_attributes != null)
         {
             $attributes = $this->_attributes->buildAttributes($row);
         }
 
-        return '<td '.$attributes.'>'.$this->renderPlain($row).'</td>';
+        return '<td '.$attributes.'>'.$this->renderPlain($list).'</td>';
     }
 
     /**
+     * @param WList $list
      * @return string
      */
-    public function renderPlain($row)
+    public function renderPlain(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         // Prepare Link Name.
         $text = htmlentities($this->getText($row), ENT_QUOTES, 'UTF-8');
 

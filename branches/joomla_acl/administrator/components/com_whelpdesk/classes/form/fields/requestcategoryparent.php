@@ -38,7 +38,7 @@ class JFormFieldRequestCategoryParent extends JFormFieldList
 		$query->join('LEFT', dbTable('request_categories').' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
 
 		// Prevent parenting to children of this item.
-		if ($id = $this->_form->getValue('id')) {
+		if ($id = $this->form->getValue('id')) {
 			$query->join('LEFT', dbTable('request_categories').' AS p ON p.id = '.(int) $id);
 			$query->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
 		}
@@ -62,7 +62,7 @@ class JFormFieldRequestCategoryParent extends JFormFieldList
 		}
 
 		$options	= array_merge(
-						parent::_getOptions(),
+						parent::getOptions(),
 						$options
 					);
 

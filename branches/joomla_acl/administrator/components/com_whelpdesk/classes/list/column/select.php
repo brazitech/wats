@@ -18,8 +18,13 @@ class WListColumnSelect extends WListColumn {
         return $html;
     }
 
-    public function render($row)
+    /**
+     * @param WList $list
+     */
+    public function render(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         $cellData = JHtml::_('grid.id', 0, $row->{$this->_name});
         return '<td align="center" '.$this->_attributes.'>'.$cellData.'</td>';
     }

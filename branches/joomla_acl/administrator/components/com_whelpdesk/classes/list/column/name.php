@@ -26,8 +26,13 @@ class WListColumnName extends WListColumn
         $this->_showDefault = ((string)$node->attributes('showdefault') == 'true');
     }
 
-    public function renderPlain($row)
+    /**
+     * @param WList $list
+     */
+    public function renderPlain(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         $name = parent::renderPlain($row);
 
         if ($this->_showDefault && $row->default)

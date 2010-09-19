@@ -3,10 +3,16 @@
 /**
  * Column that when rendered reflects the depth of the item in the nested set.  
  */
-class WListColumnNested extends WListColumn {
-    
-    public function render($row)
+class WListColumnNested extends WListColumn
+{
+
+    /**
+     * @param WList $list
+     */
+    public function render(WList $list)
     {
+        $row = $list->getCurrentRow();
+
         $class = '';
         if ($row->level)
         {

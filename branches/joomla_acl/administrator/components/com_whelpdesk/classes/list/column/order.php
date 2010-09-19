@@ -20,22 +20,32 @@ class WListColumnOrder extends WListColumn {
         {
             $html .= htmlentities(JText::_($this->_label), ENT_QUOTES, 'UTF-8');
         }
-        $html .= JHtml::_('grid.order', $this->_list->getRows(), 'filesave.png', 'modules.saveorder');
         $html .= '</th>';
 
         return $html;
     }
 
-    public function render($row)
+    /**
+     * @param WList $list
+     */
+    public function renderPlain(WList  $list)
     {
-        /*$html = <<<HTML
-<td align="center" $this->_attributes>
-    <span>$this->pagination->orderUpIcon($i, true, 'modules.orderup', 'JGrid_Move_Up', $ordering)</span>
-    <span>$this->pagination->orderDownIcon($i, $this->pagination->total, true, 'modules.orderdown', 'JGrid_Move_Down', $ordering);</span>
-    <?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
-    <input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-</td>
-HTML;*/
-        return parent::render($row);
+        $row = $list->getCurrentRow();
+        $previousRow = $list->getRow($list->getRowPointer() - 1);
+        $nextRow = $list->getRow($list->getRowPointer() + 1);
+
+        $html = '';
+
+        if (!is_null($previousRow))
+        {
+            $html .= JHtml::_('jgrid.orderUp', $i, $task, '', $alt, $enabled, $checkbox);
+        }
+
+        if (!is_null($nextRow))
+        {
+            $html .= JHtml::_('jgrid.orderDown', $i, $task, '', $alt, $enabled, $checkbox);
+        }
+        
+        return $html;
     }
 }

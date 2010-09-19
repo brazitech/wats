@@ -20,43 +20,45 @@ class WList
      *
      * @var array
      */
-    protected $_columns = array();
+    protected $columns = array();
 
     /**
      *
      * @var WQuery
      */
-    protected $_query = null;
+    protected $query = null;
 
-    protected $_filters = array();
+    protected $filters = array();
 
-    protected $_defaultOrder = null;
+    protected $defaultOrder = null;
 
-    protected $_rows = null;
+    protected $rows = null;
+
+    protected $rowPointer = null;
 
     /**
      *
      * @var int
      */
-    protected $_total = null;
+    protected $total = null;
 
     /**
      *
      * @var WPaginationState
      */
-    protected $_paginationState = null;
+    protected $paginationState = null;
 
     /**
      *
      * @var string
      */
-    protected $_namespace = null;
+    protected $namespace = null;
 
     /**
      *
      * @var array
      */
-    private static $_instances = array();
+    private static $instances = array();
 
     function __construct($options)
     {
@@ -73,16 +75,16 @@ class WList
     public static function getInstance($xml, $options = array())
     {
         $key = md5(serialize(array($xml, $options)));
-        if (array_key_exists($key, self::$_instances))
+        if (array_key_exists($key, self::$instances))
         {
-            return self::$_instances[$key];
+            return self::$instances[$key];
         }
 
         // build new instance.
-        self::$_instances[$key] = new WList($options);
-        self::$_instances[$key]->load($xml);
+        self::$instances[$key] = new WList($options);
+        self::$instances[$key]->load($xml);
 
-        return self::$_instances[$key];
+        return self::$instances[$key];
     }
 
     public function load($xml, $params = array())
@@ -93,7 +95,7 @@ class WList
         // Attempt to load the XML file.
         if ($parser->loadFile($xml)) {
             // Get the basic attributes
-            $this->_namespace = $parser->document->attributes('state');
+            $this->namespace = $parser->document->attributes('state');
 
             // Check if any columns exist.
             if (isset($parser->document->column))
@@ -101,7 +103,7 @@ class WList
                 // Set the list columns.
                 foreach ($parser->document->column as $column)
                 {
-                    $this->_columns[] = WListColumn::getInstance($column, $this);
+                    $this->columns[] = WListColumn::getInstance($column, $this);
                 }
             }
             else
@@ -114,9 +116,9 @@ class WList
             {
                 $db = JFactory::getDBO();
                 $query = $parser->document->query[0];
-                $this->_query = new WDatabaseQuery();
+                $this->query = new WDatabaseQuery();
 
-                if (!$this->_query->fromXML($query))
+                if (!$this->query->fromXML($query))
                 {
                     throw new WException('Error parsing WList XML query.');
                 }
@@ -131,7 +133,7 @@ class WList
             {
                 foreach ($parser->document->filter as $filter)
                 {
-                    $this->_filters[] = WListFilter::getInstance($filter, $this);
+                    $this->filters[] = WListFilter::getInstance($filter, $this);
                 }
             }
 
@@ -141,13 +143,13 @@ class WList
                 $condition = $filter->getCondition();
                 if ($condition !== false)
                 {
-                    $this->_query->where($condition);
+                    $this->query->where($condition);
                 }
             }
 
             // Get pagination state.
-            $this->_paginationState = WPaginationState::getInstance(
-                $this->_namespace,
+            $this->paginationState = WPaginationState::getInstance(
+                $this->namespace,
                 $this->getTotal()
             );
         }
@@ -159,17 +161,17 @@ class WList
 
     public function getNamespace()
     {
-        return $this->_namespace;
+        return $this->namespace;
     }
 
     public function getColumns()
     {
-        return $this->_columns;
+        return $this->columns;
     }
 
     public function getColumn($name)
     {
-        foreach ($this->_columns as $column)
+        foreach ($this->columns as $column)
         {
             if ($column->getName() == $name)
             {
@@ -181,68 +183,127 @@ class WList
 
     public function getFilters()
     {
-        return $this->_filters;
+        return $this->filters;
     }
 
     public function getRows()
     {
         // check if rows are already loaded.
-        if (isset($this->_rows))
+        if (isset($this->rows))
         {
-            return $this->_rows;
+            return $this->rows;
         }
 
         // run query to get rows.
         $db = JFactory::getDBO();
         $db->setQuery(
-            (string)$this->_query,
-            $this->_paginationState->getLimitStart(),
-            $this->_paginationState->getLimit()
+            (string)$this->query,
+            $this->paginationState->getLimitStart(),
+            $this->paginationState->getLimit()
         );
-        $this->_rows = $db->loadObjectList();
+        $this->rows = $db->loadObjectList();
 
 		// Check for an error.
 		if ($db->getErrorNum()) {
             throw new WException('WHD_LIST:DATABASE ERROR %s', $db->getErrorMsg());
 		}
 
-        return $this->_rows;
+        return $this->rows;
+    }
+
+    /**
+     * Gets the row from the specified position
+     * 
+     * @param int $rowNumber
+     * @return Object
+     */
+    public function getRow($rowNumber)
+    {
+        $this->getRows();
+
+        if (count($this->rows) < ($rowNumber + 1))
+        {
+            return null;
+        }
+
+        return $this->rows[$rowNumber];
+    }
+
+    /**
+     * Gets the current row according to the internal row pointer.
+     *
+     * @return Object
+     */
+    public function getCurrentRow()
+    {
+        if ($this->rowPointer == null)
+        {
+            $this->rowPointer = 0;
+        }
+
+        return $this->getRow($this->rowPointer);
+    }
+
+    /**
+     * Gets the internal row pointer
+     *
+     * @return int
+     */
+    public function getRowPointer()
+    {
+        return $this->rowPointer;
+    }
+
+    public function nextRow()
+    {
+        // set the row pointer
+        if (is_null($this->rowPointer))
+        {
+            $this->rowPointer = 0;
+        }
+        else
+        {
+            $this->rowPointer++;
+        }
+
+        return $this->rows[$this->rowPointer];
     }
 
     public function getPagination()
     {
-        return $this->_paginationState->getPagination();
+        return $this->paginationState->getPagination();
     }
     
     public function setPaginationState(WPaginationState $paginationState)
     {
-        $this->_paginationState = $paginationState;
+        $this->paginationState = $paginationState;
     }
 
     public function getTotal()
     {
         // check if rows are already loaded.
-        if (isset($this->_total))
+        if (isset($this->total))
         {
-            return $this->_total;
+            return $this->total;
         }
 
         // prepare the query.
-        $query = clone $this->_query;
+        $query = clone $this->query;
         $query->resetSelect();
         $query->select('COUNT(*)');
 
         // run query to get rows.
         $db = JFactory::getDBO();
         $db->setQuery($query);
-        $this->_total = (int)$db->loadResult();
+        $this->total = (int)$db->loadResult();
 
 		// Check for an error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+        {
             throw new WException('WHD_LIST:DATABASE ERROR %s', $db->getErrorMsg());
 		}
 
-        return $this->_total;
+        return $this->total;
     }
 
 }

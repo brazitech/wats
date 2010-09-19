@@ -15,8 +15,8 @@ wimport('application.controller');
 class RequestCategoriesListWController extends WController {
 
     public function  __construct() {
-        //parent::__construct();
-        $this->setUsecase('list');
+        //$this->setType('list');
+        //$this->setDefaultView('list');
     }
 
     /**
