@@ -14,9 +14,8 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'controllers' . DS . 'requestc
 class RequestCategoryNewWController extends RequestCategoryWController {
 
     public function  __construct() {
-        //parent::__construct();
+        parent::__construct();
         $this->setDefaultView('new');
-        $this->setType('requestcategory');
     }
 
     /**
@@ -24,6 +23,7 @@ class RequestCategoryNewWController extends RequestCategoryWController {
      */
     public function execute($stage) {
         // get the model
+        /* @var $model ModelRequestCategory */
         $model = WModel::getInstanceByName('requestcategory');
 
         // get the JForm
@@ -102,19 +102,5 @@ class RequestCategoryNewWController extends RequestCategoryWController {
         return parent::commit(0, $post, $model);
     }
 
-    /**
-     *
-     * @return String
-     * @todo
-     */
-    protected function getAccessTargetIdentifier() {
-        $id = WModel::getId();
-        if (!$id) {
-            JRequest::setVar('task', 'knowledgedomain.list.start');
-            JError::raiseNotice('INPUT', JText::_('WHD KNOWLEDGE DOMAIN UNKNOWN'));
-        }
-        return $id;
-    }
-}
 
-?>
+}
