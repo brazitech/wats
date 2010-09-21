@@ -33,7 +33,7 @@ class WListColumnNested extends WListColumn
         $html = '<td '.$this->_attributes.$class.'>'.$text;
         if (array_key_exists('alias', get_object_vars($row)))
         {
-            $html .= '<br/>('.JText::_('WHD_LIST:ALIAS').': '.$row->alias.')';
+            $html .= '<br/>(' . JText::sprintf('WHD_LIST:ALIAS %s', $row->alias) . ')';
         }
         $html .= '</td>';
 

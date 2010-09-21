@@ -1,7 +1,6 @@
-<fields
-        group="publishing"
-        label="WHD_DATA:PUBLISHING DETAILS"
-        position="detail">
+<fieldset
+        name="publishing"
+        labelfield="WHD_DATA:PUBLISHING DETAILS">
     <field
             id="created"
             name="created"
@@ -41,4 +40,4 @@
             description="WHD_DATA:REVISION DESCRIPTION"
             size="6"
             default="0" />
-</fields>
+</fieldset>

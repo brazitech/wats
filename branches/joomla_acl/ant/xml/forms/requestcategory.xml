@@ -13,7 +13,7 @@
 
 <form>
     <fields name="normal">
-        <fieldset name="request">
+        <fieldset labelfield="name" name="requestcategory">
             <field
                     id="id"
                     name="id"
@@ -27,14 +27,14 @@
                     id="name"
                     name="name"
                     type="text"
-                    label="NAME"
+                    label="WHD_RC:Name"
                     description="JField_Name_Desc"
                     class="inputbox"
                     size="30"
                     required="true" />
             <field
                     id="alias"
-                    name="alias"
+                    name="WHD_RC:ALIAS"
                     type="text"
                     label="ALIAS"
                     description="JField_Alias_Desc"
@@ -74,16 +74,16 @@
                     name="description"
                     type="editor"
                     class="inputbox"
-                    label="DESCRIPTION"
-                    description="JField_Description_Desc"
+                    label="WHD_RC:DESCRIPTION"
+                    description="WHD_RC:DESCRIPTION DESCRIPTION"
                     filter="safehtml"
                     buttons="false"
                     default="" />
         </fieldset>
     </fields>
-    &publishing;
     <fields name="detail">
-        <fieldset name="WHD_DATA:METADATA">
+        &publishing;
+        <fieldset labelfield="WHD_DATA:METADATA" name="metadata">
             <field
                     id="metakey"
                     name="metakey"
@@ -105,8 +105,7 @@
                     cols="30"
                     default="" />
         </fieldset>
-        <fieldset
-                name="WHD_ACCESS:RULES">
+        <fieldset label="WHD_ACCESS:RULES" name="access rules">
             <field
                     id="rules"
                     name="rules"
