@@ -15,15 +15,6 @@
     <fields name="normal">
         <fieldset labelfield="name" name="requestcategory">
             <field
-                    id="id"
-                    name="id"
-                    type="hidden"
-                    label="Content_Id_Label"
-                    size="10"
-                    default="0"
-                    required="true"
-                    readonly="true" />
-            <field
                     id="name"
                     name="name"
                     type="text"

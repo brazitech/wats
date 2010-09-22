@@ -70,11 +70,16 @@
             <transaction>
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_access_controls;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_access_map;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_announcements;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_data_fields;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_data_groups;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_data_tables;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_document_containers;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_faq_categories;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_faqs;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_glossary;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_request_categories;
+                SHOW CREATE TABLE ${database.prefix}whelpdesk_request_history;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_request_priorities;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_request_replies;
                 SHOW CREATE TABLE ${database.prefix}whelpdesk_requests;

@@ -23,6 +23,24 @@ jos_whelpdesk_access_map,CREATE TABLE `jos_whelpdesk_access_map` (
 
 0 rows affected
 Table,Create Table
+jos_whelpdesk_announcements,CREATE TABLE `jos_whelpdesk_announcements` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `created` datetime NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `checked_out` int(10) unsigned NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `publish_from` datetime NOT NULL,
+  `publish_to` datetime NOT NULL,
+  `revised` int(10) unsigned NOT NULL,
+  `modified` datetime NOT NULL,
+  `modified_by` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
+
+0 rows affected
+Table,Create Table
 jos_whelpdesk_data_fields,CREATE TABLE `jos_whelpdesk_data_fields` (
   `group` int(10) unsigned NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -89,6 +107,71 @@ jos_whelpdesk_document_containers,CREATE TABLE `jos_whelpdesk_document_container
 
 0 rows affected
 Table,Create Table
+jos_whelpdesk_faq_categories,CREATE TABLE `jos_whelpdesk_faq_categories` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `alias` varchar(100) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `created` datetime NOT NULL,
+  `checked_out` int(10) unsigned NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `created_by` int(10) unsigned NOT NULL default '42',
+  `modified` datetime NOT NULL,
+  `field_metadata_author` varchar(100) NOT NULL,
+  `field_metadata_keywords` varchar(255) NOT NULL,
+  `revised` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `UNIQUEALIAS` USING BTREE (`alias`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+
+0 rows affected
+Table,Create Table
+jos_whelpdesk_faqs,CREATE TABLE `jos_whelpdesk_faqs` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `question` varchar(500) NOT NULL,
+  `answer` text NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL default '0',
+  `checked_out` int(10) unsigned NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `alias` varchar(200) NOT NULL,
+  `version` int(10) unsigned NOT NULL,
+  `field_metadata_author` varchar(200) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
+
+0 rows affected
+Table,Create Table
+jos_whelpdesk_glossary,CREATE TABLE `jos_whelpdesk_glossary` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `term` varchar(500) NOT NULL,
+  `description` text NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL default '0',
+  `checked_out` int(10) unsigned NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `hits` int(10) unsigned NOT NULL,
+  `alias` varchar(100) NOT NULL,
+  `created` datetime NOT NULL,
+  `checked_out_time` datetime NOT NULL,
+  `revised` int(10) unsigned NOT NULL default '0',
+  `modified` datetime NOT NULL,
+  `hits_reset` datetime NOT NULL,
+  `field_metadata_description` varchar(255) NOT NULL,
+  `field_metadata_keywords` varchar(45) NOT NULL,
+  `field_metadata_robots` varchar(45) NOT NULL,
+  `field_metadata_author` varchar(45) NOT NULL,
+  `field_related_wikipedia` varchar(400) NOT NULL,
+  `field_related_acronyms` varchar(255) NOT NULL,
+  `hits_reset_by` int(10) unsigned NOT NULL,
+  `field_related_a` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8
+
+0 rows affected
+Table,Create Table
 jos_whelpdesk_request_categories,CREATE TABLE `jos_whelpdesk_request_categories` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(500) NOT NULL,
@@ -113,6 +196,17 @@ jos_whelpdesk_request_categories,CREATE TABLE `jos_whelpdesk_request_categories`
   `metadesc` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+
+0 rows affected
+Table,Create Table
+jos_whelpdesk_request_history,CREATE TABLE `jos_whelpdesk_request_history` (
+  `id` int(11) NOT NULL auto_increment,
+  `request_id` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
 
 0 rows affected
 Table,Create Table
